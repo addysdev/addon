@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserSearch">
+
+<resultMap id="adUserSearchVO" type="com.offact.addys.vo.ad.ADUserSearchVO" >
+  <result column="USER_ID"              property="userId"  />
+  <result column="USER_NM"              property="userNm"  />
+  <result column="EMPLOYEE_NUMBER"      property="employeeNumber"  />
+  <result column="USER_DEPT_CODE"       property="userDeptCode"  />
+  <result column="USER_GROUP_CODE"      property="userGroupCode"  />
+  <result column="USER_DEPT_NAME"       property="userDeptName"  />
+  <result column="USER_GROUP_NAME"      property="userGroupName"  />
+  <result column="USING_YN"             property="usingYn"  />
+  <result column="AGENT_ID"             property="agentId"  />
+  <result column="INNER_NUM"            property="innerNum"  />
+  <result column="MANAGER_YN"           property="managerYn"  />
+  <result column="WORK_YN"              property="workYn"  />
+  <result column="COMPANY_GBN"          property="companyGbn"  />
+  <result column="COMPANY_GBN_NAME"     property="companyGbnName"  />
+  <result column="CHARGE_BUSINESS_CODE" property="chargeBusinessCode"  />
+  <result column="CHARGE_BUSINESS_NAME" property="chargeBusinessName"  />
+  <result column="FRST_REG_TS"          property="frstRegTs"  />
+  <result column="FRST_REGR_ID"         property="frstRegrId"  />
+  <result column="LAST_MOD_TS"          property="lastModTs"  />
+  <result column="LAST_CORT_ID"         property="lastCortId"  />
+  <result column="PARTNER_CHARGE_YN"    property="partnerChargeYn"  />
+</resultMap>
+
+<select id="getAdUserSearchList"  resultMap="adUserSearchVO" parameterType="com.offact.addys.vo.ad.ADUserSearchVO" >
+        SELECT USER_ID                                      AS USER_ID
+              ,USER_NM                                      AS USER_NM
+              ,EMPLOYEE_NUMBER                              AS EMPLOYEE_NUMBER
+              ,USER_DEPT_CODE                               AS USER_DEPT_CODE
+              ,USER_GROUP_CODE                              AS USER_GROUP_CODE
+              ,fnGetCodeName('IG10',USER_DEPT_CODE)         AS USER_DEPT_NAME
+              ,fnGetCodeName('IG11',USER_GROUP_CODE)        AS USER_GROUP_NAME
+              ,IFNULL(USING_YN,'N')                         AS USING_YN
+              ,AGENT_ID                                     AS AGENT_ID
+              ,INNER_NUM                                    AS INNER_NUM
+              ,MANAGER_YN                                   AS MANAGER_YN
+              ,IFNULL(WORK_YN,'Y')                          AS WORK_YN
+              ,COMPANY_GBN                                  AS COMPANY_GBN
+              ,fnGetCodeName('IG14',COMPANY_GBN)            AS COMPANY_GBN_NAME
+              ,fnGetCodeName('IG12',CHARGE_BUSINESS_CODE)   AS CHARGE_BUSINESS_CODE
+          FROM TB_USER A
+              ,(SELECT @ROWNUM := 0) R
+         WHERE 1=1
+           AND USING_YN = 'Y'
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND USER_NM  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND USER_ID  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+           <if test="con_companyGbnCode != null and con_companyGbnCode != ''" >
+           AND COMPANY_GBN = #{con_companyGbnCode}
+           </if>
+           <if test="con_userDeptCode != null and con_userDeptCode != ''" >
+           AND USER_DEPT_CODE = #{con_userDeptCode}
+           </if>
+         ORDER BY USER_ID
+</select>
+
+<select id="getAdUserSearchInfo"  resultMap="adUserSearchVO" parameterType="com.offact.addys.vo.ad.ADUserSearchVO" >
+SELECT T1.*
+      ,fnGetCodeName('IG10',T1.USER_DEPT_CODE)         AS USER_DEPT_NAME
+      ,fnGetCodeName('IG11',T1.USER_GROUP_CODE)        AS USER_GROUP_NAME
+      ,fnGetCodeName('IG14',T1.COMPANY_GBN)            AS COMPANY_GBN_NAME
+      ,fnGetCodeName('IG12',T1.CHARGE_BUSINESS_CODE)   AS CHARGE_BUSINESS_NAME
+  FROM TB_USER T1
+ WHERE T1.USER_ID = #{con_userId}
+</select>
+
+<select id="getAdUserSearchAutoSetInfo"  resultMap="adUserSearchVO" parameterType="com.offact.addys.vo.ad.ADUserSearchVO" >
+SELECT T1.*
+      ,fnGetCodeName('IG10',T1.USER_DEPT_CODE)         AS USER_DEPT_NAME
+      ,fnGetCodeName('IG11',T1.USER_GROUP_CODE)        AS USER_GROUP_NAME
+      ,fnGetCodeName('IG14',T1.COMPANY_GBN)            AS COMPANY_GBN_NAME
+      ,fnGetCodeName('IG12',T1.CHARGE_BUSINESS_CODE)   AS CHARGE_BUSINESS_NAME
+  FROM TB_USER T1
+       RIGHT JOIN (
+                  SELECT '1' AS PRIORITY          #딜별사용자에게 우선할당
+                        ,TU.USER_ID
+                        ,TU.USER_NM
+                        ,( SELECT COUNT(TT.TRANSFER_SNO)
+                             FROM TB_TRANSFER TT
+                            WHERE TT.TRANSFER_PROC_USER_ID = TU.USER_ID
+                              AND TT.TRANSFER_RESULT_CODE = '01'     # 01: 미진행 (고정값)
+                         ) AS HOLD_CNT          #미진행중인 이관처리가 가장 적은 사람에게 할당
+                    FROM TB_DEAL TD
+                        ,TB_DEAL_USER TDU
+                        ,TB_USER TU
+                   WHERE TD.DEAL_ID = #{autoSetDealId}        #딜ID
+                     AND TDU.DEAL_ID = TD.DEAL_ID
+                     AND TU.USER_ID = TDU.USER_ID
+                     AND TU.USER_DEPT_CODE = #{autoSetUserDeptCode}      #사용자부서코드
+                     AND TU.USING_YN = 'Y'
+                     AND IFNULL(TU.WORK_YN, 'Y') = 'Y'
+                  UNION ALL
+                  SELECT '2' AS PRIORITY          #차선책으로 카테고리별사용자에게 할당
+                        ,TU.USER_ID
+                        ,TU.USER_NM
+                        ,( SELECT COUNT(TT.TRANSFER_SNO)
+                             FROM TB_TRANSFER TT
+                            WHERE TT.TRANSFER_PROC_USER_ID = TU.USER_ID
+                              AND TT.TRANSFER_RESULT_CODE = '01'     # 01: 미진행 (고정값)
+                         ) AS HOLD_CNT
+                    FROM TB_DEAL TD
+                        ,TB_CATEGORY_USER TCU
+                        ,TB_USER TU
+                   WHERE TD.DEAL_ID = #{autoSetDealId}        #딜ID
+                     AND TCU.CATEGORY_S_CODE = TD.CATEGORY_S_CODE
+                     AND TU.USER_ID = TCU.USER_ID
+                     AND TU.USER_DEPT_CODE = #{autoSetUserDeptCode}      #사용자부서코드
+                     AND TU.USING_YN = 'Y'
+                     AND IFNULL(TU.WORK_YN, 'Y') = 'Y'
+                   ORDER BY PRIORITY, HOLD_CNT
+                  LIMIT 1         #우선순위가 가장 높은 사용자 한명만 추출
+                 ) T2
+         ON T1.USER_ID = T2.USER_ID
+</select>
+
+</mapper>

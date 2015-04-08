@@ -1,0 +1,88 @@
+@charset "utf-8";
+
+/*********************************************************
+Huation UX R&D Team (http://www.huation.com/)
+Author : huation (2013.10.31)
+*********************************************************/
+
+/* title */
+.title {margin-bottom:10px;height:25px;border-bottom:1px solid #888;}
+.title span {display:inline-block;padding:6px 20px 4px;border:1px solid #888;border-bottom:0 none;background:#fff;color:#333;font-weight:bold;}
+
+/* tab */
+.tab_type01 {position:relative;width:100%;height:147px;border-bottom:2px solid #d4d4d4;}
+.tab_type01 .heading {float:left;}
+.tab_type01 .heading.off {margin-left:-1px;padding:6px 20px 3px;border:1px solid #bbb;border-bottom:0 none;background:#f4f4f4;color:#333;}
+.tab_type01 .heading.on {position:relative;margin-left:-1px;padding:6px 20px 4px;border:1px solid #888;border-bottom:0 none;background:#fff;color:#333;font-weight:bold;z-index:60;}
+.tab_type01 .heading.on a {color:#333;}
+.tab_type01 .heading.first {margin-left:0;}
+.tab_type01 .tab_con_area01 {position:absolute;left:0;top:25px;width:100%;height:100px;z-index:50;}
+.tab_type01 .tab_con {padding:10px;height:100px;border:1px solid #888;background:#fff;}
+
+.tab_type02 {overflow:hidden;width:100%;background:url(../images/common/bg_tab_list.gif) repeat-x 0 bottom;}
+.tab_type02 li {float:left;}
+.tab_type02 li a {display:inline-block;margin-left:-1px;padding:6px 20px 3px;border:1px solid #bbb;border-bottom:0 none;background:#f4f4f4;color:#333;}
+.tab_type02 li.on {position:relative;margin-left:-1px;padding:6px 20px 4px;border:1px solid #888;border-bottom:0 none;background:#fff;color:#333;font-weight:bold;}
+.tab_type02 li.first {margin-left:0;}
+.tab_con_area02 {padding-top:10px;}
+
+/* table */
+.tbl_type01 {width:100%;border-top:1px solid #ccc;border-left:1px solid #ccc;}
+.tbl_type01_list {table-layout:fixed;word-break:break-all;word-wrap:break-word;}/* 테이블 고정 */
+.tbl_type01 th, .tbl_type01 td {padding:2px 5px 0;height:31px;border-bottom:1px solid #ccc;border-right:1px solid #ccc;vertical-align:middle;}
+.tbl_type01 td a {color:#333;text-decoration:underline;}
+.tbl_type01 th {text-align:center;background:#f4f4f4;color:#333;}
+.tbl_type01 td input, .tbl_type01 td select, .tbl_type01 td textarea {margin-top:-2px;}
+.tbl_type01 td input.radio {margin-top:-4px;}
+.tbl_type01 .list_select th, .tbl_type01 .list_select td {background:#72787e !important;color:#fff !important;}/* 선택된 리스트 지정 */
+.tbl_type01 .list_select th a, .tbl_type01 .list_select td a {color:#fff !important;text-decoration:underline !important;}
+
+/* btn */
+a.btn_type01 {display:inline-block;margin-top:-1px;padding:0 0 0 7px;background:url(../images/common/btn.gif) no-repeat 0 0;vertical-align:middle;font-size:11px;color:#333;}
+#container .tbl_type01 a.btn_type01, #lypop_container .tbl_type01 a.btn_type01 {color:#333 !important;}/* 선택된리스트에서 버튼 텍스트색 변경되는거 재설정 */
+a.btn_type01 span {padding:5px 7px 4px 0;background:url(../images/common/btn.gif) no-repeat right 0;}
+a.btn_type01:hover,
+a.btn_type01:focus,
+a.btn_type01:active {background-position:0 -34px;}
+a.btn_type01:hover span,
+a.btn_type01:focus span,
+a.btn_type01:active span {background-position:right -34px;}
+.btn_tableR {position:relative;}/* 오른쪽 정렬 기준 */
+.btn_tableR .btn_type01 {position:absolute;top:6px;right:5px;}/* 테이블안에서 버튼 오른쪽 정렬 */
+.btn_tableRRe {position:relative;}/* 오른쪽 정렬 기준 - 화면초기화용 */
+.btn_tableRRe .btn_type01 {position:absolute;top:6px;right:5px;}/* 테이블안에서 버튼 오른쪽 정렬 - 화면초기화용 */
+
+a.btn_type02 {display:inline-block;padding:0 0 0 7px;background:url(../images/common/btn.gif) no-repeat 0 -68px;vertical-align:middle;color:#fff !important;;font-weight:bold;}
+a.btn_type02 span {padding:6px 7px 5px 0;background:url(../images/common/btn.gif) no-repeat right -68px;}
+a.btn_type02_gray {background-position:0 -104px;}
+a.btn_type02_gray span {background-position:right -104px;}
+
+/* button 태그를 이용한 btn */
+.img_button .btn_type02 {display:block;position:relative;padding:0 0 0 7px;line-height:16px;background:url(../images/common/btn.gif) no-repeat 0 -68px;vertical-align:middle;color:#fff !important;;font-weight:bold;font-size:12px;}
+.img_button .btn_type02 span {padding:6px 7px 5px 0;background:url(../images/common/btn.gif) no-repeat right -68px;}
+.img_button .btn_type02_gray {background-position:0 -104px;}
+.img_button .btn_type02_gray span {background-position:right -104px;}
+
+/* paging */
+.paging {width:100%;margin:10px 0 0;text-align:center;}
+.paging a, .paging strong {padding:4px 4px 1px;vertical-align:top;}
+.paging strong {color:#f15a22;}
+.paging .btn {display:inline-block;padding:0;width:21px;height:22px;background:url(../images/common/btn.gif) no-repeat;}
+.paging .btn_first {background-position:0 -141px;}
+.paging .btn_prev {margin-right:10px;width:22px;background-position:-21px -141px;}
+.paging .btn_next {margin-left:10px;background-position:-43px -141px;}
+.paging .btn_last {width:22px;background-position:-64px -141px;}
+
+/* 안내 문구 */
+.guide_txt {padding-bottom:3px;line-height:15px;color:#f15a22;text-align:right;}
+.guide_txt img {margin-top:-2px;padding-right:4px;}
+.guide_txtleft {padding-bottom:3px;line-height:15px;color:#f15a22;}
+.guide_txtleft img {margin-top:-2px;padding-right:4px;}
+
+/* 엑셀 다운로드 */
+.ico_exceldown {display:inline-block;padding-left:21px;height:16px;background:url(../images/common/ico_excel.gif) no-repeat;color:#333;text-decoration:none !important;}
+.ico_exceldown:hover, .ico_exceldown:focus, .ico_exceldown:active {text-decoration:underline !important;}
+
+/* 말줄임
+.ellipsis {width:100%;overflow:hidden;height:18px;text-overflow:ellipsis;white-space:nowrap;-o-text-overflow:ellipsis;word-break:nowrap;word-wrap:normal;}
+ */

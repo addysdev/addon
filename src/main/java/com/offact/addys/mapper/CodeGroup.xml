@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ADGroupCodeManage">
+
+  <resultMap id="groupcodeVO" type="com.offact.addys.vo.ADGroupCodeManageVO" >
+    <result column="code_id" property="codeId"  />
+    <result column="code_nm" property="codeNm"  />
+    <result column="description" property="description"  />
+    <result column="using_yn" property="usingYn"  />
+    <result column="frst_reg_ts" property="frstRegTs"  />
+    <result column="frst_reg_id" property="frstRegrId"  />
+    <result column="last_mod_ts" property="lastModTs"  />
+    <result column="last_cort_id" property="lastCortId"  />
+  </resultMap>
+  
+   <select id="getGroupcodeContents" resultMap="groupcodeVO" parameterType="com.offact.addys.vo.ADGroupCodeManageVO" >
+	SELECT  * 
+     FROM TB_CODE_GROUP
+     WHERE code_id =  #{codeId}
+  </select>
+
+	<select id="getGroupcodeCnt" resultType="int">
+    SELECT  COUNT(*) AS TOT_COUNT
+    FROM   TB_CODE
+	</select> 
+	
+	<select id="getGroupcodeMax" resultType="java.lang.String">
+    SELECT  IFNULL(MAX(NO),0)+1 AS MAX_COUNT
+    FROM   TB_CODE
+	</select> 	
+	
+	<select id="getGroupcodeList"  resultMap="groupcodeVO" parameterType="com.offact.addys.vo.ADGroupCodeManageVO" >
+	SELECT *
+	FROM TB_CODE_GROUP
+	</select>	
+
+  	<insert id="insertGroupcode" parameterType="com.offact.addys.vo.ADGroupCodeManageVO" >
+  	INSERT INTO SAMPLE_NOTICE (
+  		  NO
+  		, TITLE
+  		, CONTENTS
+  		, WRITER
+  		, REG_DT
+  		, MOD_DT
+  	)
+  	VALUES (
+  		  #{no}
+  		, #{title}
+  		, #{contents}
+  		, #{writer}
+  		, now()
+  		, now()
+  	)
+  	</insert>  
+  	
+  	<update id="modifyGroupcode" parameterType="com.offact.addys.vo.ADGroupCodeManageVO" >
+    UPDATE SAMPLE_NOTICE
+    SET  WRITER     = #{writer}
+         , TITLE        = #{title}
+         , CONTENTS = #{contents}
+         , MOD_DT    = now()
+    WHERE NO = #{no}
+  	</update>  	
+  	
+	<delete id="deleteGroupcode" parameterType="com.offact.addys.vo.ADGroupCodeManageVO" >
+		DELETE FROM SAMPLE_NOTICE
+		WHERE NO = #{no}
+	</delete>  	
+</mapper>

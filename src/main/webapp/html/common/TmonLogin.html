@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>Login</title>
+<link rel="stylesheet" type="text/css" href="../../css/default.css" />
+<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+<link rel="stylesheet" type="text/css" href="../../css/layout.css" />
+<!--[if lt IE 9]>
+	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+</head>
+<body class="bgcolor">
+<!-- skip navigation -->
+<a href="#loginId" class="hidden_obj">아이디입력 이동</a>
+<!-- //skip navigation -->
+<div id="login_wrap">
+<header>
+	<h1><img src="../../images/layout/logo_login.gif" alt="TICKET MONSTER" /></h1>
+</header>
+<section>
+	<h2><img src="../../images/layout/h2_login.gif" alt="TicketMonster CS Application Login" /></h2>
+	<form method="post" action="">
+	<fieldset>
+		<legend>Login</legend>
+		<div class="con">
+			<!-- label의 for값과 input의 id값을 똑같이 사용해주세요. -->
+			<dl>
+				<dt><label for="loginId">아이디</label></dt>
+				<dd><input type="text" class="login_text" id="loginId" /></dd>
+				<dt><label for="loginPwd">비빌번호</label></dt>
+				<dd><input type="password" class="login_text" id="loginPwd" /></dd>
+			</dl>
+			<p class="login_extension"><input type="checkbox" class="check" id="loginNum" /><label for="loginNum">내선번호가 없는 사용자입니다.</label></p>
+			<p><button class="img_button"><img src="../../images/layout/btn_login.gif" alt="Login" /></button></p>
+		</div>
+	</fieldset>
+	</form>
+</section>
+</div>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SampleNotice">
+
+  <resultMap id="noticeVO" type="com.offact.addys.vo.SampleNoticeVO" >
+    <result column="no" property="no"  />
+    <result column="title" property="title"  />
+    <result column="contents" property="contents"  />
+    <result column="wirter" property="wirter"  />
+    <result column="reg_dt" property="regDt"  />
+    <result column="mod_dt" property="modDt"  />
+  </resultMap>
+  
+   <select id="getNoticeContents" resultMap="noticeVO" parameterType="com.offact.addys.vo.SampleNoticeVO" >
+	SELECT  NO
+	         , TITLE
+	         , CONTENTS
+	         , WRITER
+	         , DATE_FORMAT(REG_DT,'%Y-%m-%d') REG_DT
+	         , DATE_FORMAT(MOD_DT,'%Y-%m-%d') MOD_DT
+	FROM    SAMPLE_NOTICE
+	WHERE  NO = #{no}
+  </select>
+
+	<select id="getNoticeCnt" resultType="int">
+    SELECT  COUNT(*) AS TOT_COUNT
+    FROM   SAMPLE_NOTICE
+	</select> 
+	
+	<select id="getNoticeMax" resultType="java.lang.String">
+    SELECT  IFNULL(MAX(NO),0)+1 AS MAX_COUNT
+    FROM   SAMPLE_NOTICE
+	</select> 	
+	
+	<select id="getNoticeList"  resultMap="noticeVO" parameterType="com.offact.addys.vo.SampleNoticeVO" >
+	SELECT A.*
+	FROM
+	(
+	    SELECT
+	             @ROWNUM := @ROWNUM + 1 AS ROWNUM
+	           , A.NO
+	           , A.TITLE
+	           , A.WRITER
+	           , DATE_FORMAT(A.REG_DT,'%Y-%m-%d') REG_DT
+	           , DATE_FORMAT(A.MOD_DT,'%Y-%m-%d') MOD_DT
+	    FROM
+	           SAMPLE_NOTICE A,
+	           (SELECT @ROWNUM := 0) R
+	    ORDER BY A.NO DESC
+	) A
+	WHERE  A.ROWNUM BETWEEN (#{curPage}-1) * #{rowCount}+1 AND #{curPage} * #{rowCount}
+	</select>	
+
+  	<insert id="insertNotice" parameterType="com.offact.addys.vo.SampleNoticeVO" >
+  	INSERT INTO SAMPLE_NOTICE (
+  		  NO
+  		, TITLE
+  		, CONTENTS
+  		, WRITER
+  		, REG_DT
+  		, MOD_DT
+  	)
+  	VALUES (
+  		  #{no}
+  		, #{title}
+  		, #{contents}
+  		, #{writer}
+  		, now()
+  		, now()
+  	)
+  	</insert>  
+  	
+  	<update id="modifyNotice" parameterType="com.offact.addys.vo.SampleNoticeVO" >
+    UPDATE SAMPLE_NOTICE
+    SET  WRITER     = #{writer}
+         , TITLE        = #{title}
+         , CONTENTS = #{contents}
+         , MOD_DT    = now()
+    WHERE NO = #{no}
+  	</update>  	
+  	
+	<delete id="deleteNotice" parameterType="com.offact.addys.vo.SampleNoticeVO" >
+		DELETE FROM SAMPLE_NOTICE
+		WHERE NO = #{no}
+	</delete>  	
+</mapper>
