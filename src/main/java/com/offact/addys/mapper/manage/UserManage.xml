@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserManage">
+
+<resultMap id="userListVO" type="com.offact.addys.vo.manage.UserListManageVO" >
+  <result column="userId"              property="userId"  />
+  <result column="userName"            property="userName"  />
+  <result column="groupId"      	   property="groupId"  />
+  <result column="groupName"       	   property="groupName"  />
+  <result column="authId"              property="authId"  />
+  <result column="authName"            property="authName"  />
+  <result column="excelAuth"           property="excelAuth"  />
+  <result column="password"            property="password"  />
+  <result column="officePhone"         property="officePhone"  />
+  <result column="officePhoneFormat"   property="officePhoneFormat"  />
+  <result column="mobliePhone"         property="mobliePhone"  />
+  <result column="mobliePhoneFormat"   property="mobliePhoneFormat"  />
+  <result column="email"               property="email"  />
+  <result column="ip"                  property="ip"  />
+  <result column="createUserId"        property="createUserId"  />
+  <result column="createDateTime"      property="createDateTime"  />
+  <result column="updateUserId"        property="updateUserId"  />
+  <result column="updateDateTime"      property="updateDateTime"  />
+  <result column="useYn"               property="useYn"  />
+  <result column="deletedYn"           property="deletedYn"  />
+</resultMap>
+
+<select id="getUserListManage"  resultMap="userListVO" parameterType="com.offact.addys.vo.manage.UserListManageVO" >
+        SELECT T1.userId
+			  ,T1.userName
+			  ,T1.groupId
+			  ,T2.groupName
+			  ,T1.authId   
+			  ,CASE WHEN T1.authId = T1.userId Then '개인권한'
+				  ELSE T3.groupName
+			   END As authName
+			  ,IFNULL(T1.excelAuth,'N')   As excelAuth
+			  ,T1.password
+			  ,T1.email
+			  ,T1.officePhone
+		      ,T1.officePhone As officePhoneFormat
+			  ,T1.mobliePhone
+			  ,T1.mobliePhone As mobliePhoneFormat
+		      ,T1.ip
+			  ,T1.createUserId
+			  ,T1.updateUserId
+			  ,T1.createDateTime As CreateDateTime
+			  ,T1.updateDateTime As UpdateDateTime
+			  ,T1.useYn
+			  ,T1.deletedYn
+          FROM ofUser T1
+          	   Left Join ofGroup T2 On T1.groupId=T2.groupId
+			   Left Join ofGroup T3 On T1.authId=T3.groupId
+         WHERE T1.deletedYn='N'
+           <if test="con_groupId != null and con_groupId != ''" >
+           AND T1.groupId = #{con_groupId}
+           </if>
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND T1.userName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND T1.userId  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+           <if test="con_useYn != null and con_useYn != ''" >
+           AND T1.useYn = #{con_useYn}
+           </if>
+         ORDER BY userId
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getUserCnt" resultType="int">
+SELECT count(*) AS TOT_COUNT
+  FROM ofUser
+ WHERE deletedYn='N'
+           <if test="con_groupId != null and con_groupId != ''" >
+           AND groupId = #{con_groupId}
+           </if>
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND userName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND userId  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+           <if test="con_useYn != null and con_useYn != ''" >
+           AND useYn = #{con_useYn}
+ 		   </if>
+</select>
+
+
+<update id="userUpdateProc" parameterType="com.offact.addys.vo.manage.UserListManageVO" >
+UPDATE TB_USER
+   SET <!-- MANAGER_YN          = #{managerYn}
+      , -->WORK_YN             = #{workYn}
+<!-- 
+      <if test="userDeptCode =='CS'" >
+      ,COMPANY_GBN         = #{companyGbn}
+      </if>
+      <if test="userDeptCode !='CS'" >
+      ,COMPANY_GBN         = null
+      </if>
+-->
+      ,PARTNER_CHARGE_YN   = #{partnerChargeYn}
+      ,LOGIN_YN   = #{loginYn}
+<!-- 
+      ,CHARGE_BUSINESS_CODE = #{chargeBusinessCode}
+      ,TPLUS_CHARGE_BUSINESS_CODE = #{tplusChargeBusinessCode}
+-->
+      ,LAST_MOD_TS        = now()
+      ,LAST_CORT_ID       = #{lastCortId}
+ WHERE USER_ID = #{userId}
+</update>
+
+<insert id="userInsertProc" parameterType="com.offact.addys.vo.manage.UserListManageVO" >
+  INSERT INTO TB_USER (
+    USER_ID
+        ,USER_NM
+        ,EMPLOYEE_NUMBER
+        ,USER_DEPT_CODE
+        ,USER_GROUP_CODE
+        ,USING_YN
+        ,AGENT_ID
+        ,INNER_NUM
+        ,MANAGER_YN
+        ,WORK_YN
+        ,COMPANY_GBN
+        ,CHARGE_BUSINESS_CODE
+        ,FRST_REG_TS
+        ,FRST_REGR_ID
+        ,LAST_MOD_TS
+        ,LAST_CORT_ID
+  )
+  VALUES (
+      #{userId}
+    , #{userNm}
+    ,'0000'
+<!--         , #{employeeNumber} -->
+        , #{userDeptCode}
+        , #{userGroupCode}
+        , "Y"
+        , #{agentId}
+        , #{innerNum}
+        , #{managerYn}
+        , #{workYn}
+        , #{companyGbn}
+        , #{chargeBusinessCode}
+    , now()
+    ,#{lastCortId}
+<!--         , #{frstRegrId} -->
+    , now()
+    ,#{lastCortId}
+<!--         , #{lastCortId} -->
+  )
+</insert>
+
+<select id="getUserDetail" resultMap="userListVO" parameterType="com.offact.addys.vo.manage.UserListManageVO" >
+SELECT USER_ID
+      ,USER_NM
+      ,EMPLOYEE_NUMBER
+      ,USER_DEPT_CODE
+      ,USER_GROUP_CODE
+      ,USING_YN
+      ,LOGIN_YN
+      ,AGENT_ID
+      ,INNER_NUM
+      ,MANAGER_YN
+      ,(case when WORK_YN = 'Y' then 'Y' else 'N' end) AS WORK_YN
+      ,COMPANY_GBN
+      ,CHARGE_BUSINESS_CODE
+      ,TPLUS_CHARGE_BUSINESS_CODE
+      ,FRST_REG_TS
+      ,FRST_REGR_ID
+      ,LAST_MOD_TS
+      ,LAST_CORT_ID
+      ,(case when PARTNER_CHARGE_YN = 'Y' then 'Y' else 'N' end) AS PARTNER_CHARGE_YN
+      ,(SELECT COUNT(*) 
+          FROM TB_TRANSFER IT
+         WHERE IT.TRANSFER_PROC_USER_ID = A.USER_ID
+           AND IT.TRANSFER_RESULT_CODE != '06'
+           AND IT.FRST_REGR_ID != 'ADMIN'
+           AND IT.TRANSFER_SNO = IT.LAST_TRANSFER_SNO
+       ) + 
+       (SELECT COUNT(*) 
+          FROM TB_TRANSFER IT
+         WHERE IT.TRANSFER_REG_USER_ID = A.USER_ID
+           AND IT.TRANSFER_RESULT_CODE != '06'
+           AND IT.FRST_REGR_ID != 'ADMIN'
+           AND IT.TRANSFER_SNO = IT.LAST_TRANSFER_SNO
+       ) AS TRANSFER_CNT
+  FROM TB_USER A
+ WHERE USER_ID = #{userId}
+</select>
+
+</mapper>
