@@ -8,14 +8,18 @@
     //session 정보
 	String strUserId= (String)session.getAttribute("strUserId");
 	String strUserName= (String)session.getAttribute("strUserName");
+	String strGroupId= (String)session.getAttribute("strGroupId");	
+	String strGroupName= (String)session.getAttribute("strGroupName");
+	String strAuthId= (String)session.getAttribute("strAuthId");
+	String strAuthName= (String)session.getAttribute("strAuthName");	
+	String strExcelAuth= (String)session.getAttribute("strExcelAuth");
+	String strOfficePhone= (String)session.getAttribute("strOfficePhone");
+	String strOfficePhoneFormat= (String)session.getAttribute("strOfficePhoneFormat");
+	String strMobliePhone= (String)session.getAttribute("strMobliePhone");
+	String strMobliePhoneFormat= (String)session.getAttribute("strMobliePhoneFormat");
+	String strEmail= (String)session.getAttribute("strEmail");
+	String strIp= (String)session.getAttribute("strIp");
 	
-	String strUserDeptCode= (String)session.getAttribute("strUserDeptCode");	
-	String strUserGroupCode= (String)session.getAttribute("strUserGroupCode");
-	String strCompanyGbn= (String)session.getAttribute("strCompanyGbn");
-
-	String strUserDeptName= (String)session.getAttribute("strUserDeptName");	
-	String strUserGroupName= (String)session.getAttribute("strUserGroupName");
-	String strCompanyGbnName= (String)session.getAttribute("strCompanyGbnName");
 %>
 <!DOCTYPE html>
 <html>
@@ -46,14 +50,11 @@
 	</script>
 	<c:set var="strUserId" value="<%=strUserId %>" />
 	<c:set var="strUserName" value="<%=strUserName %>" />
-	
-	<c:set var="strUserDeptCode" value="<%=strUserDeptCode %>" />
-	<c:set var="strUserGroupCode" value="<%=strUserGroupCode %>" />
-	<c:set var="strCompanyGbn" value="<%=strCompanyGbn %>" />
-	
-	<c:set var="strUserDeptName" value="<%=strUserDeptName %>" />
-	<c:set var="strUserGroupName" value="<%=strUserGroupName %>" />
-	<c:set var="strCompanyGbnName" value="<%=strCompanyGbnName %>" />
+	<c:set var="strGroupId" value="<%=strGroupId %>" />
+	<c:set var="strGroupName" value="<%=strGroupName %>" />
+	<c:set var="strAuthId" value="<%=strAuthId %>" />
+	<c:set var="strAuthName" value="<%=strAuthName %>" />
+	<c:set var="strExcelAuth" value="<%=strExcelAuth %>" />
 	
   </head>
   <body>
@@ -86,7 +87,7 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">관리 <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="<%= request.getContextPath() %>/addys/usermanage">계정관리</a></li>
+            <li><a href="<%= request.getContextPath() %>/manage/usermanage">계정관리</a></li>
             <li><a href="#">조직관리</a></li>
             <li><a href="#">메뉴권한관리</a></li> 
             <li><a href="#">Master정보관리</a></li>                         

@@ -6,8 +6,8 @@
     <script>
     //onload
 	$(document).ready(function () {
-		var strUserId = $('#strUserId').val();
-	 	//alert("[strUserId]"+strUserId);
+		var strUserID = $('#strUserId').val();
+	 	//alert("[strUserID]"+strUserID);
 	 	
 	 	var strUserName = '${strUserName}';
 	 	//alert("[strUserName]"+strUserName);
@@ -17,7 +17,7 @@
   </head>
   <body>
   	<form method="post" id="mainForm" name="mainForm"  role="form" >
-  	<input type="hidden" id="strUserId" name="strUserId" value="${strUserId}">
+  	<input type="hidden" id="strUserID" name="strUserId" value="${strUserId}">
     </form>
    <div class="container">
 	  <h2>메인화면</h2>

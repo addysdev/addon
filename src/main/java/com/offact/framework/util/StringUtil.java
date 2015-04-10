@@ -1086,4 +1086,11 @@ public class StringUtil {
 		return lpad(Integer.toString(str), size, ch);
 	}	
 	
+	// Limit 방식페이징 시작인덱스 구하기
+    public static String getCalcLimitStart(String curPage, String rowCount) {
+        curPage = nvl(curPage, "1");
+        rowCount = nvl(rowCount, "10");
+        int i_start = (Integer.parseInt(curPage) - 1) * Integer.parseInt(rowCount);
+        return String.valueOf(i_start);
+    }
 }

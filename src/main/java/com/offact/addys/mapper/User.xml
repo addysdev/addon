@@ -3,84 +3,55 @@
 <mapper namespace="User">
 
 <resultMap id="UserVO" type="com.offact.addys.vo.UserVO" >
-  <result column="USER_ID"              property="userId"  />
-  <result column="USER_NM"              property="userNm"  />
-  <result column="EMPLOYEE_NUMBER"      property="employeeNumber"  />
-  <result column="USER_DEPT_CODE"       property="userDeptCode"  />
-  <result column="USER_GROUP_CODE"      property="userGroupCode"  />
-  <result column="USER_DEPT_NAME"       property="userDeptName"  />
-  <result column="USER_GROUP_NAME"      property="userGroupName"  />
-  <result column="USING_YN"             property="usingYn"  />
-  <result column="AGENT_ID"             property="agentId"  />
-  <result column="INNER_NUM"            property="innerNum"  />
-  <result column="MANAGER_YN"           property="managerYn"  />
-  <result column="WORK_YN"              property="workYn"  />
-  <result column="LOGIN_YN"             property="loginYn"  />
-  <result column="PARTNER_CHARGE_YN"    property="partnerChargeYn"  />
-  <result column="COMPANY_GBN"          property="companyGbn"  />
-  <result column="COMPANY_GBN_NAME"     property="companyGbnName"  />
-  <result column="CHARGE_BUSINESS_CODE" property="chargeBusinessCode"  />
-  <result column="FRST_REG_TS"          property="frstRegTs"  />
-  <result column="FRST_REGR_ID"         property="frstRegrId"  />
-  <result column="LAST_MOD_TS"          property="lastModTs"  />
-  <result column="LAST_CORT_ID"         property="lastCortId"  />
+  <result column="userId"              property="userId"  />
+  <result column="userName"            property="userName"  />
+  <result column="groupId"      	   property="groupId"  />
+  <result column="groupName"       	   property="groupName"  />
+  <result column="authId"              property="authId"  />
+  <result column="authName"            property="authName"  />
+  <result column="excelAuth"           property="excelAuth"  />
+  <result column="password"            property="password"  />
+  <result column="officePhone"         property="officePhone"  />
+  <result column="officePhoneFormat"   property="officePhoneFormat"  />
+  <result column="mobliePhone"         property="mobliePhone"  />
+  <result column="mobliePhoneFormat"   property="mobliePhoneFormat"  />
+  <result column="email"               property="email"  />
+  <result column="ip"                  property="ip"  />
+  <result column="createUserId"        property="createUserId"  />
+  <result column="createDateTime"      property="createDateTime"  />
+  <result column="updateUserId"        property="updateUserId"  />
+  <result column="updateDateTime"      property="updateDateTime"  />
+  <result column="useYn"               property="useYn"  />
+  <result column="deletedYn"           property="deletedYn"  />
 </resultMap>
 
 <select id="getUser" resultMap="UserVO" parameterType="com.offact.addys.vo.UserVO" >
-SELECT T1.USER_ID
-      ,T1.USER_NM
-      ,T1.EMPLOYEE_NUMBER
-      ,T1.USER_DEPT_CODE
-      ,T2.DESCRIPTION as USER_DEPT_NAME
-      ,T1.USER_GROUP_CODE
-      ,T3.DESCRIPTION as USER_GROUP_NAME
-      ,T1.USING_YN
-      ,T1.AGENT_ID
-      ,T1.INNER_NUM
-      ,T1.MANAGER_YN
-      ,T1.WORK_YN
-      ,T1.LOGIN_YN
-      ,IFNULL(T1.PARTNER_CHARGE_YN, '') AS PARTNER_CHARGE_YN
-      ,T1.COMPANY_GBN
-      ,T4.DESCRIPTION  as COMPANY_GBN_NAME
-      ,T1.CHARGE_BUSINESS_CODE
-      ,T1.FRST_REG_TS
-      ,T1.FRST_REGR_ID
-      ,T1.LAST_MOD_TS
-      ,T1.LAST_CORT_ID
-  FROM TB_USER T1
-      Left Join TB_CODE T2 On T1.USER_DEPT_CODE=T2.CODE And T2.CODE_ID='IG10'
-      Left Join TB_CODE T3 On T1.USER_GROUP_CODE=T3.CODE And T3.CODE_ID='IG11'
-      Left Join TB_CODE T4 On T1.COMPANY_GBN=T4.CODE And T4.CODE_ID='IG14'
- WHERE T1.USER_ID = #{userId}
- 	  AND T1.USING_YN ='Y'
+			Select	   T1.userId
+					  ,T1.userName
+					  ,T1.groupId
+					  ,T2.groupName
+				  	  ,T1.authId   
+				  	  ,CASE WHEN T1.authId = T1.userId Then '개인권한'
+						   ELSE T3.groupName
+					  END As authName
+					  ,IFNULL(T1.excelAuth,'N')   As excelAuth
+					  ,T1.password
+					  ,T1.email
+					  ,T1.officePhone
+					  ,T1.officePhone As officePhoneFormat
+					  ,T1.mobliePhone
+					  ,T1.mobliePhone As mobliePhoneFormat
+					  ,T1.ip
+					  ,T1.createUserId
+					  ,T1.updateUserId
+					  ,T1.createDateTime As CreateDateTime
+					  ,T1.updateDateTime As UpdateDateTime
+					  ,T1.useYn
+					  ,T1.deletedYn
+				  From ofUser T1 
+					   Left Join ofGroup T2 On T1.groupId=T2.groupId
+					   Left Join ofGroup T3 On T1.authId=T3.groupId
+				  Where T1.userId = #{userId} And T1.deletedYn='N'
 </select>
-
-<insert id="setInsertUserState" parameterType="com.offact.addys.vo.UserVO">
-        INSERT INTO TB_CONNECT_LOG( 
-        	 USER_ID
-            ,CONNECT_DATE
-            ,CONNECT_IP 
-            ,FRST_REG_TS
-            ,FRST_REGR_ID
-            ,LAST_MOD_TS
-            ,LAST_CORT_ID
-            )
-        VALUES (
-	  		  #{userId}
-	  		, now()
-	  		, #{connectIp}
-	  		, now()
-	  		, #{userId}
-	  		, now()
-	  		, #{userId}
-	  		)       
- </insert>
- 
- <update id="setUpdateUserState" parameterType="com.offact.addys.vo.UserVO">
-        UPDATE TB_USER
-        	SET LOGIN_YN =  #{loginYn}
-        WHERE USER_ID = #{userId}     
- </update>
 
 </mapper>

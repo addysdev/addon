@@ -5,160 +5,147 @@ package com.offact.addys.vo;
  *
  */
 public class UserVO extends AbstractVO {
+	
 	private String userId;
-	private String userNm;
-	private String employeeNumber;
-	private String userDeptCode;
-	private String userGroupCode;
-	private String userDeptName;
-	private String userGroupName;
-	private String usingYn;
-	private String agentId;
-	private String innerNum;
-	private String managerYn;
-	private String workYn;
-	private String companyGbn;
-	private String companyGbnName;
-	private String chargeBusinessCode;
-	private String frstRegTs;
-	private String frstRegrId;
-	private String lastModTs;
-	private String lastCortId;
-	private String loginYn;
-	private String connectIp;
-	private String partnerChargeYn;
-
+	private String userName;
+	private String groupId;
+	private String groupName;
+	private String authId;
+	private String authName;
+	private String excelAuth;
+	private String password;
+	private String officePhone;
+	private String officePhoneFormat;
+	private String mobliePhone;
+	private String mobliePhoneFormat;
+	private String email;
+	private String ip;
+	private String createUserId;
+	private String createDateTime;
+	private String updateUserId;
+	private String updateDateTime;
+	private String useYn;
+	private String deletedYn;
+	
 	public String getUserId() {
 		return userId;
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public String getUserNm() {
-		return userNm;
+	public String getUserName() {
+		return userName;
 	}
-	public void setUserNm(String userNm) {
-		this.userNm = userNm;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
-	public String getEmployeeNumber() {
-		return employeeNumber;
+	public String getGroupId() {
+		return groupId;
 	}
-	public void setEmployeeNumber(String employeeNumber) {
-		this.employeeNumber = employeeNumber;
+	public void setGroupId(String groupId) {
+		this.groupId = groupId;
 	}
-	public String getUserDeptCode() {
-		return userDeptCode;
+	public String getGroupName() {
+		return groupName;
 	}
-	public void setUserDeptCode(String userDeptCode) {
-		this.userDeptCode = userDeptCode;
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
-	public String getUserGroupCode() {
-		return userGroupCode;
+	public String getAuthId() {
+		return authId;
 	}
-	public void setUserGroupCode(String userGroupCode) {
-		this.userGroupCode = userGroupCode;
+	public void setAuthId(String authId) {
+		this.authId = authId;
 	}
-	public String getUsingYn() {
-		return usingYn;
+	public String getAuthName() {
+		return authName;
 	}
-	public void setUsingYn(String usingYn) {
-		this.usingYn = usingYn;
+	public void setAuthName(String authName) {
+		this.authName = authName;
 	}
-	public String getAgentId() {
-		return agentId;
+	public String getExcelAuth() {
+		return excelAuth;
 	}
-	public void setAgentId(String agentId) {
-		this.agentId = agentId;
+	public void setExcelAuth(String excelAuth) {
+		this.excelAuth = excelAuth;
 	}
-	public String getInnerNum() {
-		return innerNum;
+	public String getPassword() {
+		return password;
 	}
-	public void setInnerNum(String innerNum) {
-		this.innerNum = innerNum;
+	public void setPassword(String password) {
+		this.password = password;
 	}
-	public String getManagerYn() {
-		return managerYn;
+	public String getOfficePhone() {
+		return officePhone;
 	}
-	public void setManagerYn(String managerYn) {
-		this.managerYn = managerYn;
+	public void setOfficePhone(String officePhone) {
+		this.officePhone = officePhone;
 	}
-	public String getWorkYn() {
-		return workYn;
+	public String getOfficePhoneFormat() {
+		return officePhoneFormat;
 	}
-	public void setWorkYn(String workYn) {
-		this.workYn = workYn;
+	public void setOfficePhoneFormat(String officePhoneFormat) {
+		this.officePhoneFormat = officePhoneFormat;
 	}
-	public String getCompanyGbn() {
-		return companyGbn;
+	public String getMobliePhone() {
+		return mobliePhone;
 	}
-	public void setCompanyGbn(String companyGbn) {
-		this.companyGbn = companyGbn;
+	public void setMobliePhone(String mobliePhone) {
+		this.mobliePhone = mobliePhone;
 	}
-	public String getChargeBusinessCode() {
-		return chargeBusinessCode;
+	public String getMobliePhoneFormat() {
+		return mobliePhoneFormat;
 	}
-	public void setChargeBusinessCode(String chargeBusinessCode) {
-		this.chargeBusinessCode = chargeBusinessCode;
+	public void setMobliePhoneFormat(String mobliePhoneFormat) {
+		this.mobliePhoneFormat = mobliePhoneFormat;
 	}
-	public String getFrstRegTs() {
-		return frstRegTs;
+	public String getEmail() {
+		return email;
 	}
-	public void setFrstRegTs(String frstRegTs) {
-		this.frstRegTs = frstRegTs;
+	public void setEmail(String email) {
+		this.email = email;
 	}
-	public String getFrstRegrId() {
-		return frstRegrId;
+	public String getIp() {
+		return ip;
 	}
-	public void setFrstRegrId(String frstRegrId) {
-		this.frstRegrId = frstRegrId;
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
-	public String getLastModTs() {
-		return lastModTs;
+	public String getCreateUserId() {
+		return createUserId;
 	}
-	public void setLastModTs(String lastModTs) {
-		this.lastModTs = lastModTs;
+	public void setCreateUserId(String createUserId) {
+		this.createUserId = createUserId;
 	}
-	public String getLastCortId() {
-		return lastCortId;
+	public String getCreateDateTime() {
+		return createDateTime;
 	}
-	public void setLastCortId(String lastCortId) {
-		this.lastCortId = lastCortId;
+	public void setCreateDateTime(String createDateTime) {
+		this.createDateTime = createDateTime;
 	}
-	public String getUserDeptName() {
-		return userDeptName;
+	public String getUpdateUserId() {
+		return updateUserId;
 	}
-	public void setUserDeptName(String userDeptName) {
-		this.userDeptName = userDeptName;
+	public void setUpdateUserId(String updateUserId) {
+		this.updateUserId = updateUserId;
 	}
-	public String getUserGroupName() {
-		return userGroupName;
+	public String getUpdateDateTime() {
+		return updateDateTime;
 	}
-	public void setUserGroupName(String userGroupName) {
-		this.userGroupName = userGroupName;
+	public void setUpdateDateTime(String updateDateTime) {
+		this.updateDateTime = updateDateTime;
 	}
-	public String getCompanyGbnName() {
-		return companyGbnName;
+	public String getUseYn() {
+		return useYn;
 	}
-	public void setCompanyGbnName(String companyGbnName) {
-		this.companyGbnName = companyGbnName;
+	public void setUseYn(String useYn) {
+		this.useYn = useYn;
 	}
-	public String getLoginYn() {
-		return loginYn;
+	public String getDeletedYn() {
+		return deletedYn;
 	}
-	public void setLoginYn(String loginYn) {
-		this.loginYn = loginYn;
-	}
-	public String getConnectIp() {
-		return connectIp;
-	}
-	public void setConnectIp(String connectIp) {
-		this.connectIp = connectIp;
-	}
-	public String getPartnerChargeYn() {
-		return partnerChargeYn;
-	}
-	public void setPartnerChargeYn(String partnerChargeYn) {
-		this.partnerChargeYn = partnerChargeYn;
+	public void setDeletedYn(String deletedYn) {
+		this.deletedYn = deletedYn;
 	}
 	
 }

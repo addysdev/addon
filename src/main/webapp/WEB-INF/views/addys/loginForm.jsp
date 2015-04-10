@@ -22,10 +22,11 @@
 		//alert('pw:'+pwd);
 	
 		$('#loginForm').attr({action:"<%= request.getContextPath() %>/addys/login"});
-		
+		/*
 		try {
 			loginForm.submit();
 		} catch(e) {}
+		*/
 	};
 	
 	function doAjaxTest() {
@@ -80,7 +81,7 @@
         <div class="checkbox">
           <label><input type="checkbox" onChange="doAjaxTest()"> Remember me</label>
         </div>
-        <button type="submit" class="btn btn-default" onclick="goLogin()">Submit</button>
+       <button type="submit" class="btn btn-default" onclick="goLogin()">Submit</button>
       </form>
     </div>
   </body>
