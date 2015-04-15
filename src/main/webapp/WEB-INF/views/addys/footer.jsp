@@ -7,3 +7,10 @@
       </div>
     </div>
 </html>
+<!-- Latest compiled JavaScript -->
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.3.custom.min.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/addys.js"></script>
+	
+	

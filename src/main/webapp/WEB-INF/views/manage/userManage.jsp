@@ -45,10 +45,10 @@
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load('');
-                //$("#addysUserRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
+                $(this).load('/addon/warning');
+                //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
-                    $("#addysUserRegist").dialog('close');
+                    $("#userRegist").dialog('close');
 
                     });
             }
@@ -121,7 +121,7 @@
   </div>
   <!-- //조회결과리스트 -->
   <!-- //사용자 등록/삭제 -->
-  <button type="button" class="btn btn-primary" onClick="gouserRegist()">regist</button>
+  <button type="button" class="btn btn-primary" onClick="goUserRegist()">regist</button>
   <button type="button" class="btn btn-danger">delete</button>
   <!-- 사용자등록-->
   <div id="userRegist"  title="사용자 등록"></div>
