@@ -87,6 +87,33 @@ public class HomeController {
 	 * Simply selects the home view to render by returning its name.
 	 * @throws BizException
 	 */
+	@RequestMapping(value = "/gmroi", method = RequestMethod.GET)
+	public ModelAndView gmroi(HttpServletRequest request,HttpServletResponse response) throws BizException {
+		logger.info("gmroi");
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("common/gmroiMain");
+		return mv;
+	}
+	
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 * @throws BizException
+	 */
+	@RequestMapping(value = "/gmroiclc", method = RequestMethod.GET)
+	public ModelAndView gmroiclc(HttpServletRequest request,HttpServletResponse response) throws BizException {
+		logger.info("gmroiclc");
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("common/gmroiClc");
+		return mv;
+	}
+	
+	
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 * @throws BizException
+	 */
 	@RequestMapping(value = "/errors404", method = RequestMethod.GET)
 	public ModelAndView errors404(HttpServletRequest request,HttpServletResponse response) throws BizException {
 		logger.info("errors404");

@@ -2979,5 +2979,79 @@ function fnMenuApply(){
                 }
             });
         };
-        
+	    /** 
+	     * input 숫자와 콤마만 입력되게 하기.
+	     * include js : jquery.number.js
+	     * input 속성에 numberOnly 추가
+	     * jsp : <input type="text" id="amount" name="amount" numberOnly placeholder="0" />
+	     * $(this).number(true);
+	     * $.number( 5020.2364 );				// Outputs 5,020
+	     * $.number( 5020.2364, 2 );			// Outputs: 5,020.24
+	     * $.number( 135.8729, 3, ',' );		// Outputs: 135,873
+	     * $.number( 5020.2364, 1, ',', ' ' );	// Outputs: 5 020,2 
+	     */
+	    $(document).on("keyup", "input:text[numberOnly]", function() {
+	    	$(this).number(true);
+	    });
+	    /**
+	     * 숫자에서 comma를 없앤다.
+	     *
+	     * @param   obj
+	     */
+	    function deleteComma(obj) {
+	        obj.value = deleteCommaStr(obj.value);
+	    }
+	    /**
+	     * 숫자에서 comma를 없앤다.
+	     *
+	     * @param   str
+	     */
+	    function deleteCommaStr(str) {
+	        var temp = '';
+
+	        for (var i = 0; i < str.length; i++) {
+	            if (str.charAt(i) == ',') {
+	                continue;
+	            } else {
+	                temp += str.charAt(i);
+	            }
+	        }
+
+	        return  temp;
+	    }
+		  /**
+	     * 숫자에 comma를 붙인다.
+	     *
+	     * @param   str
+	     */
+	    function addCommaStr(str) {
+	        var rxSplit = new RegExp('([0-9])([0-9][0-9][0-9][,.])');
+	        var arrNumber = str.split('.');
+	        arrNumber[0] += '.';
+	        do {
+	            arrNumber[0] = arrNumber[0].replace(rxSplit, '$1,$2');
+	        } while (rxSplit.test(arrNumber[0]));
+
+	        if (arrNumber.length > 1) {
+	            replaceStr = arrNumber.join("");
+	        } else {
+	            replaceStr = arrNumber[0].split(".")[0];
+	        }
+	        return replaceStr;
+	    }
+	    /**
+	     * 입력값의 null check
+	     *
+	     * @param   str
+	     */
+		  function isnullStr(val){
+
+			  if(val=='NaN' || val=='' || val==null){
+				  
+				  return 0;
+			  }
+			  return val
+			  
+		  }
+	   
      
