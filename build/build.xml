@@ -24,7 +24,7 @@
 	<property name="dist.classes.dir" value="${dist.base.dir}/WEB-INF/classes" />
 	<property name="dist.web.jsp.dir" value="${dist.base.dir}/WEB-INF/views" />
 	
-	<property name="server.base.dir" value="/cs" />
+	<property name="server.base.dir" value="/addon" />
 	<property name="server.web.root" value="${server.base.dir}" />
 	<property name="server.classes.dir" value="${server.base.dir}/WEB-INF/classes" />
 	<property name="server.web.jsp.dir" value="${server.base.dir}/WEB-INF/views" />
@@ -73,7 +73,7 @@
 		
 	<target name="upload2">
 		<tstamp />
-		<scp file="${dist.web.root}/WEB-INF/views/index.jsp" todir="${server.userid}:${server.password}@${server.host}:/home/test/cs" trust="true" />
+		<scp file="${dist.web.root}/WEB-INF/views/index.jsp" todir="${server.userid}:${server.password}@${server.host}:/home/test/addon" trust="true" />
 	    <scp todir="${server.userid}:${server.password}@${server.host}:/opt/tomcat7webapps/addys" trust="true" >
 	    	<fileset dir="${dis.web.root}">
 	    		<include name="**/*.xml, **/*.html" />

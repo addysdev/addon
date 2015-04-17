@@ -43,7 +43,6 @@ import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.addys.service.UserMenuService;
 import com.offact.addys.service.UserService;
-import com.offact.addys.service.common.CmmService;
 import com.offact.addys.service.manage.UserListManageService;
 import com.offact.addys.vo.UserMenuVO;
 import com.offact.addys.vo.UserVO;
@@ -65,9 +64,6 @@ public class ManageController {
 	
     @Autowired
     private UserMenuService userMenuSvc;
-    
-	@Autowired
-	private CmmService cmmService;
 
     @Autowired
     private UserListManageService userListService;
@@ -201,6 +197,41 @@ public class ManageController {
        	logger.info("["+logid+"] ManageController.viewUserListManageList end execute time:[" + (t2-t1)/1000.0 + "] seconds");
        	
         return mv;
+    }
+	
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 * @throws BizException
+	 */
+    @RequestMapping(value = "/manage/userregform")
+	public ModelAndView userRegForm(HttpServletRequest request,HttpServletResponse response) throws BizException {
+		
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("/manage/userRegForm");
+		return mv;
+	}
+	
+    @RequestMapping({"/manage/userreg"})
+    public String userReg(@ModelAttribute("userVO") UserListManageVO userVO, RedirectAttributes attributes, HttpServletRequest request)
+      throws BizException
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] ManageController.userReg start User List info userVO" + userVO);
+
+		ModelAndView mv = new ModelAndView();
+
+		mv.addObject("userVO", new UserVO());
+
+		int retVal=this.userListService.userInsertProc(userVO);
+		
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] ManageController.userReg end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+      return ""+retVal;
     }
 
 }

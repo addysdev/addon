@@ -119,45 +119,34 @@ UPDATE TB_USER
 </update>
 
 <insert id="userInsertProc" parameterType="com.offact.addys.vo.manage.UserListManageVO" >
-  INSERT INTO TB_USER (
-    USER_ID
-        ,USER_NM
-        ,EMPLOYEE_NUMBER
-        ,USER_DEPT_CODE
-        ,USER_GROUP_CODE
-        ,USING_YN
-        ,AGENT_ID
-        ,INNER_NUM
-        ,MANAGER_YN
-        ,WORK_YN
-        ,COMPANY_GBN
-        ,CHARGE_BUSINESS_CODE
-        ,FRST_REG_TS
-        ,FRST_REGR_ID
-        ,LAST_MOD_TS
-        ,LAST_CORT_ID
-  )
-  VALUES (
-      #{userId}
-    , #{userNm}
-    ,'0000'
-<!--         , #{employeeNumber} -->
-        , #{userDeptCode}
-        , #{userGroupCode}
-        , "Y"
-        , #{agentId}
-        , #{innerNum}
-        , #{managerYn}
-        , #{workYn}
-        , #{companyGbn}
-        , #{chargeBusinessCode}
-    , now()
-    ,#{lastCortId}
-<!--         , #{frstRegrId} -->
-    , now()
-    ,#{lastCortId}
-<!--         , #{lastCortId} -->
-  )
+  INSERT INTO ofUser( 
+        	 userId
+            ,userName
+            ,groupId 
+            ,authId
+            ,excelAuth
+            ,password
+            ,email
+            ,officePhone
+            ,mobliePhone
+            ,ip
+            ,createUserId
+            ,createDateTime
+            )
+        VALUES (
+	  		  #{userId}
+	  		, #{userName}
+	  		, #{groupId}
+	  		, #{authId}
+	  		, #{excelAuth}
+	  		, #{password}
+	  		, #{email}
+	  		, #{officePhone}
+	  		, #{mobliePhone}
+	  		, #{ip}
+	  		, #{createUserId}
+	  		, now()
+	  		)       
 </insert>
 
 <select id="getUserDetail" resultMap="userListVO" parameterType="com.offact.addys.vo.manage.UserListManageVO" >

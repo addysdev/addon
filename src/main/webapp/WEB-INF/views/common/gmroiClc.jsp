@@ -34,7 +34,7 @@
 			  avgSaleRate=0;
 		  }else{
 			  avgSaleRate=(profitSaleAmt/totalSaleAmt)*10000;
-			  avgSaleRate=Math.floor(avgSaleRate)*(1/100);
+			  avgSaleRate=(Math.floor(avgSaleRate)*0.01).toFixed(2);
 		  }
 		  
 		  var stockCycleRate=0;
@@ -44,25 +44,25 @@
 			  stockCycleRate=0;
 		  }else{
 			  stockCycleRate=(totalSaleAmt/avgStockAmt)*100;
-			  stockCycleRate=Math.floor(stockCycleRate)*(1/100);
+			  stockCycleRate=(Math.floor(stockCycleRate)*0.01).toFixed(2);
 		  }
 		  
 		  if(profitSaleAmt==0 || avgStockAmt==0){
 			  gmroiRate=0;
 		  }else{
 			  gmroiRate=(profitSaleAmt/avgStockAmt)*10000
-			  gmroiRate=Math.floor(gmroiRate)*(1/100);
+			  gmroiRate=(Math.floor(gmroiRate)*0.01).toFixed(2);
 		  }
 
 		  $('#avgStockAmtclc').val=avgStockAmt;
-		  document.all('avgStockAmt').innerText='평균 재고금액 :'+addCommaStr(''+avgStockAmt)+'원';
+		  document.all('avgStockAmt').innerText='평균 재고금액 : '+addCommaStr(''+avgStockAmt)+' 원';
 		  $('#avgSaleRateclc').val=avgSaleRate
-		  document.all('avgSaleRate').innerText='총 이익율 :'+addCommaStr(''+avgSaleRate)+'%';
+		  document.all('avgSaleRate').innerText='총 이익율 : '+addCommaStr(''+avgSaleRate)+' %';
 		  
-		  document.all('stockCycleRate').innerText='재고금액 회전율 :'+addCommaStr(''+stockCycleRate)+'회전';
-		  document.all('gmroiRate').innerText='GMROI :'+addCommaStr(''+gmroiRate)+'%';
+		  document.all('stockCycleRate').innerText='재고금액 회전율 : '+addCommaStr(''+stockCycleRate)+' 회전';
+		  document.all('gmroiRate').innerText='GMROI : '+addCommaStr(''+gmroiRate)+' %';
 		  
-		}
+	  }
 	  function calReset(){
 		  
 		  if(confirm('입력값을 초기화 하시겠습니까?')){
@@ -90,8 +90,8 @@
 	    <div class="form-group">
 	    	<th>
    		  <td>
-			    기초재고금액 : <input  onKeyUp="gmroiCal()"   numberOnly placeholder="0"   type="text" class="form-control" id="firstStockAmt" name="firstStockAmt" tabindex="1" onKeyDown="if (event.keyCode==13 && this.value.length>=1) document.gmroiform.lastStockAmt.focus();else this.focus();">
-			    기말재고금액: <input onKeyUp="gmroiCal()" numberOnly placeholder="0" type="text" class="form-control" id="lastStockAmt" name="lastStockAmt" tabindex="2" onKeyDown="if (event.keyCode==13 && this.value.length>=1) document.gmroiform.totalSaleAmt.focus();else this.focus();">
+			    기초 재고금액 : <input  onKeyUp="gmroiCal()"   numberOnly placeholder="0"   type="text" class="form-control" id="firstStockAmt" name="firstStockAmt" tabindex="1" onKeyDown="if (event.keyCode==13 && this.value.length>=1) document.gmroiform.lastStockAmt.focus();else this.focus();">
+			    기말 재고금액: <input onKeyUp="gmroiCal()" numberOnly placeholder="0" type="text" class="form-control" id="lastStockAmt" name="lastStockAmt" tabindex="2" onKeyDown="if (event.keyCode==13 && this.value.length>=1) document.gmroiform.totalSaleAmt.focus();else this.focus();">
 	      </td>
 			 </th>
 		    <th>
@@ -102,7 +102,7 @@
         <div class="form-group">  
 	    	<th>
           <td>
-                              총매출금액 : <input onKeyUp="gmroiCal()" numberOnly placeholder="0" type="text" class="form-control" id="totalSaleAmt"  name="totalSaleAmt" tabindex="3" onKeyDown="if (event.keyCode==13 && this.value.length>=1) document.gmroiform.profitSaleAmt.focus();else this.focus();">
+                              총 매출금액 : <input onKeyUp="gmroiCal()" numberOnly placeholder="0" type="text" class="form-control" id="totalSaleAmt"  name="totalSaleAmt" tabindex="3" onKeyDown="if (event.keyCode==13 && this.value.length>=1) document.gmroiform.profitSaleAmt.focus();else this.focus();">
 	    	  매출 이익 : <input onKeyUp="gmroiCal()" numberOnly placeholder="0" type="text" class="form-control" id="profitSaleAmt" name="profitSaleAmt" tabindex="4" onKeyDown="if (event.keyCode==13 && this.value.length>=1) calReset();else this.focus();">
           </td>
 			</th>

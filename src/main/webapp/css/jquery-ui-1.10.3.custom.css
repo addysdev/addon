@@ -828,7 +828,7 @@ body .ui-tooltip {
 .ui-widget {
 /*	font-family: Verdana,Arial,sans-serif;
 	font-size: 1.1em;	mh*/
-	font-family:"����", Dotum, Verdana, Tahoma sans-serif;/*mh*/
+	font-family:"돋움", Dotum, Verdana, Tahoma sans-serif;/*mh*/
 	font-size: 12px;/*mh*/
 }
 .ui-widget .ui-widget {

@@ -41,7 +41,6 @@ import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.addys.service.UserMenuService;
-import com.offact.addys.service.common.CmmService;
 import com.offact.addys.vo.UserMenuVO;
 
 /**
@@ -51,9 +50,6 @@ import com.offact.addys.vo.UserMenuVO;
 
 public class HomeController {
 
-	@Autowired
-	private CmmService cmmService;
-	
 	private final Logger logger = Logger.getLogger(getClass());
 	
 	@Value("#{config['offact.host.url']}")
@@ -167,7 +163,7 @@ public class HomeController {
 		logger.info("loginFail");
 		ModelAndView mv = new ModelAndView();
 		
-		mv.setViewName("test/loginFail");
+		mv.setViewName("addys/loginFail");
 		return mv;
 	}
 	//동작
@@ -192,7 +188,7 @@ public class HomeController {
 	public ModelAndView redirectUrl4(){
 		ModelAndView mv = new ModelAndView();
 
-		mv.setView(new RedirectView("/cs/index"));
+		mv.setView(new RedirectView("/addys/index"));
 		Object params = null;
 		mv.addObject("parameter",params);
 		return mv;
@@ -203,7 +199,7 @@ public class HomeController {
 	public ModelAndView redirectUrl5(){
 		ModelAndView mv = new ModelAndView();
 
-		mv.setView(new RedirectView("/cs/index"));
+		mv.setView(new RedirectView("/addys/index"));
 		Object params = null;
 		mv.addObject("parameter",params);
 		return mv;

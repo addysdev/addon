@@ -12,7 +12,7 @@
 	★ Parameter 
 	   1. 팝업 URL
 	*****************************************************************************/
-	
+
 	function func_OpenExploerPopup(strParm) 
 	{
 		try {
@@ -29,7 +29,8 @@
 	
     function tmt_winLaunch(theURL,winName,targetName,features) {
 		
-		eval(winName+"=window.open('"+theURL+"','"+targetName+"','"+features+"')");
+		var targetRandom=Math.random();
+		eval(winName+"=window.open('"+theURL+"','"+targetRandom+"','"+features+"')");
 
 	}
     
@@ -37,8 +38,9 @@
 		
 		var h=560;
 		var s=400;
-	
-	    tmt_winLaunch('<%= request.getContextPath()%>/gmroiclc' , 'qaz', 'qaz', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
+		
+		
+	    tmt_winLaunch('<%= request.getContextPath()%>/gmroiclc' , 'gmroiobj', 'gmroiobj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
 		
 	}
 
@@ -46,8 +48,8 @@
 	*팝업 부모창 종료함수
 	*/
 	function selfClose(){
-		qaz.firstInput();
-		window.open('about:blank','_self').close();
+		gmroiobj.firstInput();//팝업창으로 포커스 이동
+		window.open('about:blank','_self').close();//부모객체 종료
 	}
 
 </script>

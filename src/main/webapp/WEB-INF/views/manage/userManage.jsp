@@ -45,7 +45,7 @@
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load('/addon/warning');
+                $(this).load('<%= request.getContextPath() %>/manage/userregform');
                 //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#userRegist").dialog('close');
@@ -56,7 +56,8 @@
                 $('#userRegist').empty();
             }
         });
-    };	
+    };
+    
 </SCRIPT>
 <!-- 사용자관리 -->
 	<div class="container">

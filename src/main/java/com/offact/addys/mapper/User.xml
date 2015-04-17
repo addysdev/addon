@@ -53,5 +53,5 @@
 					   Left Join ofGroup T3 On T1.authId=T3.groupId
 				  Where T1.userId = #{userId} And T1.deletedYn='N'
 </select>
-
+ 
 </mapper>

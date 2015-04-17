@@ -44,7 +44,7 @@ public interface UserListManageService {
      * @return
      * @throws BizException
      */
-    public void userInsertProc(UserListManageVO userDetail) throws BizException;
+    public int userInsertProc(UserListManageVO userDetail) throws BizException;
 
     /**
      * 사용자상세조회

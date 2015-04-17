@@ -44,6 +44,6 @@ public interface UserService {
 	 * @return
 	 * @throws BizException
 	 */
-	public void inserUserProc(UserVO userVO) throws BizException;
+	public void insetrUserProc(UserVO userVO) throws BizException;
 	
 }

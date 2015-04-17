@@ -45,9 +45,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void inserUserProc(UserVO userVO)
+	public void insetrUserProc(UserVO userVO)
 			throws BizException {
-		commonDao.insert("User.inserUserProc", userVO);
+		commonDao.insert("User.insertUserProc", userVO);
 	}
 
 }

@@ -28,7 +28,6 @@
     <!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/jquery-ui-1.10.3.custom.css" />
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/bootstrap.min.css">
-
 	<script>
 	
 	//logout 처리

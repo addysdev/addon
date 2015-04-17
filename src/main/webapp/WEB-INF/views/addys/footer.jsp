@@ -13,4 +13,3 @@
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/addys.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.number.js"></script>
-	

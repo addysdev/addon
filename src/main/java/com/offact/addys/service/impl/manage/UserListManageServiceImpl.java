@@ -52,10 +52,10 @@ public class UserListManageServiceImpl implements UserListManageService {
     }
 
     @Override
-    public void userInsertProc(UserListManageVO userDetail) throws BizException {
+    public int userInsertProc(UserListManageVO userDetail) throws BizException {
         // 사용자 추가
 
-        commonDao.update("UserManage.userInsertProc", userDetail);
+    	return commonDao.update("UserManage.userInsertProc", userDetail);
 
     }
 

@@ -39,7 +39,6 @@ import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
 
 import com.offact.addys.service.UserService;
-import com.offact.addys.service.common.CmmService;
 
 import com.offact.addys.vo.UserVO;
 
@@ -55,9 +54,6 @@ public class AddysController {
 	@Autowired
 	private UserService userSvc;
 	
-	@Autowired
-	private CmmService cmmService;
-
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
