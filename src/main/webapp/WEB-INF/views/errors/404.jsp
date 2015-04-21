@@ -25,18 +25,18 @@ $(document).ready(function () {
 <div id="popup_wrap"  class="error_area">
 	<div id="popup_area" class="error_con">
 		<h1><img src="<%= request.getContextPath() %>/images/layout/txt_error.gif" alt="ERROR" /></h1>
-		<h2><img src="<%= request.getContextPath() %>/images/layout/txt_error_01.gif" alt="페이지오류입니다." /></h2>
+		<h2><img src="<%= request.getContextPath() %>/images/layout/txt_error_01.gif" alt="íì´ì§ì¤ë¥ìëë¤." /></h2>
 		<ul>
-			<li><img src="<%= request.getContextPath() %>/images/common/bu_square.gif" alt="" /> 요청하신 페이지를 찾을 수 없습니다.</li>
-			<li><img src="<%= request.getContextPath() %>/images/common/bu_square.gif" alt="" /> 이 페이지는 다음의 이유로도 표시될 수 있습니다.
+			<li><img src="<%= request.getContextPath() %>/images/common/bu_square.gif" alt="" /> ìì²­íì  íì´ì§ë¥¼ ì°¾ì ì ììµëë¤.</li>
+			<li><img src="<%= request.getContextPath() %>/images/common/bu_square.gif" alt="" /> ì´ íì´ì§ë ë¤ìì ì´ì ë¡ë íìë  ì ììµëë¤.
 				<ul>
-					<li>제공되던 서비스가 중단된 경우</li>
-			       	<li>URL주소에 백슬래시나 다중 따옴표등의 크래킹 시도가 감지된 경우</li>
-			        <li>기타 부정접근시도가 감지된 경우</li>
+					<li>ì ê³µëë ìë¹ì¤ê° ì¤ë¨ë ê²½ì°</li>
+			       	<li>URLì£¼ìì ë°±ì¬ëìë ë¤ì¤ ë°ì´íë±ì í¬ëí¹ ìëê° ê°ì§ë ê²½ì°</li>
+			        <li>ê¸°í ë¶ì ì ê·¼ìëê° ê°ì§ë ê²½ì°</li>
 				</ul>
 			</li>
 		</ul>
-		<p><button type="button" class="img_button" onclick="location.href='<%= request.getContextPath() %>/index'"><img src="<%= request.getContextPath() %>/images/common/btn_back.gif" alt="돌아가기" /></button></p>
+		<p><button type="button" class="img_button" onclick="location.href='<%= request.getContextPath() %>/index'"><img src="<%= request.getContextPath() %>/images/common/btn_back.gif" alt="ëìê°ê¸°" /></button></p>
 	</div>
 </div>
 </body>

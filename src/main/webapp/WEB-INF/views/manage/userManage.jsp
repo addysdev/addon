@@ -2,7 +2,7 @@
 <SCRIPT>
     // 리스트 조회
     function fcUserListManage_listSearch(curPage){
-    	
+    	//alert('<%= request.getContextPath() %>/manage/userlist');
         userListManageConForm.con_userId.value = "";
         curPage = (curPage==null) ? 1:curPage;
         userListManageConForm.curPage.value = curPage;

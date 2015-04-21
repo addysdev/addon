@@ -233,5 +233,19 @@ public class ManageController {
 
       return ""+retVal;
     }
+    
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 * @throws BizException
+	 */
+    @RequestMapping(value = "/manage/test")
+	public ModelAndView test(HttpServletRequest request,HttpServletResponse response) throws BizException {
+		
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("/errors/404");
+		return mv;
+	}
+	
 
 }

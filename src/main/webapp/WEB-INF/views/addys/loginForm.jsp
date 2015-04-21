@@ -3,13 +3,13 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/bootstrap.min.css">
-	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/jquery-ui-1.10.3.custom.css" />
-	<!-- Latest compiled JavaScript -->
-	<script src="<%= request.getContextPath() %>/js/bootstrap.min.js"></script>
-	<script src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
-	<script src="<%= request.getContextPath() %>/js/jquery-ui-1.10.3.custom.min.js"></script>
+    <!-- Latest compiled and minified CSS-->
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.css">
+	<link rel="stylesheet" href="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/css/bootstrap.css">
+    <!-- Latest compiled JavaScript--> 
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/js/bootstrap.js"></script>
 	<script>
 
 	//login 처리

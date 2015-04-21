@@ -2,6 +2,7 @@ eclipse.preferences.version=1
 encoding//src/main/resources/config.properties=UTF-8
 encoding//src/main/resources/messages.properties=UTF-8
 encoding//src/main/webapp/WEB-INF/views/addys/top.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/errors/404.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/manage/userList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/manage/userManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/manage/userRegForm.jsp=UTF-8

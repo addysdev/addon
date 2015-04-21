@@ -4,8 +4,8 @@
  <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/jquery-ui-1.10.3.custom.css" />
-	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.css">
+	<link rel="stylesheet" href="<%= request.getContextPath() %>/bootstrap-3.3.2-dist/css/bootstrap.css">
 
 	<script>
 	
