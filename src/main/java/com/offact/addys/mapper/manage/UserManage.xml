@@ -2,7 +2,7 @@
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="UserManage">
 
-<resultMap id="userListVO" type="com.offact.addys.vo.manage.UserListManageVO" >
+<resultMap id="userListVO" type="com.offact.addys.vo.manage.UserManageVO" >
   <result column="userId"              property="userId"  />
   <result column="userName"            property="userName"  />
   <result column="groupId"      	   property="groupId"  />
@@ -25,7 +25,7 @@
   <result column="deletedYn"           property="deletedYn"  />
 </resultMap>
 
-<select id="getUserListManage"  resultMap="userListVO" parameterType="com.offact.addys.vo.manage.UserListManageVO" >
+<select id="getUserPageList"  resultMap="userListVO" parameterType="com.offact.addys.vo.manage.UserManageVO" >
         SELECT T1.userId
 			  ,T1.userName
 			  ,T1.groupId
@@ -95,7 +95,7 @@ SELECT count(*) AS TOT_COUNT
 </select>
 
 
-<update id="userUpdateProc" parameterType="com.offact.addys.vo.manage.UserListManageVO" >
+<update id="userUpdateProc" parameterType="com.offact.addys.vo.manage.UserManageVO" >
 UPDATE TB_USER
    SET <!-- MANAGER_YN          = #{managerYn}
       , -->WORK_YN             = #{workYn}
@@ -118,7 +118,7 @@ UPDATE TB_USER
  WHERE USER_ID = #{userId}
 </update>
 
-<insert id="userInsertProc" parameterType="com.offact.addys.vo.manage.UserListManageVO" >
+<insert id="userInsertProc" parameterType="com.offact.addys.vo.manage.UserManageVO" >
   INSERT INTO ofUser( 
         	 userId
             ,userName
@@ -149,7 +149,7 @@ UPDATE TB_USER
 	  		)       
 </insert>
 
-<select id="getUserDetail" resultMap="userListVO" parameterType="com.offact.addys.vo.manage.UserListManageVO" >
+<select id="getUserDetail" resultMap="userListVO" parameterType="com.offact.addys.vo.manage.UserManageVO" >
 SELECT USER_ID
       ,USER_NM
       ,EMPLOYEE_NUMBER

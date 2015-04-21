@@ -2,7 +2,7 @@ package com.offact.addys.vo.manage;
 
 import com.offact.addys.vo.AbstractVO;
 
-public class UserListManageVO extends AbstractVO {
+public class UserManageVO extends AbstractVO {
 
     /**
      * @author HSH

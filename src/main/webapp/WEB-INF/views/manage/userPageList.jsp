@@ -6,17 +6,17 @@
 <%@ taglib uri="/WEB-INF/tlds/taglib.tld" prefix="taglib"%>
 <SCRIPT>
     // 페이지 이동
-    function goPageUserListManageList(page) {
-        document.userListManageConForm.curPage.value = page;
-        var dataParam = $("#userListManageConForm").serialize();
+    function goPageUserManagePageList(page) {
+        document.userManageConForm.curPage.value = page;
+        var dataParam = $("#userManageConForm").serialize();
         commonDim(true);
         $.ajax({
             type: "POST",
-            url:  "<%= request.getContextPath() %>/manage/userlist",
+            url:  "<%= request.getContextPath() %>/manage/userpagelist",
               data:dataParam,
             success: function(result) {
                    commonDim(false);
-                   $("#userListManageList").html(result);
+                   $("#userManagePageList").html(result);
             },
             error:function(){
                 commonDim(false);
@@ -26,7 +26,7 @@
 
 </SCRIPT>
 	<div class="container">
-     <form:form commandName="userlistVO" name="userListManageListForm" method="post" action="" >
+     <form:form commandName="userlistVO" name="userManagePageListForm" method="post" action="" >
       <p><span>총 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
 	    <colgroup>
@@ -54,7 +54,7 @@
 	    <tbody>
 	    	<c:if test="${!empty userList}">
              <c:forEach items="${userList}" var="userListVO" varStatus="status">
-             <tr id="select_tr_${userListVO.userId}" onClick="javascript:fcUserListManage_detailSearch('${userListVO.userId}')">
+             <tr id="select_tr_${userListVO.userId}" onClick="javascript:fcUserManage_detailSearch('${userListVO.userId}')">
                  <td><input type="checkbox"></td>
                  <td><c:out value="${userListVO.userId}"></c:out></td>
                  <td><c:out value="${userListVO.userName}"></c:out></td>
@@ -77,7 +77,7 @@
 	</div>
 	<div class="container">
 	    <!-- 페이징 -->
-        <taglib:paging cbFnc="goPageUserListManageList" totalCount="${totalCount}" curPage="${userCon.curPage}" rowCount="${userCon.rowCount}" />
+        <taglib:paging cbFnc="goPageUserManagePageList" totalCount="${totalCount}" curPage="${userCon.curPage}" rowCount="${userCon.rowCount}" />
         <!-- //페이징 -->
 	</div>
     

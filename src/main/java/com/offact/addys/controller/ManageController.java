@@ -43,11 +43,11 @@ import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.addys.service.UserMenuService;
 import com.offact.addys.service.UserService;
-import com.offact.addys.service.manage.UserListManageService;
+import com.offact.addys.service.manage.UserManageService;
 import com.offact.addys.vo.UserMenuVO;
 import com.offact.addys.vo.UserVO;
 import com.offact.addys.vo.UserConditionVO;
-import com.offact.addys.vo.manage.UserListManageVO;
+import com.offact.addys.vo.manage.UserManageVO;
 
 
 /**
@@ -66,7 +66,7 @@ public class ManageController {
     private UserMenuService userMenuSvc;
 
     @Autowired
-    private UserListManageService userListService;
+    private UserManageService userManageSvc;
     	
 	public String logid(){
 		
@@ -78,7 +78,7 @@ public class ManageController {
 		return logid;
 	}
 	 /**
-     * 사용자조회 화면 로딩
+     * 사용자관리 화면 로딩
      *
      * @param userVO
      * @param request
@@ -90,23 +90,28 @@ public class ManageController {
      * @throws IOException
      */
     @RequestMapping(value = "/manage/usermanage")
-    public ModelAndView viewUserListManage(@ModelAttribute("UserConVO") UserListManageVO userConVO, HttpServletRequest request, HttpServletResponse response) throws BizException, IOException {
+    public ModelAndView userManage(HttpServletRequest request, HttpServletResponse response) throws BizException, IOException {
         
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] ManageController.viewUserListManage start User List info userConVO" + userConVO);
+		logger.info("["+logid+"] ManageController.userManage start ");
 
         ModelAndView mv = new ModelAndView();
+        
 
-        // 부서정보
+        // 사용자 세션정보
         HttpSession session = request.getSession();
+        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
+        UserManageVO userConVO = new UserManageVO();
+        
+        userConVO.setUserId(userId);
         userConVO.setGroupId(groupId);
 
         // 조회조건저장
-        mv.addObject("userCon", userConVO);
+        mv.addObject("userConVO", userConVO);
 
         // 공통코드 조회 (사용자그룹코드)
         /*
@@ -120,7 +125,7 @@ public class ManageController {
         
        //log Controller execute time end
       	long t2 = System.currentTimeMillis();
-      	logger.info("["+logid+"] ManageController.viewUserListManage end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	logger.info("["+logid+"] ManageController.userManage end execute time:[" + (t2-t1)/1000.0 + "] seconds");
       	
         return mv;
     }
@@ -135,17 +140,17 @@ public class ManageController {
      * @return
      * @throws BizException
      */
-    @RequestMapping(value = "/manage/userlist")
-    public ModelAndView viewUserListManageList(@ModelAttribute("UserConVO") UserListManageVO userConVO, HttpServletRequest request, HttpServletResponse response) throws BizException, IOException {
+    @RequestMapping(value = "/manage/userpagelist")
+    public ModelAndView userPageList(@ModelAttribute("userConVO") UserManageVO userConVO, HttpServletRequest request, HttpServletResponse response) throws BizException, IOException {
         
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] ManageController.viewUserListManageList start User List info userConVO" + userConVO);
+		logger.info("["+logid+"] ManageController.userPageList start User List info userConVO" + userConVO);
 
         ModelAndView mv = new ModelAndView();
-        List<UserListManageVO> userList = null;
-        UserListManageVO userDetail = null;
+        List<UserManageVO> userList = null;
+        UserManageVO userDetail = null;
 
         // 사용여부 값 null 일때 공백처리
         if (userConVO.getCon_useYn() == null) {
@@ -175,11 +180,11 @@ public class ManageController {
         userConVO.setPage_limit_val2(StringUtil.nvl(userConVO.getRowCount(), "10"));
         
         // 사용자목록조회
-        userList = userListService.getUserList(userConVO);
+        userList = userManageSvc.getUserList(userConVO);
         mv.addObject("userList", userList);
 
         // totalCount 조회
-        String totalCount = String.valueOf(userListService.getUserCnt(userConVO));
+        String totalCount = String.valueOf(userManageSvc.getUserCnt(userConVO));
         mv.addObject("totalCount", totalCount);
 
         // 기능 권한 리스트
@@ -190,11 +195,11 @@ public class ManageController {
         List<UserMenuVO> funcList = userMenuSvc.getAuthPerFunction(authListVo);
         mv.addObject("funcList", funcList);
         */
-        mv.setViewName("/manage/userList");
+        mv.setViewName("/manage/userPageList");
         
         //log Controller execute time end
        	long t2 = System.currentTimeMillis();
-       	logger.info("["+logid+"] ManageController.viewUserListManageList end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	logger.info("["+logid+"] ManageController.userPageList end execute time:[" + (t2-t1)/1000.0 + "] seconds");
        	
         return mv;
     }
@@ -204,17 +209,26 @@ public class ManageController {
 	 * @throws BizException
 	 */
     @RequestMapping(value = "/manage/userregform")
-	public ModelAndView userRegForm(HttpServletRequest request,HttpServletResponse response) throws BizException {
+	public ModelAndView userRegForm(HttpServletRequest request) throws BizException {
 		
 		ModelAndView mv = new ModelAndView();
+		
+		UserManageVO userVO = new UserManageVO();
+		
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+		
+		userVO.setUserId(userId);
+		mv.addObject("userVO", userVO);
 		
 		mv.setViewName("/manage/userRegForm");
 		return mv;
 	}
 	
-    @RequestMapping({"/manage/userreg"})
-    public String userReg(@ModelAttribute("userVO") UserListManageVO userVO, RedirectAttributes attributes, HttpServletRequest request)
-      throws BizException
+    @RequestMapping(value = "/manage/userreg", method = RequestMethod.POST)
+    public String userReg(@ModelAttribute("userVO") UserManageVO userVO, HttpServletRequest request)
+      throws BizException, IOException
     {
     	//log Controller execute time start
 		String logid=logid();
@@ -222,10 +236,10 @@ public class ManageController {
 		logger.info("["+logid+"] ManageController.userReg start User List info userVO" + userVO);
 
 		ModelAndView mv = new ModelAndView();
+		
+		mv.addObject("userVO", userVO);
 
-		mv.addObject("userVO", new UserVO());
-
-		int retVal=this.userListService.userInsertProc(userVO);
+		int retVal=this.userManageSvc.userInsertProc(userVO);
 		
 		//log Controller execute time end
        	long t2 = System.currentTimeMillis();
@@ -233,19 +247,6 @@ public class ManageController {
 
       return ""+retVal;
     }
-    
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 * @throws BizException
-	 */
-    @RequestMapping(value = "/manage/test")
-	public ModelAndView test(HttpServletRequest request,HttpServletResponse response) throws BizException {
-		
-		ModelAndView mv = new ModelAndView();
-		
-		mv.setViewName("/errors/404");
-		return mv;
-	}
-	
+
 
 }
