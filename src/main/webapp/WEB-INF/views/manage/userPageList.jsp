@@ -48,7 +48,7 @@
             <th>사용유무</th>
             <th>조회권한</th>
             <th>Email</th>
-            <th>수정자</th>
+            <th>수정자2</th>
 	      </tr>
 	    </thead>
 	    <tbody>
