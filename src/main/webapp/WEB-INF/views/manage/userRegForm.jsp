@@ -9,44 +9,31 @@
 <html>
  <head>
 	<script>
-		function goUserSave1(){
-			alert('a');
-		}
-		
-		// 삭제
-		function goUserSave2(){
-		    commonDim(true);
-		    $.ajax({
-		        type: "POST",
-		        async:false,
-		           url:  "/cs/ADUserAuthListDelAuth",
-		           data:{"con_userId":userId,"con_userDeptCode":userDeptCode,"con_funcAuthCode":funcAuthCode},
-		           success: function(result) {
-		               commonDim(false);
-		               fnAdUserAuthList_listSearch();
-		           },
-		           error:function(){
-		               commonDim(false);
-		           }
-		    });
-		}
-		
-		//리스트 조회
-		function goUserSave(){
-		    //commonDim(true);
+
+		//사용자 등록
+		function fcUserManage_regist(){
+
 		    $.ajax({
 		        type: "POST",
 		        async:false,
 		           url:  "<%= request.getContextPath() %>/manage/userreg",
 		           data:$("#userRegistForm").serialize(),
 		           success: function(result) {
-		               
-		        	   alert('1');
-		        	   alert(result);
-		               //commonDim(false);
+
+						if(result=='1'){
+							 alert('사용자 등록을 성공했습니다.');
+						} else{
+							 alert('사용자 등록에 실패했습니다.');
+						}
+						
+						$('#userManageRegist').dialog('close');
+						fcUserManage_listSearch();
+						
 		           },
 		           error:function(){
-		              // commonDim(false);
+		        	   
+		        	   alert('사용자 등록에 실패했습니다.');
+		        	   $('#userManageRegist').dialog('close');
 		           }
 		    });
 		}
@@ -55,23 +42,25 @@
   <body>
    <div class="container">
       <form:form commandName="userVO" id="userRegistForm" name="userRegistForm" method="post" action="">
+      <input type="hidden" id="createUserId" name="createUserId" value="${userVO.createUserId}" >
 	    <div class="form-group">
 	    <th>
    		  <td>
-			  아이디 : <input type="text" class="form-control" id="userId" name="userId" tabindex="1" value="${userVO.userId}">
-			  패스워드: <input type="text" class="form-control" id="password" name="password" tabindex="2" >
+			  아이디 : <input type="text" class="form-control" id="userId" name="userId" tabindex="1">
+			  패스워드: <input type="password" class="form-control" id="password" name="password" tabindex="2" >
 	      </td>
           <td>
                               사용자명: <input  type="text" class="form-control" id="userName"  name="userName" tabindex="3">
-	    	  생성자 : <input type="text" class="form-control" id="createUserId" name="createUserId" tabindex="4">
-          </td>
-          <td>
-                              조직: <input  type="text" class="form-control" id="groupId"  name="groupId" tabindex="3">
-	    	  권한 : <input type="text" class="form-control" id="authId" name="authId" tabindex="4">
+	    	  조직: <input  type="text" class="form-control" id="groupId"  name="groupId" tabindex="4">
+	    	  권한 : <input type="text" class="form-control" id="authId" name="authId" tabindex="5">
+	    	 excel 권한 : <input type="text" class="form-control" id="excelAuth" name="excelAuth" tabindex="6"> 
+	    	 email : <input type="text" class="form-control" id="email" name="email" tabindex="7">           
+	    	 officePhone : <input type="text" class="form-control" id="officePhone" name="officePhone" tabindex="8">           
+	    	 mobliePhone : <input type="text" class="form-control" id="mobliePhone" name="mobliePhone" tabindex="9">                            
           </td>
 			</th>
 			<br>
-            <td><button type="button" class="btn btn-primary" onClick="javascript:goUserSave()">저장</button></td>
+            <td><button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_regist()">저장</button></td>
 	    </div>
 	  </form:form>
 	</div>

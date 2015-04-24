@@ -2,14 +2,11 @@
 <SCRIPT>
     // 리스트 조회
     function fcUserManage_listSearch(curPage){
-    	//alert('1');
-        //userManageConForm.con_userId.value = "";
-       // alert('2');
-       // curPage = (curPage==null) ? 1:curPage;
-        //alert('3');
-       // userListManageConForm.curPage.value = curPage;
-       // alert('4');
-       // alert('5');
+
+        userManageConForm.con_userId.value = "";
+        curPage = (curPage==null) ? 1:curPage;
+        userManageConForm.curPage.value = curPage;
+
         commonDim(true);
         $.ajax({
             type: "POST",
@@ -36,8 +33,8 @@
     
     //레이어팝업 : 사용자등록 Layer 팝업
     function fcUserManage_regForm(){
-    	
-        $('#userManageRegist').dialog({
+
+    	$('#userManageRegist').dialog({
             resizable : false, //사이즈 변경 불가능
             draggable : true, //드래그 불가능
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
@@ -60,7 +57,83 @@
             }
         });
     };
+  //레이어팝업 : 사용자수정 Layer 팝업
+    function fcUserManage_detailSearch(userId){
+
+    	$('#userManageModify').dialog({
+            resizable : false, //사이즈 변경 불가능
+            draggable : true, //드래그 불가능
+            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+            width : 480,
+            height : 518,
+            modal : true, //주위를 어둡게
+
+            open:function(){
+                //팝업 가져올 url
+                $(this).load('<%= request.getContextPath() %>/manage/usermodifyform',{
+    				'userId' : userId
+    			});
+                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+                    $("#userManageModify").dialog('close');
+
+                    });
+            }
+            ,close:function(){
+                $('#userManageModify').empty();
+            }
+        });
+    };
     
+    //체크박스 전체선택
+    function fcUserManage_checkAll(){
+    	$("input:checkbox[id='userCheck']").prop("checked", $("#userCheckAll").is(":checked"));
+    }
+    
+    //사용자 삭제
+    function fcUserManage_delete(){
+    	
+    	var checkedCnt = $('input:checkbox[ name="userCheck"]:checked').length;
+
+    	if(checkedCnt <= 0){
+        	alert("삭제 대상을 선택해 주세요!");
+        	return;
+        }
+        
+        var arrDelUserId = "";
+        $('input:checkbox[name="userCheck"]').each(function() {
+            if ($(this).is(":checked")) {
+            	arrDelUserId += $(this).val() + "^";
+            }   
+        });
+        
+        var paramString = $("#userManagePageListForm").serialize() + "&arrDelUserId="+arrDelUserId;
+
+        commonDim(true);
+        $.ajax({
+            type: "POST",
+            url:  "<%= request.getContextPath() %>/manage/userdeletes",
+            data:paramString,
+            cache : false,
+            success: function(result) {
+                commonDim(false);
+                if(result=='1'){
+					 alert('사용자 삭제를 성공했습니다.');
+				} else{
+					 alert('사용자 삭제를 실패했습니다.');
+				}
+				
+				fcUserManage_listSearch();
+				
+            },
+            error:function(error){
+                commonDim(false);
+                alert('사용자 삭제를 실패했습니다.');
+            }
+        });
+
+    }
+
 </SCRIPT>
 <!-- 사용자관리 -->
 	<div class="container">
@@ -111,7 +184,7 @@
                         <td>    
                             <input type="text" class="form-control" id="searchValue" name="searchValue"  value="${userConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
                         </td>
-                         <td><button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_listSearch(1)">search</button></td>
+                         <td><button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_listSearch()">search</button></td>
                          <td><button type="button" class="btn" onClick="">excel</button></td>
                     </div>
                     </tr>
@@ -127,9 +200,12 @@
   <!-- //조회결과리스트 -->
   <!-- //사용자 등록/삭제 -->
   <button type="button" class="btn btn-primary" onClick="fcUserManage_regForm()">regist</button>
-  <button type="button" class="btn btn-danger">delete</button>
-  <!-- 사용자등록-->
+  <button type="button" class="btn btn-danger" onClick="fcUserManage_delete()">delete</button>
+  <!-- 사용자 등록-->
   <div id="userManageRegist"  title="사용자 등록"></div>
   <!-- //사용자 등록 -->
+  <!-- 사용자 수정-->
+  <div id="userManageModify"  title="사용자 수정"></div>
+  <!-- //사용자 수정 -->
 </div>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>

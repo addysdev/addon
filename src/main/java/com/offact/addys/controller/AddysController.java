@@ -37,9 +37,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.offact.framework.util.StringUtil;
 import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
-
 import com.offact.addys.service.UserService;
-
 import com.offact.addys.vo.UserVO;
 
 /**
@@ -50,6 +48,18 @@ import com.offact.addys.vo.UserVO;
 public class AddysController {
 
 	private final Logger logger = Logger.getLogger(getClass());
+	/*
+    * log id 생성 
+    */
+	public String logid(){
+		
+		double id=Math.random();
+		long t1 = System.currentTimeMillis ( ); 
+		
+		String logid=""+t1+id;
+		
+		return logid;
+	}
 	
 	@Autowired
 	private UserService userSvc;
@@ -58,16 +68,18 @@ public class AddysController {
 	 * Simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/addys/loginform", method = RequestMethod.GET)
-	public ModelAndView addysloginform(HttpServletRequest request) throws BizException, IOException {
+	public ModelAndView loginForm(HttpServletRequest request) throws BizException {
 		
 		logger.info("Welcome addys loginForm! ");
 		
-		HttpSession session = request.getSession(false);
+		 // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
 		ModelAndView mv = new ModelAndView();
 		String strMainUrl = "addys/loginForm";
 		
 		try{
-			String userId = StringUtil.nvl((String) session.getAttribute("strUserId"),"");
 
 			if(!"".equals(userId)){
 				strMainUrl="addys/addysMain";
@@ -94,11 +106,14 @@ public class AddysController {
 	 */
 	@SuppressWarnings("null")
 	@RequestMapping(value = "/addys/login", method = RequestMethod.POST)
-	public ModelAndView addyslogin(HttpServletRequest request,HttpServletResponse response)
-			throws Exception
+	public ModelAndView addyslogin(HttpServletRequest request,
+			                       HttpServletResponse response) throws Exception
 	{
 		
-		logger.info(">>>> Start Login ");
+		//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start");
 		
 		ModelAndView  mv = new ModelAndView();
 
@@ -202,18 +217,21 @@ public class AddysController {
 			
 			mv.setViewName(strMainUrl);
 			
+			//log Controller execute time end
+	      	long t2 = System.currentTimeMillis();
+	      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	      	
 			return mv;
 		}
-	
 	/**
 	 * Logout 처리
 	 * @param request
-	 * @param response
 	 * @return
 	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/addys/logout")
-	 public ModelAndView addyslogout(HttpServletRequest request) throws BizException, IOException {
+	public ModelAndView logout(HttpServletRequest request) throws BizException
+	{
 		
 		logger.info("Good bye addys! ");
 		
@@ -238,8 +256,13 @@ public class AddysController {
 
 		return mv;
 	}
+	
+	/**
+	 *main request test
+	 */
 	@RequestMapping("/addysmain")
-    public String addysmain(@RequestParam(value = "addys1") String addys1) {
+    public String addysmain(@RequestParam(value = "addys1") String addys1) 
+	{
 		
 		logger.info("[addys1]"+addys1);
 
@@ -250,9 +273,10 @@ public class AddysController {
 	 * ajax test
 	 */
 	@RequestMapping("/addys/addyscheck")
-	 public @ResponseBody
-	 String addysCheck(@RequestParam(value = "id") String id,
-				   @RequestParam(value = "pwd") String pwd) {
+	public @ResponseBody
+	String addysCheck(@RequestParam(value = "id") String id,
+				       @RequestParam(value = "pwd") String pwd) 
+	{
 
 		logger.info("[id]"+id);
 		logger.info("[pwd]" + pwd);

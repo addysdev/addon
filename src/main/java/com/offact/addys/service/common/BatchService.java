@@ -13,6 +13,8 @@ import com.offact.framework.exception.BizException;
  */
 public interface BatchService {
 
-	public void deleteTbPreCategory() throws BizException;
+	public int insertBatchTest1() throws BizException;
+
+	public void insertBatchTest2(JSONArray arrayGetAllCategory) throws BizException;
 
 }

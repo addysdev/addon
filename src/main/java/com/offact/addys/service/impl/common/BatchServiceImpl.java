@@ -19,17 +19,29 @@ import com.offact.addys.service.common.BatchService;
 @Service
 public class BatchServiceImpl implements BatchService {
 
-    private final Logger 			batchloger = Logger.getLogger("batchlog");
+    private final Logger 			
+    batchloger = Logger.getLogger("batchlog");
 
 	@Autowired
 	private SqlSessionCommonDao commonDao;
 
 	@Override
-	public void deleteTbPreCategory() throws BizException {
-		commonDao.delete("Batch.deleteTbPreCategory");
-//		commonDao.delete("Batch.deleteTbCategory");
+	public int insertBatchTest1() throws BizException {
+			  return commonDao.insert("Batch.insertBatchTest1");
 
 	}
 
+	@Override
+	public void insertBatchTest2(JSONArray arrayGetAllCategory) throws BizException {
+		
+		Object arryObjGetAllCategory=null;
+		for (int i=0;i<arrayGetAllCategory.size();i++){
+			arryObjGetAllCategory = JSONValue.parse(arrayGetAllCategory.get(i).toString());
+			batchloger.debug("INSERT : " + arryObjGetAllCategory);
+            commonDao.insert("Batch.insertTbPreCategory",arryObjGetAllCategory);
+		}
+		batchloger.debug("EXECUTE QUERY : Batch.insertBatchTest2");
+		commonDao.insert("Batch.insertBatchTest2");
+	}
 
 }

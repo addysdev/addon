@@ -36,7 +36,7 @@ public interface UserManageService {
      * @return
      * @throws BizException
      */
-    public void userUpdateProc(UserManageVO userDetail) throws BizException;
+    public int userUpdateProc(UserManageVO userDetail) throws BizException;
 
     /**
      * 사용자 상세정보 저장
@@ -54,5 +54,14 @@ public interface UserManageService {
      * @throws BizException
      */
     public UserManageVO getUserDetail(String userId) throws BizException;
+    
+    /**
+     * 사용자 삭제
+     * 
+     * @param arrDelUserId
+     * @return
+     * @throws BizException
+     */
+    public int userDeleteProc(String updateUserId ,String arrDelUserId) throws BizException;
 
 }

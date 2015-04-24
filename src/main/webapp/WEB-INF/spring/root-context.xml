@@ -88,13 +88,11 @@
             </bean>
         </property>
     </bean>
-    
-    
-    
+
     <!-- DealBatch -->
         <!-- Cron 대상 클래스 정의 -->
     <bean id="dealQuartz" class="org.springframework.scheduling.quartz.JobDetailBean">
-        <property name="jobClass" value="com.offact.batch.DealBatch"></property>
+        <property name="jobClass" value="com.offact.batch.CommonBatch"></property>
     </bean>    
     
     <!-- Cron 시간 설정 -->
@@ -125,8 +123,7 @@
     	</property>
     </bean>
     
-    
-
+  
     <!-- LdapBatch -->
         <!-- Cron 대상 클래스 정의 -->
     <bean id="ldapQuartz" class="org.springframework.scheduling.quartz.JobDetailBean">
@@ -161,9 +158,7 @@
         </property>
     </bean>
     
-    
-    
-        <!-- Ldap 적용 
+    <!-- Ldap 적용 
     <bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource">
     	<property name="url" value="bean.tmoncorp.com:389" />
     	<property name="base" value="DC=tmoncorp,DC=com" />

@@ -51,6 +51,18 @@ import com.offact.addys.vo.UserMenuVO;
 public class HomeController {
 
 	private final Logger logger = Logger.getLogger(getClass());
+	/*
+    * log id 생성 
+    */
+	public String logid(){
+		
+		double id=Math.random();
+		long t1 = System.currentTimeMillis ( ); 
+		
+		String logid=""+t1+id;
+		
+		return logid;
+	}
 	
 	@Value("#{config['offact.host.url']}")
 	private String host_url;
@@ -58,10 +70,11 @@ public class HomeController {
 	@RequestMapping("/hello")
 	 public @ResponseBody
 	 String hello(@RequestParam(value = "name") String name,
-				   @RequestParam(value = "gender") String gender,
-				   @RequestParam(value = "email") String email,
-				   @RequestParam(value = "phone") String phone,
-				   @RequestParam(value = "city") String city) {
+				  @RequestParam(value = "gender") String gender,
+				  @RequestParam(value = "email") String email,
+				  @RequestParam(value = "phone") String phone,
+				  @RequestParam(value = "city") String city) 
+	{
 
 		  System.out.println(name);
 		  System.out.println(gender);
@@ -84,8 +97,12 @@ public class HomeController {
 	 * @throws BizException
 	 */
 	@RequestMapping(value = "/gmroi", method = RequestMethod.GET)
-	public ModelAndView gmroi(HttpServletRequest request,HttpServletResponse response) throws BizException {
+	public ModelAndView gmroi(HttpServletRequest request,
+			                  HttpServletResponse response) throws BizException 
+	{
+		
 		logger.info("gmroi");
+		
 		ModelAndView mv = new ModelAndView();
 		
 		mv.setViewName("common/gmroiMain");
@@ -97,21 +114,26 @@ public class HomeController {
 	 * @throws BizException
 	 */
 	@RequestMapping(value = "/gmroiclc", method = RequestMethod.GET)
-	public ModelAndView gmroiclc(HttpServletRequest request,HttpServletResponse response) throws BizException {
+	public ModelAndView gmroiclc(HttpServletRequest request,
+                                 HttpServletResponse response) throws BizException 
+	{
+		
 		logger.info("gmroiclc");
+		
 		ModelAndView mv = new ModelAndView();
 		
 		mv.setViewName("common/gmroiClc");
 		return mv;
 	}
 	
-	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 * @throws BizException
 	 */
 	@RequestMapping(value = "/errors404", method = RequestMethod.GET)
-	public ModelAndView errors404(HttpServletRequest request,HttpServletResponse response) throws BizException {
+	public ModelAndView errors404(HttpServletRequest request,
+			                      HttpServletResponse response) throws BizException 
+	{
 		logger.info("errors404");
 		ModelAndView mv = new ModelAndView();
 		
@@ -123,8 +145,12 @@ public class HomeController {
 	 * @throws BizException
 	 */
 	@RequestMapping(value = "/errors500", method = RequestMethod.GET)
-	public ModelAndView errors500(HttpServletRequest request,HttpServletResponse response) throws BizException {
+	public ModelAndView errors500(HttpServletRequest request,
+			                      HttpServletResponse response) throws BizException 
+	{
+		
 		logger.info("errors500");
+		
 		ModelAndView mv = new ModelAndView();
 		
 		mv.setViewName("errors/500");
@@ -135,8 +161,12 @@ public class HomeController {
 	 * @throws BizException
 	 */
 	@RequestMapping(value = "/errors", method = RequestMethod.GET)
-	public ModelAndView errors(HttpServletRequest request,HttpServletResponse response) throws BizException {
+	public ModelAndView errors(HttpServletRequest request,
+			                   HttpServletResponse response) throws BizException 
+	{
+		
 		logger.info("errors");
+		
 		ModelAndView mv = new ModelAndView();
 		
 		mv.setViewName("errors/errors");
@@ -147,8 +177,12 @@ public class HomeController {
 	 * @throws BizException
 	 */
 	@RequestMapping(value = "/warning", method = RequestMethod.GET)
-	public ModelAndView warning(HttpServletRequest request,HttpServletResponse response) throws BizException {
+	public ModelAndView warning(HttpServletRequest request,
+			                    HttpServletResponse response) throws BizException 
+	{
+		
 		logger.info("warning");
+		
 		ModelAndView mv = new ModelAndView();
 		
 		mv.setViewName("errors/warning");
@@ -159,8 +193,12 @@ public class HomeController {
 	 * @throws BizException
 	 */
 	@RequestMapping(value = "/loginFail", method = RequestMethod.GET)
-	public ModelAndView loginFail(HttpServletRequest request,HttpServletResponse response) throws BizException {
+	public ModelAndView loginFail(HttpServletRequest request,
+			                      HttpServletResponse response) throws BizException 
+	{
+		
 		logger.info("loginFail");
+		
 		ModelAndView mv = new ModelAndView();
 		
 		mv.setViewName("addys/loginFail");
@@ -168,13 +206,16 @@ public class HomeController {
 	}
 	//동작
 	@RequestMapping(value = "/redirectUrl2", method = RequestMethod.GET)
-	public ModelAndView redirectUrl2(){
+	public ModelAndView redirectUrl2()
+	{
 		return new ModelAndView("redirect:/index");
 	}
 
 	//동작
 	@RequestMapping(value = "/redirectUrl3", method = RequestMethod.GET)
-	public ModelAndView redirectUrl3(){
+	public ModelAndView redirectUrl3()
+	{
+		
 		RedirectView redirectView = new RedirectView("/index");
 		redirectView.setContextRelative(true);
 
@@ -185,7 +226,9 @@ public class HomeController {
 
 	//동작
 	@RequestMapping(value = "/redirectUrl4", method = RequestMethod.GET)
-	public ModelAndView redirectUrl4(){
+	public ModelAndView redirectUrl4()
+	{
+		
 		ModelAndView mv = new ModelAndView();
 
 		mv.setView(new RedirectView("/addys/index"));
@@ -196,7 +239,9 @@ public class HomeController {
 
 	//동작
 	@RequestMapping(value = "/redirectUrl5", method = RequestMethod.POST)
-	public ModelAndView redirectUrl5(){
+	public ModelAndView redirectUrl5()
+	{
+		
 		ModelAndView mv = new ModelAndView();
 
 		mv.setView(new RedirectView("/addys/index"));

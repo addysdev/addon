@@ -20,35 +20,33 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
  */
 public class LdapBatch extends QuartzJobBean {
 
-	private final Logger 			batchloger = Logger.getLogger("batchlog");
+	private final Logger 			
+	batchloger = Logger.getLogger("batchlog");
 
     @Override
     // protected void executeInternal(JobExecutionContext arg0)
     // throws JobExecutionException {
     protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
+    	
     	batchloger.debug("########################  CRON    LdapBatch START.....!");
-
-
 
         URL url;// URL 주소 객체
         URLConnection connection;// URL접속을 가지는 객체
         try {
 
-			if(Inet4Address.getLocalHost().getHostName().equals("offactsolapp01.offactc.net")){
+			if(Inet4Address.getLocalHost().getHostName().equals("www.offactc.com")){
 	            ResourceBundle rb = ResourceBundle.getBundle("config");
 	            rb.getString("cs.host.url");
 	            String strHost = rb.getString("cs.host.url");
 
 	            // CATEGORY
-	            url = new URL(strHost + "/cs/adUserInfoReload");
+	            url = new URL(strHost + "/addys/userInfoReload");
 	            connection = url.openConnection();
 	            connection.getInputStream();
 
 			}else{
-	        	batchloger.debug("CS2 Pass!!!");
+	        	batchloger.debug("Pass!!!");
 			}
-
-
 
         } catch (MalformedURLException e) {
             e.printStackTrace();

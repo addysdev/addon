@@ -3053,5 +3053,57 @@ function fnMenuApply(){
 			  return val
 			  
 		  }
-	   
+		  function setCookie( name, value ){
+				var todayDate = new Date();
+				todayDate.setDate( todayDate.getDate() + (60*60*24*365));
+				document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
+			}
+			
+			function setCookieOne( name, value ){
+				var todayDate = new Date();
+				todayDate.setDate( todayDate.getDate() + (60*60*24));
+				document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
+			}
+			
+			function getCookie(name){
+				var coki;
+				var idx = document.cookie.indexOf(name+'=');
+				
+				if (idx != -1) {
+					idx += name.length + 1;
+					to_idx = document.cookie.indexOf(';', idx);
+					
+					if (to_idx == -1) {
+						to_idx = document.cookie.length;
+					}		
+					coki = document.cookie.substring(idx, to_idx);
+				} else {
+				 coki = "";
+				}
+				return coki;
+			}
+		    /**
+		     * trim
+		     *
+		     * @param   text
+		     * @return  string
+		     */
+		    function trim(text) {
+		    	if (text == "") {
+		            return  text;
+		        }
+
+		        var len = text.length;
+		        var st = 0;
+
+		        while ((st < len) && (text.charAt(st) <= ' ')) {
+		            st++;
+		        }
+
+		        while ((st < len) && (text.charAt(len - 1) <= ' ')) {
+		            len--;
+		        }
+
+		        return  ((st > 0) || (len < text.length)) ? text.substring(st, len) : text;
+		    }
      

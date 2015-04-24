@@ -6,10 +6,7 @@
     <!-- Latest compiled and minified CSS-->
     <link rel="stylesheet" href="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.css">
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/css/bootstrap.css">
-    <!-- Latest compiled JavaScript--> 
-	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
-	<script type="text/javascript" src="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
-	<script type="text/javascript" src="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/js/bootstrap.js"></script>
+
 	<script>
 
 	//login 처리
@@ -20,7 +17,19 @@
 		
 		//alert('id:'+id);
 		//alert('pw:'+pwd);
+		
+		//alert( $("input[name=saveId]:checkbox:checked").val());
+		var chkCnt = $("input[name=saveId]:checkbox:checked").length;
 	
+		if( $("input[name=saveId]:checkbox:checked").val()=='on'){
+			//alert($('#id').val());
+			setCookie("offact_UserId", $('#id').val());
+		} else {
+			setCookie("offact_UserId", "");
+		}
+		
+		//alert(chkCnt);
+		
 		$('#loginForm').attr({action:"<%= request.getContextPath() %>/addys/login"});
 		/*
 		try {
@@ -63,15 +72,32 @@
 	
 	$.ajaxSetup({ cache: false });
 	
+	function init(){
+		
+		$('#id').focus(1); 
+		
+		var cUserId = getCookie("offact_UserId");
+		
+		//alert(cUserId);
+
+		if( cUserId != null && trim(cUserId) != '' && cUserId != 'null' ){
+			//$('#id').val=cUserId;
+			//$("input[name=saveId]:checkbox:checked").val==on;
+			document.loginForm.id.value=cUserId;
+			document.loginForm.saveId.checked=true;
+			//$("#saveId").is(":checked");
+			//$("input:checkbox[id='saveId']").prop("checked",'');
+		}
+	}
 	</script>
   </head>
 
-  <body>
+  <body onload="init()">
     <div class="container">
       <h2>addys login</h2>
       <form method="post" id="loginForm" name="loginForm"  role="form" >
         <div class="form-group">
-          <label for="email">Id:</label>
+          <label for="id">Id:</label>
           <input type="id" class="form-control" id="id" name="id" placeholder="Enter id">
         </div>
         <div class="form-group">
@@ -79,10 +105,11 @@
           <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Enter password">
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" onChange="doAjaxTest()"> Remember me</label>
+          <label><input type="checkbox" id="saveId" name="saveId"> Remember me</label>
         </div>
        <button type="submit" class="btn btn-default" onclick="goLogin()">Submit</button>
       </form>
     </div>
   </body>
 </html>
+<%@ include file="/WEB-INF/views/addys/footer.jsp" %>

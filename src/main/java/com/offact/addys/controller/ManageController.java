@@ -58,16 +58,9 @@ import com.offact.addys.vo.manage.UserManageVO;
 public class ManageController {
 
 	private final Logger logger = Logger.getLogger(getClass());
-	
-	@Autowired
-	private UserService userSvc;
-	
-    @Autowired
-    private UserMenuService userMenuSvc;
-
-    @Autowired
-    private UserManageService userManageSvc;
-    	
+	 /*
+     * log id 생성 
+     */
 	public String logid(){
 		
 		double id=Math.random();
@@ -77,29 +70,38 @@ public class ManageController {
 		
 		return logid;
 	}
+	
+	@Autowired
+	private UserService userSvc;
+	
+    @Autowired
+    private UserMenuService userMenuSvc;
+
+    @Autowired
+    private UserManageService userManageSvc;
+    
 	 /**
      * 사용자관리 화면 로딩
      *
-     * @param userVO
      * @param request
      * @param response
      * @param model
      * @param locale
      * @return
      * @throws BizException
-     * @throws IOException
      */
     @RequestMapping(value = "/manage/usermanage")
-    public ModelAndView userManage(HttpServletRequest request, HttpServletResponse response) throws BizException, IOException {
+    public ModelAndView userManage(HttpServletRequest request, 
+    		                       HttpServletResponse response) throws BizException 
+    {
         
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] ManageController.userManage start ");
+		logger.info("["+logid+"] Controller start ");
 
         ModelAndView mv = new ModelAndView();
         
-
         // 사용자 세션정보
         HttpSession session = request.getSession();
         String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
@@ -125,14 +127,14 @@ public class ManageController {
         
        //log Controller execute time end
       	long t2 = System.currentTimeMillis();
-      	logger.info("["+logid+"] ManageController.userManage end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
       	
         return mv;
     }
     /**
      * 사용자관리 목록조회
      * 
-     * @param userDetailVO
+     * @param UserManageVO
      * @param request
      * @param response
      * @param model
@@ -141,12 +143,15 @@ public class ManageController {
      * @throws BizException
      */
     @RequestMapping(value = "/manage/userpagelist")
-    public ModelAndView userPageList(@ModelAttribute("userConVO") UserManageVO userConVO, HttpServletRequest request, HttpServletResponse response) throws BizException, IOException {
+    public ModelAndView userPageList(@ModelAttribute("userConVO") UserManageVO userConVO, 
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
         
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] ManageController.userPageList start User List info userConVO" + userConVO);
+		logger.info("["+logid+"] Controller start : userConVO" + userConVO);
 
         ModelAndView mv = new ModelAndView();
         List<UserManageVO> userList = null;
@@ -199,7 +204,7 @@ public class ManageController {
         
         //log Controller execute time end
        	long t2 = System.currentTimeMillis();
-       	logger.info("["+logid+"] ManageController.userPageList end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
        	
         return mv;
     }
@@ -209,7 +214,8 @@ public class ManageController {
 	 * @throws BizException
 	 */
     @RequestMapping(value = "/manage/userregform")
-	public ModelAndView userRegForm(HttpServletRequest request) throws BizException {
+	public ModelAndView userRegForm(HttpServletRequest request) throws BizException 
+    {
 		
 		ModelAndView mv = new ModelAndView();
 		
@@ -217,36 +223,141 @@ public class ManageController {
 		
 		// 사용자 세션정보
         HttpSession session = request.getSession();
-        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String createUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
 		
-		userVO.setUserId(userId);
+		userVO.setCreateUserId(createUserId);
 		mv.addObject("userVO", userVO);
 		
 		mv.setViewName("/manage/userRegForm");
 		return mv;
 	}
-	
+	 /**
+     * 사용자관리 등록처리
+     *
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
     @RequestMapping(value = "/manage/userreg", method = RequestMethod.POST)
-    public String userReg(@ModelAttribute("userVO") UserManageVO userVO, HttpServletRequest request)
-      throws BizException, IOException
+    public @ResponseBody
+    String userReg(@ModelAttribute("userVO") UserManageVO userVO, 
+    		       HttpServletRequest request, 
+    		       HttpServletResponse response) throws BizException
     {
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] ManageController.userReg start User List info userVO" + userVO);
-
-		ModelAndView mv = new ModelAndView();
-		
-		mv.addObject("userVO", userVO);
+		logger.info("["+logid+"] Controller start : userVO" + userVO);
 
 		int retVal=this.userManageSvc.userInsertProc(userVO);
 		
 		//log Controller execute time end
        	long t2 = System.currentTimeMillis();
-       	logger.info("["+logid+"] ManageController.userReg end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 
       return ""+retVal;
     }
+	 /**
+     * 사용자정 수정화면
+     *
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/manage/usermodifyform")
+	public ModelAndView userModifyForm(@RequestParam(value = "userId") String userId, 
+									   HttpServletRequest request) throws BizException 
+    {
+		
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : userId" + userId);
+    			
+		ModelAndView mv = new ModelAndView();
+		
+		UserManageVO userVO = new UserManageVO();
+		
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String updateuserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
+        userVO = userManageSvc.getUserDetail(userId);
+		
+		userVO.setUpdateUserId(updateuserId);
+		mv.addObject("userVO", userVO);
+		
+		mv.setViewName("/manage/userModifyForm");
+		
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+		return mv;
+	}
+    /**
+     * 사용자관리 수정처리
+     *
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/manage/usermodify", method = RequestMethod.POST)
+    public @ResponseBody
+    String userModify(@ModelAttribute("userVO") UserManageVO userVO, 
+    		          HttpServletRequest request, 
+    		          HttpServletResponse response) throws BizException
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : userVO" + userVO);
 
+		int retVal=this.userManageSvc.userUpdateProc(userVO);
+		
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 
+      return ""+retVal;
+    }
+    @RequestMapping({"/manage/userdeletes"})
+    public @ResponseBody
+    String userDeletes(@ModelAttribute("userVO") UserManageVO userVO, 
+    		           @RequestParam(value="arrDelUserId", required=false, defaultValue="") String arrDelUserId,
+    		           HttpServletRequest request) throws BizException
+    {
+      
+	    //log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : userVO" + userVO);
+			
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String updateuserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+
+	    logger.info("@#@#@# arrDelUserId : " + arrDelUserId);
+
+        int retVal=this.userManageSvc.userDeleteProc(updateuserId , arrDelUserId);
+		
+		//log Controller execute time end
+	 	long t2 = System.currentTimeMillis();
+	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+    return ""+retVal;
+    }
+    
 }

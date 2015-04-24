@@ -41,7 +41,7 @@
         </colgroup>
 	    <thead>
 	      <tr>
-	        <th><input type="checkbox"></th>
+	        <th><input type="checkbox"  id="userCheckAll"  name="userCheckAll" onchange="fcUserManage_checkAll();" title="전체선택" /></th>
 	        <th>아이디</th>
             <th>이름</th>
             <th>지점</th>
@@ -54,9 +54,9 @@
 	    <tbody>
 	    	<c:if test="${!empty userList}">
              <c:forEach items="${userList}" var="userListVO" varStatus="status">
-             <tr id="select_tr_${userListVO.userId}" onClick="javascript:fcUserManage_detailSearch('${userListVO.userId}')">
-                 <td><input type="checkbox"></td>
-                 <td><c:out value="${userListVO.userId}"></c:out></td>
+             <tr id="select_tr_${userListVO.userId}">
+                 <td><input type="checkbox" id="userCheck" name="userCheck" value="${userListVO.userId}" title="선택" /></td>
+                 <td><a href="javascript:fcUserManage_detailSearch('${userListVO.userId}')"><c:out value="${userListVO.userId}"></c:out></a></td>
                  <td><c:out value="${userListVO.userName}"></c:out></td>
                  <td><c:out value="${userListVO.groupName}"></c:out></td>
                  <td class="text_c"><c:out value="${userListVO.useYn}"></c:out></td>
