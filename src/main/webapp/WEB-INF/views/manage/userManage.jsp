@@ -133,7 +133,32 @@
         });
 
     }
+    //레이어팝업 : 사용자등록 Layer 팝업
+    function fcUserManage_excelForm(){
 
+    	$('#userExcelForm').dialog({
+            resizable : false, //사이즈 변경 불가능
+            draggable : true, //드래그 불가능
+            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+            width : 480,
+            height : 518,
+            modal : true, //주위를 어둡게
+
+            open:function(){
+                //팝업 가져올 url
+                $(this).load('<%= request.getContextPath() %>/manage/userexcelform');
+                //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
+                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+                    $("#userExcelForm").dialog('close');
+
+                    });
+            }
+            ,close:function(){
+                $('#userExcelForm').empty();
+            }
+        });
+    };
 </SCRIPT>
 <!-- 사용자관리 -->
 	<div class="container">
@@ -199,8 +224,12 @@
   </div>
   <!-- //조회결과리스트 -->
   <!-- //사용자 등록/삭제 -->
+  <button type="button" class="btn btn-primary" onClick="fcUserManage_excelForm()">upload</button>
   <button type="button" class="btn btn-primary" onClick="fcUserManage_regForm()">regist</button>
   <button type="button" class="btn btn-danger" onClick="fcUserManage_delete()">delete</button>
+  <!-- 사용자 일괄등록-->
+  <div id="userExcelForm"  title="사용자 일괄등록"></div>
+  <!-- //사용자 일괄등록 -->
   <!-- 사용자 등록-->
   <div id="userManageRegist"  title="사용자 등록"></div>
   <!-- //사용자 등록 -->

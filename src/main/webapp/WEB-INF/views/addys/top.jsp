@@ -87,7 +87,8 @@
             <li><a href="<%= request.getContextPath() %>/manage/usermanage">계정관리</a></li>
             <li><a href="#">조직관리</a></li>
             <li><a href="#">메뉴권한관리</a></li> 
-            <li><a href="#">Master정보관리</a></li>                         
+            <li><a href="#">품목관리</a></li>
+            <li><a href="<%= request.getContextPath() %>/manage/groupstockguide">지점별 재고수량 관리</a></li>                            
           </ul>
         </li>
       </ul>

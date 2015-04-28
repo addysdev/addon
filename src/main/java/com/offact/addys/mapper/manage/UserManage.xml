@@ -23,6 +23,7 @@
   <result column="updateDateTime"      property="updateDateTime"  />
   <result column="useYn"               property="useYn"  />
   <result column="deletedYn"           property="deletedYn"  />
+  <result column="userResult"          property="userResult"  />
 </resultMap>
 
 <select id="getUserPageList"  resultMap="userListVO" parameterType="com.offact.addys.vo.manage.UserManageVO" >
@@ -181,5 +182,45 @@
             	,updateDateTime = now()
  		Where userId = #{userId}
 </update>
+
+<select id="validationUploadFile"  resultMap="userListVO" parameterType="com.offact.addys.vo.manage.UserManageVO" >
+    SELECT 
+       'SUCCESS' as userResult
+       FROM 
+              ofUser 
+       WHERE 
+              userId = 'system' 
+</select>
+
+<insert id="insertExcelUser"  parameterType="com.offact.addys.vo.manage.UserManageVO" >
+		insert into ofUser (
+				 userId
+            	,userName
+            	,groupId 
+            	,authId
+            	,excelAuth
+            	,password
+           		,email
+            	,officePhone
+            	,mobliePhone
+            	,ip
+            	,createUserId
+            	,createDateTime
+		)values(
+				 #{userId}
+	  			, #{userName}
+	  			, #{groupId}
+	  			, #{authId}
+	  			, #{excelAuth}
+	  			, #{password}
+	  			, #{email}
+	  		, #{officePhone}
+	  		, #{mobliePhone}
+	  		, #{ip}
+	  		, #{createUserId}
+	  		, now()
+		)
+</insert>
+
 
 </mapper>
