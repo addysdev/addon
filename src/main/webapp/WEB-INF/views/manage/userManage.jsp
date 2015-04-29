@@ -189,7 +189,7 @@
                         <!-- label의 for값과 input의 id값을 똑같이 사용해주세요. -->
                         <th><label for="con_groupId">지점</label></th>
                          <td>    
-                            <input type="text" class="form-control" id="groupId" name="groupId"  value="${userConVO.groupId}" />
+                            <input type="text" class="form-control" id="con_groupId" name="con_groupId"  value="${userConVO.groupId}" />
                         </td>
                         <th><label for="con_useYn">사용여부</label></th>
                         <td>

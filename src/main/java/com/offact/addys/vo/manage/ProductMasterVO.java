@@ -11,6 +11,7 @@ public class ProductMasterVO extends AbstractVO {
 	private String barCode;
 	private String productName;
 	private String companyCode;
+	private String companyName;
 	private String productPrice;
 	private String vatRate;
 	private String group1;
@@ -21,10 +22,25 @@ public class ProductMasterVO extends AbstractVO {
 	private String group3Name;
 
 	private String createUserId;
+	private String createUserName;
 	private String createDateTime;
 	private String updateUserId;
+	private String updateUserName;
 	private String updateDateTime;
 	private String deletedYn;
+	
+    private String searchGubun;
+    private String searchValue;
+
+    // /** for paging */
+    private String totalCount       = "0";
+    private String curPage          = "1";
+    private String rowCount         = "10";
+    private String page_limit_val1;
+    private String page_limit_val2;
+    
+    private String userResult;
+    private String errMsg;
 	
 	public String getProductCode() {
 		return productCode;
@@ -128,5 +144,77 @@ public class ProductMasterVO extends AbstractVO {
 	public void setDeletedYn(String deletedYn) {
 		this.deletedYn = deletedYn;
 	}
-
+	public String getSearchGubun() {
+		return searchGubun;
+	}
+	public void setSearchGubun(String searchGubun) {
+		this.searchGubun = searchGubun;
+	}
+	public String getSearchValue() {
+		return searchValue;
+	}
+	public void setSearchValue(String searchValue) {
+		this.searchValue = searchValue;
+	}
+	public String getTotalCount() {
+		return totalCount;
+	}
+	public void setTotalCount(String totalCount) {
+		this.totalCount = totalCount;
+	}
+	public String getCurPage() {
+		return curPage;
+	}
+	public void setCurPage(String curPage) {
+		this.curPage = curPage;
+	}
+	public String getRowCount() {
+		return rowCount;
+	}
+	public void setRowCount(String rowCount) {
+		this.rowCount = rowCount;
+	}
+	public String getPage_limit_val1() {
+		return page_limit_val1;
+	}
+	public void setPage_limit_val1(String page_limit_val1) {
+		this.page_limit_val1 = page_limit_val1;
+	}
+	public String getPage_limit_val2() {
+		return page_limit_val2;
+	}
+	public void setPage_limit_val2(String page_limit_val2) {
+		this.page_limit_val2 = page_limit_val2;
+	}
+	public String getUserResult() {
+		return userResult;
+	}
+	public void setUserResult(String userResult) {
+		this.userResult = userResult;
+	}
+	public String getErrMsg() {
+		return errMsg;
+	}
+	public void setErrMsg(String errMsg) {
+		this.errMsg = errMsg;
+	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	public String getCreateUserName() {
+		return createUserName;
+	}
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
+	}
+    
 }

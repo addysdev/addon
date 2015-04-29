@@ -53,7 +53,7 @@
           	   Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join ofGroup T3 On T1.authId=T3.groupId
          WHERE T1.deletedYn='N'
-           <if test="con_groupId != null and con_groupId != ''" >
+           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            AND T1.groupId = #{con_groupId}
            </if>
            <if test="searchValue != null and searchValue != ''" >
@@ -220,6 +220,17 @@
 	  		, #{createUserId}
 	  		, now()
 		)
+		ON DUPLICATE KEY UPDATE userName = #{userName},
+		                        groupId = #{groupId},
+		                        authId = #{authId},
+		                        excelAuth = #{excelAuth},
+		                        password = #{password},
+		                        email = #{email},
+		                        officePhone = #{officePhone},
+		                        mobliePhone = #{mobliePhone},
+		                        ip = #{ip},
+		                        updateUserId = #{createUserId},
+		                        updateDateTime =now()
 </insert>
 
 
