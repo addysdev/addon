@@ -27,7 +27,6 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -55,7 +54,6 @@ import com.offact.addys.vo.UserConditionVO;
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.manage.StockMasterVO;
 import com.offact.addys.vo.manage.ProductMasterVO;
-
 import com.offact.addys.vo.MultipartFileVO;
 
 /**
@@ -668,5 +666,389 @@ public class ManageController {
 	  logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 	 	
       return mv;
+    }
+    /**
+     * 품목현황 관리화면
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/manage/productmanage")
+    public ModelAndView productManage(HttpServletRequest request, 
+    		                       HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start ");
+
+        ModelAndView mv = new ModelAndView();
+        
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        UserManageVO userConVO = new UserManageVO();
+        
+        userConVO.setUserId(userId);
+        userConVO.setGroupId(groupId);
+
+        // 조회조건저장
+        mv.addObject("userConVO", userConVO);
+
+        // 공통코드 조회 (사용자그룹코드)
+        /*
+        ADCodeManageVO code = new ADCodeManageVO();
+        code.setCodeId("IG11");
+        List<ADCodeManageVO> searchCondition1 = codeService.getCodeComboList(code);
+        mv.addObject("searchCondition1", searchCondition1);
+       */
+       
+        mv.setViewName("/manage/productManage");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    /**
+     * 품목 목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/manage/productpagelist")
+    public ModelAndView productPageList(@ModelAttribute("userConVO") UserManageVO userConVO, 
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : userConVO" + userConVO);
+
+        ModelAndView mv = new ModelAndView();
+        List<UserManageVO> userList = null;
+        UserManageVO userDetail = null;
+
+        // 사용여부 값 null 일때 공백처리
+        if (userConVO.getCon_useYn() == null) {
+            userConVO.setCon_useYn("Y");
+        }
+
+        // 그룹 값 null 일때 공백처리
+        if (userConVO.getCon_groupId() == null) {
+            userConVO.setCon_groupId("G00000");
+        }
+        
+        // 조회조건 null 일때 공백처리
+        if (userConVO.getSearchGubun() == null) {
+            userConVO.setSearchGubun("02");
+        }
+        
+        // 조회값 null 일때 공백처리
+        if (userConVO.getSearchValue() == null) {
+            userConVO.setSearchValue("system");
+        }
+        
+        // 조회조건저장
+        mv.addObject("userCon", userConVO);
+
+        // 페이징코드
+        userConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(userConVO.getCurPage(), userConVO.getRowCount()));
+        userConVO.setPage_limit_val2(StringUtil.nvl(userConVO.getRowCount(), "10"));
+        
+        // 사용자목록조회
+        userList = userManageSvc.getUserList(userConVO);
+        mv.addObject("userList", userList);
+
+        // totalCount 조회
+        String totalCount = String.valueOf(userManageSvc.getUserCnt(userConVO));
+        mv.addObject("totalCount", totalCount);
+
+        // 기능 권한 리스트
+        /*
+        HttpSession session = request.getSession();
+        UserMenuVO authListVo = new UserMenuVO();
+        authListVo.setUSER_ID((String) session.getAttribute("strUserId"));
+        List<UserMenuVO> funcList = userMenuSvc.getAuthPerFunction(authListVo);
+        mv.addObject("funcList", funcList);
+        */
+        mv.setViewName("/manage/productPageList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    /**
+     * 재고현황 관리화면
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/manage/stockmanage")
+    public ModelAndView stockManage(HttpServletRequest request, 
+    		                       HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start ");
+
+        ModelAndView mv = new ModelAndView();
+        
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        UserManageVO userConVO = new UserManageVO();
+        
+        userConVO.setUserId(userId);
+        userConVO.setGroupId(groupId);
+
+        // 조회조건저장
+        mv.addObject("userConVO", userConVO);
+
+        // 공통코드 조회 (사용자그룹코드)
+        /*
+        ADCodeManageVO code = new ADCodeManageVO();
+        code.setCodeId("IG11");
+        List<ADCodeManageVO> searchCondition1 = codeService.getCodeComboList(code);
+        mv.addObject("searchCondition1", searchCondition1);
+       */
+       
+        mv.setViewName("/manage/stockManage");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    /**
+     * 재고현황 목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/manage/stockpagelist")
+    public ModelAndView stockPageList(@ModelAttribute("userConVO") UserManageVO userConVO, 
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : userConVO" + userConVO);
+
+        ModelAndView mv = new ModelAndView();
+        List<UserManageVO> userList = null;
+        UserManageVO userDetail = null;
+
+        // 사용여부 값 null 일때 공백처리
+        if (userConVO.getCon_useYn() == null) {
+            userConVO.setCon_useYn("Y");
+        }
+
+        // 그룹 값 null 일때 공백처리
+        if (userConVO.getCon_groupId() == null) {
+            userConVO.setCon_groupId("G00000");
+        }
+        
+        // 조회조건 null 일때 공백처리
+        if (userConVO.getSearchGubun() == null) {
+            userConVO.setSearchGubun("02");
+        }
+        
+        // 조회값 null 일때 공백처리
+        if (userConVO.getSearchValue() == null) {
+            userConVO.setSearchValue("system");
+        }
+        
+        // 조회조건저장
+        mv.addObject("userCon", userConVO);
+
+        // 페이징코드
+        userConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(userConVO.getCurPage(), userConVO.getRowCount()));
+        userConVO.setPage_limit_val2(StringUtil.nvl(userConVO.getRowCount(), "10"));
+        
+        // 사용자목록조회
+        userList = userManageSvc.getUserList(userConVO);
+        mv.addObject("userList", userList);
+
+        // totalCount 조회
+        String totalCount = String.valueOf(userManageSvc.getUserCnt(userConVO));
+        mv.addObject("totalCount", totalCount);
+
+        // 기능 권한 리스트
+        /*
+        HttpSession session = request.getSession();
+        UserMenuVO authListVo = new UserMenuVO();
+        authListVo.setUSER_ID((String) session.getAttribute("strUserId"));
+        List<UserMenuVO> funcList = userMenuSvc.getAuthPerFunction(authListVo);
+        mv.addObject("funcList", funcList);
+        */
+        mv.setViewName("/manage/stockPageList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    /**
+     * 매출현황 관리화면
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/manage/salesmanage")
+    public ModelAndView salesManage(HttpServletRequest request, 
+    		                       HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start ");
+
+        ModelAndView mv = new ModelAndView();
+        
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        UserManageVO userConVO = new UserManageVO();
+        
+        userConVO.setUserId(userId);
+        userConVO.setGroupId(groupId);
+
+        // 조회조건저장
+        mv.addObject("userConVO", userConVO);
+
+        // 공통코드 조회 (사용자그룹코드)
+        /*
+        ADCodeManageVO code = new ADCodeManageVO();
+        code.setCodeId("IG11");
+        List<ADCodeManageVO> searchCondition1 = codeService.getCodeComboList(code);
+        mv.addObject("searchCondition1", searchCondition1);
+       */
+       
+        mv.setViewName("/manage/salesManage");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    /**
+     * 매출현황 목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/manage/salespagelist")
+    public ModelAndView salesPageList(@ModelAttribute("userConVO") UserManageVO userConVO, 
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : userConVO" + userConVO);
+
+        ModelAndView mv = new ModelAndView();
+        List<UserManageVO> userList = null;
+        UserManageVO userDetail = null;
+
+        // 사용여부 값 null 일때 공백처리
+        if (userConVO.getCon_useYn() == null) {
+            userConVO.setCon_useYn("Y");
+        }
+
+        // 그룹 값 null 일때 공백처리
+        if (userConVO.getCon_groupId() == null) {
+            userConVO.setCon_groupId("G00000");
+        }
+        
+        // 조회조건 null 일때 공백처리
+        if (userConVO.getSearchGubun() == null) {
+            userConVO.setSearchGubun("02");
+        }
+        
+        // 조회값 null 일때 공백처리
+        if (userConVO.getSearchValue() == null) {
+            userConVO.setSearchValue("system");
+        }
+        
+        // 조회조건저장
+        mv.addObject("userCon", userConVO);
+
+        // 페이징코드
+        userConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(userConVO.getCurPage(), userConVO.getRowCount()));
+        userConVO.setPage_limit_val2(StringUtil.nvl(userConVO.getRowCount(), "10"));
+        
+        // 사용자목록조회
+        userList = userManageSvc.getUserList(userConVO);
+        mv.addObject("userList", userList);
+
+        // totalCount 조회
+        String totalCount = String.valueOf(userManageSvc.getUserCnt(userConVO));
+        mv.addObject("totalCount", totalCount);
+
+        // 기능 권한 리스트
+        /*
+        HttpSession session = request.getSession();
+        UserMenuVO authListVo = new UserMenuVO();
+        authListVo.setUSER_ID((String) session.getAttribute("strUserId"));
+        List<UserMenuVO> funcList = userMenuSvc.getAuthPerFunction(authListVo);
+        mv.addObject("funcList", funcList);
+        */
+        mv.setViewName("/manage/salesPageList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
     }
 }

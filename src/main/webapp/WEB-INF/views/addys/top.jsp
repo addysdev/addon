@@ -69,16 +69,14 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">발주 <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="#">재고현황관리</a></li>
-            <li><a href="#">발주리스트</a></li>
-            <li><a href="#">검수리스트</a></li>                        
+            <li><a href="<%= request.getContextPath() %>/order/targetmanage" >발주리스트</a></li>
+            <li><a href="<%= request.getContextPath() %>/order/ordermanage" >검수리스트</a></li>                        
           </ul>
         </li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">회수 <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="#">회수리스트</a></li>
-            <li><a href="#">회수완료리스트</a></li>                       
+            <li><a href="<%= request.getContextPath() %>/recovery/recoverymanage">회수리스트</a></li>                    
           </ul>
         </li>
         <li class="dropdown">
@@ -87,8 +85,9 @@
             <li><a href="<%= request.getContextPath() %>/manage/usermanage">계정관리</a></li>
             <li><a href="#">조직관리</a></li>
             <li><a href="#">메뉴권한관리</a></li> 
-            <li><a href="#">품목관리</a></li>
-            <li><a href="<%= request.getContextPath() %>/manage/groupstockguide">지점별 재고수량 관리</a></li>                            
+            <li><a href="<%= request.getContextPath() %>/manage/productmanage">품목관리</a></li>
+            <li><a href="<%= request.getContextPath() %>/manage/stockmanage">재고현황 관리</a></li>   
+            <li><a href="<%= request.getContextPath() %>/manage/salesmanage">매출현황 관리</a></li>                            
           </ul>
         </li>
       </ul>
