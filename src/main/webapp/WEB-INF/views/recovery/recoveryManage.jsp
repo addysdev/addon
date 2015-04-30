@@ -212,7 +212,7 @@
   </div>
   <!-- //조회결과리스트 -->
   <!-- //사용자 등록/삭제 -->
-  <button type="button" class="btn btn-primary" onClick="#">회수등록</button>
+  <button type="button" class="btn btn-primary" onClick="">회수등록</button>
   <!-- 사용자 일괄등록-->
   <div id="userExcelForm"  title="사용자 일괄등록"></div>
   <!-- //사용자 일괄등록 -->
