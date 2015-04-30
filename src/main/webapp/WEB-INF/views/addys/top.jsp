@@ -80,14 +80,19 @@
           </ul>
         </li>
         <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Master관리 <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="<%= request.getContextPath() %>/master/productmanage">품목관리</a></li>
+            <li><a href="<%= request.getContextPath() %>/master/stockmanage">재고현황 관리</a></li>   
+            <li><a href="<%= request.getContextPath() %>/master/salesmanage">매출현황 관리</a></li>                            
+          </ul>
+        </li>
+        <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">관리 <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="<%= request.getContextPath() %>/manage/usermanage">계정관리</a></li>
             <li><a href="#">조직관리</a></li>
-            <li><a href="#">메뉴권한관리</a></li> 
-            <li><a href="<%= request.getContextPath() %>/manage/productmanage">품목관리</a></li>
-            <li><a href="<%= request.getContextPath() %>/manage/stockmanage">재고현황 관리</a></li>   
-            <li><a href="<%= request.getContextPath() %>/manage/salesmanage">매출현황 관리</a></li>                            
+            <li><a href="#">메뉴권한관리</a></li>                        
           </ul>
         </li>
       </ul>

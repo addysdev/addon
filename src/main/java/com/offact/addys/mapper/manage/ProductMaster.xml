@@ -2,7 +2,7 @@
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ProductMaster">
 
-<resultMap id="productMaster" type="com.offact.addys.vo.manage.ProductMasterVO" >
+<resultMap id="productMasterVO" type="com.offact.addys.vo.manage.ProductMasterVO" >
   <result column="productCode"      property="productCode"  />
   <result column="barCode"          property="barCode"  />
   <result column="productName"      property="productName"  />
@@ -26,7 +26,7 @@
   <result column="deletedYn"        property="deletedYn"  />
 </resultMap>
 
-<select id="getProductPageList"  resultMap="productMaster" parameterType="com.offact.addys.vo.manage.ProductMasterVO" >
+<select id="getProductPageList"  resultMap="productMasterVO" parameterType="com.offact.addys.vo.manage.ProductMasterVO" >
         SELECT T1.productCode
 			  ,T1.barCode
 			  ,T1.productName
@@ -42,11 +42,11 @@
 			  ,T1.group3Name
 			  ,T1.recoveryYn
 			  ,T1.createUserId
-			  ,T3.createUserName
+			  ,T3.userName As createUserName
 			  ,T1.updateUserId
-			  ,T4.updateUserName
-			  ,T1.createDateTime As CreateDateTime
-			  ,T1.updateDateTime As UpdateDateTime
+			  ,T4.userName As updateUserName
+			  ,T1.createDateTime 
+			  ,T1.updateDateTime
 			  ,T1.deletedYn
           FROM adProductMaster T1
                Left Join adCompany T2 On T1.companyCode=T2.companyCode
@@ -96,7 +96,7 @@
 </select>
 
 
-<select id="getProductDetail" resultMap="productMaster" parameterType="com.offact.addys.vo.manage.ProductMasterVO" >
+<select id="getProductDetail" resultMap="productMasterVO" parameterType="com.offact.addys.vo.manage.ProductMasterVO" >
 
 		SELECT T1.productCode
 			  ,T1.barCode
@@ -113,11 +113,11 @@
 			  ,T1.group3Name
 			  ,T1.recoveryYn
 			  ,T1.createUserId
-			  ,T3.createUserName
+			  ,T3.userName As createUserName
 			  ,T1.updateUserId
-			  ,T4.updateUserName
-			  ,T1.createDateTime As CreateDateTime
-			  ,T1.updateDateTime As UpdateDateTime
+			  ,T4.userName As updateUserName
+			  ,T1.createDateTime
+			  ,T1.updateDateTime
 			  ,T1.deletedYn
           FROM adProductMaster T1
                Left Join adCompany T2 On T1.companyCode=T2.companyCode
@@ -126,7 +126,7 @@
 		 Where T1.productCode = #{productCode} And T1.deletedYn='N'
 </select>
 
-<select id="validationUploadFile"  resultMap="productMaster" parameterType="com.offact.addys.vo.manage.ProductMasterVO" >
+<select id="validationUploadFile"  resultMap="productMasterVO" parameterType="com.offact.addys.vo.manage.ProductMasterVO" >
     SELECT 
        'SUCCESS' as productResult
        FROM 

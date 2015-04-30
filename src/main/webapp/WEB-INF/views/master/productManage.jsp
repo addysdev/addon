@@ -1,20 +1,19 @@
 <%@ include file="/WEB-INF/views/addys/top.jsp" %>
 <SCRIPT>
     // 리스트 조회
-    function fcProductManage_listSearch(curPage){
+    function fcProductMaster_listSearch(curPage){
 
-        productManageConForm.con_productCode.value = "";
         curPage = (curPage==null) ? 1:curPage;
-        productManageConForm.curPage.value = curPage;
+        productMasterConForm.curPage.value = curPage;
 
         commonDim(true);
         $.ajax({
             type: "POST",
-               url:  "<%= request.getContextPath() %>/manage/productpagelist",
-                    data:$("#productManageConForm").serialize(),
+               url:  "<%= request.getContextPath() %>/master/productpagelist",
+                    data:$("#productMasterConForm").serialize(),
                success: function(result) {
                    commonDim(false);
-                   $("#productManagePageList").html(result);
+                   $("#productMasterPageList").html(result);
                },
                error:function() {
                    commonDim(false);
@@ -32,9 +31,9 @@
     }
     
   //레이어팝업 : 사용자수정 Layer 팝업
-    function fcProductManage_detailSearch(productCode){
+    function fcProductMaster_detailSearch(productCode){
 
-    	$('#productManageDetail').dialog({
+    	$('#productMasterDetail').dialog({
             resizable : false, //사이즈 변경 불가능
             draggable : true, //드래그 불가능
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
@@ -45,16 +44,16 @@
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load('<%= request.getContextPath() %>/manage/productdetailform',{
+                $(this).load('<%= request.getContextPath() %>/master/productdetailform',{
     				'productCode' : productCode
     			});
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
-                    $("#productManageDetail").dialog('close');
+                    $("#productMasterDetail").dialog('close');
 
                     });
             }
             ,close:function(){
-                $('#productManageDetail').empty();
+                $('#productMasterDetail').empty();
             }
         });
     };
@@ -74,7 +73,7 @@
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load('<%= request.getContextPath() %>/manage/productexcelform');
+                $(this).load('<%= request.getContextPath() %>/master/productexcelform');
                 //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#productExcelForm").dialog('close');
@@ -100,7 +99,7 @@
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load('<%= request.getContextPath() %>/manage/safestockexcelform');
+                $(this).load('<%= request.getContextPath() %>/master/safestockexcelform');
                 //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#safeStockExcelForm").dialog('close');
@@ -126,7 +125,7 @@
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load('<%= request.getContextPath() %>/manage/holdstockexcelform');
+                $(this).load('<%= request.getContextPath() %>/master/holdstockexcelform');
                 //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#holdStockExcelForm").dialog('close');
@@ -144,7 +143,7 @@
         <h4><span>품목현황관리</span></h4>
         <!-- 조회조건 -->
         <div class="search">
-            <form:form commandName="productConVO" id="productManageConForm" name="productManageConForm" method="post" action="" >
+            <form:form commandName="productConVO" id="productMasterConForm" name="productMasterConForm" method="post" action="" >
             <input type="hidden" name="curPage"             id="curPage"            value="1" />
             <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
             <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
@@ -174,7 +173,7 @@
                         <td>    
                             <input type="text" class="form-control" id="searchValue" name="searchValue"  value="${userConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
                         </td>
-                         <td><button type="button" class="btn btn-primary" onClick="javascript:fcProductManage_listSearch()">search</button></td>
+                         <td><button type="button" class="btn btn-primary" onClick="javascript:fcProductMaster_listSearch()">search</button></td>
                          <td><button type="button" class="btn" onClick="">excel</button></td>
                     </div>
                     </tr>
@@ -185,7 +184,7 @@
         </div >
         <!-- //조회 -->
   <!-- 조회결과리스트 -->
-  <div id=productManagePageList>
+  <div id=productMasterPageList>
   </div>
   <!-- //조회결과리스트 -->
   <!-- //사용자 등록/삭제 -->
