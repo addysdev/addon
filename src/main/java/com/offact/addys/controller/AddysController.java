@@ -205,7 +205,9 @@ public class AddysController {
 		        */
 				mv.addObject("userId", strUserId);
 				
-				strMainUrl = "addys/addysMain";
+				//발주대상 화면 로직 추가
+				
+				strMainUrl = "order/targetManage";
 				
 			} else {//app 상요자 정보가 없는경우
 	

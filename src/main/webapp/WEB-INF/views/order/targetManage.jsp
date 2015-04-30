@@ -10,7 +10,7 @@
         commonDim(true);
         $.ajax({
             type: "POST",
-               url:  "<%= request.getContextPath() %>/manage/userpagelist",
+               url:  "<%= request.getContextPath() %>/order/targetpagelist",
                     data:$("#userManageConForm").serialize(),
                success: function(result) {
                    commonDim(false);
@@ -162,7 +162,7 @@
 </SCRIPT>
 <!-- 사용자관리 -->
 	<div class="container">
-        <h4><span>계정관리</span></h4>
+        <h4><span>발주리스트</span></h4>
         <!-- 조회조건 -->
         <div class="search">
             <form:form commandName="userConVO" id="userManageConForm" name="userManageConForm" method="post" action="" >
@@ -187,23 +187,11 @@
                     <tr>
                     	<div class="form-group">
                         <!-- label의 for값과 input의 id값을 똑같이 사용해주세요. -->
-                        <th><label for="con_groupId">지점</label></th>
-                         <td>    
-                            <input type="text" class="form-control" id="con_groupId" name="con_groupId"  value="${userConVO.groupId}" />
-                        </td>
-                        <th><label for="con_useYn">사용여부</label></th>
-                        <td>
-                            <select class="form-control" title="사용유무" id="con_useYn" name="con_useYn" >
-                                <option value="" >전체</option>
-                                <option value="Y" >사용</option>
-                                <option value="N" >미사용</option>
-                            </select>
-                        </td>
-                        <th><label for="searchGubun">계정정보</label></th>
+                        <th><label for="searchGubun">발주상태</label></th>
                         <td>
                             <select class="form-control" title="계정정보" id="searchGubun" name="searchGubun" >
-                                <option value="01" >이름</option>
-                                <option value="02" >아이디</option>
+                                <option value="01" >대기</option>
+                                <option value="02" >보류</option>
                             </select>
                         </td>
                         <td>    
@@ -223,10 +211,6 @@
   <div id=userManagePageList>
   </div>
   <!-- //조회결과리스트 -->
-  <!-- //사용자 등록/삭제 -->
-  <button type="button" class="btn btn-primary" onClick="fcUserManage_excelForm()">upload</button>
-  <button type="button" class="btn btn-primary" onClick="fcUserManage_regForm()">regist</button>
-  <button type="button" class="btn btn-danger" onClick="fcUserManage_delete()">delete</button>
   <!-- 사용자 일괄등록-->
   <div id="userExcelForm"  title="사용자 일괄등록"></div>
   <!-- //사용자 일괄등록 -->

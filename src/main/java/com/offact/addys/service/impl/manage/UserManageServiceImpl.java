@@ -87,5 +87,60 @@ public class UserManageServiceImpl implements UserManageService {
       }
       return retVal;
     }
+    
+    public Map<Object, Object> regiExcelUpload(List<UserManageVO> userUploadList)
+    	    throws BizException
+    	  {
+    	    Map rtnMap = new HashMap();
+
+    	    List rtnErrorUserVOList = new ArrayList();
+    	    List rtnSuccessUserVOList = new ArrayList();
+
+    	    Boolean errFg = Boolean.valueOf(false);
+
+    	    int idx = 0;
+
+    	    for (int i = 0; i < userUploadList.size(); i++) {
+    	      errFg = Boolean.valueOf(false);
+    	      try {
+    	        idx = i + 2;
+    	        UserManageVO userManageVO = (UserManageVO)userUploadList.get(i);
+    	        userManageVO.setErrMsg("");
+
+    	        UserManageVO validationUserVO = (UserManageVO)this.commonDao.selectOne("UserManage.validationUploadFile", userManageVO);
+
+    	        String lineStr = "";
+    	        if (!validationUserVO.getUserResult().equals("SUCCESS")) {
+    	          errFg = Boolean.valueOf(true);
+    	          if (!validationUserVO.getErrMsg().equals(""))
+    	            lineStr = "\n\r";
+    	          else {
+    	            lineStr = "";
+    	          }
+    	          validationUserVO.setErrMsg(validationUserVO.getErrMsg() + lineStr + "(" + idx + ")사용자 정보가 유효 하지 않습니다.");
+    	          System.out.println("UserManageVO.getErrMsg() : " + validationUserVO.getErrMsg());
+    	        }
+
+    	        if (!errFg.booleanValue()) {
+    	          rtnSuccessUserVOList.add(userManageVO);
+    	          this.commonDao.insert("UserManage.insertExcelUser", userManageVO);
+    	        } else {
+    	          rtnErrorUserVOList.add(userManageVO);
+    	        }
+    	      }
+    	      catch (Exception e) {
+    	        e.printStackTrace();
+    	        String errMsg = e.getMessage();
+    	        errMsg = errMsg.substring(errMsg.lastIndexOf("Exception"));
+    	        ((UserManageVO)userUploadList.get(i)).setErrMsg(((UserManageVO)userUploadList.get(i)).getErrMsg() + "\n\r(" + idx + ")" + errMsg);
+    	        rtnErrorUserVOList.add((UserManageVO)userUploadList.get(i));
+    	      }
+    	    }
+
+    	    rtnMap.put("rtnErrorUserVOList", rtnErrorUserVOList);
+    	    rtnMap.put("rtnSuccessUserVOList", rtnSuccessUserVOList);
+
+    	    return rtnMap;
+    	  }
 
 }

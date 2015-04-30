@@ -3106,4 +3106,23 @@ function fnMenuApply(){
 
 		        return  ((st > 0) || (len < text.length)) ? text.substring(st, len) : text;
 		    }
+		    
+		    /**
+		     *  파일 확장자명 체크
+		     *
+		     **/
+		    function isImageFile( obj ) {
+		    	var strIdx = obj.lastIndexOf( '.' ) + 1;
+		    	if ( strIdx == 0 ) {
+		    		return false;
+		    	} else {
+		    		var ext = obj.substr( strIdx ).toLowerCase();
+		    		if ( ext == "xls") {
+		    			return true;
+		    		} else {
+		    			alert(ext+'파일은 전송이 불가능합니다.');
+		    			return false;
+		    		}
+		    	}
+		    }
      

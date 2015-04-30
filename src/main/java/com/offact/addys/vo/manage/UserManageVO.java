@@ -42,6 +42,21 @@ public class UserManageVO extends AbstractVO {
     private String page_limit_val1;
     private String page_limit_val2;
     
+    private String userResult;
+    private String errMsg;
+    
+	public String getUserResult() {
+		return userResult;
+	}
+	public void setUserResult(String userResult) {
+		this.userResult = userResult;
+	}
+	public String getErrMsg() {
+		return errMsg;
+	}
+	public void setErrMsg(String errMsg) {
+		this.errMsg = errMsg;
+	}
 	public String getUserId() {
 		return userId;
 	}
