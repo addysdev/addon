@@ -43,6 +43,43 @@ function fcUserManage_excelimport(){
     frm.submit();        
 }
 
+function fcUserManage_excelUpload(){
+
+	var frm=document.userRegistFrm; //form객체세팅
+
+	/* if(frm.userFile.value == ""){
+		
+		alert('업로드할 xls파일을 첨부하세요');
+		return;
+		
+	}else if(!isImageFile(frm.userFile.value)){
+
+		return; 				
+    } */
+	
+	openWaiting();
+	frm.action = "<%=request.getContextPath() %>/H_User.do?cmd=userExcelImport";
+	frm.submit();
+}
+/**
+ *  파일 확장자명 체크
+ *
+ **/
+function isImageFile( obj ) {
+	var strIdx = obj.lastIndexOf( '.' ) + 1;
+	if ( strIdx == 0 ) {
+		return false;
+	} else {
+		var ext = obj.substr( strIdx ).toLowerCase();
+		if ( ext == "xls") {
+			return true;
+		} else {
+			alert(ext+'파일은 전송이 불가능합니다.');
+			return false;
+		}
+	}
+}
+
 </script>
 </head>
 <%-- <div id="waitwindow" style=" position:absolute; left:0">

@@ -53,8 +53,8 @@ import com.offact.addys.vo.UserMenuVO;
 import com.offact.addys.vo.UserVO;
 import com.offact.addys.vo.UserConditionVO;
 import com.offact.addys.vo.manage.UserManageVO;
-import com.offact.addys.vo.manage.StockMasterVO;
-import com.offact.addys.vo.manage.ProductMasterVO;
+import com.offact.addys.vo.master.StockMasterVO;
+import com.offact.addys.vo.master.ProductMasterVO;
 
 import com.offact.addys.vo.MultipartFileVO;
 

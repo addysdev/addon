@@ -2,7 +2,7 @@
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ProductMaster">
 
-<resultMap id="productMasterVO" type="com.offact.addys.vo.manage.ProductMasterVO" >
+<resultMap id="productMasterVO" type="com.offact.addys.vo.master.ProductMasterVO" >
   <result column="productCode"      property="productCode"  />
   <result column="barCode"          property="barCode"  />
   <result column="productName"      property="productName"  />
@@ -26,7 +26,7 @@
   <result column="deletedYn"        property="deletedYn"  />
 </resultMap>
 
-<select id="getProductPageList"  resultMap="productMasterVO" parameterType="com.offact.addys.vo.manage.ProductMasterVO" >
+<select id="getProductPageList"  resultMap="productMasterVO" parameterType="com.offact.addys.vo.master.ProductMasterVO" >
         SELECT T1.productCode
 			  ,T1.barCode
 			  ,T1.productName
@@ -95,8 +95,7 @@
            </if>
 </select>
 
-
-<select id="getProductDetail" resultMap="productMasterVO" parameterType="com.offact.addys.vo.manage.ProductMasterVO" >
+<select id="getProductDetail" resultMap="productMasterVO" parameterType="com.offact.addys.vo.master.ProductMasterVO" >
 
 		SELECT T1.productCode
 			  ,T1.barCode
@@ -126,16 +125,16 @@
 		 Where T1.productCode = #{productCode} And T1.deletedYn='N'
 </select>
 
-<select id="validationUploadFile"  resultMap="productMasterVO" parameterType="com.offact.addys.vo.manage.ProductMasterVO" >
-    SELECT 
-       'SUCCESS' as productResult
-       FROM 
-              adProductMaster 
-       WHERE 
-              productCode = '' 
-</select>
+<update id="productDeleteAll" parameterType="java.util.Map" >
+        Update adProductMaster
+       		Set
+  				deletedYn = 'Y'
+            	,updateUserId = #{updateUserId}
+            	,updateDateTime = now()
+ 		Where 1=1
+</update>
 
-<insert id="insertExcelProduct"  parameterType="com.offact.addys.vo.manage.ProductMasterVO" >
+<insert id="insertExcelProduct"  parameterType="com.offact.addys.vo.master.ProductMasterVO" >
 		insert into adProductMaster (
 				 productCode
             	,barCode
@@ -166,7 +165,7 @@
 	  		    , #{group2Name}
 	  		    , #{group3}
 	  		    , #{group3Name}
-	  		    , #{recoveryYn}
+	  		    , 'Y'
 	  			, #{createUserId}
 	  			, now()
 	  			, #{deletedYn}
@@ -182,7 +181,7 @@
 		                        group2Name = #{group2Name},
 		                        group3 = #{group3},
 		                        group3Name = #{group3Name},
-		                        recoveryYn = #{recoveryYn},
+		                        recoveryYn = 'Y',
 		                        updateUserId = #{updateUserId},
 		                        updateDateTime =now(),
 		                        deletedYn = #{deletedYn}

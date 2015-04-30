@@ -147,7 +147,7 @@
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load('<%= request.getContextPath() %>/manage/userexcelform');
+                $(this).load('<%= request.getContextPath() %>/master/stockexcelform');
                 //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#userExcelForm").dialog('close');
@@ -214,7 +214,7 @@
   <!-- //사용자 등록/삭제 -->
   <button type="button" class="btn btn-primary" onClick="fcUserManage_excelForm()">재고현황 excel 업로드</button>
   <!-- 사용자 일괄등록-->
-  <div id="userExcelForm"  title="사용자 일괄등록"></div>
+  <div id="userExcelForm"  title="재고현황 일괄등록"></div>
   <!-- //사용자 일괄등록 -->
   <!-- 사용자 등록-->
   <div id="userManageRegist"  title="사용자 등록"></div>

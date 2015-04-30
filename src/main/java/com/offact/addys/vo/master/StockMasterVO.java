@@ -1,4 +1,4 @@
-package com.offact.addys.vo.manage;
+package com.offact.addys.vo.master;
 
 import com.offact.addys.vo.AbstractVO;
 /**

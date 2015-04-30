@@ -1,14 +1,14 @@
 /**
  *
  */
-package com.offact.addys.service.manage;
+package com.offact.addys.service.master;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.offact.framework.exception.BizException;
-import com.offact.addys.vo.manage.ProductMasterVO;
+import com.offact.addys.vo.master.ProductMasterVO;
 
 /**
  * @author

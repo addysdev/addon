@@ -12,7 +12,7 @@
 	}
 
 } --%>
-function fcUserManage_excelimport(){
+function fcStockMaster_excelimport(){
 
     if($("#files").val() == ''){
     	
@@ -29,9 +29,9 @@ function fcUserManage_excelimport(){
     var gap1 = fileName.substring(ln+1);
 
     if(gap1=="xls"){
-       url="<%= request.getContextPath() %>/manage/userexcelimport?fileName="+gap+"&extension="+gap1;
+       url="<%= request.getContextPath() %>/master/productexcelimport?fileName="+gap+"&extension="+gap1;
     }else if(gap1=="xlsx"){
-       url="<%= request.getContextPath() %>/manage/userexcelimport?fileName="+gap+"&extension="+gap1;
+       url="<%= request.getContextPath() %>/master/productexcelimport?fileName="+gap+"&extension="+gap1;
     }else{
         alert("엑셀파일만 올려주세요");
         return;
@@ -43,22 +43,13 @@ function fcUserManage_excelimport(){
     frm.submit();        
 }
 
+
+
 </script>
 </head>
-<%-- <div id="waitwindow" style=" position:absolute; left:0">
-  <div class="wait" style="" >
-    <img src="<%= request.getContextPath()%>/images/loading.gif" width="32" height="32" style="left:0;" >
-  </div>
-</div> --%>
-<body onLoad="init()" style="background:none">
+<body style="background:none">
 <iframe id="excel_import_result" name="excel_import_result" style="display: none" ></iframe>
 <div id="wrap">
-  <!-- title -->
-  <!-- <div class="title">
-    <h1 class="title_lft"><span class="title_rgt">사용자정보 일괄등록</span></h1>
-  </div> -->
-  <!-- //title -->
-  <!-- contents -->
   <div id="contents">
     <!-- form_area -->
 	<div>
@@ -70,17 +61,35 @@ function fcUserManage_excelimport(){
     </fieldset>
 	</div>
     <!-- //form_area -->
+        <!-- form_area -->
+	<div>
+    <fieldset>
+      <h4>재고일자</h4>
+ 
+        <h5></h5>
+     <h4>대상지점</h4>
+                      <td>
+                            <select class="form-control" title="계정정보" id="searchGubun" name="searchGubun" >
+                                <option value="01" >영등포영풍</option>
+                                <option value="02" >본사</option>
+                            </select>
+                        </td>
+        <h5></h5>
+    </fieldset>
+	</div>
+    <!-- //form_area -->
     <!-- caution_area -->
     <div>
       <h5>업로드시 주의사항</h5>
       <ul>
-        <h6>-엑셀파일로 사용자 정보를 일괄 업데이트 할 수 있습니다.
+      <h6>-업로드 대상의 재고현황 일자와 지점을 꼭 선택해야 합니다.
+          <br />
+        <h6>-엑셀파일로 재고현황을 일괄 업데이트 할 수 있습니다.
           <br />
           <span> (확장자가 xls 인 엑셀 파일만 업로드 가능합니다.)</span> </h6>
         <h6>-엑셀파일 업로드 양식을 다운로드 합니다. <a href="<%= request.getContextPath() %>/fileDownServlet?rFileName=UserUploadFormat.xls&sFileName=UserUploadFormat.xls&filePath=/down"><strong class="blueTxt">[양식다운로드]</strong></a>
           <br />
-          <span> (다운받으신 양식의 첫번째 타이틀에 맞춰 사용자정보를 저장합니다.)</span> </h6>
-        <h6>-사용자정보 입력시 사용자ID가 중복 될 경우 등록실패 됩니다.</h6>
+          <span> (다운받으신 양식의 첫번째 타이틀에 맞춰 재고현황를 저장합니다.)</span> </h6>
         <h6>-파일 업로드 결과는 서버의 log 경로에서 확인이 가능합니다.</h6>
         <br />
       </ul>
@@ -90,7 +99,7 @@ function fcUserManage_excelimport(){
   <!-- //contents -->
   <!-- button -->
   <div class="ly_foot">
-    <button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_excelimport()">import</button>
+    <button type="button" class="btn btn-primary" onClick="javascript:fcProductMaster_excelimport()">import</button>
   </div>
   <!-- //button -->
 </div>

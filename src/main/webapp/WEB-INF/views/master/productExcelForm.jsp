@@ -12,7 +12,7 @@
 	}
 
 } --%>
-function fcUserManage_excelimport(){
+function fcProductMaster_excelimport(){
 
     if($("#files").val() == ''){
     	
@@ -29,9 +29,9 @@ function fcUserManage_excelimport(){
     var gap1 = fileName.substring(ln+1);
 
     if(gap1=="xls"){
-       url="<%= request.getContextPath() %>/manage/userexcelimport?fileName="+gap+"&extension="+gap1;
+       url="<%= request.getContextPath() %>/master/productexcelimport?fileName="+gap+"&extension="+gap1;
     }else if(gap1=="xlsx"){
-       url="<%= request.getContextPath() %>/manage/userexcelimport?fileName="+gap+"&extension="+gap1;
+       url="<%= request.getContextPath() %>/master/productexcelimport?fileName="+gap+"&extension="+gap1;
     }else{
         alert("엑셀파일만 올려주세요");
         return;
@@ -43,22 +43,13 @@ function fcUserManage_excelimport(){
     frm.submit();        
 }
 
+
+
 </script>
 </head>
-<%-- <div id="waitwindow" style=" position:absolute; left:0">
-  <div class="wait" style="" >
-    <img src="<%= request.getContextPath()%>/images/loading.gif" width="32" height="32" style="left:0;" >
-  </div>
-</div> --%>
-<body onLoad="init()" style="background:none">
+<body style="background:none">
 <iframe id="excel_import_result" name="excel_import_result" style="display: none" ></iframe>
 <div id="wrap">
-  <!-- title -->
-  <!-- <div class="title">
-    <h1 class="title_lft"><span class="title_rgt">사용자정보 일괄등록</span></h1>
-  </div> -->
-  <!-- //title -->
-  <!-- contents -->
   <div id="contents">
     <!-- form_area -->
 	<div>
@@ -90,7 +81,7 @@ function fcUserManage_excelimport(){
   <!-- //contents -->
   <!-- button -->
   <div class="ly_foot">
-    <button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_excelimport()">import</button>
+    <button type="button" class="btn btn-primary" onClick="javascript:fcProductMaster_excelimport()">import</button>
   </div>
   <!-- //button -->
 </div>

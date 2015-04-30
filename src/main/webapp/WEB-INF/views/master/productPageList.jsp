@@ -2,7 +2,7 @@
 <SCRIPT>
     // 페이지 이동
     function goPageProductMasterPageList(page) {
-        document.productManageConForm.curPage.value = page;
+        document.productMasterConForm.curPage.value = page;
         var dataParam = $("#productMasterConForm").serialize();
         commonDim(true);
         $.ajax({

@@ -1,4 +1,4 @@
-package com.offact.addys.vo.manage;
+package com.offact.addys.vo.master;
 
 import com.offact.addys.vo.AbstractVO;
 /**
@@ -20,6 +20,7 @@ public class ProductMasterVO extends AbstractVO {
 	private String group2Name;
 	private String group3;
 	private String group3Name;
+	private String recoveryYn;
 
 	private String createUserId;
 	private String createUserName;
@@ -215,6 +216,12 @@ public class ProductMasterVO extends AbstractVO {
 	}
 	public void setUpdateUserName(String updateUserName) {
 		this.updateUserName = updateUserName;
+	}
+	public String getRecoveryYn() {
+		return recoveryYn;
+	}
+	public void setRecoveryYn(String recoveryYn) {
+		this.recoveryYn = recoveryYn;
 	}
     
 }
