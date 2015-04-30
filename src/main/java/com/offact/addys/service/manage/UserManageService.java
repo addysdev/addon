@@ -5,6 +5,7 @@ package com.offact.addys.service.manage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.offact.framework.exception.BizException;
 import com.offact.addys.vo.UserVO;
@@ -63,5 +64,15 @@ public interface UserManageService {
      * @throws BizException
      */
     public int userDeleteProc(String updateUserId ,String arrDelUserId) throws BizException;
+   
+    /**
+     * 사용자 업로드
+     * 
+     * @param UserManageVO
+     * @return
+     * @throws BizException
+     */
+    public abstract Map regiExcelUpload(List<UserManageVO> paramList)
+    	    throws BizException;
 
 }

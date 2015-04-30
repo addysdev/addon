@@ -23,6 +23,7 @@
   <result column="updateDateTime"      property="updateDateTime"  />
   <result column="useYn"               property="useYn"  />
   <result column="deletedYn"           property="deletedYn"  />
+  <result column="userResult"          property="userResult"  />
 </resultMap>
 
 <select id="getUserPageList"  resultMap="userListVO" parameterType="com.offact.addys.vo.manage.UserManageVO" >
@@ -52,7 +53,7 @@
           	   Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join ofGroup T3 On T1.authId=T3.groupId
          WHERE T1.deletedYn='N'
-           <if test="con_groupId != null and con_groupId != ''" >
+           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            AND T1.groupId = #{con_groupId}
            </if>
            <if test="searchValue != null and searchValue != ''" >
@@ -181,5 +182,56 @@
             	,updateDateTime = now()
  		Where userId = #{userId}
 </update>
+
+<select id="validationUploadFile"  resultMap="userListVO" parameterType="com.offact.addys.vo.manage.UserManageVO" >
+    SELECT 
+       'SUCCESS' as userResult
+       FROM 
+              ofUser 
+       WHERE 
+              userId = 'system' 
+</select>
+
+<insert id="insertExcelUser"  parameterType="com.offact.addys.vo.manage.UserManageVO" >
+		insert into ofUser (
+				 userId
+            	,userName
+            	,groupId 
+            	,authId
+            	,excelAuth
+            	,password
+           		,email
+            	,officePhone
+            	,mobliePhone
+            	,ip
+            	,createUserId
+            	,createDateTime
+		)values(
+				 #{userId}
+	  			, #{userName}
+	  			, #{groupId}
+	  			, #{authId}
+	  			, #{excelAuth}
+	  			, #{password}
+	  			, #{email}
+	  		, #{officePhone}
+	  		, #{mobliePhone}
+	  		, #{ip}
+	  		, #{createUserId}
+	  		, now()
+		)
+		ON DUPLICATE KEY UPDATE userName = #{userName},
+		                        groupId = #{groupId},
+		                        authId = #{authId},
+		                        excelAuth = #{excelAuth},
+		                        password = #{password},
+		                        email = #{email},
+		                        officePhone = #{officePhone},
+		                        mobliePhone = #{mobliePhone},
+		                        ip = #{ip},
+		                        updateUserId = #{createUserId},
+		                        updateDateTime =now()
+</insert>
+
 
 </mapper>

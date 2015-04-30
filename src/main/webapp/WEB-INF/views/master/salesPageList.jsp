@@ -25,39 +25,33 @@
       <p><span>총 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
 	    <colgroup>
-	     <col width="5%" />
-         <col width="15%" />
+	     <col width="15%" />
          <col width="15%" />
          <col width="*" />
-         <col width="10%" />
          <col width="10%" />
          <col width="10%" />
          <col width="15%" />
         </colgroup>
 	    <thead>
 	      <tr>
-	        <th><input type="checkbox"  id="userCheckAll"  name="userCheckAll" onchange="fcUserManage_checkAll();" title="전체선택" /></th>
-	        <th>아이디</th>
-            <th>이름</th>
-            <th>지점</th>
-            <th>사용유무</th>
-            <th>조회권한</th>
-            <th>Email</th>
-            <th>수정자</th>
+	        <th>매출현황일자</th>
+            <th>매장아이디</th>
+            <th>매장명</th>
+            <th>최종업데이트UserID</th>
+            <th>최종업데이트UserName</th>
+            <th>최종업데이트</th>
 	      </tr>
 	    </thead>
 	    <tbody>
 	    	<c:if test="${!empty userList}">
              <c:forEach items="${userList}" var="userListVO" varStatus="status">
              <tr id="select_tr_${userListVO.userId}">
-                 <td><input type="checkbox" id="userCheck" name="userCheck" value="${userListVO.userId}" title="선택" /></td>
-                 <td><a href="javascript:fcUserManage_detailSearch('${userListVO.userId}')"><c:out value="${userListVO.userId}"></c:out></a></td>
-                 <td><c:out value="${userListVO.userName}"></c:out></td>
-                 <td><c:out value="${userListVO.groupName}"></c:out></td>
-                 <td class="text_c"><c:out value="${userListVO.useYn}"></c:out></td>
-                 <td class="text_c"><c:out value="${userListVO.authName}"></c:out></td>
-                 <td><c:out value="${userListVO.email}"></c:out></td>
-                 <td><c:out value="${userListVO.updateUserId}"></c:out></td>
+                 <td><a href="javascript:fcUserManage_detailSearch('${userListVO.userId}')"><c:out value=""></c:out></a></td>
+                 <td><c:out value=""></c:out></td>
+                 <td><c:out value=""></c:out></td>
+                 <td><c:out value=""></c:out></td>
+                 <td><c:out value=""></c:out></td>
+                 <td><c:out value=""></c:out></td>
               </tr>
              </c:forEach>
             </c:if>
