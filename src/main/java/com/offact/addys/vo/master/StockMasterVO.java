@@ -18,6 +18,14 @@ public class StockMasterVO extends AbstractVO {
 	private String updateDateTime;
 	private String deletedYn;
 	
+	private String errMsg;
+	
+	public String getErrMsg() {
+		return errMsg;
+	}
+	public void setErrMsg(String errMsg) {
+		this.errMsg = errMsg;
+	}
 	public String getProductCode() {
 		return productCode;
 	}

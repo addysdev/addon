@@ -12,7 +12,7 @@
 	}
 
 } --%>
-function fcUserManage_excelimport(){
+function fcHoldStock_excelimport(){
 
     if($("#files").val() == ''){
     	
@@ -29,55 +29,18 @@ function fcUserManage_excelimport(){
     var gap1 = fileName.substring(ln+1);
 
     if(gap1=="xls"){
-       url="<%= request.getContextPath() %>/manage/userexcelimport?fileName="+gap+"&extension="+gap1;
-    }else if(gap1=="xlsx"){
-       url="<%= request.getContextPath() %>/manage/userexcelimport?fileName="+gap+"&extension="+gap1;
-    }else{
-        alert("엑셀파일만 올려주세요");
-        return;
-    }
+        url="<%= request.getContextPath() %>/master/stockmasterexcelimport?fileName="+gap+"&extension="+gap1+"&importType=hold";
+     }else if(gap1=="xlsx"){
+        url="<%= request.getContextPath() %>/master/stockmasterexcelimport?fileName="+gap+"&extension="+gap1+"&importType=hold";
+     }else{
+         alert("엑셀파일만 올려주세요");
+         return;
+     }
 
     frm.action = url;
     frm.target="excel_import_result";
 
     frm.submit();        
-}
-
-function fcUserManage_excelUpload(){
-
-	var frm=document.userRegistFrm; //form객체세팅
-
-	/* if(frm.userFile.value == ""){
-		
-		alert('업로드할 xls파일을 첨부하세요');
-		return;
-		
-	}else if(!isImageFile(frm.userFile.value)){
-
-		return; 				
-    } */
-	
-	openWaiting();
-	frm.action = "<%=request.getContextPath() %>/H_User.do?cmd=userExcelImport";
-	frm.submit();
-}
-/**
- *  파일 확장자명 체크
- *
- **/
-function isImageFile( obj ) {
-	var strIdx = obj.lastIndexOf( '.' ) + 1;
-	if ( strIdx == 0 ) {
-		return false;
-	} else {
-		var ext = obj.substr( strIdx ).toLowerCase();
-		if ( ext == "xls") {
-			return true;
-		} else {
-			alert(ext+'파일은 전송이 불가능합니다.');
-			return false;
-		}
-	}
 }
 
 </script>
@@ -127,7 +90,7 @@ function isImageFile( obj ) {
   <!-- //contents -->
   <!-- button -->
   <div class="ly_foot">
-    <button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_excelimport()">import</button>
+    <button type="button" class="btn btn-primary" onClick="javascript:fcHoldStock_excelimport()">import</button>
   </div>
   <!-- //button -->
 </div>

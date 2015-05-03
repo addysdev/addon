@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StockMaster">
+
+<resultMap id="stockMasterVO" type="com.offact.addys.vo.master.StockMasterVO" >
+  <result column="productCode"      property="productCode"  />
+  <result column="groupId"          property="groupId"  />
+  <result column="safeStock"      property="safeStock"  />
+  <result column="holdStock"      property="holdStock"  />
+  <result column="createUserId"     property="createUserId"  />
+  <result column="createUserName"   property="createUserName"  />
+  <result column="createDateTime"   property="createDateTime"  />
+  <result column="updateUserId"     property="updateUserId"  />
+  <result column="updateUserName"   property="updateUserName"  />
+  <result column="updateDateTime"   property="updateDateTime"  />
+  <result column="deletedYn"        property="deletedYn"  />
+</resultMap>
+
+<select id="getStockList"  resultMap="stockMasterVO" parameterType="com.offact.addys.vo.master.StockMasterVO" >
+        SELECT T1.productCode
+			  ,T1.groupId
+			  ,T1.safeStock
+			  ,T1.holdStock
+			  ,T1.createUserId
+			  ,T2.userName As createUserName
+			  ,T1.updateUserId
+			  ,T3.userName As updateUserName
+			  ,T1.createDateTime 
+			  ,T1.updateDateTime
+			  ,T1.deletedYn
+          FROM adStockMaster T1
+               Left Join ofUser T2 On T1.createUserId=T2.userId
+			   Left Join ofUser T3 On T1.updateUserId=T3.userId
+         WHERE T1.deletedYn='N'
+           AND T1.productCode = #{productCode}
+               
+         ORDER BY groupId asc
+</select>
+
+<update id="stockDeleteAll" parameterType="java.util.Map" >
+        Update adStockMaster
+       		Set
+  				deletedYn = 'Y'
+            	,updateUserId = #{updateUserId}
+            	,updateDateTime = now()
+ 		Where 1=1
+</update>
+
+<insert id="insertExcelSafe"  parameterType="com.offact.addys.vo.master.StockMasterVO" >
+		insert into adStockMaster (
+				 productCode
+            	,groupId
+            	,safeStock 
+            	,holdStock
+            	,createUserId
+            	,createDateTime
+            	,deletedYn
+		)values(
+				 #{productCode}
+	  			, #{groupId}
+	  			, #{safeStock}
+	  			, 0
+	  			, #{createUserId}
+	  			, now()
+	  			, 'N'
+		)
+		ON DUPLICATE KEY UPDATE safeStock = #{safeStock},
+		                        updateUserId = #{updateUserId},
+		                        updateDateTime =now(),
+		                        deletedYn = 'N'
+		                        
+</insert>
+
+<insert id="insertExcelHold"  parameterType="com.offact.addys.vo.master.StockMasterVO" >
+		insert into adStockMaster (
+				 productCode
+            	,groupId
+            	,safeStock 
+            	,holdStock
+            	,createUserId
+            	,createDateTime
+            	,deletedYn
+		)values(
+				 #{productCode}
+	  			, #{groupId}
+	  			, 0
+	  			, #{holdStock}
+	  			, #{createUserId}
+	  			, now()
+	  			, 'N'
+		)
+		ON DUPLICATE KEY UPDATE holdStock = #{holdStock},
+		                        updateUserId = #{updateUserId},
+		                        updateDateTime =now(),
+		                        deletedYn = 'N'
+		                        
+</insert>
+
+</mapper>

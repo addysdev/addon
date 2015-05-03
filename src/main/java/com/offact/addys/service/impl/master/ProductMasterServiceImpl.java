@@ -43,9 +43,9 @@ public class ProductMasterServiceImpl implements ProductMasterService {
     }
 
     @Override
-    public ProductMasterVO getProductDetail(String productCode) throws BizException {
+    public ProductMasterVO getProductDetail(ProductMasterVO product) throws BizException {
     	
-    	ProductMasterVO productDetailVO = commonDao.selectOne("ProductMaster.getProductDetail", productCode);
+    	ProductMasterVO productDetailVO = commonDao.selectOne("ProductMaster.getProductDetail", product);
 
         return productDetailVO;
     }

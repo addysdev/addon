@@ -37,7 +37,7 @@ public interface ProductMasterService {
      * @return
      * @throws BizException
      */
-    public ProductMasterVO getProductDetail(String productCode) throws BizException;
+    public ProductMasterVO getProductDetail(ProductMasterVO product) throws BizException;
     
     /**
      * 품목 업로드
