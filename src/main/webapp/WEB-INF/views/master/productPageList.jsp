@@ -24,44 +24,35 @@
      <form:form commandName="productMasterVO" name="productMasterPageListForm" method="post" action="" >
       <p><span>총 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
-	    <colgroup>
-	     <col width="15%" />
-         <col width="15%" />
-         <col width="*" />
-         <col width="10%" />
-         <col width="10%" />
-         <col width="10%" />
-         <col width="15%" />
-        </colgroup>
 	    <thead>
 	      <tr>
-	        <th>품목코드</th>
-            <th>바코드</th>
-            <th>품목명</th>
-            <th>구매처</th>
-            <th>최종업데이트UserID</th>
-            <th>최종업데이트UserName</th>
-            <th>최종업데이트</th>
+	        <th class='text-center'>품목코드</th>
+            <th class='text-center'>바코드</th>
+            <th class='text-center'>품목명</th>
+            <th class='text-center'>구매처</th>
+            <th class='text-center'>업데이트<br>사용자ID</th>
+            <th class='text-center'>업데이트 <br>사용자명</th>
+            <th class='text-center'>업데이트 일시</th>
 	      </tr>
 	    </thead>
 	    <tbody>
 	    	<c:if test="${!empty productList}">
              <c:forEach items="${productList}" var="productMasterVO" varStatus="status">
              <tr id="select_tr_${productMasterVO.productCode}">
-                 <td><a href="javascript:fcUserMaster_detailSearch('${productMasterVO.productCode}')"><c:out value="${productMasterVO.productCode}"></c:out></a></td>
-                 <td><c:out value="${productMasterVO.barCode}"></c:out></td>
+                 <td class='text-center'><a href="javascript:fcUserMaster_detailSearch('${productMasterVO.productCode}')"><c:out value="${productMasterVO.productCode}"></c:out></a></td>
+                 <td class='text-center'><c:out value="${productMasterVO.barCode}"></c:out></td>
                  <td><c:out value="${productMasterVO.productName}"></c:out></td>
-                 <td><c:out value="${productMasterVO.companyName}"></c:out></td>
-                 <td><c:out value="${productMasterVO.updateUserId}"></c:out></td>
-                 <td><c:out value="${productMasterVO.updateUserName}"></c:out></td>
-                 <td><c:out value="${productMasterVO.updateDateTime}"></c:out></td>
+                 <td class='text-center'><c:out value="${productMasterVO.companyName}"></c:out></td>
+                 <td class='text-center'><c:out value="${productMasterVO.updateUserId}"></c:out></td>
+                 <td class='text-center'><c:out value="${productMasterVO.updateUserName}"></c:out></td>
+                 <td class='text-center'><c:out value="${productMasterVO.updateDateTime}"></c:out></td>
               </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty productList}">
-              <tr>
-                  <td colspan='7' class='text_c'>조회된 데이터가 없습니다.</td>
-              </tr>
+           <tr>
+           	<td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
+           </tr>
           </c:if>
 	    </tbody>
 	  </table>

@@ -160,81 +160,60 @@
         });
     };
 </SCRIPT>
-<!-- 사용자관리 -->
-	<div class="container">
-        <h4><span>계정관리</span></h4>
-        <!-- 조회조건 -->
-        <div class="search">
-            <form:form commandName="userConVO" id="userManageConForm" name="userManageConForm" method="post" action="" >
-            <input type="hidden" name="curPage"             id="curPage"            value="1" />
-            <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
-            <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
-            <input type="hidden" name="con_userId"          id="con_userId"         value=""  />
-            <input type="hidden" name="userId"          id="userId"         value="${userConVO.userId}"  />
-            <fieldset>
-                <table summary="사용자조회(그룹, 계정정보, 사용여부, 업체구분)">
-                    <colgroup>
-                        <col width="7%" />
-                        <col width="15%" />
-                        <col width="7%" />
-                        <col width="10%" />
-                        <col width="15%" />
-                        <col width="7%" />
-                        <col width="20%" />
-                        <col width="*" />
-                    </colgroup>
-                    <tbody>
-                    <tr>
-                    	<div class="form-group">
-                        <!-- label의 for값과 input의 id값을 똑같이 사용해주세요. -->
-                        <th><label for="con_groupId">지점</label></th>
-                         <td>    
-                            <input type="text" class="form-control" id="con_groupId" name="con_groupId"  value="${userConVO.groupId}" />
-                        </td>
-                        <th><label for="con_useYn">사용여부</label></th>
-                        <td>
-                            <select class="form-control" title="사용유무" id="con_useYn" name="con_useYn" >
-                                <option value="" >전체</option>
-                                <option value="Y" >사용</option>
-                                <option value="N" >미사용</option>
-                            </select>
-                        </td>
-                        <th><label for="searchGubun">계정정보</label></th>
-                        <td>
-                            <select class="form-control" title="계정정보" id="searchGubun" name="searchGubun" >
-                                <option value="01" >이름</option>
-                                <option value="02" >아이디</option>
-                            </select>
-                        </td>
-                        <td>    
-                            <input type="text" class="form-control" id="searchValue" name="searchValue"  value="${userConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
-                        </td>
-                         <td><button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_listSearch()">search</button></td>
-                         <td><button type="button" class="btn" onClick="">excel</button></td>
-                    </div>
-                    </tr>
-                    </tbody>
-                </table>
-            </fieldset>
-            </form:form>
-        </div >
-        <!-- //조회 -->
+<div class="container">
+<h4><span>[계정관리]</span></h4>
+	  <!-- 조회조건 -->
+	  <form:form class="form-inline" role="form" commandName="userConVO" id="userManageConForm" name="userManageConForm" method="post" action="" >
+        <input type="hidden" name="curPage"             id="curPage"            value="1" />
+        <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
+        <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
+        <input type="hidden" name="con_userId"          id="con_userId"         value=""  />
+        <input type="hidden" name="userId"              id="userId"         value="${userConVO.userId}"  />
+        <fieldset>
+        	<div class="form-group">
+        	    <label for="con_groupId"> 지점선택 : </label>
+				<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${userConVO.groupId}">
+                    <option value="AD001" >물류정상</option>
+                    <option value="BD009" >반디울산</option>
+                    <option value="YP008" >영풍청량리</option>
+                </select>
+                <label for="con_useYn"> 사용여부 : </label>
+				<select class="form-control" title="사용유무" id="con_useYn" name="con_useYn" >
+                    <option value="" >전체</option>
+                    <option value="Y" >사용</option>
+                    <option value="N" >미사용</option>
+                </select>
+				<label for="searchGubun"> 검색조건 : </label>
+				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
+                	<option value="01" >사용자명</option>
+                    <option value="02" >사용자ID</option>
+           		</select>
+				<label class="sr-only" for="searchValue"> 조회값 </label>
+				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${userConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
+				<button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_listSearch()">search</button>
+	            <button type="button" class="btn" onClick="">excel</button>
+            </div>
+	    </fieldset>
+	  </form:form>
+	  <!-- //조회 -->
+  <br>
   <!-- 조회결과리스트 -->
-  <div id=userManagePageList>
-  </div>
-  <!-- //조회결과리스트 -->
+  <div id=userManagePageList></div>
+  
   <!-- //사용자 등록/삭제 -->
-  <button type="button" class="btn btn-primary" onClick="fcUserManage_excelForm()">upload</button>
+  <button type="button" class="btn btn-primary" onClick="fcUserManage_excelForm()">사용자 일괄등록</button>
   <button type="button" class="btn btn-primary" onClick="fcUserManage_regForm()">regist</button>
   <button type="button" class="btn btn-danger" onClick="fcUserManage_delete()">delete</button>
+  
   <!-- 사용자 일괄등록-->
   <div id="userExcelForm"  title="사용자 일괄등록"></div>
-  <!-- //사용자 일괄등록 -->
+  
   <!-- 사용자 등록-->
   <div id="userManageRegist"  title="사용자 등록"></div>
-  <!-- //사용자 등록 -->
+
   <!-- 사용자 수정-->
   <div id="userManageModify"  title="사용자 수정"></div>
-  <!-- //사용자 수정 -->
+
 </div>
+<br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>

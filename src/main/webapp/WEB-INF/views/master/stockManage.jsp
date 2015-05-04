@@ -1,5 +1,6 @@
 <%@ include file="/WEB-INF/views/addys/top.jsp" %>
 <SCRIPT>
+
     // 리스트 조회
     function fcStock_listSearch(curPage){
 
@@ -38,7 +39,7 @@
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
             width : 480,
-            height : 518,
+            height : 550,
             modal : true, //주위를 어둡게
 
             open:function(){
@@ -55,57 +56,45 @@
             }
         });
     };
-    
+
 </SCRIPT>
-<!-- 사용자관리 -->
-	<div class="container">
-        <h4><span>재고현황관리</span></h4>
-        <!-- 조회조건 -->
-        <div class="search">
-            <form:form commandName="stockConVO" id="stockConForm" name="stockConForm" method="post" action="" >
-            <input type="hidden" name="curPage"             id="curPage"            value="1" />
-            <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
-            <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
-            <fieldset>
-                <table summary="재고현황조회">
-                    <colgroup>
-                        <col width="7%" />
-                        <col width="15%" />
-                        <col width="7%" />
-                        <col width="10%" />
-                        <col width="15%" />
-                        <col width="7%" />
-                        <col width="20%" />
-                        <col width="*" />
-                    </colgroup>
-                    <tbody>
-                    <tr>
-                    	<div class="form-group">
-                        <!-- label의 for값과 input의 id값을 똑같이 사용해주세요. -->
-                        <th><label for="searchGubun">검색조건</label></th>
-                        <td>
-                            <select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${stockConVO.groupId}">
-                                <option value="AD001" >물류정상</option>
-                                <option value="BD009" >반디울산</option>
-                                <option value="YP008" >영풍청량리</option>
-                            </select>
-                        </td>
-                        <td>    
-                            <input type="text" class="form-control" id=start_stockDate name="start_stockDate"  value="${stockConVO.start_stockDate}" onkeypress="javascript:return checkKey(event);"/>
-                        </td>~
-                        <td>    
-                            <input type="text" class="form-control" id="end_stockDate" name="end_stockDate"  value="${stockConVO.end_stockDate}" onkeypress="javascript:return checkKey(event);"/>
-                        </td>
-                         <td><button type="button" class="btn btn-primary" onClick="javascript:fcStock_listSearch()">search</button></td>
-                         <td><button type="button" class="btn" onClick="">excel</button></td>
-                    </div>
-                    </tr>
-                    </tbody>
-                </table>
-            </fieldset>
-            </form:form>
-        </div >
-        <!-- //조회 -->
+<div class="container">
+	<h4><span>[재고현황관리]</span></h4>
+	  <!-- 조회조건 -->
+	  <form:form class="form-inline" role="form" commandName="stockConVO" id="stockConForm" name="stockConForm" method="post" action="" >
+        <input type="hidden" name="curPage"             id="curPage"            value="1" />
+        <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
+        <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
+        <fieldset>
+        	<div class="form-group" >
+				<label for="start_stockDate end_stockDate"> 재고현황일자 : </label>
+				<div class='input-group date ' id='datetimepicker1' data-link-field="start_stockDate" data-link-format="yyyy-mm-dd">
+	                <input type='text' class="form-control" value="${stockConVO.start_stockDate}" />
+	                <span class="input-group-addon">
+	                    <span class="glyphicon glyphicon-calendar"></span>
+	                </span>
+	                <input type="hidden" id="start_stockDate" name="start_stockDate" value="${stockConVO.start_stockDate}" />
+	            </div>
+	            <div class='input-group date' id='datetimepicker2'  data-link-field="end_stockDate" data-link-format="yyyy-mm-dd">
+	                <input type='text' class="form-control" value="${stockConVO.end_stockDate}" />
+	                <span class="input-group-addon">
+	                    <span class="glyphicon glyphicon-calendar"></span>
+	                </span>
+	                <input type="hidden" id="end_stockDate" name="end_stockDate" value="${stockConVO.end_stockDate}" />
+	            </div>
+				<label for="con_groupId"> 지점선택 : </label>
+				<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${stockConVO.groupId}">
+                    <option value="AD001" >물류정상</option>
+                    <option value="BD009" >반디울산</option>
+                    <option value="YP008" >영풍청량리</option>
+                </select>
+                <button type="button" class="btn btn-primary" onClick="javascript:fcStock_listSearch()">search</button>
+                <button type="button" class="btn" onClick="">excel</button>
+        	</div>
+      	</fieldset>
+	  </form:form>
+	  <!-- //조회 -->
+  <br>
   <!-- 조회결과리스트 -->
   <div id=stockPageList>
   </div>
@@ -119,4 +108,35 @@
   <div id="stockDetailManage"  title="재고상세 현황"></div>
   <!-- //재고상세현황 페이지 -->
 </div>
+<br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>
+<script type="text/javascript">
+
+
+    $(function () {
+        $('#datetimepicker1').datetimepicker(
+        		{
+                	language:  'kr',
+                    format: 'yyyy-mm-dd',
+                    weekStart: 1,
+                    todayBtn:  1,
+            		autoclose: 1,
+            		todayHighlight: 1,
+            		startView: 2,
+            		minView: 2,
+            		forceParse: 0
+                });
+        $('#datetimepicker2').datetimepicker(
+        		{
+                	language:  'kr',
+                    format: 'yyyy-mm-dd',
+                    weekStart: 1,
+                    todayBtn:  1,
+            		autoclose: 1,
+            		todayHighlight: 1,
+            		startView: 2,
+            		minView: 2,
+            		forceParse: 0
+                });
+    });
+</script>

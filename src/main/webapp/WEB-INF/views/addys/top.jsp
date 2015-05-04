@@ -28,6 +28,13 @@
     <!-- Latest compiled and minified CSS-->
     <link rel="stylesheet" href="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.css">
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/css/bootstrap.css">
+	
+	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/bootstrap-datetimepicker.min.css">
+
+	<!--link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/default.css" />
+    <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/common.css" />
+    <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/layout.css" />
+    <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/content.css" /-->
 	<!-- lastest ver -->
 	<!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css" rel="stylesheet">-->
 	<script>
@@ -65,7 +72,7 @@
         </button>  <button type="button" class="btn btn-primary" onClick="goLogout()">logout</button>
       </p>
       <ul class="nav nav-pills" role="tablist">
-        <li class="active"><a href="#">Home</a></li>
+        <li class="active"><a href="<%= request.getContextPath() %>/order/targetmanage">Home</a></li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">발주 <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">

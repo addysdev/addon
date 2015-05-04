@@ -51,41 +51,33 @@
      <form:form commandName="stockVO" name="stockPageListForm" method="post" action="" >
       <p><span>총 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
-	    <colgroup>
-	     <col width="15%" />
-         <col width="15%" />
-         <col width="*" />
-         <col width="10%" />
-         <col width="10%" />
-         <col width="15%" />
-        </colgroup>
 	    <thead>
 	      <tr>
-	        <th>재고현황일자</th>
-            <th>매장아이디</th>
-            <th>매장명</th>
-            <th>최종업데이트UserID</th>
-            <th>최종업데이트UserName</th>
-            <th>최종업데이트</th>
+	        <th class='text-center'>재고현황일자</th>
+            <th class='text-center'>매장아이디</th>
+            <th class='text-center'>매장명</th>
+            <th class='text-center'>업데이트 사용자ID</th>
+            <th class='text-center'>업데이트 사용자명</th>
+            <th class='text-center'>업데이트 일시</th>
 	      </tr>
 	    </thead>
 	    <tbody>
 	    	<c:if test="${!empty stockList}">
              <c:forEach items="${stockList}" var="stockVO" varStatus="status">
              <tr id="select_tr_${stockVO.stockDate}">
-                 <td><a href="javascript:fcStock_detailPageList('${stockVO.stockDate}','${stockVO.groupId}')"><c:out value="${stockVO.stockDate}"></c:out></a></td>
-                 <td><c:out value="${stockVO.groupId}"></c:out></td>
+                 <td class='text-center'><a href="javascript:fcStock_detailPageList('${stockVO.stockDate}','${stockVO.groupId}')"><c:out value="${stockVO.stockDate}"></c:out></a></td>
+                 <td class='text-center'><c:out value="${stockVO.groupId}"></c:out></td>
                  <td><c:out value="${stockVO.groupName}"></c:out></td>
-                 <td><c:out value="${stockVO.lastUserId}"></c:out></td>
-                 <td><c:out value="${stockVO.lastUserName}"></c:out></td>
-                 <td><c:out value="${stockVO.stockDateTime}"></c:out></td>
+                 <td class='text-center'><c:out value="${stockVO.lastUserId}"></c:out></td>
+                 <td class='text-center'><c:out value="${stockVO.lastUserName}"></c:out></td>
+                 <td class='text-center'><c:out value="${stockVO.stockDateTime}"></c:out></td>
               </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty stockList}">
-              <tr>
-                  <td colspan='7' class='text_c'>조회된 데이터가 없습니다.</td>
-              </tr>
+           <tr>
+           	<td colspan='6' class='text-center'>조회된 데이터가 없습니다.</td>
+           </tr>
           </c:if>
 	    </tbody>
 	  </table>

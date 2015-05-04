@@ -24,16 +24,6 @@
      <form:form commandName="userlistVO" name="userManagePageListForm" method="post" action="" >
       <p><span>총 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
-	    <colgroup>
-	     <col width="5%" />
-         <col width="15%" />
-         <col width="15%" />
-         <col width="*" />
-         <col width="10%" />
-         <col width="10%" />
-         <col width="10%" />
-         <col width="15%" />
-        </colgroup>
 	    <thead>
 	      <tr>
 	        <th><input type="checkbox"  id="userCheckAll"  name="userCheckAll" onchange="fcUserManage_checkAll();" title="전체선택" /></th>
@@ -54,17 +44,17 @@
                  <td><a href="javascript:fcUserManage_detailSearch('${userListVO.userId}')"><c:out value="${userListVO.userId}"></c:out></a></td>
                  <td><c:out value="${userListVO.userName}"></c:out></td>
                  <td><c:out value="${userListVO.groupName}"></c:out></td>
-                 <td class="text_c"><c:out value="${userListVO.useYn}"></c:out></td>
-                 <td class="text_c"><c:out value="${userListVO.authName}"></c:out></td>
+                 <td><c:out value="${userListVO.useYn}"></c:out></td>
+                 <td><c:out value="${userListVO.authName}"></c:out></td>
                  <td><c:out value="${userListVO.email}"></c:out></td>
                  <td><c:out value="${userListVO.updateUserId}"></c:out></td>
               </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty userList}">
-              <tr>
-                  <td colspan='7' class='text_c'>조회된 데이터가 없습니다.</td>
-              </tr>
+           <tr>
+               <td colspan='8' class='text-center'>조회된 데이터가 없습니다.</td>
+           </tr>
           </c:if>
 	    </tbody>
 	  </table>

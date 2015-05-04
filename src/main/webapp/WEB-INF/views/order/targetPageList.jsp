@@ -1,17 +1,17 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <SCRIPT>
     // 페이지 이동
-    function goPageUserManagePageList(page) {
-        document.userManageConForm.curPage.value = page;
-        var dataParam = $("#userManageConForm").serialize();
+    function goPageProductMasterPageList(page) {
+        document.productMasterConForm.curPage.value = page;
+        var dataParam = $("#productMasterConForm").serialize();
         commonDim(true);
         $.ajax({
             type: "POST",
-            url:  "<%= request.getContextPath() %>/manage/userpagelist",
+            url:  "<%= request.getContextPath() %>/order/targetpagelist",
               data:dataParam,
             success: function(result) {
                    commonDim(false);
-                   $("#userManagePageList").html(result);
+                   $("#productMasterPageList").html(result);
             },
             error:function(){
                 commonDim(false);
@@ -21,47 +21,38 @@
 
 </SCRIPT>
 	<div class="container">
-     <form:form commandName="userlistVO" name="userManagePageListForm" method="post" action="" >
+     <form:form commandName="productMasterVO" name="productMasterPageListForm" method="post" action="" >
       <p><span>총 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
-	    <colgroup>
-	     <col width="15%" />
-         <col width="15%" />
-         <col width="*" />
-         <col width="10%" />
-         <col width="10%" />
-         <col width="10%" />
-         <col width="15%" />
-        </colgroup>
 	    <thead>
 	      <tr>
-	        <th>발주상태</th>
-            <th>매장ID</th>
-            <th>매장명</th>
-            <th>업체코드</th>
-            <th>업체명</th>
-            <th>수량</th>
-            <th>기준금액</th>
+	        <th class='text-center'>발주상태</th>
+            <th class='text-center'>매장ID</th>
+            <th class='text-center'>매장명</th>
+            <th class='text-center'>업체코드</th>
+            <th class='text-center'>업체명</th>
+            <th class='text-center'>수량</th>
+            <th class='text-center'>기준금액</th>
 	      </tr>
 	    </thead>
 	    <tbody>
-	    	<c:if test="${!empty userList}">
-             <c:forEach items="${userList}" var="userListVO" varStatus="status">
-             <tr id="select_tr_${userListVO.userId}">
-                 <td><a href="javascript:fcUserManage_detailSearch('${userListVO.userId}')"><c:out value=""></c:out></a></td>
-                 <td><c:out value=""></c:out></td>
-                 <td><c:out value=""></c:out></td>
-                 <td><c:out value=""></c:out></td>
-                 <td><c:out value=""></c:out></td>
-                 <td><c:out value="22"></c:out></td>
-                 <td><c:out value="5000"></c:out></td>
+	    	<c:if test="${!empty productList}">
+             <c:forEach items="${productList}" var="productMasterVO" varStatus="status">
+             <tr id="select_tr_${productMasterVO.productCode}">
+                 <td class='text-center'><a href="javascript:fcUserMaster_detailSearch('${productMasterVO.productCode}')"><c:out value="대기"></c:out></a></td>
+                 <td class='text-center'><c:out value="${productMasterVO.companyCode}"></c:out></td>
+                 <td><c:out value="${productMasterVO.companyName}"></c:out></td>
+                 <td class='text-center'><c:out value="${productMasterVO.companyCode}"></c:out></td>
+                 <td class='text-center'><c:out value="${productMasterVO.companyName}"></c:out></td>
+                 <td class='text-center'><c:out value="27"></c:out></td>
+                 <td class='text-center'><c:out value="5860"></c:out></td>
               </tr>
              </c:forEach>
             </c:if>
-           <c:if test="${empty userList}">
-              <tr>
-                  <td colspan='7' class='text_c'>조회된 데이터가 없습니다.</td>
-              </tr>
+           <c:if test="${empty productList}">
+           <tr>
+           	<td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
+           </tr>
           </c:if>
 	    </tbody>
 	  </table>
@@ -69,7 +60,7 @@
 	</div>
 	<div class="container">
 	    <!-- 페이징 -->
-        <taglib:paging cbFnc="goPageUserManagePageList" totalCount="${totalCount}" curPage="${userCon.curPage}" rowCount="${userCon.rowCount}" />
+        <taglib:paging cbFnc="goPageProductMasterPageList" totalCount="${totalCount}" curPage="${productCon.curPage}" rowCount="${productCon.rowCount}" />
         <!-- //페이징 -->
 	</div>
     

@@ -12,7 +12,7 @@
 	}
 
 } --%>
-function fcStockMaster_excelimport(){
+function fcStock_excelimport(){
 
     if($("#files").val() == ''){
     	
@@ -29,9 +29,9 @@ function fcStockMaster_excelimport(){
     var gap1 = fileName.substring(ln+1);
 
     if(gap1=="xls"){
-       url="<%= request.getContextPath() %>/master/productexcelimport?fileName="+gap+"&extension="+gap1;
+       url="<%= request.getContextPath() %>/master/stockexcelimport?fileName="+gap+"&extension="+gap1;
     }else if(gap1=="xlsx"){
-       url="<%= request.getContextPath() %>/master/productexcelimport?fileName="+gap+"&extension="+gap1;
+       url="<%= request.getContextPath() %>/master/stockexcelimport?fileName="+gap+"&extension="+gap1;
     }else{
         alert("엑셀파일만 올려주세요");
         return;
@@ -44,6 +44,17 @@ function fcStockMaster_excelimport(){
 }
 
 
+$('.form_date').datetimepicker({
+    language:  'kr',
+    format: 'yyyy-mm-dd',
+    weekStart: 1,
+    todayBtn:  1,
+	autoclose: 1,
+	todayHighlight: 1,
+	startView: 2,
+	minView: 2,
+	forceParse: 0
+});
 
 </script>
 </head>
@@ -65,7 +76,16 @@ function fcStockMaster_excelimport(){
 	<div>
     <fieldset>
       <h4>재고일자</h4>
- 
+      <div class="form-group">
+                <label for="dtp_input2" class="col-md-2 control-label">Date Picking</label>
+                <div class="input-group date form_date col-md-5" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                    <input class="form-control" size="16" type="text" value="" readonly>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+					<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+				<input type="hidden" id="dtp_input2" value="" /><br/>
+            </div>
+      </div>
         <h5></h5>
      <h4>대상지점</h4>
                       <td>
@@ -99,7 +119,7 @@ function fcStockMaster_excelimport(){
   <!-- //contents -->
   <!-- button -->
   <div class="ly_foot">
-    <button type="button" class="btn btn-primary" onClick="javascript:fcProductMaster_excelimport()">import</button>
+    <button type="button" class="btn btn-primary" onClick="javascript:fcStock_excelimport()">import</button>
   </div>
   <!-- //button -->
 </div>

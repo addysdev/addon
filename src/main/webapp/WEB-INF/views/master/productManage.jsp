@@ -138,67 +138,46 @@
         });
     };
 </SCRIPT>
-<!-- 사용자관리 -->
-	<div class="container">
-        <h4><span>품목현황관리</span></h4>
-        <!-- 조회조건 -->
-        <div class="search">
-            <form:form commandName="productConVO" id="productMasterConForm" name="productMasterConForm" method="post" action="" >
-            <input type="hidden" name="curPage"             id="curPage"            value="1" />
-            <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
-            <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
-            <fieldset>
-                <table summary="품목조회">
-                    <colgroup>
-                        <col width="7%" />
-                        <col width="15%" />
-                        <col width="7%" />
-                        <col width="10%" />
-                        <col width="15%" />
-                        <col width="7%" />
-                        <col width="20%" />
-                        <col width="*" />
-                    </colgroup>
-                    <tbody>
-                    <tr>
-                    	<div class="form-group">
-                        <!-- label의 for값과 input의 id값을 똑같이 사용해주세요. -->
-                        <th><label for="searchGubun">검색조건</label></th>
-                        <td>
-                            <select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" >
-                                <option value="01" >품목코드</option>
-                                <option value="02" >품목명</option>
-                            </select>
-                        </td>
-                        <td>    
-                            <input type="text" class="form-control" id="searchValue" name="searchValue"  value="${userConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
-                        </td>
-                         <td><button type="button" class="btn btn-primary" onClick="javascript:fcProductMaster_listSearch()">search</button></td>
-                         <td><button type="button" class="btn" onClick="">excel</button></td>
-                    </div>
-                    </tr>
-                    </tbody>
-                </table>
-            </fieldset>
-            </form:form>
-        </div >
-        <!-- //조회 -->
+<div class="container">
+	<h4><span>[품목현황관리]</span></h4>
+	  <!-- 조회조건 -->
+	  <form:form class="form-inline" role="form" commandName="productConVO" id="productMasterConForm" name="productMasterConForm" method="post" action="" >
+        <input type="hidden" name="curPage"             id="curPage"            value="1" />
+        <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
+        <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
+        <fieldset>
+        	<div class="form-group">
+				<label for="searchGubun"> 검색조건 : </label>
+				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
+                	<option value="01" >품목코드</option>
+                    <option value="02" >품목명</option>
+           		</select>
+				<label class="sr-only" for="searchValue"> 조회값 </label>
+				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${productConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
+				<button type="button" class="btn btn-primary" onClick="javascript:fcProductMaster_listSearch()">search</button>
+	            <button type="button" class="btn" onClick="">excel</button>
+            </div>
+	    </fieldset>
+	  </form:form>
+	  <!-- //조회 -->
+  <br>
   <!-- 조회결과리스트 -->
-  <div id=productMasterPageList>
-  </div>
-  <!-- //조회결과리스트 -->
-  <!-- //사용자 등록/삭제 -->
-  <button type="button" class="btn btn-primary" onClick="fcProduct_excelForm()">품목 excel 업로드</button>
-  <button type="button" class="btn btn-primary" onClick="fcSafeStock_excelForm()">안전재고 excel 업로드</button>
-  <button type="button" class="btn btn-primary" onClick="fcHoldStock_excelForm()">보유재고 excel 업로드</button>
+  <div id=productMasterPageList></div>
+
+  <!-- 품목 안전재고 보유재고 일괄등록 -->
+  <button type="button" class="btn btn-primary" onClick="fcProduct_excelForm()">품목 일괄등록</button>
+  <button type="button" class="btn btn-primary" onClick="fcSafeStock_excelForm()">안전재고 일괄등록</button>
+  <button type="button" class="btn btn-primary" onClick="fcHoldStock_excelForm()">보유재고 일괄등록</button>
+  
   <!-- 품목 일괄등록-->
   <div id="productExcelForm"  title="품목 일괄등록"></div>
-  <!-- //품목 일괄등록 -->
+
   <!-- 안전재고 일괄등록-->
   <div id="safeStockExcelForm"  title="안저재고 일괄등록"></div>
-  <!-- //안전재고 일괄등록 -->
+
   <!-- 보유재고 일괄등록-->
   <div id="holdStockExcelForm"  title="보유재고 일괄등록"></div>
-  <!-- //보유재고 일괄등록 -->
+
 </div>
+<br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>

@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -819,11 +820,15 @@ public class MasterController {
         HttpSession session = request.getSession();
         String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
         
         StockVO stockConVO = new StockVO();
         
-        stockConVO.setStart_stockDate("20150503");
-        stockConVO.setEnd_stockDate("20150503");
+        stockConVO.setStart_stockDate(strToday);
+        stockConVO.setEnd_stockDate(strToday);
 
         // 조회조건저장
         mv.addObject("stockConVO", stockConVO);
