@@ -13,9 +13,11 @@
   </head>
 
   <body>
-    <div class="container">
-      <h1>Login Fail (등록된 사용자가 아닙니다.)</h1>
-      <h4><a href="<%= request.getContextPath() %>/addys/loginform" ><-뒤로가기</a></h4>
-    </div>
+  <div class="container">
+      <h3><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-plus-sign"></span> Addys Purchase Management System</font></strong></h3>
+      <h1><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-exclamation-sign"></span> Login Fail</font></strong></h1>
+      <h5><font style="color:#FF9900">(등록된 사용자가 아닙니다.)</font></h5>   
+      <h5><strong><a href="<%= request.getContextPath() %>/addys/loginform" ><font style="color:#428bca"> <span class="glyphicon glyphicon-arrow-left"></span> 뒤로가기</font></a></strong></h5>
+  </div>
   </body>
 </html>

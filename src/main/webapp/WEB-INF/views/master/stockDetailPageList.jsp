@@ -20,39 +20,35 @@
     }
     
 </SCRIPT>
-	<div class="container">
+	<div class="container-fluid">
      <form:form commandName="stockVO" name="stockDetailPageListForm" method="post" action="" >
-      <p><span>총 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
+      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
-	    <colgroup>
-	     <col width="25%" />
-         <col width="25%" />
-        </colgroup>
 	    <thead>
 	      <tr>
-	        <th>품목코드</th>
-            <th>품목명</th>
+	        <th class='text-center'>품목코드</th>
+            <th class='text-center'>품목명</th>
          </tr>
 	    </thead>
 	    <tbody>
 	    	<c:if test="${!empty stockDetailList}">
              <c:forEach items="${stockDetailList}" var="stockVO" varStatus="status">
              <tr id="select_tr_${stockVO.productCode}">
-                 <td><c:out value="${stockVO.productCode}"></c:out></td>
-                 <td><c:out value="${stockVO.productName}"></c:out></td>
+	              <td><c:out value="${stockVO.productCode}"></c:out></td>
+	              <td><c:out value="${stockVO.productName}"></c:out></td>
               </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty stockDetailList}">
               <tr>
-                  <td colspan='7' class='text_c'>조회된 데이터가 없습니다.</td>
+                  <td colspan='2' class='text-center'>조회된 데이터가 없습니다.</td>
               </tr>
           </c:if>
 	    </tbody>
 	  </table>
 	 </form:form>
 	</div>
-	<div class="container">
+	<div class="container-fluid">
 	    <!-- 페이징 -->
         <taglib:paging cbFnc="goPageStockDetailPageList" totalCount="${totalCount}" curPage="${stockDetailConVO.curPage}" rowCount="${stockDetailConVO.rowCount}" />
         <!-- //페이징 -->

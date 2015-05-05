@@ -94,7 +94,7 @@
 
   <body onload="init()">
     <div class="container">
-      <h2>addys login</h2>
+      <h3><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-plus-sign"></span> Addys Purchase Management System</font></strong></h3>
       <form method="post" id="loginForm" name="loginForm"  role="form" >
         <div class="form-group">
           <label for="id">Id:</label>
@@ -112,4 +112,5 @@
     </div>
   </body>
 </html>
+<br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>

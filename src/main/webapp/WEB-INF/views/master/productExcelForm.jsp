@@ -47,43 +47,34 @@ function fcProductMaster_excelimport(){
 
 </script>
 </head>
-<body style="background:none">
+<body>
 <iframe id="excel_import_result" name="excel_import_result" style="display: none" ></iframe>
-<div id="wrap">
-  <div id="contents">
-    <!-- form_area -->
-	<div>
-    <fieldset>
-      <h4>등록파일 선택</h4>
-      <form:form commandName="fileVO"  id="excel_form" method="post" target="excel_import_result"  name="excel_form"  enctype="multipart/form-data" >
-        <h5><span>업로드 할 <em class="bold">엑셀파일</em></span><input type="file"  id="files" name="files" /></h5>
-      </form:form>
-    </fieldset>
-	</div>
-    <!-- //form_area -->
-    <!-- caution_area -->
-    <div>
-      <h5>업로드시 주의사항</h5>
-      <ul>
-        <h6>-엑셀파일로 사용자 정보를 일괄 업데이트 할 수 있습니다.
-          <br />
-          <span> (확장자가 xls 인 엑셀 파일만 업로드 가능합니다.)</span> </h6>
-        <h6>-엑셀파일 업로드 양식을 다운로드 합니다. <a href="<%= request.getContextPath() %>/fileDownServlet?rFileName=UserUploadFormat.xls&sFileName=UserUploadFormat.xls&filePath=/down"><strong class="blueTxt">[양식다운로드]</strong></a>
-          <br />
-          <span> (다운받으신 양식의 첫번째 타이틀에 맞춰 사용자정보를 저장합니다.)</span> </h6>
-        <h6>-사용자정보 입력시 사용자ID가 중복 될 경우 등록실패 됩니다.</h6>
-        <h6>-파일 업로드 결과는 서버의 log 경로에서 확인이 가능합니다.</h6>
-        <br />
-      </ul>
-    </div>
-    <!-- //caution_area -->
+ <!-- content -->
+<div class="container-fluid">
+ <!-- form_area -->
+ <form:form class="form-inline" role="form" commandName="fileVO"  id="excel_form" method="post" target="excel_import_result"  name="excel_form"  enctype="multipart/form-data" >
+  <fieldset>
+  <div class="form-group" >
+  <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 업로드 파일 선택</font></strong></h4>
+  <h5><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-bookmark"></span> 업로드 할 <em class="bold"> excel파일</em></font></strong></h5>
+  <input type="file"  id="files" name="files" />
+  <br><br> 
+  <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 업로드 시 주의사항</font></strong></h4>
+  <h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 엑셀파일 업로드 양식을 다운로드 합니다. 
+  <a href="<%= request.getContextPath() %>/fileDownServlet?rFileName=UserUploadFormat.xls&sFileName=UserUploadFormat.xls&filePath=/down"><strong><font style="color:#428bca">[양식다운로드]</font></strong></a></font></strong></h6>
+  <h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 파일 업로드 결과는 서버의 log 경로에서 확인이 가능합니다.</font></strong></h6>
   </div>
-  <!-- //contents -->
-  <!-- button -->
-  <div class="ly_foot">
-    <button type="button" class="btn btn-primary" onClick="javascript:fcProductMaster_excelimport()">import</button>
-  </div>
+  </fieldset>
+</form:form>
+ <!-- //form_area --> 
+ <br>
+ <!-- button -->
+ <div >
+  <button type="button" class="btn btn-primary" onClick="javascript:fcProductMaster_excelimport()">upload</button>
+ </div>
   <!-- //button -->
 </div>
+ </div>
+ <!-- //content -->
 </body>
 </html>

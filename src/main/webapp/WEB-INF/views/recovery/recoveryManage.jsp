@@ -3,23 +3,22 @@
     // 리스트 조회
     function fcUserManage_listSearch(curPage){
 
-        userManageConForm.con_userId.value = "";
-        curPage = (curPage==null) ? 1:curPage;
-        userManageConForm.curPage.value = curPage;
+    	 curPage = (curPage==null) ? 1:curPage;
+         productMasterConForm.curPage.value = curPage;
 
-        commonDim(true);
-        $.ajax({
-            type: "POST",
-               url:  "<%= request.getContextPath() %>/recovery/recoverypagelist",
-                    data:$("#userManageConForm").serialize(),
-               success: function(result) {
-                   commonDim(false);
-                   $("#userManagePageList").html(result);
-               },
-               error:function() {
-                   commonDim(false);
-               }
-        });
+         commonDim(true);
+         $.ajax({
+             type: "POST",
+                url:  "<%= request.getContextPath() %>/recover/recoverpagelist",
+                     data:$("#productMasterConForm").serialize(),
+                success: function(result) {
+                    commonDim(false);
+                    $("#productMasterPageList").html(result);
+                },
+                error:function() {
+                    commonDim(false);
+                }
+         });
     }
     /// key down function (엔터키가 입력되면 검색함수 호출)
     function checkKey(event){
@@ -160,67 +159,60 @@
         });
     };
 </SCRIPT>
-<!-- 사용자관리 -->
-	<div class="container">
-        <h4><span>회수리스트</span></h4>
-        <!-- 조회조건 -->
-        <div class="search">
-            <form:form commandName="userConVO" id="userManageConForm" name="userManageConForm" method="post" action="" >
-            <input type="hidden" name="curPage"             id="curPage"            value="1" />
-            <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
-            <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
-            <input type="hidden" name="con_userId"          id="con_userId"         value=""  />
-            <input type="hidden" name="userId"          id="userId"         value="${userConVO.userId}"  />
-            <fieldset>
-                <table summary="사용자조회(그룹, 계정정보, 사용여부, 업체구분)">
-                    <colgroup>
-                        <col width="7%" />
-                        <col width="15%" />
-                        <col width="7%" />
-                        <col width="10%" />
-                        <col width="15%" />
-                        <col width="7%" />
-                        <col width="20%" />
-                        <col width="*" />
-                    </colgroup>
-                    <tbody>
-                    <tr>
-                    	<div class="form-group">
-                        <!-- label의 for값과 input의 id값을 똑같이 사용해주세요. -->
-                        <th><label for="searchGubun">회수상태</label></th>
-                        <td>
-                            <select class="form-control" title="계정정보" id="searchGubun" name="searchGubun" >
-                                <option value="01" >대기</option>
-                                <option value="02" >회수중</option>
-                            </select>
-                        </td>
-                        <td>    
-                            <input type="text" class="form-control" id="searchValue" name="searchValue"  value="${userConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
-                        </td>
-                         <td><button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_listSearch()">search</button></td>
-                         <td><button type="button" class="btn" onClick="">excel</button></td>
-                    </div>
-                    </tr>
-                    </tbody>
-                </table>
-            </fieldset>
-            </form:form>
-        </div >
-        <!-- //조회 -->
+<div class="container">
+	<h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 회수 리스트</font></strong></h4>
+	  <!-- 조회조건 -->
+	  <form:form class="form-inline" role="form" commandName="productConVO" id="productMasterConForm" name="productMasterConForm" method="post" action="" >
+        <input type="hidden" name="curPage"             id="curPage"            value="1" />
+        <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
+        <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
+        <fieldset>
+        	<div class="form-group">
+        		<label for="start_stockDate end_stockDate"><h6><strong><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span>  회수일자 : </font></strong></h6></label>
+				<div class='input-group date ' id='datetimepicker1' data-link-field="start_stockDate" data-link-format="yyyy-mm-dd">
+	                <input type='text' class="form-control" value="${stockConVO.start_stockDate}" />
+	                <span class="input-group-addon">
+	                    <span class="glyphicon glyphicon-calendar"></span>
+	                </span>
+	                <input type="hidden" id="start_stockDate" name="start_stockDate" value="${stockConVO.start_stockDate}" />
+	            </div>
+	            <div class='input-group date' id='datetimepicker2'  data-link-field="end_stockDate" data-link-format="yyyy-mm-dd">
+	                <input type='text' class="form-control" value="${stockConVO.end_stockDate}" />
+	                <span class="input-group-addon">
+	                    <span class="glyphicon glyphicon-calendar"></span>
+	                </span>
+	                <input type="hidden" id="end_stockDate" name="end_stockDate" value="${stockConVO.end_stockDate}" />
+	            </div>
+	            <br><br>
+				<label for="con_groupId"><h6><strong><font style="color:#FF9900"> 지점선택 : </font></strong></h6></label>
+				<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${stockConVO.groupId}">
+                    <option value="AD001" >물류정상</option>
+                    <option value="BD009" >반디울산</option>
+                    <option value="YP008" >영풍청량리</option>
+                </select>
+				<label for="searchGubun"><h6><strong><font style="color:#FF9900"> 회수상태 : </font></strong></h6></label>
+				<select class="form-control" title="발주상태" id="searchGubun" name="searchGubun" value="">
+                	<option value="01" >대기</option>
+                    <option value="02" >보류</option>
+           		</select>
+           		<label for="searchGubun"><h6><strong><font style="color:#FF9900"> 검색조건 : </font></strong></h6></label>
+				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
+                	<option value="01" >매장명</option>
+                    <option value="02" >발주자</option>
+           		</select>
+				<label class="sr-only" for="searchValue"> 조회값 </label>
+				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${productConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
+				<button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_listSearch()">search</button>
+	            <button type="button" class="btn" onClick="">excel</button>
+            </div>
+	    </fieldset>
+	  </form:form>
+	  <!-- //조회 -->
+  <br>
   <!-- 조회결과리스트 -->
-  <div id=userManagePageList>
-  </div>
-  <!-- //조회결과리스트 -->
-  <!-- //사용자 등록/삭제 -->
+  <div id=productMasterPageList></div>
+
   <button type="button" class="btn btn-primary" onClick="">회수등록</button>
-  <!-- 사용자 일괄등록-->
-  <div id="userExcelForm"  title="사용자 일괄등록"></div>
-  <!-- //사용자 일괄등록 -->
-  <!-- 사용자 등록-->
-  <div id="userManageRegist"  title="사용자 등록"></div>
-  <!-- //사용자 등록 -->
-  <!-- 사용자 수정-->
-  <div id="userManageModify"  title="사용자 수정"></div>
-  <!-- //사용자 수정 -->
 </div>
+<br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>

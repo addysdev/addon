@@ -60,7 +60,7 @@
    
 </SCRIPT>
 <div class="container">
-	<h4><span>[발주대상리스트]</span></h4>
+	<h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 발주 리스트</font></strong></h4>
 	  <!-- 조회조건 -->
 	  <form:form class="form-inline" role="form" commandName="productConVO" id="productMasterConForm" name="productMasterConForm" method="post" action="" >
         <input type="hidden" name="curPage"             id="curPage"            value="1" />
@@ -68,13 +68,13 @@
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
         <fieldset>
         	<div class="form-group">
-        	    <label for="con_groupId"> 지점선택 : </label>
+        	    <label for="con_groupId"><h6><strong><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span>  지점선택 : </font></strong></h6></label>
 				<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${stockConVO.groupId}">
                     <option value="AD001" >물류정상</option>
                     <option value="BD009" >반디울산</option>
                     <option value="YP008" >영풍청량리</option>
                 </select>
-				<label for="searchGubun"> 발주상태 : </label>
+				<label for="searchGubun"><h6><strong><font style="color:#FF9900"> 발주상태 : </font></strong></h6></label>
 				<select class="form-control" title="발주상태" id="searchGubun" name="searchGubun" value="">
                 	<option value="01" >대기</option>
                     <option value="02" >보류</option>

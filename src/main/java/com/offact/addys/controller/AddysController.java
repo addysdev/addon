@@ -82,7 +82,7 @@ public class AddysController {
 		try{
 
 			if(!"".equals(userId)){
-				strMainUrl="addys/addysMain";
+				strMainUrl="order/targetManage";
 			}
 			
 		    mv.setViewName(strMainUrl);

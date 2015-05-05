@@ -3,7 +3,7 @@
 <html>
     <div id="footer">
       <div class="container">
-        <p class="text-muted credit">Copyright 2015 ⓒ <b>addys</b> Corp. All rights reserved. v1.0.0</p>
+        <p class="text-muted credit" style="color:#428bca">Copyright 2015 ⓒ <b>addys</b> Corp. All rights reserved. v1.0.0</p>
       </div>
     </div>
 </html>

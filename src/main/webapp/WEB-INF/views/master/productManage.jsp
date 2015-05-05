@@ -67,8 +67,8 @@
             draggable : true, //드래그 불가능
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
-            width : 480,
-            height : 518,
+            width : 430,
+            height : 400,
             modal : true, //주위를 어둡게
 
             open:function(){
@@ -93,8 +93,8 @@
             draggable : true, //드래그 불가능
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
-            width : 480,
-            height : 518,
+            width : 430,
+            height : 400,
             modal : true, //주위를 어둡게
 
             open:function(){
@@ -119,8 +119,8 @@
             draggable : true, //드래그 불가능
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
-            width : 480,
-            height : 518,
+            width : 430,
+            height : 400,
             modal : true, //주위를 어둡게
 
             open:function(){
@@ -139,7 +139,7 @@
     };
 </SCRIPT>
 <div class="container">
-	<h4><span>[품목현황관리]</span></h4>
+	<h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 품목관리</font></strong></h4>
 	  <!-- 조회조건 -->
 	  <form:form class="form-inline" role="form" commandName="productConVO" id="productMasterConForm" name="productMasterConForm" method="post" action="" >
         <input type="hidden" name="curPage"             id="curPage"            value="1" />
@@ -147,7 +147,7 @@
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
         <fieldset>
         	<div class="form-group">
-				<label for="searchGubun"> 검색조건 : </label>
+				<label for="searchGubun"><h6><strong><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span> 검색조건 :</font></strong></h6></label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
                 	<option value="01" >품목코드</option>
                     <option value="02" >품목명</option>
@@ -173,7 +173,7 @@
   <div id="productExcelForm"  title="품목 일괄등록"></div>
 
   <!-- 안전재고 일괄등록-->
-  <div id="safeStockExcelForm"  title="안저재고 일괄등록"></div>
+  <div id="safeStockExcelForm"  title="안전재고 일괄등록"></div>
 
   <!-- 보유재고 일괄등록-->
   <div id="holdStockExcelForm"  title="보유재고 일괄등록"></div>

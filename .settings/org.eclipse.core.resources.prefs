@@ -15,6 +15,7 @@ encoding//src/main/webapp/WEB-INF/views/master/productPageList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/master/safeStockExcelForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/master/salesManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/master/salesPageList.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/master/salseExcelForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/master/stockDetailManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/master/stockDetailPageList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/master/stockExcelForm.jsp=UTF-8

@@ -38,7 +38,7 @@
             draggable : true, //드래그 불가능
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
-            width : 480,
+            width : 430,
             height : 550,
             modal : true, //주위를 어둡게
 
@@ -59,7 +59,7 @@
 
 </SCRIPT>
 <div class="container">
-	<h4><span>[재고현황관리]</span></h4>
+	 <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 재고 현황관리</font></strong></h4>
 	  <!-- 조회조건 -->
 	  <form:form class="form-inline" role="form" commandName="stockConVO" id="stockConForm" name="stockConForm" method="post" action="" >
         <input type="hidden" name="curPage"             id="curPage"            value="1" />
@@ -67,7 +67,7 @@
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
         <fieldset>
         	<div class="form-group" >
-				<label for="start_stockDate end_stockDate"> 재고현황일자 : </label>
+				<label for="start_stockDate end_stockDate"><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span> 재고현황일자 : </font></label>
 				<div class='input-group date ' id='datetimepicker1' data-link-field="start_stockDate" data-link-format="yyyy-mm-dd">
 	                <input type='text' class="form-control" value="${stockConVO.start_stockDate}" />
 	                <span class="input-group-addon">
@@ -82,7 +82,7 @@
 	                </span>
 	                <input type="hidden" id="end_stockDate" name="end_stockDate" value="${stockConVO.end_stockDate}" />
 	            </div>
-				<label for="con_groupId"> 지점선택 : </label>
+				<label for="con_groupId"><font style="color:#FF9900"> 지점선택 : </font></label>
 				<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${stockConVO.groupId}">
                     <option value="AD001" >물류정상</option>
                     <option value="BD009" >반디울산</option>

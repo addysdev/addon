@@ -22,7 +22,7 @@
 </SCRIPT>
 	<div class="container">
      <form:form commandName="userlistVO" name="userManagePageListForm" method="post" action="" >
-      <p><span>총 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
+      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
 	    <thead>
 	      <tr>

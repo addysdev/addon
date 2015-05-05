@@ -27,8 +27,8 @@
             draggable : true, //드래그 불가능
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
-            width : 880,
-            height : 718,
+            width : 650,
+            height : 750,
             modal : true, //주위를 어둡게
 
             open:function(){
@@ -49,7 +49,7 @@
 </SCRIPT>
 	<div class="container">
      <form:form commandName="stockVO" name="stockPageListForm" method="post" action="" >
-      <p><span>총 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
+      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
 	    <thead>
 	      <tr>

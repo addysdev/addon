@@ -39,8 +39,8 @@
             draggable : true, //드래그 불가능
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
-            width : 480,
-            height : 518,
+            width : 400,
+            height : 630,
             modal : true, //주위를 어둡게
 
             open:function(){
@@ -65,8 +65,8 @@
             draggable : true, //드래그 불가능
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
-            width : 480,
-            height : 518,
+            width : 400,
+            height : 630,
             modal : true, //주위를 어둡게
 
             open:function(){
@@ -141,8 +141,8 @@
             draggable : true, //드래그 불가능
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
-            width : 480,
-            height : 518,
+            width : 430,
+            height : 400,
             modal : true, //주위를 어둡게
 
             open:function(){
@@ -161,7 +161,7 @@
     };
 </SCRIPT>
 <div class="container">
-<h4><span>[계정관리]</span></h4>
+	<h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 계정관리</font></strong></h4>
 	  <!-- 조회조건 -->
 	  <form:form class="form-inline" role="form" commandName="userConVO" id="userManageConForm" name="userManageConForm" method="post" action="" >
         <input type="hidden" name="curPage"             id="curPage"            value="1" />
@@ -171,19 +171,19 @@
         <input type="hidden" name="userId"              id="userId"         value="${userConVO.userId}"  />
         <fieldset>
         	<div class="form-group">
-        	    <label for="con_groupId"> 지점선택 : </label>
+        	    <label for="con_groupId"><h6><strong><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span>  지점선택 : </font></strong></h6></label>
 				<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${userConVO.groupId}">
                     <option value="AD001" >물류정상</option>
                     <option value="BD009" >반디울산</option>
                     <option value="YP008" >영풍청량리</option>
                 </select>
-                <label for="con_useYn"> 사용여부 : </label>
+                <label for="con_useYn"><h6><strong><font style="color:#FF9900"> 사용여부 : </font></strong></h6></label>
 				<select class="form-control" title="사용유무" id="con_useYn" name="con_useYn" >
                     <option value="" >전체</option>
                     <option value="Y" >사용</option>
                     <option value="N" >미사용</option>
                 </select>
-				<label for="searchGubun"> 검색조건 : </label>
+				<label for="searchGubun"><h6><strong><font style="color:#FF9900"> 검색조건 : </font></strong></h6></label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
                 	<option value="01" >사용자명</option>
                     <option value="02" >사용자ID</option>

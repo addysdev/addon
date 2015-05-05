@@ -4,7 +4,7 @@
 <script language="javascript">
 //초기세팅
 
-function fcStock_excelimport(){
+function fcSalse_excelimport(){
 
     if($("#files").val() == ''){
     	
@@ -21,9 +21,9 @@ function fcStock_excelimport(){
     var gap1 = fileName.substring(ln+1);
 
     if(gap1=="xls"){
-       url="<%= request.getContextPath() %>/master/stockexcelimport?fileName="+gap+"&extension="+gap1;
+       url="<%= request.getContextPath() %>/master/salsexcelimport?fileName="+gap+"&extension="+gap1;
     }else if(gap1=="xlsx"){
-       url="<%= request.getContextPath() %>/master/stockexcelimport?fileName="+gap+"&extension="+gap1;
+       url="<%= request.getContextPath() %>/master/salsexcelimport?fileName="+gap+"&extension="+gap1;
     }else{
         alert("엑셀파일만 올려주세요");
         return;
@@ -49,14 +49,14 @@ function fcStock_excelimport(){
   <h5><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-bookmark"></span> 업로드 할 <em class="bold"> excel파일</em></font></strong></h5>
   <input type="file"  id="files" name="files" />
   <br><br> 
-   <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 재고 기준 선택</font></strong></h4>
-	<label for="stockDate"><h6><strong><font style="color:#FF9900"> 재고일자 : </font></strong></h6></label>
-	<div class='input-group date ' id='datetimepicker3' data-link-field="in_stockDate" data-link-format="yyyy-mm-dd">
+   <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 매출 기준 선택</font></strong></h4>
+	<label for="salseDate"><h6><strong><font style="color:#FF9900"> 매출일자 : </font></strong></h6></label>
+	<div class='input-group date ' id='datetimepicker3' data-link-field="in_salseDate" data-link-format="yyyy-mm-dd">
         <input type='text' class="form-control" value="" />
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>
-        <input type="hidden" id="in_stockDate" name="in_stockDate" value="" />
+        <input type="hidden" id="in_salseDate" name="in_salseDate" value="" />
     </div>
     <br><br>
 	<label for="con_groupId"><h6><strong><font style="color:#FF9900">  지점선택 : </font></strong></h6></label>
@@ -67,7 +67,7 @@ function fcStock_excelimport(){
     </select>
   <br><br> 
   <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 업로드 시 주의사항</font></strong></h4>
-  <h6><strong><font id="avgStockAmt" style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 업로드 대상의 재고현황 일자와 지점을 꼭 선택해야 합니다.</font></strong></h6>
+  <h6><strong><font id="avgStockAmt" style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 업로드 대상의 매출현황 일자와 지점을 꼭 선택해야 합니다.</font></strong></h6>
   <h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 엑셀파일 업로드 양식을 다운로드 합니다. 
   <a href="<%= request.getContextPath() %>/fileDownServlet?rFileName=UserUploadFormat.xls&sFileName=UserUploadFormat.xls&filePath=/down"><strong><font style="color:#428bca">[양식다운로드]</font></strong></a></font></strong></h6>
   <h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 파일 업로드 결과는 서버의 log 경로에서 확인이 가능합니다.</font></strong></h6>
@@ -78,7 +78,7 @@ function fcStock_excelimport(){
  <br>
  <!-- button -->
  <div >
-  <button type="button" class="btn btn-primary" onClick="javascript:fcStock_excelimport()">upload</button>
+  <button type="button" class="btn btn-primary" onClick="javascript:fcSales_excelimport()">upload</button>
  </div>
   <!-- //button -->
 </div>

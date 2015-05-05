@@ -65,7 +65,7 @@
   <form method="post" id="logoutForm" name="logoutForm"  role="form" >
   </form>
     <div class="container">
-      <h2>addys</h2>
+      <h3><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-plus-sign"></span> Addys Purchase Management System</font></strong></h3>
       <p>
         <button type="button" class="btn btn-default btn-sm">
           <span class="glyphicon glyphicon-user"></span> <%=strUserName %>(<%=strUserId %>) 
@@ -98,8 +98,8 @@
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">관리 <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="<%= request.getContextPath() %>/manage/usermanage">계정관리</a></li>
-            <li><a href="#">조직관리</a></li>
-            <li><a href="#">메뉴권한관리</a></li>                        
+            <!-- li><a href="#">조직관리</a></li>
+            <li><a href="#">메뉴권한관리</a></li -->                        
           </ul>
         </li>
       </ul>

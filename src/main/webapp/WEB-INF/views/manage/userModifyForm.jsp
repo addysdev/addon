@@ -34,7 +34,7 @@
 	</script>
   </head>
   <body>
-   <div class="container">
+	<div class="container-fluid">
       <form:form commandName="userVO" id="userModifyForm" name="userModifyForm" method="post" action="">
       <input type="hidden" id="updateUserId" name="updateUserId" value="${userVO.updateUserId}" >
 	    <div class="form-group">
@@ -42,9 +42,7 @@
    		  <td>
 			  아이디 : <input type="text" class="form-control" id="userId" name="userId" tabindex="1" value="${userVO.userId}">
 			  패스워드: <input type="password" class="form-control" id="password" name="password" tabindex="2" value="${userVO.password}" >
-	      </td>
-          <td>
-                              사용자명: <input  type="text" class="form-control" id="userName"  name="userName" tabindex="3" value="${userVO.userName}">
+	                사용자명: <input  type="text" class="form-control" id="userName"  name="userName" tabindex="3" value="${userVO.userName}">
 	    	  조직: <input  type="text" class="form-control" id="groupId"  name="groupId" tabindex="4" value="${userVO.groupId}">
 	    	  권한 : <input type="text" class="form-control" id="authId" name="authId" tabindex="5" value="${userVO.authId}">
 	    	 excel 권한 : <input type="text" class="form-control" id="excelAuth" name="excelAuth" tabindex="6" value="${userVO.excelAuth}"> 

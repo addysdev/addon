@@ -50,18 +50,16 @@ import com.offact.framework.util.StringUtil;
 import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
-import com.offact.addys.service.UserMenuService;
-import com.offact.addys.service.manage.UserManageService;
 import com.offact.addys.service.master.ProductMasterService;
 import com.offact.addys.service.master.StockMasterService;
 import com.offact.addys.service.master.StockService;
-import com.offact.addys.vo.UserMenuVO;
-import com.offact.addys.vo.UserVO;
-import com.offact.addys.vo.UserConditionVO;
+import com.offact.addys.service.master.SalesService;
+
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.master.StockMasterVO;
 import com.offact.addys.vo.master.ProductMasterVO;
 import com.offact.addys.vo.master.StockVO;
+import com.offact.addys.vo.master.SalesVO;
 import com.offact.addys.vo.MultipartFileVO;
 
 /**
@@ -86,9 +84,6 @@ public class MasterController {
 	}
 	
     @Autowired
-    private UserManageService userManageSvc;
-    
-    @Autowired
     private ProductMasterService productMasterSvc;
     
     @Autowired
@@ -96,6 +91,9 @@ public class MasterController {
     
     @Autowired
     private StockService stockSvc;
+    
+    @Autowired
+    private SalesService salesSvc;
     
     /**
      * 품목현황 관리화면
@@ -844,7 +842,7 @@ public class MasterController {
     /**
      * 재고현황 목록조회
      * 
-     * @param UserManageVO
+     * @param StockVO
      * @param request
      * @param response
      * @param model
@@ -946,7 +944,7 @@ public class MasterController {
    /**
     * 재고상세현황 목록조회
     * 
-    * @param UserManageVO
+    * @param StockVO
     * @param request
     * @param response
     * @param model
@@ -991,132 +989,202 @@ public class MasterController {
       	
        return mv;
    }
-    /**
-     * 매출현황 관리화면
-     *
-     * @param request
-     * @param response
-     * @param model
-     * @param locale
-     * @return
-     * @throws BizException
-     */
-    @RequestMapping(value = "/master/salesmanage")
-    public ModelAndView salesManage(HttpServletRequest request, 
-    		                       HttpServletResponse response) throws BizException 
-    {
-        
-    	//log Controller execute time start
+   /**
+    * 매출현황 관리화면
+    *
+    * @param request
+    * @param response
+    * @param model
+    * @param locale
+    * @return
+    * @throws BizException
+    */
+   @RequestMapping(value = "/master/salesmanage")
+   public ModelAndView salesManage(HttpServletRequest request, 
+   		                       HttpServletResponse response) throws BizException 
+   {
+       
+   	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
 		logger.info("["+logid+"] Controller start ");
 
-        ModelAndView mv = new ModelAndView();
-        
-        // 사용자 세션정보
-        HttpSession session = request.getSession();
-        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
-        
-        UserManageVO userConVO = new UserManageVO();
-        
-        userConVO.setUserId(userId);
-        userConVO.setGroupId(groupId);
-
-        // 조회조건저장
-        mv.addObject("userConVO", userConVO);
-
-        // 공통코드 조회 (사용자그룹코드)
-        /*
-        ADCodeManageVO code = new ADCodeManageVO();
-        code.setCodeId("IG11");
-        List<ADCodeManageVO> searchCondition1 = codeService.getCodeComboList(code);
-        mv.addObject("searchCondition1", searchCondition1);
-       */
+       ModelAndView mv = new ModelAndView();
        
-        mv.setViewName("/master/salesManage");
-        
+       // 사용자 세션정보
+       HttpSession session = request.getSession();
+       String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+       String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+       //오늘 날짜
+       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+       Date currentTime = new Date();
+       String strToday = simpleDateFormat.format(currentTime);
+       
+       SalesVO salesConVO = new SalesVO();
+       
+       salesConVO.setStart_salesDate(strToday);
+       salesConVO.setEnd_salesDate(strToday);
+
+       // 조회조건저장
+       mv.addObject("salesConVO", salesConVO);
+      
+       mv.setViewName("/master/salesManage");
+       
+      //log Controller execute time end
+     	long t2 = System.currentTimeMillis();
+     	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+     	
+       return mv;
+   }
+   /**
+    * 매출현황 목록조회
+    * 
+    * @param SalesVO
+    * @param request
+    * @param response
+    * @param model
+    * @param locale
+    * @return
+    * @throws BizException
+    */
+   @RequestMapping(value = "/master/salespagelist")
+   public ModelAndView salesPageList(@ModelAttribute("salesConVO") SalesVO salesConVO, 
+   		                         HttpServletRequest request, 
+   		                         HttpServletResponse response) throws BizException 
+   {
+       
+   	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : salesConVO" + salesConVO);
+
+       ModelAndView mv = new ModelAndView();
+       List<SalesVO> salesList = null;
+
+       // 조회조건저장
+       mv.addObject("salesConVO", salesConVO);
+
+       // 페이징코드
+       salesConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(salesConVO.getCurPage(), salesConVO.getRowCount()));
+       salesConVO.setPage_limit_val2(StringUtil.nvl(salesConVO.getRowCount(), "10"));
+       
+       // 재고현황목록조회
+       salesList = salesSvc.getSalesPageList(salesConVO);
+       mv.addObject("salesList", salesList);
+
+       // totalCount 조회
+       String totalCount = String.valueOf(salesSvc.getSalesCnt(salesConVO));
+       mv.addObject("totalCount", totalCount);
+
+       mv.setViewName("/master/salesPageList");
+       
        //log Controller execute time end
       	long t2 = System.currentTimeMillis();
       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
       	
-        return mv;
-    }
-    /**
-     * 매출현황 목록조회
-     * 
-     * @param UserManageVO
-     * @param request
-     * @param response
-     * @param model
-     * @param locale
-     * @return
-     * @throws BizException
-     */
-    @RequestMapping(value = "/master/salespagelist")
-    public ModelAndView salesPageList(@ModelAttribute("userConVO") UserManageVO userConVO, 
-    		                         HttpServletRequest request, 
-    		                         HttpServletResponse response) throws BizException 
-    {
-        
-    	//log Controller execute time start
-		String logid=logid();
-		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : userConVO" + userConVO);
+       return mv;
+   }
+   /**
+  	 * Simply selects the home view to render by returning its name.
+  	 * @throws BizException
+  	 */
+      @RequestMapping(value = "/master/salesexcelform")
+  	public ModelAndView salesExcelForm(HttpServletRequest request) throws BizException 
+      {
+  		
+  		ModelAndView mv = new ModelAndView();
+  		
+  		mv.setViewName("/master/salesExcelForm");
+  		
+  		return mv;
+  	}
+  /**
+   * 매출상세현황 관리화면
+   *
+   * @param request
+   * @param response
+   * @param model
+   * @param locale
+   * @return
+   * @throws BizException
+   */
+  @RequestMapping(value = "/master/salesdetailmanage")
+  public ModelAndView salesDetailManage(HttpServletRequest request, 
+  		                                 HttpServletResponse response,
+  		                                 String salesDate, 
+ 		                                 String groupId ) throws BizException 
+  {
+      
+	   //log Controller execute time start
+	   String logid=logid();
+	   long t1 = System.currentTimeMillis();
+	   logger.info("["+logid+"] Controller start ");
+	
+	   ModelAndView mv = new ModelAndView();
+	   
+	   SalesVO salesDetailConVO = new SalesVO();
+	   
+	   salesDetailConVO.setSalesDate(salesDate);
+	   salesDetailConVO.setGroupId(groupId);
+	
+	   // 조회조건저장
+	   mv.addObject("salesDetailConVO", salesDetailConVO);
+	  
+	   mv.setViewName("/master/salesDetailManage");
+	   
+	  //log Controller execute time end
+	  long t2 = System.currentTimeMillis();
+	  logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	 	
+	   return mv;
+  }
+  /**
+   * 매출상세현황 목록조회
+   * 
+   * @param SalesVO
+   * @param request
+   * @param response
+   * @param model
+   * @param locale
+   * @return
+   * @throws BizException
+   */
+  @RequestMapping(value = "/master/salesdetailpagelist")
+  public ModelAndView salesDetailPageList(@ModelAttribute("salesDetailConVO") SalesVO salesDetailConVO, 
+  		                         HttpServletRequest request, 
+  		                         HttpServletResponse response) throws BizException 
+  {
+      
+  	//log Controller execute time start
+	String logid=logid();
+	long t1 = System.currentTimeMillis();
+	logger.info("["+logid+"] Controller start : salesDetailConVO" + salesDetailConVO);
 
-        ModelAndView mv = new ModelAndView();
-        List<UserManageVO> userList = null;
-        UserManageVO userDetail = null;
+      ModelAndView mv = new ModelAndView();
+      List<SalesVO> salesDetailList = null;
 
-        // 사용여부 값 null 일때 공백처리
-        if (userConVO.getCon_useYn() == null) {
-            userConVO.setCon_useYn("Y");
-        }
+      // 조회조건저장
+      mv.addObject("salesDetailConVO", salesDetailConVO);
 
-        // 그룹 값 null 일때 공백처리
-        if (userConVO.getCon_groupId() == null) {
-            userConVO.setCon_groupId("G00000");
-        }
-        
-        // 조회조건 null 일때 공백처리
-        if (userConVO.getSearchGubun() == null) {
-            userConVO.setSearchGubun("02");
-        }
-        
-        // 조회값 null 일때 공백처리
-        if (userConVO.getSearchValue() == null) {
-            userConVO.setSearchValue("system");
-        }
-        
-        // 조회조건저장
-        mv.addObject("userCon", userConVO);
+      // 페이징코드
+      salesDetailConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(salesDetailConVO.getCurPage(), salesDetailConVO.getRowCount()));
+      salesDetailConVO.setPage_limit_val2(StringUtil.nvl(salesDetailConVO.getRowCount(), "10"));
+      
+      // 재고상세현황목록조회
+      salesDetailList = salesSvc.getSalesDetailPageList(salesDetailConVO);
+      mv.addObject("salesDetailList", salesDetailList);
 
-        // 페이징코드
-        userConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(userConVO.getCurPage(), userConVO.getRowCount()));
-        userConVO.setPage_limit_val2(StringUtil.nvl(userConVO.getRowCount(), "10"));
-        
-        // 사용자목록조회
-        userList = userManageSvc.getUserList(userConVO);
-        mv.addObject("userList", userList);
+      // totalCount 조회
+      String totalCount = String.valueOf(salesSvc.getSalesDetailCnt(salesDetailConVO));
+      mv.addObject("totalCount", totalCount);
 
-        // totalCount 조회
-        String totalCount = String.valueOf(userManageSvc.getUserCnt(userConVO));
-        mv.addObject("totalCount", totalCount);
-
-        // 기능 권한 리스트
-        /*
-        HttpSession session = request.getSession();
-        UserMenuVO authListVo = new UserMenuVO();
-        authListVo.setUSER_ID((String) session.getAttribute("strUserId"));
-        List<UserMenuVO> funcList = userMenuSvc.getAuthPerFunction(authListVo);
-        mv.addObject("funcList", funcList);
-        */
-        mv.setViewName("/master/salesPageList");
-        
-        //log Controller execute time end
-       	long t2 = System.currentTimeMillis();
-       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
-       	
-        return mv;
-    }
+      mv.setViewName("/master/salesDetailPageList");
+      
+      //log Controller execute time end
+     	long t2 = System.currentTimeMillis();
+     	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+     	
+      return mv;
+  }
+   
 }
