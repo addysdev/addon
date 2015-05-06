@@ -21,7 +21,7 @@
 
 </SCRIPT>
 	<div class="container">
-     <form:form commandName="orderVO" name="productMasterPageListForm" method="post" action="" >
+     <form:form commandName="orderVO" name="orderPageListForm" method="post" action="" >
       <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
 	    <thead>

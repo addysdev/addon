@@ -28,6 +28,13 @@ public interface TargetService {
      * @throws BizException
      */
     public int getTargetCnt(TargetVO target) throws BizException;
-
+    
+    /**
+     * 발주대상 상세목록 조회
+     * 
+     * @return
+     * @throws BizException
+     */
+    public List<TargetVO> getTargetDetailList(TargetVO target) throws BizException;
    
 }

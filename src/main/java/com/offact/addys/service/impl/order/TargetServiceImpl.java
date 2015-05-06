@@ -42,4 +42,11 @@ public class TargetServiceImpl implements TargetService {
         return commonDao.selectOne("Target.getTargetCnt", target);
     }
     
+    @Override
+    public List<TargetVO> getTargetDetailList(TargetVO target) throws BizException {
+    	
+        List<TargetVO> targetList = commonDao.selectList("Target.getTargetDetailList", target);
+
+        return targetList;
+    }
 }

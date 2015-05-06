@@ -200,6 +200,57 @@ public class OrderController {
         return mv;
     }
 	
+    /**
+     * 발주대상 상세조회
+     * 
+     * @param targetConVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/targetdetailview")
+    public ModelAndView targetDetailView( HttpServletRequest request, 
+    		                              HttpServletResponse response,
+    		                              String groupId,
+    		                              String groupName,
+    		                              String companyCode,
+    		                              String orderState) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : groupId : [" + groupId+"] groupName : ["+groupName+
+				"] companyCode : ["+companyCode+"] orderState : ["+orderState+"]");
+
+        ModelAndView mv = new ModelAndView();
+        List<TargetVO> targetDetailList = null;
+        
+        TargetVO targetConVO = new TargetVO();
+
+        targetConVO.setCon_groupId(groupId);
+        targetConVO.setCon_companyCode(companyCode);
+        targetConVO.setCon_orderState(orderState);
+        targetConVO.setGroupName(groupName);
+
+        // 조회조건저장
+        mv.addObject("targetConVO", targetConVO);
+
+        // 발주대상 상세목록조회
+        targetDetailList = targetSvc.getTargetDetailList(targetConVO);
+        mv.addObject("targetDetailList", targetDetailList);
+
+        mv.setViewName("/order/targetDetailView");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
 	
 	 /**
      * 검수대상 화면

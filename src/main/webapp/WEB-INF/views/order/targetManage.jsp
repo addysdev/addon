@@ -63,7 +63,10 @@
   <br>
   <!-- 조회결과리스트 -->
   <div id=targetPageList></div>
-
+  <!-- //조회결과리스트 -->
+  <!-- 발주 상세처리화면-->
+  <div id="targetDetailView"  title="발주 상세처리화면"></div>
+  <!-- //발주 상세처리화면 -->
 </div>
 <br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>

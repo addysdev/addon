@@ -25,6 +25,7 @@ public class TargetVO extends AbstractVO {
 	private String orderEtc;
 	private String orderAdress;
 	private String buyResult;
+	private String buyResultView;
 	private String buyDateTime;
 	private String buyUserId;
 	private String buyUserName;
@@ -38,11 +39,20 @@ public class TargetVO extends AbstractVO {
 	
 	private String con_groupId;
 	private String con_orderState;
+	private String con_companyCode;
 	
     private String searchGubun;
     private String searchValue;
 	
 	private String errMsg;
+	
+	//상세 추가항목
+	private String productCode;
+	private String productName;
+	private String stockDate;
+	private String stockCnt;
+	private String safeStock;
+	private String holdStock;
 	
 	// /** for paging */
     private String totalCount       = "0";
@@ -50,7 +60,6 @@ public class TargetVO extends AbstractVO {
     private String rowCount         = "10";
     private String page_limit_val1;
     private String page_limit_val2;
-	
 	public String getOrderCode() {
 		return orderCode;
 	}
@@ -153,6 +162,12 @@ public class TargetVO extends AbstractVO {
 	public void setBuyResult(String buyResult) {
 		this.buyResult = buyResult;
 	}
+	public String getBuyResultView() {
+		return buyResultView;
+	}
+	public void setBuyResultView(String buyResultView) {
+		this.buyResultView = buyResultView;
+	}
 	public String getBuyDateTime() {
 		return buyDateTime;
 	}
@@ -219,6 +234,12 @@ public class TargetVO extends AbstractVO {
 	public void setCon_orderState(String con_orderState) {
 		this.con_orderState = con_orderState;
 	}
+	public String getCon_companyCode() {
+		return con_companyCode;
+	}
+	public void setCon_companyCode(String con_companyCode) {
+		this.con_companyCode = con_companyCode;
+	}
 	public String getSearchGubun() {
 		return searchGubun;
 	}
@@ -236,6 +257,42 @@ public class TargetVO extends AbstractVO {
 	}
 	public void setErrMsg(String errMsg) {
 		this.errMsg = errMsg;
+	}
+	public String getProductCode() {
+		return productCode;
+	}
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
+	}
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	public String getStockDate() {
+		return stockDate;
+	}
+	public void setStockDate(String stockDate) {
+		this.stockDate = stockDate;
+	}
+	public String getStockCnt() {
+		return stockCnt;
+	}
+	public void setStockCnt(String stockCnt) {
+		this.stockCnt = stockCnt;
+	}
+	public String getSafeStock() {
+		return safeStock;
+	}
+	public void setSafeStock(String safeStock) {
+		this.safeStock = safeStock;
+	}
+	public String getHoldStock() {
+		return holdStock;
+	}
+	public void setHoldStock(String holdStock) {
+		this.holdStock = holdStock;
 	}
 	public String getTotalCount() {
 		return totalCount;
@@ -267,5 +324,5 @@ public class TargetVO extends AbstractVO {
 	public void setPage_limit_val2(String page_limit_val2) {
 		this.page_limit_val2 = page_limit_val2;
 	}
-
+	
 }
