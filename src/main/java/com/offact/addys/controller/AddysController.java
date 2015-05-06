@@ -37,8 +37,12 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.offact.framework.util.StringUtil;
 import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
-import com.offact.addys.service.UserService;
-import com.offact.addys.vo.UserVO;
+import com.offact.addys.service.common.CommonService;
+import com.offact.addys.service.common.UserService;
+import com.offact.addys.vo.common.CodeVO;
+import com.offact.addys.vo.common.GroupVO;
+import com.offact.addys.vo.common.UserVO;
+import com.offact.addys.vo.order.TargetVO;
 
 /**
  * Handles requests for the application home page.
@@ -61,6 +65,9 @@ public class AddysController {
 		return logid;
 	}
 	
+    @Autowired
+    private CommonService commonSvc;
+    
 	@Autowired
 	private UserService userSvc;
 	
@@ -205,8 +212,26 @@ public class AddysController {
 		        */
 				mv.addObject("userId", strUserId);
 				
-				//발주대상 화면 로직 추가
-				
+				//발주리스트 화면 로직 추가
+				TargetVO targetConVO = new TargetVO();
+		        
+		        targetConVO.setGroupId(strGroupId);
+
+		        // 조회조건저장
+		        mv.addObject("targetConVO", targetConVO);
+
+		        //조직정보 조회
+		        GroupVO group = new GroupVO();
+		        group.setGroupId(strGroupId);
+		        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+		        mv.addObject("group_comboList", group_comboList);
+		        
+		        // 공통코드 조회 (발주상태코드)
+		        CodeVO code = new CodeVO();
+		        code.setCodeGroupId("OD01");
+		        List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
+		        mv.addObject("code_comboList", code_comboList);
+
 				strMainUrl = "order/targetManage";
 				
 			} else {//app 상요자 정보가 없는경우

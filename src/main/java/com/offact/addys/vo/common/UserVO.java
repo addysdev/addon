@@ -1,5 +1,6 @@
-package com.offact.addys.vo;
+package com.offact.addys.vo.common;
 
+import com.offact.addys.vo.AbstractVO;
 /**
  * @author 4530
  *

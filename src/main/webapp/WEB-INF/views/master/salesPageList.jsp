@@ -57,7 +57,7 @@
             </c:if>
            <c:if test="${empty userList}">
               <tr>
-                  <td colspan='7' class='text_c'>조회된 데이터가 없습니다.</td>
+                  <td colspan='6' class='text-center'>조회된 데이터가 없습니다.</td>
               </tr>
           </c:if>
 	    </tbody>

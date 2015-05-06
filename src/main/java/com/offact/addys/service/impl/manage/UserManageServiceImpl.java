@@ -16,7 +16,6 @@ import com.offact.framework.util.StringUtil;
 import com.offact.framework.db.SqlSessionCommonDao;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.service.manage.UserManageService;
-import com.offact.addys.vo.UserVO;
 import com.offact.addys.vo.manage.UserManageVO;
 
 /**

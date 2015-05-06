@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.offact.framework.constants.CodeConstant;
-import com.offact.addys.vo.UserVO;
+import com.offact.addys.vo.common.UserVO;
 
 
 /**

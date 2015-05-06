@@ -1,17 +1,17 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <SCRIPT>
     // 페이지 이동
-    function goPageUserManagePageList(page) {
-        document.userManageConForm.curPage.value = page;
-        var dataParam = $("#userManageConForm").serialize();
+    function goPageRecoveryPageList(page) {
+        document.recoveryConForm.curPage.value = page;
+        var dataParam = $("#recoveryConForm").serialize();
         commonDim(true);
         $.ajax({
             type: "POST",
-            url:  "<%= request.getContextPath() %>/manage/userpagelist",
+            url:  "<%= request.getContextPath() %>/recovery/recoverypagelist",
               data:dataParam,
             success: function(result) {
                    commonDim(false);
-                   $("#userManagePageList").html(result);
+                   $("#recoveryPageList").html(result);
             },
             error:function(){
                 commonDim(false);
@@ -21,18 +21,9 @@
 
 </SCRIPT>
 	<div class="container">
-     <form:form commandName="userlistVO" name="userManagePageListForm" method="post" action="" >
+     <form:form commandName="recoveryVO" name="recoveryPageListForm" method="post" action="" >
       <p><span>총 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
-	    <colgroup>
-	     <col width="15%" />
-         <col width="15%" />
-         <col width="*" />
-         <col width="10%" />
-         <col width="10%" />
-         <col width="10%" />
-         <col width="15%" />
-        </colgroup>
 	    <thead>
 	      <tr>
 	        <th>회수상태</th>
@@ -45,11 +36,11 @@
 	      </tr>
 	    </thead>
 	    <tbody>
-	    	<c:if test="${!empty userList}">
-             <c:forEach items="${userList}" var="userListVO" varStatus="status">
-             <tr id="select_tr_${userListVO.userId}">
-                 <td><a href="javascript:fcUserManage_detailSearch('${userListVO.userId}')"><c:out value=""></c:out></a></td>
+	    	<c:if test="${!empty recoveryList}">
+             <c:forEach items="${recoveryList}" var="userListVO" varStatus="status">
+             <tr id="select_tr_${recoveryVO.recoveryCode}">
                  <td><c:out value=""></c:out></td>
+                 <td><a href="javascript:fcUserManage_detailSearch('${recoveryVO.recoveryCode}')"><c:out value="${recoveryVO.recoveryCode}"></c:out></a></td>
                  <td><c:out value=""></c:out></td>
                  <td><c:out value=""></c:out></td>
                  <td><c:out value=""></c:out></td>
@@ -58,9 +49,9 @@
               </tr>
              </c:forEach>
             </c:if>
-           <c:if test="${empty userList}">
+           <c:if test="${empty recoveryList}">
               <tr>
-                  <td colspan='7' class='text_c'>조회된 데이터가 없습니다.</td>
+                  <td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
               </tr>
           </c:if>
 	    </tbody>
@@ -69,7 +60,7 @@
 	</div>
 	<div class="container">
 	    <!-- 페이징 -->
-        <taglib:paging cbFnc="goPageUserManagePageList" totalCount="${totalCount}" curPage="${userCon.curPage}" rowCount="${userCon.rowCount}" />
+        <taglib:paging cbFnc="goPageRecoveryPageList" totalCount="${totalCount}" curPage="${recoveryConVO.curPage}" rowCount="${recoveryConVO.rowCount}" />
         <!-- //페이징 -->
 	</div>
     

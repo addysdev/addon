@@ -50,11 +50,13 @@ import com.offact.framework.util.StringUtil;
 import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
+import com.offact.addys.service.common.CommonService;
 import com.offact.addys.service.master.ProductMasterService;
 import com.offact.addys.service.master.StockMasterService;
 import com.offact.addys.service.master.StockService;
 import com.offact.addys.service.master.SalesService;
-
+import com.offact.addys.vo.common.CodeVO;
+import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.master.StockMasterVO;
 import com.offact.addys.vo.master.ProductMasterVO;
@@ -82,7 +84,9 @@ public class MasterController {
 		
 		return logid;
 	}
-	
+    @Autowired
+    private CommonService commonSvc;
+    
     @Autowired
     private ProductMasterService productMasterSvc;
     
@@ -827,9 +831,15 @@ public class MasterController {
         
         stockConVO.setStart_stockDate(strToday);
         stockConVO.setEnd_stockDate(strToday);
-
+       
         // 조회조건저장
         mv.addObject("stockConVO", stockConVO);
+        
+        //조직정보 조회
+        GroupVO group = new GroupVO();
+        group.setGroupId(groupId);
+        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+        mv.addObject("group_comboList", group_comboList);
        
         mv.setViewName("/master/stockManage");
         
@@ -1027,6 +1037,12 @@ public class MasterController {
 
        // 조회조건저장
        mv.addObject("salesConVO", salesConVO);
+       
+       //조직정보 조회
+       GroupVO group = new GroupVO();
+       group.setGroupId(groupId);
+       List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+       mv.addObject("group_comboList", group_comboList);
       
        mv.setViewName("/master/salesManage");
        

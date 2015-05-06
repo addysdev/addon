@@ -1,4 +1,4 @@
-package com.offact.addys.service.impl;
+package com.offact.addys.service.impl.common;
 
 import java.util.List;
 
@@ -9,9 +9,8 @@ import org.springframework.stereotype.Service;
 import com.offact.framework.db.SqlSessionCommonAdminDao;
 import com.offact.framework.db.SqlSessionCommonDao;
 import com.offact.framework.exception.BizException;
-import com.offact.addys.service.UserService;
-import com.offact.addys.vo.UserConditionVO;
-import com.offact.addys.vo.UserVO;
+import com.offact.addys.service.common.UserService;
+import com.offact.addys.vo.common.UserVO;
 
 /**
  * @author 4530
@@ -31,23 +30,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserVO getUser(UserVO user) throws BizException {
 		return commonDao.selectOne("User.getUser", user);
-	}
-
-	@Override
-	public int getUserCnt() throws BizException {
-		return commonDao.selectOne("User.getUserCnt");
-	}
-
-	@Override
-	public List<UserVO> getUserList(UserConditionVO userConVo)
-			throws BizException {
-		return commonDao.selectList("User.getUserList", userConVo);
-	}
-
-	@Override
-	public void insetrUserProc(UserVO userVO)
-			throws BizException {
-		commonDao.insert("User.insertUserProc", userVO);
 	}
 
 }

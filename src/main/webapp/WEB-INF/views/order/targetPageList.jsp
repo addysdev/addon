@@ -1,9 +1,9 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <SCRIPT>
     // 페이지 이동
-    function goPageProductMasterPageList(page) {
-        document.productMasterConForm.curPage.value = page;
-        var dataParam = $("#productMasterConForm").serialize();
+    function goPageTargetPageList(page) {
+        document.targetConForm.curPage.value = page;
+        var dataParam = $("#targetConForm").serialize();
         commonDim(true);
         $.ajax({
             type: "POST",
@@ -11,7 +11,7 @@
               data:dataParam,
             success: function(result) {
                    commonDim(false);
-                   $("#productMasterPageList").html(result);
+                   $("#targetPageList").html(result);
             },
             error:function(){
                 commonDim(false);
@@ -21,7 +21,7 @@
 
 </SCRIPT>
 	<div class="container">
-     <form:form commandName="productMasterVO" name="productMasterPageListForm" method="post" action="" >
+     <form:form commandName="targetVO" name="productMasterPageListForm" method="post" action="" >
       <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
 	    <thead>
@@ -36,20 +36,20 @@
 	      </tr>
 	    </thead>
 	    <tbody>
-	    	<c:if test="${!empty productList}">
-             <c:forEach items="${productList}" var="productMasterVO" varStatus="status">
-             <tr id="select_tr_${productMasterVO.productCode}">
-                 <td class='text-center'><a href="javascript:fcUserMaster_detailSearch('${productMasterVO.productCode}')"><c:out value="대기"></c:out></a></td>
-                 <td class='text-center'><c:out value="${productMasterVO.companyCode}"></c:out></td>
-                 <td><c:out value="${productMasterVO.companyName}"></c:out></td>
-                 <td class='text-center'><c:out value="${productMasterVO.companyCode}"></c:out></td>
-                 <td class='text-center'><c:out value="${productMasterVO.companyName}"></c:out></td>
-                 <td class='text-center'><c:out value="27"></c:out></td>
-                 <td class='text-center'><c:out value="5860"></c:out></td>
+	    	<c:if test="${!empty targetList}">
+             <c:forEach items="${targetList}" var="targetVO" varStatus="status">
+             <tr id="select_tr_${targetVO.groupId}_${targetVO.companyCode}">
+                 <td class='text-center'><c:out value="${targetVO.buyResult}"></c:out></td>
+                 <td class='text-center'><a href="javascript:fcTarget_detail('${targetVO.groupId}','${targetVO.companyCode}')"><c:out value="${targetVO.groupId}"></c:out></a></td>
+                 <td><c:out value="${targetVO.groupName}"></c:out></td>
+                 <td class='text-center'><c:out value="${targetVO.companyCode}"></c:out></td>
+                 <td><c:out value="${targetVO.companyName}"></c:out></td>
+                 <td class='text-center'><c:out value="${targetVO.orderCnt}"></c:out></td>
+                 <td class='text-center'><c:out value="${targetVO.orderAmt}"></c:out></td>
               </tr>
              </c:forEach>
             </c:if>
-           <c:if test="${empty productList}">
+           <c:if test="${empty targetList}">
            <tr>
            	<td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
@@ -60,7 +60,7 @@
 	</div>
 	<div class="container">
 	    <!-- 페이징 -->
-        <taglib:paging cbFnc="goPageProductMasterPageList" totalCount="${totalCount}" curPage="${productCon.curPage}" rowCount="${productCon.rowCount}" />
+        <taglib:paging cbFnc="goPageTargetPageList" totalCount="${totalCount}" curPage="${targetConVO.curPage}" rowCount="${targetConVO.rowCount}" />
         <!-- //페이징 -->
 	</div>
     

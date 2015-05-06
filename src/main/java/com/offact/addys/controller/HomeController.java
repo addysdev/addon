@@ -40,8 +40,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
-import com.offact.addys.service.UserMenuService;
-import com.offact.addys.vo.UserMenuVO;
 
 /**
  * Handles requests for the application home page.

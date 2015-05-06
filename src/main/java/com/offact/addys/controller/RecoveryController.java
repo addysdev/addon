@@ -27,6 +27,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -45,15 +46,13 @@ import com.offact.framework.util.StringUtil;
 import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
-import com.offact.addys.service.UserMenuService;
-import com.offact.addys.service.manage.UserManageService;
-import com.offact.addys.service.manage.UserManageService;
-import com.offact.addys.vo.UserMenuVO;
-import com.offact.addys.vo.UserVO;
-import com.offact.addys.vo.UserConditionVO;
-import com.offact.addys.vo.manage.UserManageVO;
-import com.offact.addys.vo.master.StockMasterVO;
-import com.offact.addys.vo.master.ProductMasterVO;
+import com.offact.addys.service.common.CommonService;
+import com.offact.addys.service.recovery.RecoveryService;
+
+import com.offact.addys.vo.common.GroupVO;
+import com.offact.addys.vo.common.CodeVO;
+import com.offact.addys.vo.recovery.RecoveryVO;
+
 import com.offact.addys.vo.MultipartFileVO;
 
 /**
@@ -78,12 +77,12 @@ public class RecoveryController {
 	}
 	
     @Autowired
-    private UserMenuService userMenuSvc;
-
-    @Autowired
-    private UserManageService userManageSvc;
+    private CommonService commonSvc;
     
-    /**
+    @Autowired
+    private RecoveryService recoverySvc;
+    
+	 /**
      * 회수대상 화면
      *
      * @param request
@@ -94,7 +93,7 @@ public class RecoveryController {
      * @throws BizException
      */
     @RequestMapping(value = "/recovery/recoverymanage")
-    public ModelAndView recoveryManage(HttpServletRequest request, 
+    public ModelAndView targetManage(HttpServletRequest request, 
     		                       HttpServletResponse response) throws BizException 
     {
         
@@ -110,21 +109,24 @@ public class RecoveryController {
         String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
-        UserManageVO userConVO = new UserManageVO();
+        RecoveryVO recoveryConVO = new RecoveryVO();
         
-        userConVO.setUserId(userId);
-        userConVO.setGroupId(groupId);
+        recoveryConVO.setGroupId(groupId);
 
         // 조회조건저장
-        mv.addObject("userConVO", userConVO);
+        mv.addObject("recoveryConVO", recoveryConVO);
 
-        // 공통코드 조회 (사용자그룹코드)
-        /*
-        ADCodeManageVO code = new ADCodeManageVO();
-        code.setCodeId("IG11");
-        List<ADCodeManageVO> searchCondition1 = codeService.getCodeComboList(code);
-        mv.addObject("searchCondition1", searchCondition1);
-       */
+        //조직정보 조회
+        GroupVO group = new GroupVO();
+        group.setGroupId(groupId);
+        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+        mv.addObject("group_comboList", group_comboList);
+        
+        // 공통코드 조회 (발주상태코드)
+        CodeVO code = new CodeVO();
+        code.setCodeGroupId("RE01");
+        List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
+        mv.addObject("code_comboList", code_comboList);
        
         mv.setViewName("/recovery/recoveryManage");
         
@@ -135,9 +137,9 @@ public class RecoveryController {
         return mv;
     }
     /**
-     * 검수대상 목록조회
+     * 회수대상 목록조회
      * 
-     * @param UserManageVO
+     * @param RecoveryVO
      * @param request
      * @param response
      * @param model
@@ -146,7 +148,7 @@ public class RecoveryController {
      * @throws BizException
      */
     @RequestMapping(value = "/recovery/recoverypagelist")
-    public ModelAndView recoveryPageList(@ModelAttribute("userConVO") UserManageVO userConVO, 
+    public ModelAndView targetPageList(@ModelAttribute("recoveryConVO") RecoveryVO recoveryConVO, 
     		                         HttpServletRequest request, 
     		                         HttpServletResponse response) throws BizException 
     {
@@ -154,55 +156,36 @@ public class RecoveryController {
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : userConVO" + userConVO);
+		logger.info("["+logid+"] Controller start : recoveryConVO" + recoveryConVO);
 
         ModelAndView mv = new ModelAndView();
-        List<UserManageVO> userList = null;
-        UserManageVO userDetail = null;
+        List<RecoveryVO> recoveryList = null;
 
-        // 사용여부 값 null 일때 공백처리
-        if (userConVO.getCon_useYn() == null) {
-            userConVO.setCon_useYn("Y");
+        // 조직값 null 일때 공백처리
+        if (recoveryConVO.getCon_groupId() == null) {
+        	recoveryConVO.setCon_groupId("");
         }
 
-        // 그룹 값 null 일때 공백처리
-        if (userConVO.getCon_groupId() == null) {
-            userConVO.setCon_groupId("G00000");
+        // 상태 값 null 일때 공백처리
+        if (recoveryConVO.getCon_recoveryState() == null) {
+        	recoveryConVO.setCon_groupId("G00000");
         }
-        
-        // 조회조건 null 일때 공백처리
-        if (userConVO.getSearchGubun() == null) {
-            userConVO.setSearchGubun("02");
-        }
-        
-        // 조회값 null 일때 공백처리
-        if (userConVO.getSearchValue() == null) {
-            userConVO.setSearchValue("system");
-        }
-        
+
         // 조회조건저장
-        mv.addObject("userCon", userConVO);
+        mv.addObject("recoveryConVO", recoveryConVO);
 
         // 페이징코드
-        userConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(userConVO.getCurPage(), userConVO.getRowCount()));
-        userConVO.setPage_limit_val2(StringUtil.nvl(userConVO.getRowCount(), "10"));
+        recoveryConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(recoveryConVO.getCurPage(), recoveryConVO.getRowCount()));
+        recoveryConVO.setPage_limit_val2(StringUtil.nvl(recoveryConVO.getRowCount(), "10"));
         
-        // 사용자목록조회
-        userList = userManageSvc.getUserList(userConVO);
-        mv.addObject("userList", userList);
+        // 발주대상목록조회
+        recoveryList = recoverySvc.getRecoveryPageList(recoveryConVO);
+        mv.addObject("recoveryList", recoveryList);
 
         // totalCount 조회
-        String totalCount = String.valueOf(userManageSvc.getUserCnt(userConVO));
+        String totalCount = String.valueOf(recoverySvc.getRecoveryCnt(recoveryConVO));
         mv.addObject("totalCount", totalCount);
 
-        // 기능 권한 리스트
-        /*
-        HttpSession session = request.getSession();
-        UserMenuVO authListVo = new UserMenuVO();
-        authListVo.setUSER_ID((String) session.getAttribute("strUserId"));
-        List<UserMenuVO> funcList = userMenuSvc.getAuthPerFunction(authListVo);
-        mv.addObject("funcList", funcList);
-        */
         mv.setViewName("/recovery/recoveryPageList");
         
         //log Controller execute time end
@@ -211,4 +194,5 @@ public class RecoveryController {
        	
         return mv;
     }
+	
 }

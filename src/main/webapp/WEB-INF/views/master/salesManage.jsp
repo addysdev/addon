@@ -85,9 +85,10 @@
 	            </div>
 				<label for="con_groupId"><font style="color:#FF9900"> 지점선택 : </font></label>
 				<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${salesConVO.groupId}">
-                    <option value="AD001" >물류정상</option>
-                    <option value="BD009" >반디울산</option>
-                    <option value="YP008" >영풍청량리</option>
+                    <option value="">전체</option>
+                    <c:forEach var="groupVO" items="${group_comboList}" >
+                    	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
+                    </c:forEach>
                 </select>
                 <button type="button" class="btn btn-primary" onClick="javascript:fcSales_listSearch()">search</button>
                 <button type="button" class="btn" onClick="">excel</button>

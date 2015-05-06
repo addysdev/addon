@@ -173,9 +173,10 @@
         	<div class="form-group">
         	    <label for="con_groupId"><h6><strong><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span>  지점선택 : </font></strong></h6></label>
 				<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${userConVO.groupId}">
-                    <option value="AD001" >물류정상</option>
-                    <option value="BD009" >반디울산</option>
-                    <option value="YP008" >영풍청량리</option>
+                    <option value="">전체</option>
+                    <c:forEach var="groupVO" items="${group_comboList}" >
+                    	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
+                    </c:forEach>
                 </select>
                 <label for="con_useYn"><h6><strong><font style="color:#FF9900"> 사용여부 : </font></strong></h6></label>
 				<select class="form-control" title="사용유무" id="con_useYn" name="con_useYn" >

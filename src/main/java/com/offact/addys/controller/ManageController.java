@@ -45,11 +45,9 @@ import com.offact.framework.util.StringUtil;
 import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
-import com.offact.addys.service.UserMenuService;
+import com.offact.addys.service.common.CommonService;
 import com.offact.addys.service.manage.UserManageService;
-import com.offact.addys.vo.UserMenuVO;
-import com.offact.addys.vo.UserVO;
-import com.offact.addys.vo.UserConditionVO;
+import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.MultipartFileVO;
 
@@ -75,8 +73,8 @@ public class ManageController {
 	}
 	
     @Autowired
-    private UserMenuService userMenuSvc;
-
+    private CommonService commonSvc;
+    
     @Autowired
     private UserManageService userManageSvc;
     
@@ -115,13 +113,11 @@ public class ManageController {
         // 조회조건저장
         mv.addObject("userConVO", userConVO);
 
-        // 공통코드 조회 (사용자그룹코드)
-        /*
-        ADCodeManageVO code = new ADCodeManageVO();
-        code.setCodeId("IG11");
-        List<ADCodeManageVO> searchCondition1 = codeService.getCodeComboList(code);
-        mv.addObject("searchCondition1", searchCondition1);
-       */
+        //조직정보 조회
+        GroupVO group = new GroupVO();
+        group.setGroupId(groupId);
+        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+        mv.addObject("group_comboList", group_comboList);
        
         mv.setViewName("/manage/userManage");
         
@@ -192,14 +188,6 @@ public class ManageController {
         String totalCount = String.valueOf(userManageSvc.getUserCnt(userConVO));
         mv.addObject("totalCount", totalCount);
 
-        // 기능 권한 리스트
-        /*
-        HttpSession session = request.getSession();
-        UserMenuVO authListVo = new UserMenuVO();
-        authListVo.setUSER_ID((String) session.getAttribute("strUserId"));
-        List<UserMenuVO> funcList = userMenuSvc.getAuthPerFunction(authListVo);
-        mv.addObject("funcList", funcList);
-        */
         mv.setViewName("/manage/userPageList");
         
         //log Controller execute time end

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Target">
+
+<resultMap id="targetVO" type="com.offact.addys.vo.order.TargetVO" >
+  <result column="orderCode"      property="orderCode"  />
+  <result column="groupId"          property="groupId"  />
+  <result column="groupName"      property="groupName"  />
+  <result column="companyCode"      property="companyCode"  />
+  <result column="companyName"      property="companyName"  />
+  <result column="orderDateTime"     property="orderDateTime"  />
+  <result column="orderUserID"          property="orderUserID"  />
+  <result column="orderUserName"           property="orderUserName"  />
+  <result column="faxKey"        property="faxKey"  />
+  <result column="smsKey"        property="smsKey"  />
+  <result column="emailKey"        property="emailKey"  />
+  <result column="faxNumber"        property="faxNumber"  />
+  <result column="mobilePhone"        property="mobilePhone"  />
+  <result column="email"        property="email"  />
+  <result column="orderEtc"        property="orderEtc"  />
+  <result column="orderAdress"        property="orderAdress"  />
+  <result column="buyResult"        property="buyResult"  />
+  <result column="buyResult"        property="buyResult"  />
+  <result column="buyDateTime"        property="buyDateTime"  />
+  <result column="buyUserId"        property="buyUserId"  />
+  <result column="buyUserName"        property="buyUserName"  />
+  <result column="deliveryDate"        property="deliveryDate"  />
+  <result column="deliveryEtc"        property="deliveryEtc"  />
+  <result column="deliveryMethod"        property="deliveryMethod"  />
+  <result column="deliveryCharge"        property="deliveryCharge"  />
+  <result column="orderCnt"        property="orderCnt"  />
+  <result column="orderAmt"        property="orderAmt"  />
+</resultMap>
+
+<select id="getTargetPageList"  resultMap="targetVO" parameterType="com.offact.addys.vo.order.TargetVO" >
+
+  Select T1.buyResult,
+         T1.groupID,
+         T4.groupName,
+		 T2.companyCode,
+         T3.companyName,
+         COUNT(T1.productCode) as orderCnt,
+	   	 SUM(T2.productPrice) as orderAmt
+  From (
+	      Select TEMP.buyResult ,
+		         TEMP.stockCnt,
+				 TEMP.safeStock,
+                 TEMP.holdStock,
+				 TEMP.groupID,
+				 TEMP.productCode
+		      From (
+					Select ifnull(I3.buyResult,'01') as buyResult ,
+						   ifnull(I2.stockDate,'19990101') as stockChk,/*재고기준일*/
+						   DATE_FORMAT(ifnull(I3.orderDateTime,'1999-01-01 00:00:00'), '%Y-%m-%d') as orderChk,/*발주기준일*/
+                           DATE_FORMAT(ifnull(I3.buyDateTime,'1999-01-01 00:00:00'), '%Y-%m-%d') as buyChk,/*발주완료기준일*/
+						   ifnull(I2.stockCnt,0) as stockCnt, 
+					       ifnull(I1.safeStock,0) as safeStock,
+                           ifnull(I1.holdStock,0) as holdStock,
+						   I1.groupID,
+					       I1.productCode
+						From adStockMaster I1
+							 Left Join(
+										Select Max(stockDate) as stockDate,stockCnt,groupID,productCode 
+                                        	From adStockDetail 
+											Group by  stockCnt,groupID,productCode
+									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID 
+							 Left Join(
+										Select E1.orderCode ,
+											   E1.productCode,
+										       E2.groupID ,
+										       E2.buyResult ,
+											   E2.buyDateTime,
+                                               E2.orderDateTime
+											From  adOrderDetail E1 
+												  Left Join adOrder E2 On E1.orderCode=E2.orderCode 
+									   ) As I3 On I1.productCode = I3.productCode And I1.groupID = I3.groupID 
+					     Where 1=1 
+					     <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           					AND I1.groupId = #{con_groupId}
+           				 </if>
+					   ) As TEMP
+					     Left Join adProductMaster T1 On TEMP.ProductCode = T1.ProductCode 
+		      Where TEMP.stockCnt  <![CDATA[<]]> TEMP.safeStock
+					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk    
+					<if test="con_orderState != null and con_orderState != ''" >
+           				AND TEMP.buyResult = #{con_orderState}
+           			</if>
+			  ) T1
+              Left Join adProductMaster T2 On T1.ProductCode = T2.ProductCode
+              Left Join adCompany T3 On T2.companyCode = T3.companyCode 
+              Left Join ofGroup T4 On T1.groupID = T4.groupID 
+			  Group By T1.groupID,
+			           T2.companyCode
+			  LIMIT ${page_limit_val1} , ${page_limit_val2}
+		
+</select>
+
+<select id="getTargetCnt" resultType="int">
+	SELECT count(*) AS TOT_COUNT
+		From (
+  			   Select T1.groupID,
+                      T2.companyCode
+			   	From (
+	      			  Select TEMP.buyResult ,
+		                     TEMP.stockCnt,
+				             TEMP.safeStock,
+                             TEMP.holdStock,
+				             TEMP.groupID,
+				             TEMP.productCode
+		              	From (
+					          Select ifnull(I3.buyResult,'01') as buyResult ,
+						      		 ifnull(I2.stockDate,'19990101') as stockChk,/*재고기준일*/
+						      		 DATE_FORMAT(ifnull(I3.orderDateTime,'1999-01-01 00:00:00'), '%Y-%m-%d') as orderChk,/*발주기준일*/
+                             		 DATE_FORMAT(ifnull(I3.buyDateTime,'1999-01-01 00:00:00'), '%Y-%m-%d') as buyChk,/*발주완료기준일*/
+						     		 ifnull(I2.stockCnt,0) as stockCnt, 
+					         		 ifnull(I1.safeStock,0) as safeStock,
+                            		 ifnull(I1.holdStock,0) as holdStock,
+						    		 I1.groupID,
+					        		 I1.productCode
+							  	From adStockMaster I1
+							 		 Left Join(
+										       Select Max(stockDate) as stockDate,stockCnt,groupID,productCode 
+                                        	   	From adStockDetail 
+											    Group by  stockCnt,groupID,productCode
+									 ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID 
+							 		 Left Join(
+										       Select E1.orderCode ,
+											   		  E1.productCode,
+										      		  E2.groupID ,
+										    	      E2.buyResult ,
+												      E2.buyDateTime,
+                                            	      E2.orderDateTime
+											   From  adOrderDetail E1 
+												 	 Left Join adOrder E2 On E1.orderCode=E2.orderCode 
+									 ) As I3 On I1.productCode = I3.productCode And I1.groupID = I3.groupID 
+					    		Where 1=1 
+					     		<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           							AND I1.groupId = #{con_groupId}
+           				 		</if>
+					   ) As TEMP
+					     Left Join adProductMaster T1 On TEMP.ProductCode = T1.ProductCode 
+			  Where TEMP.stockCnt <![CDATA[<]]>  TEMP.safeStock 
+					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk     
+					<if test="con_orderState != null and con_orderState != ''" >
+           				AND TEMP.buyResult = #{con_orderState}
+           			</if>
+			  ) T1
+              Left Join adProductMaster T2 On T1.ProductCode = T2.ProductCode
+              Left Join adCompany T3 On T2.companyCode = T3.companyCode 
+              Left Join ofGroup T4 On T1.groupID = T4.groupID 
+			  Group By T1.groupID,
+			           T2.companyCode
+			 ) As TOT
+			           
+</select>
+
+</mapper>
