@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Stock">
+
+<resultMap id="stockVO" type="com.offact.addys.vo.master.StockVO" >
+  <result column="stockDate"      property="stockDate"  />
+  <result column="groupId"          property="groupId"  />
+  <result column="groupName"      property="groupName"  />
+  <result column="stockDateTime"      property="stockDateTime"  />
+  <result column="lastUserId"      property="lastUserId"  />
+  <result column="lastUserName"     property="lastUserName"  />
+  <result column="productCode"          property="productCode"  />
+  <result column="productName"           property="productName"  />
+  <result column="stockCnt"        property="stockCnt"  />
+</resultMap>
+
+<select id="getStockPageList"  resultMap="stockVO" parameterType="com.offact.addys.vo.master.StockVO" >
+        SELECT T1.stockDate
+			  ,T1.groupId
+			  ,T2.groupName
+			  ,T1.stockDateTime
+			  ,T1.lastUserId
+			  ,T3.userName as lastUserName 
+          FROM adStock T1
+               Left Join ofGroup T2 On T1.groupId=T2.groupId
+          	   Left Join ofUser T3 On T1.lastUserId=T3.userId
+         WHERE T1.stockDate between REPLACE('${start_stockDate}', '-', '')  and REPLACE('${end_stockDate}', '-', '')
+            <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           		AND T1.groupId = #{con_groupId}
+           </if>
+         ORDER BY stockDateTime desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getStockCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  			FROM adStock
+ 			 WHERE stockDate between REPLACE('${start_stockDate}', '-', '')  and REPLACE('${end_stockDate}', '-', '')
+            <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           		AND groupId = #{con_groupId}
+           </if>
+</select>
+
+<select id="getStockDetailPageList"  resultMap="stockVO" parameterType="com.offact.addys.vo.master.StockVO" >
+        SELECT T1.productCode
+			  ,T2.productName
+			  ,T1.stockCnt
+          FROM adStockDetail T1
+  			   Left Join adProductMaster T2 On T1.productCode=T2.productCode
+ 			WHERE stockDate = ${stockDate}
+              AND groupId = #{groupId}
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND T1.productCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND T2.productName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+         ORDER BY productCode desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getStockDetailCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  			FROM adStockDetail T1
+  			    Left Join adProductMaster T2 On T1.productCode=T2.productCode
+ 			WHERE stockDate = ${stockDate}
+              AND groupId = #{groupId}
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND T1.productCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND T2.productName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+</select>
+
+<delete id="stockDeleteAll" parameterType="com.offact.addys.vo.master.StockVO" >
+        Delete
+		From adStock
+ 		Where stockDate = #{stockDate}
+ 		  And groupId = #{groupId}
+</delete>
+
+<delete id="stockDetailDeleteAll" parameterType="com.offact.addys.vo.master.StockVO" >
+        Delete
+		From adStockDetail
+ 		Where stockDate = #{stockDate}
+ 		  And groupId = #{groupId}
+</delete>
+
+<insert id="insertStock"  parameterType="com.offact.addys.vo.master.StockVO" >
+		insert into adStock (
+				 stockDate
+            	,groupId
+            	,stockDateTime 
+            	,lastUserId
+		)values(
+				 #{stockDate}
+	  			, #{groupId}
+	  			, #{stockDateTime}
+	  			, #{lastUserId}
+		)
+		                        
+</insert>
+
+<insert id="insertExcelStockdDetail"  parameterType="com.offact.addys.vo.master.StockVO" >
+		insert into adStockDetail (
+				 stockDate
+            	,groupId
+            	,productCode 
+            	,stockCnt
+		)values(
+				 #{stockDate}
+	  			, #{groupId}
+	  			, #{productCode}
+	  			, #{stockCnt}
+		)
+		                        
+</insert>
+
+</mapper>

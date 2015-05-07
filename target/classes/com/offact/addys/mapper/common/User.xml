@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="User">
+
+<resultMap id="UserVO" type="com.offact.addys.vo.common.UserVO" >
+  <result column="userId"              property="userId"  />
+  <result column="userName"            property="userName"  />
+  <result column="groupId"      	   property="groupId"  />
+  <result column="groupName"       	   property="groupName"  />
+  <result column="authId"              property="authId"  />
+  <result column="authName"            property="authName"  />
+  <result column="excelAuth"           property="excelAuth"  />
+  <result column="password"            property="password"  />
+  <result column="officePhone"         property="officePhone"  />
+  <result column="officePhoneFormat"   property="officePhoneFormat"  />
+  <result column="mobliePhone"         property="mobliePhone"  />
+  <result column="mobliePhoneFormat"   property="mobliePhoneFormat"  />
+  <result column="email"               property="email"  />
+  <result column="ip"                  property="ip"  />
+  <result column="createUserId"        property="createUserId"  />
+  <result column="createDateTime"      property="createDateTime"  />
+  <result column="updateUserId"        property="updateUserId"  />
+  <result column="updateDateTime"      property="updateDateTime"  />
+  <result column="useYn"               property="useYn"  />
+  <result column="deletedYn"           property="deletedYn"  />
+</resultMap>
+
+<select id="getUser" resultMap="UserVO" parameterType="com.offact.addys.vo.common.UserVO" >
+			Select	   T1.userId
+					  ,T1.userName
+					  ,T1.groupId
+					  ,T2.groupName
+				  	  ,T1.authId   
+				  	  ,CASE WHEN T1.authId = T1.userId Then '개인권한'
+						   ELSE T3.groupName
+					  END As authName
+					  ,IFNULL(T1.excelAuth,'N')   As excelAuth
+					  ,T1.password
+					  ,T1.email
+					  ,T1.officePhone
+					  ,T1.officePhone As officePhoneFormat
+					  ,T1.mobliePhone
+					  ,T1.mobliePhone As mobliePhoneFormat
+					  ,T1.ip
+					  ,T1.createUserId
+					  ,T1.updateUserId
+					  ,T1.createDateTime As CreateDateTime
+					  ,T1.updateDateTime As UpdateDateTime
+					  ,T1.useYn
+					  ,T1.deletedYn
+				  From ofUser T1 
+					   Left Join ofGroup T2 On T1.groupId=T2.groupId
+					   Left Join ofGroup T3 On T1.authId=T3.groupId
+				  Where T1.userId = #{userId} And T1.deletedYn='N'
+</select>
+ 
+</mapper>

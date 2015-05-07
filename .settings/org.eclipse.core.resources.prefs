@@ -26,6 +26,7 @@ encoding//src/main/webapp/WEB-INF/views/master/stockManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/master/stockPageList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/orderManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/orderPageList.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/order/targetDetailPrint.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/targetDetailView.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/targetManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/targetPageList.jsp=UTF-8

@@ -5,6 +5,10 @@ import java.io.FileInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -23,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.mail.*;
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -42,6 +47,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import org.apache.commons.mail.*;
 import com.offact.framework.util.StringUtil;
 import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
@@ -52,6 +58,7 @@ import com.offact.addys.service.order.TargetService;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.CompanyVO;
+import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.master.StockVO;
 import com.offact.addys.vo.order.TargetVO;
 import com.offact.addys.vo.order.OrderVO;
@@ -297,7 +304,389 @@ public class OrderController {
        	
         return mv;
     }
-	
+    /**
+   	 * Simply selects the home view to render by returning its name.
+   	 * @throws BizException
+   	 */
+    @RequestMapping(value = "/order/targetdetailprint")
+   	public ModelAndView targetDetailPrint(HttpServletRequest request) throws BizException 
+       {
+   		
+   		ModelAndView mv = new ModelAndView();
+   		
+   		mv.setViewName("/order/targetDetailPrint");
+   		
+   		return mv;
+   	}
+    /**
+     * 발주처리
+     *
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/orderProcess", method = RequestMethod.POST)
+    public @ResponseBody
+    String userModify(@ModelAttribute("targetVO") TargetVO targetVO, 
+    		          HttpServletRequest request, 
+    		          HttpServletResponse response) throws BizException
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : targetVO" + targetVO);
+		
+		int retVal=-1;
+		String msg="";
+		String emailResult="";
+		
+		 //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+
+		//String ordercode="O"+targetVO.getGroupId()+targetVO.getCompanyCode()+strToday;
+        String ordercode="OAD001987654321"+strToday;
+
+		ResourceBundle rb = ResourceBundle.getBundle("config");
+	    String uploadFilePath = rb.getString("offact.upload.path") + "html/";
+	    String szFileName = uploadFilePath+ordercode+".html";                    // 파일 이름
+        String szContent = "";
+	    
+		try{
+            /* 파일을 생성해서 내용 쓰기 */
+	        
+	        File file = new File(szFileName);                        // 파일 생성
+	        OutputStream out = new FileOutputStream(file);            // 파일에 문자를 적을 스트림 생성
+
+            szContent += "<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN'>";
+	        szContent += "<html>";
+	        szContent += "<head>";
+	        szContent += "<title>상품주문서</title>";
+	        szContent += "<meta http-equiv='Content-Type' content='text/html; charset=euc-kr' />";
+	        szContent += "<style type='text/css'>"; 
+	        szContent += "<!--";
+	        szContent += "td {";
+	        szContent += "font-family: '굴림', '돋움', 'Seoul', '한강체';";
+	        szContent += "font-size: 12px";
+	        szContent += "	line-height: 30px;";
+	        szContent += "}";
+			szContent += ".style1 {";
+		    szContent += "	font-size: 30px;";
+			szContent += "	font-weight: bold;";
+			szContent += "	font-family: '굴림체', '돋움체', Seoul;";
+	        szContent += "}";
+			szContent += ".style5 {";
+			szContent += "	font-size: 24px;";
+			szContent += "font-weight: bold;";
+	        szContent += "}";
+			szContent += "-->";
+			szContent += "</style>";
+			szContent += "</head>";
+
+			szContent += "<body>";
+			szContent += "<div align='center'></div>";
+
+			szContent += "<div align='left'>";
+			szContent += "<table width='612' border='0' align='center' cellpadding='0' cellspacing='0'>";
+			szContent += "<tr>"; 
+			szContent += "<td width='516' valign='top'>";
+			szContent += "<table width='722' height='900' border='0' align='center' cellpadding='1' cellspacing='1' bgcolor='#000000'>";
+			szContent += "<tr bgcolor='#FFFFFF'>"; 
+			szContent += "<td height='55' colspan='12' align='center'><span class='style1'>상 품 주 문 서</span></td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += " <td rowspan='7' align='center' style='background-color:#E4E4E4'>수<br>신</td>";
+			szContent += " <td align='center'>&nbsp;수 신</td>";
+			szContent += " <td colspan='5' align='center'>&nbsp;</td>";
+			szContent += " <td rowspan='7'  align='center' style='background-color:#E4E4E4'>발<br>신</td>";
+			szContent += " <td align='center'>&nbsp;발 신</td>";
+			szContent += " <td colspan='3' align='center'>&nbsp;</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td align='center'>&nbsp;참 조</td>";
+			szContent += "<td colspan='5' align='center'>&nbsp;</td>";
+			szContent += "<td align='center'>&nbsp;참 조</td>";
+			szContent += "<td colspan='3' align='center'>&nbsp;</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td rowspan='2' align='center' >연락처</td>";
+			szContent += "<td colspan='5' align='center'>&nbsp;</td>";
+			szContent += "<td rowspan='2' align='center' >연락처</td>";
+			szContent += "<td colspan='3' align='center'>&nbsp;</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='5' align='center'>&nbsp;</td>";
+			szContent += "<td colspan='5' align='center'>&nbsp;</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td align='center' >발주일자</td>";
+			szContent += "<td width='70' align='center'><div align='right'>2015년 </div></td>";
+			szContent += "<td width='50' align='center'>&nbsp;5</td>";
+			szContent += "<td width='50' align='center'>월</td>";
+			szContent += "<td width='50' align='center'>&nbsp;28</td>";
+			szContent += "<td width='50' align='center'>일</td>";
+			szContent += "<td rowspan='2' align='center' >배송주소</td>";
+			szContent += "<td rowspan='2' colspan='3' align='center'>&nbsp;</td>";
+			szContent += "</tr>";
+            szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td align='center' >납품일자</td>";
+			szContent += "<td width='70' align='center'><div align='right'>2015년 </div></td>";
+			szContent += "<td width='50' align='center'>&nbsp;5</td>";
+			szContent += "<td width='50' align='center'>월</td>";
+			szContent += "<td width='50' align='center'>&nbsp;28</td>";
+			szContent += "<td width='50' align='center'>일</td>";
+			szContent += "</tr>";
+            szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td align='center'>&nbsp;납품방법</td>";
+			szContent += "<td colspan='5' align='center'>&nbsp;</td>";
+			szContent += "<td align='center'>&nbsp;결재방법</td>";
+			szContent += "<td colspan='3' align='center'>&nbsp;</td>";
+			szContent += "</tr>";
+
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' >메모</td>";
+			szContent += "<td colspan='10' align='center'></td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='12' align='center' height='27'><div align='left'>1.아래와 같이 발주합니다.</div></td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>번 호</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>수량</td>";
+			szContent += "<td width='172' align='center'>비 고</td>";
+			szContent += "</tr>";
+	        szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='2' align='center' height='27'>1</td>";
+			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td colspan='7' align='center'>상 품 명</td>";
+			szContent += "<td width='57' align='center'>10</td>";
+			szContent += "<td width='172' align='center'>블랙</td>";
+			szContent += "</tr>";
+
+			szContent += "</table>";
+			szContent += "</div>";
+
+			szContent += "</body>";
+			szContent += " </html>";
+
+			szContent += "</html>";
+	        
+			szContent += "</html>";
+
+	        
+	        out.write(szContent.getBytes());                        // 파일에 쓰기
+	        out.close();                                            // 파일 쓰기 스트림 닫기
+			
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+        
+		
+		 try{
+			 
+			 
+			EmailAttachment attachment = new EmailAttachment();	
+
+	    	attachment.setPath(szFileName); //첨부 파일 위치
+	    	attachment.setDisposition(EmailAttachment.ATTACHMENT);
+	    	attachment.setDescription("Order");
+	    	attachment.setName(ordercode+".html");
+	    	
+	    	String MAIL_HOST = rb.getString("offact.mail.host");
+	    	String MAIL_ID = rb.getString("offact.mail.user");
+	    	String MAIL_PW = rb.getString("offact.mail.password");
+	    	String MAIL_FROMNM = rb.getString("offact.mail.fromName");
+	    	String MAIL_FROMADDR = rb.getString("offact.mail.fromAddr");
+
+	    	//기본 메일정보 생성
+	    	MultiPartEmail email = new MultiPartEmail();
+	    	email.setHostName(MAIL_HOST);
+	    	email.setAuthentication(MAIL_ID, MAIL_PW);
+	    	email.addTo("dev@addys.co.kr", "Test");
+	    	email.setFrom(MAIL_FROMADDR, "(주)애디스 다이렉트");
+	    	email.setSubject("[TEST]상품주문서");
+	    	email.setMsg("발주 테스트 입니다.");
+	    	
+	    	//첨부 파일 추가
+	    	email.attach(attachment);
+	    	 
+	    	//메일 전송
+	    	email.send();
+	    	
+	        }catch (Exception e) {
+				
+	        	logger.debug("email error :"+e.getMessage());
+	        	emailResult="N";
+				
+			}
+		
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+      return ""+retVal;
+    }
 	 /**
      * 검수대상 화면
      *

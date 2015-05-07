@@ -1,6 +1,7 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <html>
 <head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script language="javascript">
 //초기세팅
 

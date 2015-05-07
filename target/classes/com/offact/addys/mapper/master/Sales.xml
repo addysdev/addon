@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Sales">
+
+<resultMap id="salesVO" type="com.offact.addys.vo.master.SalesVO" >
+  <result column="salesDate"      property="salesDate"  />
+  <result column="groupId"          property="groupId"  />
+  <result column="groupName"      property="groupName"  />
+  <result column="updateDateTime"      property="updateDateTime"  />
+  <result column="updateUserId"      property="updateUserId"  />
+  <result column="updateUserName"     property="updateUserName"  />
+  <result column="productCode"          property="productCode"  />
+  <result column="productName"           property="productName"  />
+  <result column="salesCnt"        property="salesCnt"  />
+  <result column="salesAmt"        property="salesAmt"  />
+</resultMap>
+
+<select id="getSalesPageList"  resultMap="salesVO" parameterType="com.offact.addys.vo.master.SalesVO" >
+        SELECT T1.salesDate
+			  ,T1.groupId
+			  ,T2.groupName
+			  ,T1.updateDateTime
+			  ,T1.updateUserId
+			  ,T3.userName as updateUserName 
+          FROM adSales T1
+               Left Join ofGroup T2 On T1.groupId=T2.groupId
+          	   Left Join ofUser T3 On T1.updateUserId=T3.userId
+         WHERE T1.salesDate between REPLACE('${start_salesDate}', '-', '')  and REPLACE('${end_salesDate}', '-', '')
+            <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           		AND T1.groupId = #{con_groupId}
+           </if>
+         ORDER BY updateDateTime desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getSalesCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  			FROM adSales
+ 			 WHERE salesDate between REPLACE('${start_salesDate}', '-', '')  and REPLACE('${end_salesDate}', '-', '')
+            <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           		AND groupId = #{con_groupId}
+           </if>
+</select>
+
+<select id="getSalesDetailPageList"  resultMap="salesVO" parameterType="com.offact.addys.vo.master.SalesVO" >
+        SELECT T1.productCode
+			  ,T2.productName
+			  ,T1.salesCnt
+			  ,T1.salesAmt
+          FROM adSalesDetail T1
+  			   Left Join adProductMaster T2 On T1.productCode=T2.productCode
+ 			WHERE salesDate = ${salesDate}
+              AND groupId = #{groupId}
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND T1.productCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND T2.productName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+         ORDER BY productCode desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getSalesDetailCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  			FROM adSalesDetail T1
+  			    Left Join adProductMaster T2 On T1.productCode=T2.productCode
+ 			WHERE salesDate = ${salesDate}
+              AND groupId = #{groupId}
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND T1.productCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND T2.productName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+</select>
+
+<delete id="salesDeleteAll" parameterType="com.offact.addys.vo.master.SalesVO" >
+        Delete
+		From adSales
+ 		Where salesDate = #{salesDate}
+ 		  And groupId = #{groupId}
+</delete>
+
+<delete id="salesDetailDeleteAll" parameterType="com.offact.addys.vo.master.SalesVO" >
+        Delete
+		From adSalesDetail
+ 		Where salesDate = #{salesDate}
+ 		  And groupId = #{groupId}
+</delete>
+
+<insert id="insertSales"  parameterType="com.offact.addys.vo.master.SalesVO" >
+		insert into adSales (
+				 salesDate
+            	,groupId
+            	,updateDateTime 
+            	,updateUserId
+		)values(
+				 #{salesDate}
+	  			, #{groupId}
+	  			, #{updateDateTime}
+	  			, #{updateUserId}
+		)
+		                        
+</insert>
+
+<insert id="insertExcelSalesdDetail"  parameterType="com.offact.addys.vo.master.SalesVO" >
+		insert into adSalesDetail (
+				 salesDate
+            	,groupId
+            	,productCode 
+            	,salesCnt
+            	,salesAmt
+		)values(
+				 #{salesDate}
+	  			, #{groupId}
+	  			, #{productCode}
+	  			, #{salesCnt}
+	  			, #{salesAmt}
+		)
+		                        
+</insert>
+
+</mapper>
