@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Company">
+
+<resultMap id="companyVO" type="com.offact.addys.vo.common.CompanyVO" >
+  <result column="companyCode"              property="companyCode"  />
+  <result column="companyName"            property="companyName"  />
+  <result column="companyPhone"      	   property="companyPhone"  />
+  <result column="postCode"       	   property="postCode"  />
+  <result column="address1"              property="address1"  />
+  <result column="faxNumber"            property="faxNumber"  />
+  <result column="mobilePhone"           property="mobilePhone"  />
+  <result column="email"            property="email"  />
+  <result column="chargeName"         property="chargeName"  />
+</resultMap>
+
+<select id="getCompany" resultMap="companyVO" parameterType="com.offact.addys.vo.common.CompanyVO" >
+			Select	   companyCode
+					  ,companyName
+					  ,companyPhone
+					  ,postCode
+				  	  ,address1
+				  	  ,faxNumber
+					  ,mobilePhone
+					  ,email
+					  ,chargeName
+				  From adCompany 
+				  Where companyCode = #{companyCode} And deletedYn='N'
+</select>
+ 
+</mapper>

@@ -48,7 +48,6 @@
 
 
 </SCRIPT>
-	<div class="container">
      <form:form commandName="targetVO" name="targetPageListForm" method="post" action="" >
       <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
@@ -85,10 +84,9 @@
 	    </tbody>
 	  </table>
 	 </form:form>
-	</div>
-	<div class="container">
-	    <!-- 페이징 -->
-        <taglib:paging cbFnc="goPageTargetPageList" totalCount="${totalCount}" curPage="${targetConVO.curPage}" rowCount="${targetConVO.rowCount}" />
-        <!-- //페이징 -->
-	</div>
+
+    <!-- 페이징 -->
+    <taglib:paging cbFnc="goPageTargetPageList" totalCount="${totalCount}" curPage="${targetConVO.curPage}" rowCount="${targetConVO.rowCount}" />
+    <!-- //페이징 -->
+
     

@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,7 +28,6 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -49,12 +49,12 @@ import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.addys.service.common.CommonService;
 import com.offact.addys.service.order.OrderService;
 import com.offact.addys.service.order.TargetService;
-
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CodeVO;
+import com.offact.addys.vo.common.CompanyVO;
+import com.offact.addys.vo.master.StockVO;
 import com.offact.addys.vo.order.TargetVO;
 import com.offact.addys.vo.order.OrderVO;
-
 import com.offact.addys.vo.MultipartFileVO;
 
 /**
@@ -229,16 +229,62 @@ public class OrderController {
         ModelAndView mv = new ModelAndView();
         List<TargetVO> targetDetailList = null;
         
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));
+        String strGroupName = StringUtil.nvl((String) session.getAttribute("strGroupName"));
+        String strOfficePhone = StringUtil.nvl((String) session.getAttribute("strOfficePhone"));
+        String strMobliePhone = StringUtil.nvl((String) session.getAttribute("strMobliePhone"));
+        String strEmail = StringUtil.nvl((String) session.getAttribute("strEmail"));
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        Date deliveryTime = new Date();
+        int movedate=1;//(1:내일 ,-1:어제)
+        
+        deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+        
+        String strToday = simpleDateFormat.format(currentTime);
+        String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+        
+        CompanyVO companyVO = new CompanyVO();
         TargetVO targetConVO = new TargetVO();
+        TargetVO targetVO = new TargetVO();
 
         targetConVO.setCon_groupId(groupId);
-        targetConVO.setCon_companyCode(companyCode);
         targetConVO.setCon_orderState(orderState);
         targetConVO.setGroupName(groupName);
+        targetConVO.setCon_companyCode(companyCode);
 
         // 조회조건저장
         mv.addObject("targetConVO", targetConVO);
+        
+        //업체 상세 정보조회
+        companyVO.setCompanyCode(companyCode);
+        companyVO = commonSvc.getCompanyDetail(companyVO);
 
+        //발주기본 정보
+        targetVO.setGroupName(groupName);
+        targetVO.setOrderUserName(strUserName);
+        targetVO.setOrderDateTime(strToday);
+        targetVO.setMobilePhone(strMobliePhone);
+        targetVO.setPhone(strOfficePhone);
+        targetVO.setEmail(strEmail);
+        targetVO.setFaxNumber("");
+        
+        targetVO.setCompanyName(companyVO.getCompanyName());
+        targetVO.setDeliveryCharge(companyVO.getChargeName());
+        targetVO.setDeliveryMobile(companyVO.getMobilePhone());
+        targetVO.setDeliveryFax(companyVO.getFaxNumber());
+        targetVO.setDeliveryTel(companyVO.getCompanyPhone());
+        targetVO.setDeliveryEmail(companyVO.getEmail());
+        targetVO.setDeliveryDate(strDeliveryDay);
+        
+        mv.addObject("targetVO", targetVO);
+        
         // 발주대상 상세목록조회
         targetDetailList = targetSvc.getTargetDetailList(targetConVO);
         mv.addObject("targetDetailList", targetDetailList);
@@ -282,9 +328,17 @@ public class OrderController {
         OrderVO orderConVO = new OrderVO();
         
         orderConVO.setGroupId(groupId);
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+        
+        orderConVO.setStart_orderDate(strToday);
+        orderConVO.setEnd_orderDate(strToday);
 
         // 조회조건저장
-        mv.addObject("targetConVO", orderConVO);
+        mv.addObject("orderConVO", orderConVO);
 
         //조직정보 조회
         GroupVO group = new GroupVO();

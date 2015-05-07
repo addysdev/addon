@@ -21,6 +21,7 @@ public class TargetVO extends AbstractVO {
 	private String emailKey;
 	private String faxNumber;
 	private String mobilePhone;
+	private String phone;
 	private String email;
 	private String orderEtc;
 	private String orderAdress;
@@ -33,6 +34,13 @@ public class TargetVO extends AbstractVO {
 	private String deliveryEtc;
 	private String deliveryMethod;
 	private String deliveryCharge;
+	
+	private String deliveryMobile;
+	private String deliveryEmail;
+	private String deliveryTel;
+	private String deliveryFax;
+	
+	private String meno;
 	
 	private String orderCnt;
 	private String orderAmt;
@@ -60,6 +68,7 @@ public class TargetVO extends AbstractVO {
     private String rowCount         = "10";
     private String page_limit_val1;
     private String page_limit_val2;
+    
 	public String getOrderCode() {
 		return orderCode;
 	}
@@ -323,6 +332,42 @@ public class TargetVO extends AbstractVO {
 	}
 	public void setPage_limit_val2(String page_limit_val2) {
 		this.page_limit_val2 = page_limit_val2;
+	}
+	public String getDeliveryMobile() {
+		return deliveryMobile;
+	}
+	public void setDeliveryMobile(String deliveryMobile) {
+		this.deliveryMobile = deliveryMobile;
+	}
+	public String getDeliveryEmail() {
+		return deliveryEmail;
+	}
+	public void setDeliveryEmail(String deliveryEmail) {
+		this.deliveryEmail = deliveryEmail;
+	}
+	public String getDeliveryTel() {
+		return deliveryTel;
+	}
+	public void setDeliveryTel(String deliveryTel) {
+		this.deliveryTel = deliveryTel;
+	}
+	public String getDeliveryFax() {
+		return deliveryFax;
+	}
+	public void setDeliveryFax(String deliveryFax) {
+		this.deliveryFax = deliveryFax;
+	}
+	public String getMeno() {
+		return meno;
+	}
+	public void setMeno(String meno) {
+		this.meno = meno;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 	
 }

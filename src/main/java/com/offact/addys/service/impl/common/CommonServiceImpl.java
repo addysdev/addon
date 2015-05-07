@@ -17,7 +17,7 @@ import com.offact.addys.service.common.CommonService;
 
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.GroupVO;
-
+import com.offact.addys.vo.common.CompanyVO;
 
 /**
  * @author 4530
@@ -45,5 +45,12 @@ public class CommonServiceImpl implements CommonService {
 
         return grolupList;
     }
+
+   @Override
+   public CompanyVO getCompanyDetail(CompanyVO company) throws BizException {
+	   CompanyVO companyDetail = commonDao.selectOne("Company.getCompany", company);
+
+       return companyDetail;
+   }
 
 }

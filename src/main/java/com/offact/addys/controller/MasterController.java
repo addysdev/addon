@@ -292,7 +292,7 @@ public class MasterController {
        XSSFWorkbook workbook = new XSSFWorkbook(fileInput);
        XSSFSheet sheet = workbook.getSheetAt(0);//첫번째 sheet
   
-           int TITLE_POINT =0;//타이틀 항목위치
+       int TITLE_POINT =0;//타이틀 항목위치
        int ROW_START = 1;//data row 시작지점
        
        int TOTAL_ROWS=sheet.getPhysicalNumberOfRows(); //전체 ROW 수를 가져온다.

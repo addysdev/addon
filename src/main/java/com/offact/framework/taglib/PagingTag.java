@@ -73,7 +73,7 @@ public class PagingTag extends TagSupport {
             lPageCount = lTotalCount / lRowCount + 1L;
         }
 
-        html.append("<div class=\"container\">\n<ul class=\"pagination\">\n");
+        html.append("<div class=\"container-fluid\">\n<ul class=\"pagination\">\n");
 
         if (lTotalCount > 0) {
 
@@ -83,12 +83,12 @@ public class PagingTag extends TagSupport {
             } else {
                 html.append("<li><a href=\"javascript:"
                         + cbFnc
-                        + "('1');\" ><span class=\"glyphicon glyphicon-step-backward\"></span></a></li>");
+                        + "('1');\"  aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>");
                 html.append("<li><a href=\"javascript:"
                         + cbFnc
                         + "('"
                         + (lCurPage - 1)
-                        + "');\" ><span class=\"glyphicon glyphicon-chevron-left\"></span></a></li>");
+                        + "');\"  aria-label=\"Previous\"><span aria-hidden=\"true\"><</span></li>");
             }
             long startPage = (lCurPage / maxPagingCount) * maxPagingCount + 1;
             if( 0L == lCurPage % maxPagingCount && lCurPage > 9 ) {
@@ -120,12 +120,12 @@ public class PagingTag extends TagSupport {
                         + cbFnc
                         + "('"
                         + (lCurPage + 1)
-                        + "');\" > <span class=\"glyphicon glyphicon-chevron-right\"></span></a></li>");
+                        + "');\"aria-label=\"Next\"><span aria-hidden=\"true\">></span></a></li>");
                 html.append("<li><a href=\"javascript:"
                         + cbFnc
                         + "('"
                         + lPageCount
-                        + "');\" ><span class=\"glyphicon glyphicon-step-forward\"></span></a></li>");
+                        + "');\"  aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>");
             }
         }
 

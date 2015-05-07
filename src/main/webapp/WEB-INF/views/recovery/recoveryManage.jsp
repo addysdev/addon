@@ -40,8 +40,8 @@
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
         <fieldset>
         	<div class="form-group">
-        		<label for="start_stockDate end_stockDate"><h6><strong><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span>  회수일자 : </font></strong></h6></label>
-				<div class='input-group date ' id='datetimepicker1' data-link-field="start_stockDate" data-link-format="yyyy-mm-dd">
+        		<label for="start_recoveryDate end_recoveryDate"><h6><strong><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span>  회수일자 : </font></strong></h6></label>
+				<div class='input-group date ' id='datetimepicker1' data-link-field="start_recoveryDate" data-link-format="yyyy-mm-dd">
 	                <input type='text' class="form-control" value="${recoveryConVO.start_recoveryDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>

@@ -32,7 +32,7 @@
     
 </SCRIPT>
 <!-- 사용자관리 -->
-	<div class="container-fluid">
+		<div class="container-fluid">
         <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 재고 상세현황  리스트</font></strong></h4>
         <!-- 조회조건 -->
         <form:form class="form-inline" role="form"  commandName="stockDetailConVO" id="stockDetailConForm" name="stockDetailConForm" method="post" action="" >

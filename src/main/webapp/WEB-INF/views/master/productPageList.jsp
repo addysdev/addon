@@ -20,7 +20,7 @@
     }
 
 </SCRIPT>
-	<div class="container">
+
      <form:form commandName="productMasterVO" name="productMasterPageListForm" method="post" action="" >
       <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
@@ -30,8 +30,8 @@
             <th class='text-center'>바코드</th>
             <th class='text-center'>품목명</th>
             <th class='text-center'>구매처</th>
-            <th class='text-center'>업데이트<br>사용자ID</th>
-            <th class='text-center'>업데이트 <br>사용자명</th>
+            <th class='text-center'>업데이트사용자ID</th>
+            <th class='text-center'>업데이트 사용자명</th>
             <th class='text-center'>업데이트 일시</th>
 	      </tr>
 	    </thead>
@@ -57,10 +57,7 @@
 	    </tbody>
 	  </table>
 	 </form:form>
-	</div>
-	<div class="container">
-	    <!-- 페이징 -->
-        <taglib:paging cbFnc="goPageProductMasterPageList" totalCount="${totalCount}" curPage="${productCon.curPage}" rowCount="${productCon.rowCount}" />
-        <!-- //페이징 -->
-	</div>
-    
+
+	 <!-- 페이징 -->
+     <taglib:paging cbFnc="goPageProductMasterPageList" totalCount="${totalCount}" curPage="${productCon.curPage}" rowCount="${productCon.rowCount}" />
+     <!-- //페이징 -->

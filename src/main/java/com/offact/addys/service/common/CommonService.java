@@ -9,6 +9,7 @@ import java.util.Map;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.GroupVO;
+import com.offact.addys.vo.common.CompanyVO;
 
 /**
  * @author 4530
@@ -30,5 +31,13 @@ public interface CommonService {
      * @throws BizException
      */
     public List<GroupVO> getGroupComboList(GroupVO group) throws BizException;
-
+    
+    
+    /**
+     * 업체정보
+     *
+     * @return
+     * @throws BizException
+     */
+    public CompanyVO getCompanyDetail(CompanyVO company) throws BizException;
 }

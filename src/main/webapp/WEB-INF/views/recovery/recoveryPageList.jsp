@@ -20,7 +20,6 @@
     }
 
 </SCRIPT>
-	<div class="container">
      <form:form commandName="recoveryVO" name="recoveryPageListForm" method="post" action="" >
       <p><span>총 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
@@ -57,10 +56,9 @@
 	    </tbody>
 	  </table>
 	 </form:form>
-	</div>
-	<div class="container">
-	    <!-- 페이징 -->
-        <taglib:paging cbFnc="goPageRecoveryPageList" totalCount="${totalCount}" curPage="${recoveryConVO.curPage}" rowCount="${recoveryConVO.rowCount}" />
-        <!-- //페이징 -->
-	</div>
+
+	 <!-- 페이징 -->
+     <taglib:paging cbFnc="goPageRecoveryPageList" totalCount="${totalCount}" curPage="${recoveryConVO.curPage}" rowCount="${recoveryConVO.rowCount}" />
+     <!-- //페이징 -->
+
     

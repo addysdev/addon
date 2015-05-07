@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,7 +28,6 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -48,11 +48,9 @@ import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.addys.service.common.CommonService;
 import com.offact.addys.service.recovery.RecoveryService;
-
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.recovery.RecoveryVO;
-
 import com.offact.addys.vo.MultipartFileVO;
 
 /**
@@ -113,6 +111,14 @@ public class RecoveryController {
         
         recoveryConVO.setGroupId(groupId);
 
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+        
+        recoveryConVO.setStart_recoveryDate(strToday);
+        recoveryConVO.setEnd_recoveryDate(strToday);
+        
         // 조회조건저장
         mv.addObject("recoveryConVO", recoveryConVO);
 

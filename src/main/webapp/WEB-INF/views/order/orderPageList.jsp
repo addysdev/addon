@@ -20,7 +20,6 @@
     }
 
 </SCRIPT>
-	<div class="container">
      <form:form commandName="orderVO" name="orderPageListForm" method="post" action="" >
       <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
@@ -61,10 +60,9 @@
 	    </tbody>
 	  </table>
 	 </form:form>
-	</div>
-	<div class="container">
-	    <!-- 페이징 -->
-        <taglib:paging cbFnc="goPageProductMasterPageList" totalCount="${totalCount}" curPage="${orderCon.curPage}" rowCount="${orderCon.rowCount}" />
-        <!-- //페이징 -->
-	</div>
+
+    <!-- 페이징 -->
+    <taglib:paging cbFnc="goPageOrderPageList" totalCount="${totalCount}" curPage="${orderConVO.curPage}" rowCount="${orderConVO.rowCount}" />
+    <!-- //페이징 -->
+
     

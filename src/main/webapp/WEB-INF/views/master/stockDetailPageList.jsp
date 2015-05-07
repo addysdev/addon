@@ -20,7 +20,6 @@
     }
     
 </SCRIPT>
-	<div class="container-fluid">
      <form:form commandName="stockVO" name="stockDetailPageListForm" method="post" action="" >
       <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-striped">
@@ -47,10 +46,8 @@
 	    </tbody>
 	  </table>
 	 </form:form>
-	</div>
-	<div class="container-fluid">
-	    <!-- 페이징 -->
-        <taglib:paging cbFnc="goPageStockDetailPageList" totalCount="${totalCount}" curPage="${stockDetailConVO.curPage}" rowCount="${stockDetailConVO.rowCount}" />
-        <!-- //페이징 -->
-	</div>
-    
+
+    <!-- 페이징 -->
+    <taglib:paging cbFnc="goPageStockDetailPageList" totalCount="${totalCount}" curPage="${stockDetailConVO.curPage}" rowCount="${stockDetailConVO.rowCount}" />
+    <!-- //페이징 -->
+	
