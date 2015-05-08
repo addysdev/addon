@@ -140,6 +140,23 @@
         
     </bean>
     
+    <!-- Email 처리 -->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	   <property name="host" value="wsmtp.ecounterp.com"/>
+	   <property name="port" value="587"/>
+	   <property name="username" value="order@addys.co.kr"/>
+	   <property name="password" value="doeltm0407" />
+	   <property name="defaultEncoding" value="UTF-8"/>
+	   <property name="javaMailProperties">
+	      <props>
+	      	<prop key="mail.transport.protocol">smtp</prop>
+	        <prop key="mail.smtp.auth">true</prop>
+	        <prop key="mail.smtp.starttls.enable">false</prop>
+	        <prop key="mail.debug">false</prop>
+	      </props>
+	   </property>
+	</bean>
+
     <!-- Cron 실행 -->
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">

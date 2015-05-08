@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -27,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.mail.*;
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -47,7 +45,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import org.apache.commons.mail.*;
 import com.offact.framework.util.StringUtil;
 import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
@@ -55,9 +52,11 @@ import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.addys.service.common.CommonService;
 import com.offact.addys.service.order.OrderService;
 import com.offact.addys.service.order.TargetService;
+import com.offact.addys.service.common.MailService;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.CompanyVO;
+import com.offact.addys.vo.common.EmailVO;
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.master.StockVO;
 import com.offact.addys.vo.order.TargetVO;
@@ -93,6 +92,9 @@ public class OrderController {
    
     @Autowired
     private OrderService orderSvc;
+    
+    @Autowired
+    private MailService mailSvc;
     
 	 /**
      * 발주대상 화면
@@ -331,7 +333,7 @@ public class OrderController {
      */
     @RequestMapping(value = "/order/orderProcess", method = RequestMethod.POST)
     public @ResponseBody
-    String userModify(@ModelAttribute("targetVO") TargetVO targetVO, 
+    String orderProcess(@ModelAttribute("targetVO") TargetVO targetVO, 
     		          HttpServletRequest request, 
     		          HttpServletResponse response) throws BizException
     {
@@ -340,9 +342,9 @@ public class OrderController {
 		long t1 = System.currentTimeMillis();
 		logger.info("["+logid+"] Controller start : targetVO" + targetVO);
 		
-		int retVal=-1;
-		String msg="";
-		String emailResult="";
+		logger.info("["+logid+"] @@@@@@@@ : targetVO.getDeliveryEmail" + targetVO.getDeliveryEmail());
+		
+		boolean mailResult=false;
 		
 		 //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
@@ -367,7 +369,7 @@ public class OrderController {
 	        szContent += "<html>";
 	        szContent += "<head>";
 	        szContent += "<title>상품주문서</title>";
-	        szContent += "<meta http-equiv='Content-Type' content='text/html; charset=euc-kr' />";
+	        szContent += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />";
 	        szContent += "<style type='text/css'>"; 
 	        szContent += "<!--";
 	        szContent += "td {";
@@ -638,54 +640,36 @@ public class OrderController {
 	        out.write(szContent.getBytes());                        // 파일에 쓰기
 	        out.close();                                            // 파일 쓰기 스트림 닫기
 			
+			EmailVO mail = new EmailVO();
+			
+			List<String> toEmails= new ArrayList();
+			List<String> attcheFileName= new ArrayList();
+			List<File> files = new ArrayList();
+			
+			toEmails.add("kevin.jeon@offact.com");
+			attcheFileName.add(ordercode+".html");
+			files.add(file);
+			
+			mail.setToEmails(toEmails);
+			mail.setAttcheFileName(attcheFileName);
+			mail.setFile(files);
+			
+			mail.setFromEmail("order@addys.co.kr");
+			mail.setMsg("addys 상품 주문서 메일입니다.\n확인하신 후 발송처리 부탁드립니다.");
+			mail.setSubject("[애디스다이렉트] 상품주문서 발송메일");
+	
+			mailResult=mailSvc.sendMail(mail);
+			logger.debug("mail result :"+mailResult);
+		
 		}catch(IOException e){
 			e.printStackTrace();
 		}
-        
-		
-		 try{
-			 
-			 
-			EmailAttachment attachment = new EmailAttachment();	
-
-	    	attachment.setPath(szFileName); //첨부 파일 위치
-	    	attachment.setDisposition(EmailAttachment.ATTACHMENT);
-	    	attachment.setDescription("Order");
-	    	attachment.setName(ordercode+".html");
-	    	
-	    	String MAIL_HOST = rb.getString("offact.mail.host");
-	    	String MAIL_ID = rb.getString("offact.mail.user");
-	    	String MAIL_PW = rb.getString("offact.mail.password");
-	    	String MAIL_FROMNM = rb.getString("offact.mail.fromName");
-	    	String MAIL_FROMADDR = rb.getString("offact.mail.fromAddr");
-
-	    	//기본 메일정보 생성
-	    	MultiPartEmail email = new MultiPartEmail();
-	    	email.setHostName(MAIL_HOST);
-	    	email.setAuthentication(MAIL_ID, MAIL_PW);
-	    	email.addTo("dev@addys.co.kr", "Test");
-	    	email.setFrom(MAIL_FROMADDR, "(주)애디스 다이렉트");
-	    	email.setSubject("[TEST]상품주문서");
-	    	email.setMsg("발주 테스트 입니다.");
-	    	
-	    	//첨부 파일 추가
-	    	email.attach(attachment);
-	    	 
-	    	//메일 전송
-	    	email.send();
-	    	
-	        }catch (Exception e) {
-				
-	        	logger.debug("email error :"+e.getMessage());
-	        	emailResult="N";
-				
-			}
-		
+       
 		//log Controller execute time end
        	long t2 = System.currentTimeMillis();
        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 
-      return ""+retVal;
+      return ""+mailResult;
     }
 	 /**
      * 검수대상 화면
