@@ -41,14 +41,14 @@
         <fieldset>
         	<div class="form-group">
         		<label for="start_orderDate end_orderDate"><h6><strong><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span>  발주일자 : </font></strong></h6></label>
-				<div class='input-group date ' id='datetimepicker1' data-link-field="start_orderDate" data-link-format="yyyy-mm-dd">
+				<div style='width:150px' class='input-group date ' id='datetimepicker1' data-link-field="start_orderDate" data-link-format="yyyy-mm-dd">
 	                <input type='text' class="form-control" value="${orderConVO.start_orderDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>
 	                </span>
 	                <input type="hidden" id="start_orderDate" name="start_orderDate" value="${orderConVO.start_orderDate}" />
 	            </div>
-	            <div class='input-group date' id='datetimepicker2'  data-link-field="end_orderDate" data-link-format="yyyy-mm-dd">
+	            <div style='width:150px' class='input-group date' id='datetimepicker2'  data-link-field="end_orderDate" data-link-format="yyyy-mm-dd">
 	                <input type='text' class="form-control" value="${orderConVO.end_orderDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>

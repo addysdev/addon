@@ -68,14 +68,14 @@
         <fieldset>
         	<div class="form-group" >
 				<label for="start_stockDate end_stockDate"><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span> 재고현황일자 : </font></label>
-				<div class='input-group date ' id='datetimepicker1' data-link-field="start_stockDate" data-link-format="yyyy-mm-dd">
+				<div style='width:150px' class='input-group date ' id='datetimepicker1' data-link-field="start_stockDate" data-link-format="yyyy-mm-dd">
 	                <input type='text' class="form-control" value="${stockConVO.start_stockDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>
 	                </span>
 	                <input type="hidden" id="start_stockDate" name="start_stockDate" value="${stockConVO.start_stockDate}" />
 	            </div>
-	            <div class='input-group date' id='datetimepicker2'  data-link-field="end_stockDate" data-link-format="yyyy-mm-dd">
+	            <div style='width:150px' class='input-group date' id='datetimepicker2'  data-link-field="end_stockDate" data-link-format="yyyy-mm-dd">
 	                <input type='text' class="form-control" value="${stockConVO.end_stockDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>

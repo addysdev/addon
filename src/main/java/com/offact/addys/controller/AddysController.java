@@ -135,6 +135,7 @@ public class AddysController {
 		// # 2. 넘겨받은 아이디로 데이터베이스를 조회하여 사용자가 있는지를 체크한다.
 		UserVO userChkVo = new UserVO();
 		userChkVo.setUserId(strUserId);
+		userChkVo.setInPassword(strUserPw);
 		UserVO userChk = userSvc.getUser(userChkVo);		
 
 		String strUserName = "";
@@ -157,6 +158,23 @@ public class AddysController {
 	
 		if(userChk != null)
 		{
+			//패스워드 체크
+			if(!userChk.getPassword().equals(userChk.getInPassword())){
+				
+				logger.info(">>> 비밀번호 오류");
+				strMainUrl = "addys/loginFail";
+				
+				mv.addObject("userId", strUserId);
+				
+				mv.setViewName(strMainUrl);
+				
+				//log Controller execute time end
+		      	long t2 = System.currentTimeMillis();
+		      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+		      	
+				return mv;
+				
+			}
 			
 			strUserId= userChk.getUserId();
 			strUserName = userChk.getUserName();

@@ -69,14 +69,14 @@
         <fieldset>
         	<div class="form-group" >
 				<label for="start_salesDate end_salesDate"><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span> 매출현황일자 : </font></label>
-				<div class='input-group date ' id='datetimepicker1' data-link-field="start_salesDate" data-link-format="yyyy-mm-dd">
+				<div style='width:150px' class='input-group date ' id='datetimepicker1' data-link-field="start_salesDate" data-link-format="yyyy-mm-dd">
 	                <input type='text' class="form-control" value="${salesConVO.start_salesDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>
 	                </span>
 	                <input type="hidden" id="start_salesDate" name="start_salesDate" value="${salesConVO.start_salesDate}" />
 	            </div>
-	            <div class='input-group date' id='datetimepicker2'  data-link-field="end_salesDate" data-link-format="yyyy-mm-dd">
+	            <div style='width:150px' class='input-group date' id='datetimepicker2'  data-link-field="end_salesDate" data-link-format="yyyy-mm-dd">
 	                <input type='text' class="form-control" value="${salesConVO.end_salesDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>

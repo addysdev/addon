@@ -36,14 +36,23 @@ function fcCompanyManage_excelimport(){
         alert("엑셀파일만 올려주세요");
         return;
     }
-
+    commonDim(true);
+    
     frm.action = url;
     frm.target="excel_import_result";
 
     frm.submit();        
 }
 
-
+function uploadClose(msg){
+	
+	 commonDim(false);
+	  
+	 alert(msg);
+	 
+	 $('#companyExcelForm').dialog('close');
+	 fcCompanyManage_listSearch();
+}
 
 </script>
 </head>

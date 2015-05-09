@@ -50,20 +50,21 @@ function fcSalse_excelimport(){
   <input type="file"  id="files" name="files" />
   <br><br> 
    <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 매출 기준 선택</font></strong></h4>
-	<label for="salseDate"><h6><strong><font style="color:#FF9900"> 매출일자 : </font></strong></h6></label>
-	<div class='input-group date ' id='datetimepicker3' data-link-field="in_salseDate" data-link-format="yyyy-mm-dd">
-        <input type='text' class="form-control" value="" />
+	<label for="start_salesDate"><h6><strong><font style="color:#FF9900"> 매출일자 : </font></strong></h6></label>
+	<div style='width:150px' class='input-group date ' id='datetimepicker1' data-link-field="start_salesDate" data-link-format="yyyy-mm-dd">
+        <input type='text' class="form-control" value="${salesConVO.start_salesDate}" />
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>
-        <input type="hidden" id="in_salseDate" name="in_salseDate" value="" />
+        <input type="hidden" id="start_salesDate" name="start_salesDate" value="${salesConVO.start_salesDate}" />
     </div>
     <br><br>
 	<label for="con_groupId"><h6><strong><font style="color:#FF9900">  지점선택 : </font></strong></h6></label>
-	<select class="form-control" title="지점정보" id="temp_con_groupId" name="temp_con_groupId" value="">
-        <option value="AD001" >물류정상</option>
-        <option value="BD009" >반디울산</option>
-        <option value="YP008" >영풍청량리</option>
+	<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${salesConVO.groupId}">
+        <option value="">전체</option>
+        <c:forEach var="groupVO" items="${group_comboList}" >
+        	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
+        </c:forEach>
     </select>
   <br><br> 
   <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 업로드 시 주의사항</font></strong></h4>

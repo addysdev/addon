@@ -48,6 +48,7 @@ import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.addys.service.common.CommonService;
 import com.offact.addys.service.manage.UserManageService;
 import com.offact.addys.service.manage.CompanyManageService;
+import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.manage.CompanyManageVO;
@@ -222,6 +223,18 @@ public class ManageController {
 		userVO.setCreateUserId(createUserId);
 		mv.addObject("userVO", userVO);
 		
+		//조직정보 조회
+        GroupVO group = new GroupVO();
+        group.setGroupId("G00000");
+        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+        mv.addObject("group_comboList", group_comboList);
+        
+        // 공통코드 조회 (관리권한)
+        CodeVO code = new CodeVO();
+        code.setCodeGroupId("AU01");
+        List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
+        mv.addObject("code_comboList", code_comboList);
+		
 		mv.setViewName("/manage/userRegForm");
 		return mv;
 	}
@@ -288,6 +301,18 @@ public class ManageController {
 		
 		userVO.setUpdateUserId(updateuserId);
 		mv.addObject("userVO", userVO);
+		
+		 //조직정보 조회
+        GroupVO group = new GroupVO();
+        group.setGroupId("G00000");
+        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+        mv.addObject("group_comboList", group_comboList);
+        
+        // 공통코드 조회 (관리권한)
+        CodeVO code = new CodeVO();
+        code.setCodeGroupId("AU01");
+        List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
+        mv.addObject("code_comboList", code_comboList);
 		
 		mv.setViewName("/manage/userModifyForm");
 		
@@ -414,6 +439,9 @@ public class ManageController {
       this.logger.info("file:" + fileVO);
 
       List userUploadList = new ArrayList();
+      String excelInfo = "";//excel 추출데이타
+      List rtnErrorList = new ArrayList(); //DB 에러 대상데이타
+      List rtnSuccessList = new ArrayList(); //DB 성공 대상데이타
 
       if (fileName != null) {
     	  
@@ -441,58 +469,100 @@ public class ManageController {
 
         fileInput = new FileInputStream(fname);
 
-        XSSFWorkbook workbook = new XSSFWorkbook(fileInput);
+        try {
+        	
+	       XSSFWorkbook workbook = new XSSFWorkbook(fileInput);
+	       XSSFSheet sheet = workbook.getSheetAt(0);//첫번째 sheet
+	   
+	       int TITLE_POINT =0;//타이틀 항목위치
+	       int ROW_START = 4;//data row 시작지점
+	        
+	       int TOTAL_ROWS=sheet.getPhysicalNumberOfRows(); //전체 ROW 수를 가져온다.
+	       int TOTAL_CELLS=sheet.getRow(TITLE_POINT).getPhysicalNumberOfCells(); //전체 셀의 항목 수를 가져온다.
+	        
+	       XSSFCell myCell = null;
+	      
+	       this.logger.debug("TOTAL_ROWS :" + TOTAL_ROWS);
+	       this.logger.debug("TOTAL_CELLS :" + TOTAL_CELLS);
 
-        XSSFSheet sheet = workbook.getSheet("Sheet1");
+           for (int rowcnt = ROW_START; rowcnt < TOTAL_ROWS; rowcnt++) {
+        	   
+        	 UserManageVO userManageVO = new UserManageVO();
+             XSSFRow row = sheet.getRow(rowcnt);
 
-        boolean validation = true;
-        
-        int DATA_START = 4;//data row 시작지점
-      
-        this.logger.info("sheet.getPhysicalNumberOfRows():" + sheet.getPhysicalNumberOfRows());
-        
-        
-        for (int i = DATA_START; i < sheet.getPhysicalNumberOfRows(); i++) {
-          
-          UserManageVO userManageVO = new UserManageVO();
-          XSSFRow row = sheet.getRow(i);
-          
-          try {
-        	userManageVO.setUserName(row.getCell(1).getStringCellValue()); } catch (NullPointerException e) { userManageVO.setUserName(""); } try {
-        	userManageVO.setUserId(row.getCell(2).getStringCellValue()); } catch (NullPointerException e) { userManageVO.setUserId(""); } try {
-            userManageVO.setMobliePhone(row.getCell(3).getStringCellValue()); } catch (NullPointerException e) { userManageVO.setMobliePhone("");} try {
-            userManageVO.setGroupId(row.getCell(4).getStringCellValue()); } catch (NullPointerException e) { userManageVO.setGroupId("");  } try {
-            userManageVO.setAuthId(row.getCell(4).getStringCellValue()); } catch (NullPointerException e) { userManageVO.setAuthId("");} try {
-            userManageVO.setDeletedYn(row.getCell(5).getStringCellValue()); } catch (NullPointerException e) { userManageVO.setDeletedYn("N");} try {
-            userManageVO.setPassword(row.getCell(6).getStringCellValue()); } catch (NullPointerException e) { userManageVO.setPassword("");
-            
-            }
+             //cell type 구분하여 담기  
+             String[] cellItemTmp = new String[TOTAL_CELLS]; 
+             for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
+	            myCell = row.getCell(cellcnt); 
+	            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
+	            	cellItemTmp[cellcnt] = String.valueOf(myCell.getNumericCellValue()); 
+	            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
+	            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
+	            }else{//그외 cell type
+	            	cellItemTmp[cellcnt] = ""; 
+	            }
+	            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
+	            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
+	         }
+         
+	         if(cellItemTmp[0] != ""){
+		        	 
+		        	 userManageVO.setUserName(cellItemTmp[1]); 
+		        	 userManageVO.setUserId(cellItemTmp[2]);
+		        	 userManageVO.setMobliePhone(cellItemTmp[3]);
+		        	 userManageVO.setGroupId(cellItemTmp[4]);
+		        	 userManageVO.setDeletedYn(cellItemTmp[5]); 
+		        	 userManageVO.setPassword(cellItemTmp[6]); 
+	       
+		             userManageVO.setCreateUserId(strUserId);
+		 	         userManageVO.setUpdateUserId(strUserId);
 
-          userManageVO.setCreateUserId(strUserId);
-          userManageVO.setUpdateUserId(strUserId);
+		             userUploadList.add(userManageVO);
+			         }
+		     	
+		       }
+           }catch (Exception e){
+  
+        	   e.printStackTrace();
+        	   excelInfo = excelInfo+"[error] : "+e.getMessage();
+        	   UserManageVO userManageVO = new UserManageVO();
+        	   userManageVO.setErrMsg(excelInfo);
+	 
+        	   this.logger.info("["+logid+"] Controller getErrMsg : "+userManageVO.getErrMsg());
+     
+        	   rtnErrorList.add(userManageVO);
 
-          userUploadList.add(userManageVO);
+        	   mv.addObject("rtnErrorList", rtnErrorList);
+        	   mv.addObject("rtnSuccessList", rtnSuccessList);
 
-        }
-
-        Map rtmMap = this.userManageSvc.regiExcelUpload(userUploadList);
-
-        List rtnErrorUserVOList = (List)rtmMap.get("rtnErrorUserVOList");
-        List rtnSuccessOUserVOList = (List)rtmMap.get("rtnSuccessUserVOList");
-
-        System.out.println("@#@#@# rtnInfoIsVOList.size() : " + rtnErrorUserVOList.size());
-   
-        mv.addObject("rtnErrorUserVOList", rtnErrorUserVOList);
-        mv.addObject("rtnSuccessOUserVOList", rtnSuccessOUserVOList);
+        	   mv.setViewName("/manage/uploadResult");
+	 
+        	   //log Controller execute time end
+        	   long t2 = System.currentTimeMillis();
+        	   logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+           	
+           		return mv;
+	   
+   			}
       }
+     //DB처리
+     Map rtmMap = this.userManageSvc.regiExcelUpload(userUploadList);
 
-      mv.setViewName("/manage/uploadResultList");
+     rtnErrorList = (List)rtmMap.get("rtnErrorList");
+     rtnSuccessList = (List)rtmMap.get("rtnSuccessList");
 
-      //log Controller execute time end
-	  long t2 = System.currentTimeMillis();
-	  logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
-	 	
-      return mv;
+     this.logger.info("rtnErrorList.size() :"+ rtnErrorList.size()+"rtnSuccessList.size() :"+ rtnSuccessList.size());
+  
+     mv.addObject("rtnErrorList", rtnErrorList);
+     mv.addObject("rtnSuccessList", rtnSuccessList);
+       
+     mv.setViewName("/manage/uploadResult");
+
+     //log Controller execute time end
+     long t2 = System.currentTimeMillis();
+     logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+ 	
+     return mv;
     }
     /**
      * 업체관리 화면 로딩
@@ -744,7 +814,7 @@ public class ManageController {
              mv.addObject("rtnErrorList", rtnErrorList);
              mv.addObject("rtnSuccessList", rtnSuccessList);
 
-             mv.setViewName("/master/uploadResult");
+             mv.setViewName("/manage/uploadResult");
        	 
              //log Controller execute time end
              long t2 = System.currentTimeMillis();
@@ -766,7 +836,7 @@ public class ManageController {
         mv.addObject("rtnErrorList", rtnErrorList);
         mv.addObject("rtnSuccessList", rtnSuccessList);
           
-        mv.setViewName("/master/uploadResult");
+        mv.setViewName("/manage/uploadResult");
 
         //log Controller execute time end
         long t2 = System.currentTimeMillis();

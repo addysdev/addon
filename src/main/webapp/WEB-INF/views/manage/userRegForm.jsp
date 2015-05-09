@@ -6,7 +6,24 @@
 
 		//사용자 등록
 		function fcUserManage_regist(){
-
+			
+			var frm=document.userRegistForm;
+			
+			if(frm.userId.value==''){
+				alert('사용자 아이디를 입력하세요');
+				return;
+			}
+			
+			if(frm.password.value==''){
+				alert('사용자 패스워드를 입력하세요');
+				return;
+			}
+			
+			if(frm.userName.value==''){
+				alert('사용자명을 입력하세요');
+				return;
+			}
+			
 		    $.ajax({
 		        type: "POST",
 		        async:false,
@@ -35,20 +52,40 @@
   </head>
   <body>
 	<div class="container-fluid">
-      <form:form commandName="userVO" id="userRegistForm" name="userRegistForm" method="post" action="">
+      <form:form class="form-inline" commandName="userVO" id="userRegistForm" name="userRegistForm" method="post" action="">
       <input type="hidden" id="createUserId" name="createUserId" value="${userVO.createUserId}" >
 	    <div class="form-group">
 	    <th>
    		  <td>
-			  아이디 : <input type="text" class="form-control" id="userId" name="userId" tabindex="1">
-			  패스워드: <input type="password" class="form-control" id="password" name="password" tabindex="2" >
-                       사용자명: <input  type="text" class="form-control" id="userName"  name="userName" tabindex="3">
-	    	  조직: <input  type="text" class="form-control" id="groupId"  name="groupId" tabindex="4">
-	    	  권한 : <input type="text" class="form-control" id="authId" name="authId" tabindex="5">
-	    	 excel 권한 : <input type="text" class="form-control" id="excelAuth" name="excelAuth" tabindex="6"> 
-	    	 email : <input type="text" class="form-control" id="email" name="email" tabindex="7">           
-	    	 officePhone : <input type="text" class="form-control" id="officePhone" name="officePhone" tabindex="8">           
-	    	 mobliePhone : <input type="text" class="form-control" id="mobliePhone" name="mobliePhone" tabindex="9">                            
+			<label for="userId"><h5><strong><font style="color:#FF9900">사용자ID : </font></strong></h5></label>
+			<input type="text" class="form-control" id="userId" name="userId"  tabindex="1" value="">
+			<label for="password"><h5><strong><font style="color:#FF9900">PASSWORD : </font></strong></h5></label>
+			<input type="password" class="form-control" id="password" name="password" tabindex="2" value="" >
+			<input type="hidden" id="regPassword" name="regPassword" value="" >      
+			<label for="userName"><h5><strong><font style="color:#FF9900">사용자명 : </font></strong></h5></label>
+			<input  type="text" class="form-control" id="userName"  name="userName" tabindex="3" value="">
+			&nbsp; &nbsp; &nbsp; &nbsp;
+	        <label for="groupId"><h5><strong><font style="color:#FF9900">조직 : </font></strong></h5></label>
+	    	<select class="form-control" title="지점정보" id="groupId" name="groupId" value="">
+                <c:forEach var="groupVO" items="${group_comboList}" >
+                	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
+                </c:forEach>
+            </select>
+            <input type="hidden" id="authId" name="authId" value="G00000" >
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+	    	<label for="auth"><h5><strong><font style="color:#FF9900">권한 : </font></strong></h5></label>
+			<select class="form-control" title="관리권한" id="auth" name="auth" value="">
+                <c:forEach var="codeVO" items="${code_comboList}" >
+                	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
+                </c:forEach>
+       		</select>
+       		&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;
+	    	<label for="email"><h5><strong><font style="color:#FF9900">email : </font></strong></h5></label>
+	    	<input type="text" class="form-control" id="email" name="email" tabindex="7" value="">
+	    	<label for="officePhone"><h5><strong><font style="color:#FF9900">officePhone : </font></strong></h5></label>           
+	    	<input type="text" class="form-control" id="officePhone" name="officePhone" tabindex="8" value="">   
+	    	<label for="mobliePhone"><h5><strong><font style="color:#FF9900">mobliePhone : </font></strong></h5></label>             
+	    	<input type="text" class="form-control" id="mobliePhone" name="mobliePhone" tabindex="9" value="">                            
           </td>
 			</th>
 			<br>
@@ -58,6 +95,10 @@
 	</div>
   </body>
 </html>
+<script>
 
+//$('#userId').focus(1); 
+document.userRegistForm.userId.focus();
+</script>
  
 

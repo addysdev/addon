@@ -36,11 +36,20 @@ function fcHoldStock_excelimport(){
          alert("엑셀파일만 올려주세요");
          return;
      }
-
+    commonDim(true,'300000');
     frm.action = url;
     frm.target="excel_import_result";
 
     frm.submit();        
+}
+function uploadClose(msg){
+	
+	 commonDim(false);
+	  
+	 alert(msg);
+	 
+	 $('#holdStockExcelForm').dialog('close');
+	 fcProductMaster_listSearch();
 }
 
 </script>

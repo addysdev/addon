@@ -29,11 +29,14 @@ public class UserManageVO extends AbstractVO {
 	private String updateDateTime;
 	private String useYn;
 	private String deletedYn;
+	private String auth;
 	
     private String con_groupId;
     private String con_useYn;
     private String searchGubun;
     private String searchValue;
+    
+    private String pw_modifyYn;
 
     // /** for paging */
     private String totalCount       = "0";
@@ -233,6 +236,18 @@ public class UserManageVO extends AbstractVO {
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	public String getPw_modifyYn() {
+		return pw_modifyYn;
+	}
+	public void setPw_modifyYn(String pw_modifyYn) {
+		this.pw_modifyYn = pw_modifyYn;
+	}
+	public String getAuth() {
+		return auth;
+	}
+	public void setAuth(String auth) {
+		this.auth = auth;
 	}
    
 }

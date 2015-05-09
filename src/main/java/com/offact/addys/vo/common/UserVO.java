@@ -15,6 +15,7 @@ public class UserVO extends AbstractVO {
 	private String authName;
 	private String excelAuth;
 	private String password;
+	private String inPassword;
 	private String officePhone;
 	private String officePhoneFormat;
 	private String mobliePhone;
@@ -147,6 +148,12 @@ public class UserVO extends AbstractVO {
 	}
 	public void setDeletedYn(String deletedYn) {
 		this.deletedYn = deletedYn;
+	}
+	public String getInPassword() {
+		return inPassword;
+	}
+	public void setInPassword(String inPassword) {
+		this.inPassword = inPassword;
 	}
 	
 }

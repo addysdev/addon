@@ -31,7 +31,7 @@
             <th>이름</th>
             <th>지점</th>
             <th>사용유무</th>
-            <th>조회권한</th>
+            <th>권한</th>
             <th>Email</th>
             <th>수정자</th>
 	      </tr>

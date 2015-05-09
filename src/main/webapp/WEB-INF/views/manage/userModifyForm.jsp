@@ -7,6 +7,14 @@
 		//사용자 수정
 		function fcUserManage_modify(){
 
+			var frm=document.userModifyForm;
+
+			if(frm.password.value!=frm.regPassword.value){
+				frm.pw_modifyYn.value='Y';
+			}else{
+				frm.pw_modifyYn.value='N';
+			}
+
 		    $.ajax({
 		        type: "POST",
 		        async:false,
@@ -31,33 +39,62 @@
 		           }
 		    });
 		}
+		
 	</script>
   </head>
   <body>
 	<div class="container-fluid">
-      <form:form commandName="userVO" id="userModifyForm" name="userModifyForm" method="post" action="">
+      <form:form class="form-inline" role="form" commandName="userVO" id="userModifyForm" name="userModifyForm" method="post" action="">
       <input type="hidden" id="updateUserId" name="updateUserId" value="${userVO.updateUserId}" >
+      <input type="hidden" id="pw_modifyYn" name="pw_modifyYn" value="N" >
 	    <div class="form-group">
 	    <th>
    		  <td>
-			  아이디 : <input type="text" class="form-control" id="userId" name="userId" tabindex="1" value="${userVO.userId}">
-			  패스워드: <input type="password" class="form-control" id="password" name="password" tabindex="2" value="${userVO.password}" >
-	                사용자명: <input  type="text" class="form-control" id="userName"  name="userName" tabindex="3" value="${userVO.userName}">
-	    	  조직: <input  type="text" class="form-control" id="groupId"  name="groupId" tabindex="4" value="${userVO.groupId}">
-	    	  권한 : <input type="text" class="form-control" id="authId" name="authId" tabindex="5" value="${userVO.authId}">
-	    	 excel 권한 : <input type="text" class="form-control" id="excelAuth" name="excelAuth" tabindex="6" value="${userVO.excelAuth}"> 
-	    	 email : <input type="text" class="form-control" id="email" name="email" tabindex="7" value="${userVO.email}">           
-	    	 officePhone : <input type="text" class="form-control" id="officePhone" name="officePhone" tabindex="8" value="${userVO.officePhone}">           
-	    	 mobliePhone : <input type="text" class="form-control" id="mobliePhone" name="mobliePhone" tabindex="9" value="${userVO.mobliePhone}">                            
+   		    <label for="userId"><h5><strong><font style="color:#FF9900">사용자ID : </font></strong></h5></label>
+			<input type="text" class="form-control"  tabindex="1" disabled value="${userVO.userId}">
+			<input type="hidden" id="userId" name="userId" value="${userVO.userId}" >
+			<label for="password"><h5><strong><font style="color:#FF9900">PASSWORD : </font></strong></h5></label>
+			<input type="password" class="form-control" id="password" name="password" tabindex="2" value="${userVO.password}" >
+			<input type="hidden" id="regPassword" name="regPassword" value="${userVO.password}" >      
+			<label for="userName"><h5><strong><font style="color:#FF9900">사용자명 : </font></strong></h5></label>
+			<input  type="text" class="form-control" id="userName"  name="userName" tabindex="3" value="${userVO.userName}">
+			&nbsp; &nbsp; &nbsp; &nbsp;
+	        <label for="groupId"><h5><strong><font style="color:#FF9900">조직 : </font></strong></h5></label>
+	    	<select class="form-control" title="지점정보" id="groupId" name="groupId" value="${userVO.groupId}">
+                <c:forEach var="groupVO" items="${group_comboList}" >
+                	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
+                </c:forEach>
+            </select>
+            <input type="hidden" id="authId" name="authId" value="${userVO.authId}" >
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+	    	<label for="auth"><h5><strong><font style="color:#FF9900">권한 : </font></strong></h5></label>
+			<select class="form-control" title="관리권한" id="auth" name="auth" value="${userVO.auth}">
+                <c:forEach var="codeVO" items="${code_comboList}" >
+                	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
+                </c:forEach>
+       		</select>
+       		&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;
+	    	<label for="email"><h5><strong><font style="color:#FF9900">email : </font></strong></h5></label>
+	    	<input type="text" class="form-control" id="email" name="email" tabindex="7" value="${userVO.email}">
+	    	<label for="officePhone"><h5><strong><font style="color:#FF9900">officePhone : </font></strong></h5></label>           
+	    	<input type="text" class="form-control" id="officePhone" name="officePhone" tabindex="8" value="${userVO.officePhone}">   
+	    	<label for="mobliePhone"><h5><strong><font style="color:#FF9900">mobliePhone : </font></strong></h5></label>             
+	    	<input type="text" class="form-control" id="mobliePhone" name="mobliePhone" tabindex="9" value="${userVO.mobliePhone}">                            
           </td>
-			</th>
-			<br>
-            <td><button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_modify()">수정</button></td>
+		</th>
+		<br><br>
+        <td><button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_modify()">수정</button></td>
 	    </div>
 	  </form:form>
 	</div>
   </body>
 </html>
+<script>
+
+document.userModifyForm.groupId.value='${userVO.groupId}';
+document.userModifyForm.auth.value='${userVO.auth}';
+
+</script>
 
  
 

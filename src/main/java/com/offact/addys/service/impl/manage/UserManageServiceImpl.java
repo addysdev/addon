@@ -45,8 +45,12 @@ public class UserManageServiceImpl implements UserManageService {
     @Override
     public int userUpdateProc(UserManageVO userDetail) throws BizException {
         // 사용자 상세정보 수정
-
-        return commonDao.update("UserManage.userUpdateProc", userDetail);
+    	
+    	if(userDetail.getPw_modifyYn().equals("Y")){
+    		return commonDao.update("UserManage.userUpdatePwProc", userDetail);
+    	}else{
+    		return commonDao.update("UserManage.userUpdateProc", userDetail);
+    	}
 
     }
 
@@ -136,8 +140,8 @@ public class UserManageServiceImpl implements UserManageService {
     	      }
     	    }
 
-    	    rtnMap.put("rtnErrorUserVOList", rtnErrorUserVOList);
-    	    rtnMap.put("rtnSuccessUserVOList", rtnSuccessUserVOList);
+    	    rtnMap.put("rtnErrorList", rtnErrorUserVOList);
+    	    rtnMap.put("rtnSuccessList", rtnSuccessUserVOList);
 
     	    return rtnMap;
     	  }

@@ -2664,7 +2664,7 @@ function fnAdRecordKeyPlay(key){
 var commonDimedTimer;
 // HSH : 공통 딤처리용 START
 function commonDim(action,checktime){
-    checktime = checktime || 5000;
+    checktime = checktime || 60000;
     if (action){
         $("#CommonDimDiv").eq(0).dimBackground();
         commonDimTimeout(true,checktime);
@@ -2676,7 +2676,7 @@ function commonDim(action,checktime){
 }
 
 function commonDimTimeout(action,checktime){
-    checktime = checktime || 5000;
+    checktime = checktime || 60000;
     if(action){
         clearTimeout(commonDimedTimer);
         commonDimedTimer = setTimeout(function(){

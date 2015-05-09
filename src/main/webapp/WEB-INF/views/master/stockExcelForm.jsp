@@ -52,19 +52,20 @@ function fcStock_excelimport(){
   <br><br> 
    <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 재고 기준 선택</font></strong></h4>
 	<label for="stockDate"><h6><strong><font style="color:#FF9900"> 재고일자 : </font></strong></h6></label>
-	<div class='input-group date ' id='datetimepicker3' data-link-field="in_stockDate" data-link-format="yyyy-mm-dd">
-        <input type='text' class="form-control" value="" />
+	<div style='width:150px' class='input-group date ' id='datetimepicker3' data-link-field="start_stockDate" data-link-format="yyyy-mm-dd">
+        <input type='text' class="form-control" value="${stockConVO.start_stockDate}" />
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>
-        <input type="hidden" id="in_stockDate" name="in_stockDate" value="" />
+        <input type="hidden" id="start_stockDate" name="start_stockDate" value="${stockConVO.start_stockDate}" />
     </div>
     <br><br>
 	<label for="con_groupId"><h6><strong><font style="color:#FF9900">  지점선택 : </font></strong></h6></label>
-	<select class="form-control" title="지점정보" id="temp_con_groupId" name="temp_con_groupId" value="">
-        <option value="AD001" >물류정상</option>
-        <option value="BD009" >반디울산</option>
-        <option value="YP008" >영풍청량리</option>
+	<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${stockConVO.groupId}">
+        <option value="">전체</option>
+        <c:forEach var="groupVO" items="${group_comboList}" >
+        	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
+        </c:forEach>
     </select>
   <br><br> 
   <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 업로드 시 주의사항</font></strong></h4>

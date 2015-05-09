@@ -24,7 +24,7 @@
     /// key down function (엔터키가 입력되면 검색함수 호출)
     function checkKey(event){
         if(event.keyCode == 13){
-        	fcUserManage_listInquiry('1');
+        	fcUserManage_listSearch('1');
             return false;
         } else{
             return true;
@@ -40,7 +40,7 @@
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
             width : 400,
-            height : 630,
+            height : 480,
             modal : true, //주위를 어둡게
 
             open:function(){
@@ -66,7 +66,7 @@
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
             width : 400,
-            height : 630,
+            height : 480,
             modal : true, //주위를 어둡게
 
             open:function(){
@@ -159,6 +159,7 @@
             }
         });
     };
+
 </SCRIPT>
 <div class="container">
 	<h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 계정관리</font></strong></h4>

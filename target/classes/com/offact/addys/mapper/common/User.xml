@@ -11,6 +11,7 @@
   <result column="authName"            property="authName"  />
   <result column="excelAuth"           property="excelAuth"  />
   <result column="password"            property="password"  />
+  <result column="inPassword"          property="inPassword"  />
   <result column="officePhone"         property="officePhone"  />
   <result column="officePhoneFormat"   property="officePhoneFormat"  />
   <result column="mobliePhone"         property="mobliePhone"  />
@@ -36,6 +37,7 @@
 					  END As authName
 					  ,IFNULL(T1.excelAuth,'N')   As excelAuth
 					  ,T1.password
+					  ,password(#{inPassword}) As inPassword
 					  ,T1.email
 					  ,T1.officePhone
 					  ,T1.officePhone As officePhoneFormat

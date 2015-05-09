@@ -62,6 +62,7 @@ import com.offact.addys.vo.master.StockMasterVO;
 import com.offact.addys.vo.master.ProductMasterVO;
 import com.offact.addys.vo.master.StockVO;
 import com.offact.addys.vo.master.SalesVO;
+import com.offact.addys.vo.order.OrderVO;
 import com.offact.addys.vo.MultipartFileVO;
 
 /**
@@ -492,7 +493,7 @@ public class MasterController {
 	      XSSFWorkbook workbook = new XSSFWorkbook(fileInput);
 	      XSSFSheet sheet = workbook.getSheetAt(0);//첫번째 sheet
 	 
-	          int TITLE_POINT =0;//타이틀 항목위치
+	      int TITLE_POINT =0;//타이틀 항목위치
 	      int ROW_START = 1;//data row 시작지점
 	      int MASTER_START=3;//master cell 시작지점
 	      
@@ -907,6 +908,31 @@ public class MasterController {
    		
    		ModelAndView mv = new ModelAndView();
    		
+   	    // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        StockVO stockConVO = new StockVO();
+        
+        stockConVO.setGroupId(groupId);
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+        
+        stockConVO.setStart_stockDate(strToday);
+
+        // 조회조건저장
+        mv.addObject("stockConVO", stockConVO);
+
+        //조직정보 조회
+        GroupVO group = new GroupVO();
+        group.setGroupId(groupId);
+        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+        mv.addObject("group_comboList", group_comboList);
+   		
    		mv.setViewName("/master/stockExcelForm");
    		
    		return mv;
@@ -1109,6 +1135,31 @@ public class MasterController {
       {
   		
   		ModelAndView mv = new ModelAndView();
+  		
+  		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        SalesVO salesConVO = new SalesVO();
+        
+        salesConVO.setGroupId(groupId);
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+        
+        salesConVO.setStart_salesDate(strToday);
+
+        // 조회조건저장
+        mv.addObject("salesConVO", salesConVO);
+
+        //조직정보 조회
+        GroupVO group = new GroupVO();
+        group.setGroupId(groupId);
+        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+        mv.addObject("group_comboList", group_comboList);
   		
   		mv.setViewName("/master/salesExcelForm");
   		

@@ -6,6 +6,7 @@ encoding//src/main/webapp/WEB-INF/views/errors/404.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/manage/companyExcelForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/manage/companyManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/manage/companyPageList.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/manage/uploadResult.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/manage/userExcelForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/manage/userManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/manage/userModifyForm.jsp=UTF-8
