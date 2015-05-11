@@ -81,6 +81,42 @@ function fcOrder_process(){
            }
     });
 }
+$(function() {
+
+    $( "#dialog" ).dialog({
+
+      autoOpen: false,
+
+      show: {
+
+        effect: "blind",
+
+        duration: 1000
+
+      },
+
+      hide: {
+
+        effect: "explode",
+
+        duration: 1000
+
+      }
+
+    });
+
+ 
+
+    $( "#opener" ).click(function() {
+
+      $( "#dialog" ).dialog( "open" );
+
+    });
+
+  });
+
+
+
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -91,13 +127,23 @@ function fcOrder_process(){
 	          <input type="checkbox" id="emailCheck" name="emailCheck" value="" title="선택" checked disabled />e-mail
 	          <input type="checkbox" id="smsCheck" name="smsCheck" value="" title="선택" disabled />sms
 	      </h4>
-	      <button type="button" class="btn btn-primary" onClick="fcUserManage_excelForm()">보류</button>
-	      <button type="button" class="btn btn-primary" onClick="fcUserManage_regForm()">보류수정</button>
-	      <button type="button" class="btn btn-danger" onClick="fcUserManage_delete()">보류폐기</button>
-	      <button type="button" class="btn btn-primary" onClick="fcUserManage_regForm()">보류사유</button>
-          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+	      <tr>
+	      <div style="position:absolute; left:30px" > 
+	      <c:if test="${targetVO.orderCode != 'X'}"><button id="opener" type="button" class="btn btn-primary" >보류</button></c:if>
+	      <c:if test="${targetVO.orderCode == 'X'}"><button type="button" class="btn btn-primary" onClick="fcDefer_modify('${targetVO.orderCode}')">보류수정</button></c:if>
+	      <c:if test="${targetVO.orderCode == 'X'}"><button type="button" class="btn btn-danger" onClick="fcDefer_cancel('${targetVO.orderCode}')">보류폐기</button></c:if>
+	      <c:if test="${targetVO.orderCode == 'X'}"><button type="button" class="btn btn-primary" onClick="fcDefer_Reason('${targetVO.orderCode}')">보류사유</button></c:if>
+          </div >
+          <div id="dialog" title="보류사유를 입력하세요">
+			<p><textarea style='height:82px'  class="form-control" row="2" id="defer_reason" name="defer_reason" ></textarea></p>
+			<button type="button" class="btn btn-primary" onClick="fcDefer_regist()">save</button> <button type="button" class="btn btn-danger" onClick="fcDefer_regist()">cancel</button>
+          </div>
+          
+          <div style="position:absolute; right:30px" > 
           <button type="button" class="btn btn-primary" onClick="fcTargetDetail_print()">출력</button>
           <button type="button" class="btn btn-primary" onClick="fcOrder_process()">발주</button>
+          </div>
+          </tr>
           <br><br>
 	  <table class="table table-bordered" >
 	 	<tr>
@@ -128,9 +174,9 @@ function fcOrder_process(){
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">tel</th>
-          <th class='text-center'><input type="text" class="form-control" id="phone" name="phone"  value="${targetVO.phone}" placeholder="tel" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="phone" name="phone"  value="${targetVO.deliveryTel}" placeholder="tel" /></th>
           <th class='text-center' style="background-color:#E6F3FF">tel</th>
-          <th class='text-center'><input type="text" class="form-control" id="deliveryTel" name="deliveryTel"  value="${targetVO.deliveryTel}" placeholder="tel" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="deliveryTel" name="deliveryTel"  value="${targetVO.phone}" placeholder="tel" /></th>
       	</tr>
       	<th class='text-center' style="background-color:#E6F3FF">fax</th>
           <th class='text-center'><input type="text" class="form-control" id="deliveryFax" name="deliveryFax"  value="${targetVO.deliveryFax}" placeholder="fax" /></th>
@@ -188,9 +234,9 @@ function fcOrder_process(){
      <form:form commandName="targetVO" name="targetDetailListForm" method="post" action="" >
       <p><span style="color:#FF9900">
         <span class="glyphicon glyphicon-asterisk"></span> 
-                    합계 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="" />
-                    공급가 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="" />
-                    부가세 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="" />
+                    합계 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderPrice}" />
+                    공급가 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.productPrice}" />
+                    부가세 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.vat}" />
         </span>
       </p>       
 	  <table class="table table-bordered" >
@@ -215,14 +261,14 @@ function fcOrder_process(){
              <tr id="select_tr_${targetVO.productCode}">
                  <td><input type="checkbox" id="userCheck" name="userCheck" value="${targetVO.productCode}" title="선택" /></td>
                  <td class='text-center'><c:out value="${targetVO.productCode}"></c:out></td>
-                 <td class='text-center'><c:out value="${targetVO.productName}"></c:out></td>
-                 <td class='text-center'><c:out value=""></c:out></td>
-                 <td class='text-center'><c:out value=""></c:out></td>
-                 <td class='text-center'><c:out value=""></c:out></td>
-                 <td class='text-center'><c:out value="${targetVO.safeStock}"></c:out></td>
-                 <td class='text-center'><c:out value="${targetVO.holdStock}"></c:out></td>
-                 <td class='text-center'><c:out value="${targetVO.stockCnt}"></c:out></td>
-                 <td class='text-center'><c:out value=""></c:out></td>
+                 <td class='text-left'><c:out value="${targetVO.productName}"></c:out></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.productPrice}" /></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderCnt}"/></td>
+                 <td class='text-right'><input style="width:40px" type="text" class="form-control" id="modify" name="modify" value="0"></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeStock}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.holdStock}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.stockCnt}"/></td>
+                 <td class='text-right'><c:out value=""></c:out></td>
               </tr>
              </c:forEach>
             </c:if>

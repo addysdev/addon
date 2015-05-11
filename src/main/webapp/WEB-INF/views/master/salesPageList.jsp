@@ -61,30 +61,32 @@
         </colgroup>
 	    <thead>
 	      <tr>
-	        <th>매출현황일자</th>
-            <th>매장아이디</th>
-            <th>매장명</th>
-            <th>최종업데이트UserID</th>
-            <th>최종업데이트UserName</th>
-            <th>최종업데이트</th>
+	        <th class='text-center'>매출현황일자</th>
+            <th class='text-center'>매장</th>
+            <th class='text-center'>판매수량</th>
+            <th class='text-center'>입고금액</th>
+            <th class='text-center'>판매금액</th>
+            <th class='text-center'>업데이트User</th>
+            <th class='text-center'>업데이트일시</th>
 	      </tr>
 	    </thead>
 	    <tbody>
 	    	<c:if test="${!empty salesList}">
              <c:forEach items="${salesList}" var="salesVO" varStatus="status">
              <tr id="select_tr_${salesVO.salesDate}_${salesVO.groupId}">
-                 <td><c:out value="${salesVO.salesDate}"></c:out></td>
-                 <td><a href="javascript:fcSales_detailPageList('${salesVO.salesDate}','${salesVO.groupId}')"><c:out value="${salesVO.groupId}"></c:out></a></td>
-                 <td><c:out value="${salesVO.groupName}"></c:out></td>
-                 <td><c:out value="${salesVO.updateUserId}"></c:out></td>
-                 <td><c:out value="${salesVO.updateUserName}"></c:out></td>
-                 <td><c:out value="${salesVO.updateDateTime}"></c:out></td>
+                 <td class='text-center'><a href="javascript:fcSales_detailPageList('${salesVO.salesDate}','${salesVO.groupId}')"><c:out value="${salesVO.salesDate}"></c:out></a></td>
+                 <td class='text-center'><c:out value="${salesVO.groupName}"></c:out></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${salesVO.salesCnt}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${salesVO.productPrice}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${salesVO.salesPrice}"/></td>
+                 <td class='text-center'><c:out value="${salesVO.updateUserName}"></c:out></td>
+                 <td class='text-center'><c:out value="${salesVO.updateDateTime}"></c:out></td>
               </tr>
              </c:forEach>
             </c:if>
-           <c:if test="${empty userList}">
+           <c:if test="${empty salesList}">
               <tr>
-                  <td colspan='6' class='text-center'>조회된 데이터가 없습니다.</td>
+                  <td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
               </tr>
           </c:if>
 	    </tbody>

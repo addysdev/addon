@@ -22,10 +22,14 @@
 			  ,T2.groupName
 			  ,T1.stockDateTime
 			  ,T1.lastUserId
-			  ,T3.userName as lastUserName 
+			  ,T3.userName as lastUserName
+			  ,SUM(T4.stockCnt) as stockCnt
+              ,SUM(T4.productPrice) as productPrice
+              ,SUM(T4.stockPrice) as stockPrice 
           FROM adStock T1
                Left Join ofGroup T2 On T1.groupId=T2.groupId
           	   Left Join ofUser T3 On T1.lastUserId=T3.userId
+          	   Left Join adStockDetail T4 On T1.stockDate = T4.stockDate And T1.groupId=T4.groupId
          WHERE T1.stockDate between REPLACE('${start_stockDate}', '-', '')  and REPLACE('${end_stockDate}', '-', '')
             <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}

@@ -54,10 +54,11 @@
 	    <thead>
 	      <tr>
 	        <th class='text-center'>재고현황일자</th>
-            <th class='text-center'>매장아이디</th>
-            <th class='text-center'>매장명</th>
-            <th class='text-center'>업데이트 사용자ID</th>
-            <th class='text-center'>업데이트 사용자명</th>
+            <th class='text-center'>매장</th>
+            <th class='text-center'>재고수량</th>
+            <th class='text-center'>입고금액</th>
+            <th class='text-center'>재고금액</th>
+            <th class='text-center'>업데이트 User</th>
             <th class='text-center'>업데이트 일시</th>
 	      </tr>
 	    </thead>
@@ -66,9 +67,10 @@
              <c:forEach items="${stockList}" var="stockVO" varStatus="status">
              <tr id="select_tr_${stockVO.stockDate}">
                  <td class='text-center'><a href="javascript:fcStock_detailPageList('${stockVO.stockDate}','${stockVO.groupId}')"><c:out value="${stockVO.stockDate}"></c:out></a></td>
-                 <td class='text-center'><c:out value="${stockVO.groupId}"></c:out></td>
-                 <td><c:out value="${stockVO.groupName}"></c:out></td>
-                 <td class='text-center'><c:out value="${stockVO.lastUserId}"></c:out></td>
+                 <td class='text-center'><c:out value="${stockVO.groupName}"></c:out></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stockVO.stockCnt}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stockVO.productPrice}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stockVO.stockPrice}"/></td>
                  <td class='text-center'><c:out value="${stockVO.lastUserName}"></c:out></td>
                  <td class='text-center'><c:out value="${stockVO.stockDateTime}"></c:out></td>
               </tr>

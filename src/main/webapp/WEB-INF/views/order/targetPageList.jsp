@@ -19,8 +19,15 @@
         });
     }
     // 재고 상세 페이지 리스트 Layup
-    function fcTarget_detail(groupId,groupName,companyCode,orderState) {
+    function fcTarget_detail(orderCode,groupId,groupName,companyCode,companyName,orderState,productPrice,vat,orderPrice) {
 
+    	if(companyName==''){
+    		
+    		alert('['+companyCode+'] 에 대한 업체정보가 없습니다.\n관리자에게 해당 업체정보 업데이트 여부 확인 부탁드립니다.');
+    		return;
+    		
+    	}
+    	
     	$('#targetDetailView').dialog({
             resizable : false, //사이즈 변경 불가능
             draggable : true, //드래그 불가능
@@ -32,8 +39,9 @@
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load('<%= request.getContextPath() %>/order/targetdetailview?groupId='+groupId+
-                		'&groupName='+groupName+'&companyCode='+companyCode+'&orderState='+orderState);
+                $(this).load('<%= request.getContextPath() %>/order/targetdetailview?orderCode='+orderCode+'&groupId='+groupId+
+                		'&groupName='+encodeURIComponent(groupName)+'&companyCode='+companyCode+
+                		'&orderState='+orderState+'&productPrice='+productPrice+'&vat='+vat+'&orderPrice='+orderPrice);
                 //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#targetDetailView").dialog('close');
@@ -54,25 +62,26 @@
 	    <thead>
 	      <tr>
 	        <th class='text-center'>발주상태</th>
-            <th class='text-center'>매장ID</th>
-            <th class='text-center'>매장명</th>
-            <th class='text-center'>업체코드</th>
-            <th class='text-center'>업체명</th>
+            <th class='text-center'>매장</th>
+            <th class='text-center'>업체</th>
             <th class='text-center'>수량</th>
             <th class='text-center'>기준금액</th>
+            <th class='text-center'>부가세</th>
+            <th class='text-center'>발주금액</th>
 	      </tr>
 	    </thead>
 	    <tbody>
 	    	<c:if test="${!empty targetList}">
              <c:forEach items="${targetList}" var="targetVO" varStatus="status">
              <tr id="select_tr_${targetVO.groupId}_${targetVO.companyCode}">
-                 <td class='text-center'><c:out value="${targetVO.buyResultView}"></c:out></td>
-                 <td class='text-center'><a href="javascript:fcTarget_detail('${targetVO.groupId}','${targetVO.groupName}','${targetVO.companyCode}','${targetVO.buyResult}')"><c:out value="${targetVO.groupId}"></c:out></a></td>
-                 <td><c:out value="${targetVO.groupName}"></c:out></td>
-                 <td class='text-center'><c:out value="${targetVO.companyCode}"></c:out></td>
+                 <td><a href="javascript:fcTarget_detail('${targetVO.orderCode}','${targetVO.groupId}','${targetVO.groupName}','${targetVO.companyCode}','${targetVO.companyName}','${targetVO.buyResult}','${targetVO.productPrice}','${targetVO.vat}','${targetVO.orderPrice}')">
+                 <c:out value="${targetVO.buyResultView}"></c:out></a></td>
+                 <td class='text-center'><c:out value="${targetVO.groupName}"></c:out></td>
                  <td><c:out value="${targetVO.companyName}"></c:out></td>
-                 <td class='text-center'><c:out value="${targetVO.orderCnt}"></c:out></td>
-                 <td class='text-center'><c:out value="${targetVO.orderAmt}"></c:out></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderCnt}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.productPrice}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.vat}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderPrice}"/></td>
               </tr>
              </c:forEach>
             </c:if>

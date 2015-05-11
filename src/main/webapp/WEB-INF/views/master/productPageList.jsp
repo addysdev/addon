@@ -58,8 +58,7 @@
             <th class='text-center'>바코드</th>
             <th class='text-center'>품목명</th>
             <th class='text-center'>구매처</th>
-            <th class='text-center'>업데이트사용자ID</th>
-            <th class='text-center'>업데이트 사용자명</th>
+            <th class='text-center'>업데이트 User</th>
             <th class='text-center'>업데이트 일시</th>
 	      </tr>
 	    </thead>
@@ -71,7 +70,6 @@
                  <td class='text-center'><c:out value="${productMasterVO.barCode}"></c:out></td>
                  <td><c:out value="${productMasterVO.productName}"></c:out></td>
                  <td class='text-center'><c:out value="${productMasterVO.companyName}"></c:out></td>
-                 <td class='text-center'><c:out value="${productMasterVO.updateUserId}"></c:out></td>
                  <td class='text-center'><c:out value="${productMasterVO.updateUserName}"></c:out></td>
                  <td class='text-center'><c:out value="${productMasterVO.updateDateTime}"></c:out></td>
               </tr>
@@ -79,7 +77,7 @@
             </c:if>
            <c:if test="${empty productList}">
            <tr>
-           	<td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='6' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>

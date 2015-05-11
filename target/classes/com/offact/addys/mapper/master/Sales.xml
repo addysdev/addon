@@ -25,9 +25,13 @@
 			  ,T1.updateDateTime
 			  ,T1.updateUserId
 			  ,T3.userName as updateUserName 
+			  ,SUM(T4.salesCnt) as salesCnt
+              ,SUM(T4.productPrice) as productPrice
+              ,SUM(T4.salesPrice) as salesPrice 
           FROM adSales T1
                Left Join ofGroup T2 On T1.groupId=T2.groupId
           	   Left Join ofUser T3 On T1.updateUserId=T3.userId
+          	   Left Join adSalesDetail T4 On T1.salesDate = T4.salesDate And T1.groupId=T4.groupId
          WHERE T1.salesDate between REPLACE('${start_salesDate}', '-', '')  and REPLACE('${end_salesDate}', '-', '')
             <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}

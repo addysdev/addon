@@ -43,7 +43,10 @@ public class TargetVO extends AbstractVO {
 	private String meno;
 	
 	private String orderCnt;
-	private String orderAmt;
+	private String orderPrice;
+	private String productPrice;
+	private String vatRate;
+	private String vat;
 	
 	private String con_groupId;
 	private String con_orderState;
@@ -53,7 +56,6 @@ public class TargetVO extends AbstractVO {
     private String searchValue;
 	
 	private String errMsg;
-	
 	//상세 추가항목
 	private String productCode;
 	private String productName;
@@ -225,11 +227,18 @@ public class TargetVO extends AbstractVO {
 	public void setOrderCnt(String orderCnt) {
 		this.orderCnt = orderCnt;
 	}
-	public String getOrderAmt() {
-		return orderAmt;
+	
+	public String getOrderPrice() {
+		return orderPrice;
 	}
-	public void setOrderAmt(String orderAmt) {
-		this.orderAmt = orderAmt;
+	public void setOrderPrice(String orderPrice) {
+		this.orderPrice = orderPrice;
+	}
+	public String getVat() {
+		return vat;
+	}
+	public void setVat(String vat) {
+		this.vat = vat;
 	}
 	public String getCon_groupId() {
 		return con_groupId;
@@ -368,6 +377,18 @@ public class TargetVO extends AbstractVO {
 	}
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+	public String getProductPrice() {
+		return productPrice;
+	}
+	public void setProductPrice(String productPrice) {
+		this.productPrice = productPrice;
+	}
+	public String getVatRate() {
+		return vatRate;
+	}
+	public void setVatRate(String vatRate) {
+		this.vatRate = vatRate;
 	}
 	
 }

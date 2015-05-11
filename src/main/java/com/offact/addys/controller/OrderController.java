@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -223,12 +224,15 @@ public class OrderController {
     @RequestMapping(value = "/order/targetdetailview")
     public ModelAndView targetDetailView( HttpServletRequest request, 
     		                              HttpServletResponse response,
+    		                              String orderCode,
     		                              String groupId,
     		                              String groupName,
     		                              String companyCode,
-    		                              String orderState) throws BizException 
-    {
-        
+    		                              String orderState,
+    		                              String productPrice,
+    		                              String vat,
+    		                              String orderPrice) throws BizException 
+    {   	
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
@@ -276,7 +280,12 @@ public class OrderController {
         companyVO = commonSvc.getCompanyDetail(companyVO);
 
         //발주기본 정보
+        targetVO.setOrderCode(orderCode);
         targetVO.setGroupName(groupName);
+        targetVO.setProductPrice(productPrice);
+        targetVO.setVat(vat);
+        targetVO.setOrderPrice(orderPrice);
+        
         targetVO.setOrderUserName(strUserName);
         targetVO.setOrderDateTime(strToday);
         targetVO.setMobilePhone(strMobliePhone);

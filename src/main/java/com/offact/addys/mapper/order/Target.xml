@@ -29,18 +29,23 @@
   <result column="deliveryMethod"        property="deliveryMethod"  />
   <result column="deliveryCharge"        property="deliveryCharge"  />
   <result column="orderCnt"        property="orderCnt"  />
-  <result column="orderAmt"        property="orderAmt"  />
   <result column="productCode"        property="productCode"  />
   <result column="productName"        property="productName"  />
   <result column="stockDate"        property="stockDate"  />
   <result column="stockCnt"        property="stockCnt"  />
   <result column="safeStock"        property="safeStock"  />
   <result column="holdStock"        property="holdStock"  />
+  <result column="productPrice"        property="productPrice"  />
+  <result column="vatRate"        property="vatRate"  />
+  <result column="vat"        property="vat"  />
+  <result column="orderCnt"        property="orderCnt"  />
+  <result column="orderPrice"        property="orderPrice"  />
 </resultMap>
 
 <select id="getTargetPageList"  resultMap="targetVO" parameterType="com.offact.addys.vo.order.TargetVO" >
 
-  Select Case T1.buyResult When '01' Then '대기'
+  Select ifnull(T1.orderCode,'X') as odrderCode,
+         Case T1.buyResult When '01' Then '대기'
   						   When '02' Then '보류'
   						   Else ''
          				   End buyResultView,
@@ -50,14 +55,17 @@
 		 T2.companyCode,
          T3.companyName,
          COUNT(T1.productCode) as orderCnt,
-	   	 SUM(T2.productPrice) as orderAmt
+	   	 SUM(T2.productPrice) as productPrice,
+	   	 SUM(round(T2.productPrice*T2.vatRate)) as vat,
+       (SUM(T2.productPrice)+SUM(round(T2.productPrice*T2.vatRate))) as orderPrice
   From (
 	      Select TEMP.buyResult ,
 		         TEMP.stockCnt,
 				 TEMP.safeStock,
                  TEMP.holdStock,
 				 TEMP.groupID,
-				 TEMP.productCode
+				 TEMP.productCode,
+				 TEMP.orderCode 
 		      From (
 					Select ifnull(I3.buyResult,'01') as buyResult ,
 						   ifnull(I2.stockDate,'19990101') as stockChk,/*재고기준일*/
@@ -67,7 +75,8 @@
 					       ifnull(I1.safeStock,0) as safeStock,
                            ifnull(I1.holdStock,0) as holdStock,
 						   I1.groupID,
-					       I1.productCode
+					       I1.productCode,
+					       I3.orderCode
 						From adStockMaster I1
 							 Left Join(
 										Select Max(stockDate) as stockDate,stockCnt,groupID,productCode 
@@ -89,7 +98,6 @@
            					AND I1.groupId = #{con_groupId}
            				 </if>
 					   ) As TEMP
-					     Left Join adProductMaster T1 On TEMP.ProductCode = T1.ProductCode 
 		      Where TEMP.stockCnt  <![CDATA[<]]> TEMP.safeStock
 					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk    
 					<if test="con_orderState != null and con_orderState != ''" >
@@ -175,7 +183,10 @@
          T1.stockDate ,
 	   	 T1.stockCnt,
 	   	 T1.safeStock,
-	   	 T1.holdStock
+	   	 T1.holdStock,
+	   	 T2.productPrice,
+         T2.vatRate,
+         (T1.holdStock-T1.StockCnt) as orderCnt
   From (
 	      Select TEMP.buyResult,
 		         TEMP.stockCnt,

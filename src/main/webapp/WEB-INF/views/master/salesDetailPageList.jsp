@@ -38,9 +38,9 @@
                   <tr id="select_tr_${salesVO.productCode}">
 	              <td><c:out value="${salesVO.productCode}"></c:out></td>
 	              <td><c:out value="${salesVO.productName}"></c:out></td>
-	              <td><c:out value="${salesVO.salesCnt}"></c:out></td>
-	              <td><c:out value="${salesVO.productPrice}"></c:out></td>
-	              <td><c:out value="${salesVO.salesPrice}"></c:out></td>
+	              <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${salesVO.salesCnt}"/></td>
+	              <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${salesVO.productPrice}"/></td>
+	              <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${salesVO.salesPrice}"/></td>
               </tr>
              </c:forEach>
             </c:if>
