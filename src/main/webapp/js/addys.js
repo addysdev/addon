@@ -3125,4 +3125,11 @@ function fnMenuApply(){
 		    		}
 		    	}
 		    }
-     
+		  //textarea maxlength 지정하기
+		    function textLimit(obj){
+		        var maxLength = parseInt(obj.getAttribute("maxlength"));
+		        if(obj.value.length > maxLength){
+		            alert(maxLength + "자 이하로 입력하세요");
+		            obj.value = obj.value.substring(0,maxLength);
+		        }
+		    }

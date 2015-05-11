@@ -142,6 +142,7 @@ public class AddysController {
 		String strGroupId = "";
 		String strGroupName = "";
 		String strAuthId = "";
+		String strAuth = "";
 		String strAuthName = "";
 		String strExcelAuth = "";
 		String strPassword = "";
@@ -190,6 +191,7 @@ public class AddysController {
 			strMobliePhoneFormat = userChk.getMobliePhoneFormat();
 			strEmail = userChk.getEmail();
 			strIp = userChk.getIp();
+			strAuth =userChk.getAuth();
 
 			// # 3. Session 객체에 셋팅
 			
@@ -215,6 +217,7 @@ public class AddysController {
 				session.setAttribute("strMobliePhoneFormat", strMobliePhoneFormat);
 				session.setAttribute("strEmail", strEmail);
 				session.setAttribute("strIp", strIp);
+				session.setAttribute("strAuth", strAuth);
 				
 				//로그인 이력처리		
 				/*
@@ -295,6 +298,7 @@ public class AddysController {
         session.removeAttribute("strMobliePhoneFormat");
         session.removeAttribute("strEmail");
         session.removeAttribute("strIp");
+        session.removeAttribute("strAuth");
         
         ModelAndView mv = new ModelAndView();
         mv.setViewName("addys/loginForm");

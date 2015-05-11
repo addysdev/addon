@@ -19,6 +19,7 @@
 	String strMobliePhoneFormat= (String)session.getAttribute("strMobliePhoneFormat");
 	String strEmail= (String)session.getAttribute("strEmail");
 	String strIp= (String)session.getAttribute("strIp");
+	String strAuth= (String)session.getAttribute("strAuth");
 	
 %>
 <!DOCTYPE html>
@@ -59,6 +60,7 @@
 	<c:set var="strAuthId" value="<%=strAuthId %>" />
 	<c:set var="strAuthName" value="<%=strAuthName %>" />
 	<c:set var="strExcelAuth" value="<%=strExcelAuth %>" />
+	<c:set var="strAuth" value="<%=strAuth %>" />
 	
   </head>
   <body>
@@ -69,7 +71,11 @@
       <p>
         <button type="button" class="btn btn-default btn-sm">
           <span class="glyphicon glyphicon-user"></span> <%=strUserName %>(<%=strUserId %>) 
-        </button>  <button type="button" class="btn btn-primary" onClick="goLogout()">logout</button>
+        </button>
+        <button type="button" class="btn btn-default btn-sm">
+          <span class="glyphicon glyphicon-home"></span> <%=strGroupName %>(<%=strGroupId %>) 
+        </button> 
+        <button type="button" class="btn btn-primary" onClick="goLogout()">logout</button>
       </p>
       <ul class="nav nav-pills" role="tablist">
         <li class="active"><a href="<%= request.getContextPath() %>/order/targetmanage">Home</a></li>
@@ -89,11 +95,12 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Master관리 <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="<%= request.getContextPath() %>/master/productmanage">품목관리</a></li>
+            <c:if test="${strAuth != '03'}"><li><a href="<%= request.getContextPath() %>/master/productmanage">품목관리</a></li></c:if>
             <li><a href="<%= request.getContextPath() %>/master/stockmanage">재고현황 관리</a></li>   
             <li><a href="<%= request.getContextPath() %>/master/salesmanage">매출현황 관리</a></li>                            
           </ul>
         </li>
+        <c:if test="${strAuth != '03'}">
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">관리 <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
@@ -103,6 +110,7 @@
             <li><a href="#">메뉴권한관리</a></li -->                        
           </ul>
         </li>
+        </c:if>
       </ul>
     </div>
   </body>

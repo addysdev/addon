@@ -83,15 +83,22 @@
 	                </span>
 	                <input type="hidden" id="end_salesDate" name="end_salesDate" value="${salesConVO.end_salesDate}" />
 	            </div>
-				<label for="con_groupId"><font style="color:#FF9900"> 지점선택 : </font></label>
-				<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${salesConVO.groupId}">
-                    <option value="">전체</option>
-                    <c:forEach var="groupVO" items="${group_comboList}" >
-                    	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
-                    </c:forEach>
-                </select>
+				<c:choose>
+	    		<c:when test="${strAuth == '03'}">
+					<input type="hidden" id="con_groupId" name="con_groupId" value="${salesConVO.groupId}">
+					</c:when>
+					<c:otherwise>
+						<label for="con_groupId"><font style="color:#FF9900"> 지점선택 : </font></label>
+						<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${salesConVO.groupId}">
+		                    <option value="">전체</option>
+		                    <c:forEach var="groupVO" items="${group_comboList}" >
+		                    	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
+		                    </c:forEach>
+		                </select>
+					</c:otherwise>
+				</c:choose>
                 <button type="button" class="btn btn-primary" onClick="javascript:fcSales_listSearch()">search</button>
-                <button type="button" class="btn" onClick="">excel</button>
+                <!--  >button type="button" class="btn" onClick="">excel</button-->
         	</div>
       	</fieldset>
 	  </form:form>

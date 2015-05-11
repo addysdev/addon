@@ -878,6 +878,7 @@ public class MasterController {
         
         stockConVO.setStart_stockDate(strToday);
         stockConVO.setEnd_stockDate(strToday);
+        stockConVO.setGroupId(groupId);
        
         // 조회조건저장
         mv.addObject("stockConVO", stockConVO);
@@ -1277,6 +1278,7 @@ public class MasterController {
        
        salesConVO.setStart_salesDate(strToday);
        salesConVO.setEnd_salesDate(strToday);
+       salesConVO.setGroupId(groupId);
 
        // 조회조건저장
        mv.addObject("salesConVO", salesConVO);

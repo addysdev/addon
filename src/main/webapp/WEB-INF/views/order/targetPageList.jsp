@@ -64,10 +64,11 @@
 	        <th class='text-center'>발주상태</th>
             <th class='text-center'>매장</th>
             <th class='text-center'>업체</th>
-            <th class='text-center'>수량</th>
-            <th class='text-center'>기준금액</th>
+            <th class='text-center'>안전재고 미달 품목수량</th>
+            <th class='text-center'>재고현황(기준)일</th>
+            <!-- >th class='text-center'>기준금액</th>
             <th class='text-center'>부가세</th>
-            <th class='text-center'>발주금액</th>
+            <th class='text-center'>발주금액</th-->
 	      </tr>
 	    </thead>
 	    <tbody>
@@ -78,16 +79,18 @@
                  <c:out value="${targetVO.buyResultView}"></c:out></a></td>
                  <td class='text-center'><c:out value="${targetVO.groupName}"></c:out></td>
                  <td><c:out value="${targetVO.companyName}"></c:out></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderCnt}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeOrderCnt}"/></td>
+                 <td class='text-center'><c:out value="${targetVO.stockDate}"></c:out></td>
+                 <!--td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderCnt}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.productPrice}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.vat}"/></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderPrice}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderPrice}"/></td-->
               </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty targetList}">
            <tr>
-           	<td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='5' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>

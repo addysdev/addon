@@ -34,6 +34,7 @@
             <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}
            </if>
+         GROUP BY T1.stockDate,T1.groupId
          ORDER BY stockDateTime desc
  LIMIT ${page_limit_val1} , ${page_limit_val2}
 </select>

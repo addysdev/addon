@@ -360,9 +360,8 @@ public class OrderController {
         Date currentTime = new Date();
         String strToday = simpleDateFormat.format(currentTime);
 
-		//String ordercode="O"+targetVO.getGroupId()+targetVO.getCompanyCode()+strToday;
-        String ordercode="OAD001987654321"+strToday;
-
+		String ordercode="O"+targetVO.getGroupId()+targetVO.getCompanyCode()+strToday;
+  
 		ResourceBundle rb = ResourceBundle.getBundle("config");
 	    String uploadFilePath = rb.getString("offact.upload.path") + "html/";
 	    String szFileName = uploadFilePath+ordercode+".html";                    // 파일 이름
@@ -655,7 +654,7 @@ public class OrderController {
 			List<String> attcheFileName= new ArrayList();
 			List<File> files = new ArrayList();
 			
-			toEmails.add("kevin.jeon@offact.com");
+			toEmails.add(targetVO.getDeliveryEmail());
 			attcheFileName.add(ordercode+".html");
 			files.add(file);
 			
@@ -679,6 +678,52 @@ public class OrderController {
        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 
       return ""+mailResult;
+    }
+    /**
+     * 보류 처리
+     *
+     * @param TargetVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping({"/order/deferregist"})
+    public @ResponseBody
+    String deferRegist(@ModelAttribute("targetVO") TargetVO targetVO, 
+    		           @RequestParam(value="arrDeferProductId", required=false, defaultValue="") String arrDeferProductId,
+    		           HttpServletRequest request) throws BizException
+    {
+      
+	    //log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : targetVO" + targetVO);
+			
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String updateuserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+		
+        String ordercode="O"+targetVO.getGroupId()+targetVO.getCompanyCode()+strToday;
+		  
+		
+        logger.info("@#@#@# targetVO.getDefer_reason : " + targetVO.getDefer_reason());
+	    logger.info("@#@#@# arrDeferProductId : " + arrDeferProductId);
+
+        int retVal=1;//this.userManageSvc.userDeleteProc(updateuserId , arrDelUserId);
+		
+		//log Controller execute time end
+	 	long t2 = System.currentTimeMillis();
+	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+    return ""+retVal;
     }
 	 /**
      * 검수대상 화면

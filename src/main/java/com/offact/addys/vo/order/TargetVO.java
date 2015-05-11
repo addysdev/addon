@@ -40,13 +40,16 @@ public class TargetVO extends AbstractVO {
 	private String deliveryTel;
 	private String deliveryFax;
 	
-	private String meno;
+	private String memo;
 	
 	private String orderCnt;
 	private String orderPrice;
 	private String productPrice;
 	private String vatRate;
 	private String vat;
+	private String safeOrderCnt;
+	
+	private String defer_reason;
 	
 	private String con_groupId;
 	private String con_orderState;
@@ -366,11 +369,12 @@ public class TargetVO extends AbstractVO {
 	public void setDeliveryFax(String deliveryFax) {
 		this.deliveryFax = deliveryFax;
 	}
-	public String getMeno() {
-		return meno;
+	
+	public String getMemo() {
+		return memo;
 	}
-	public void setMeno(String meno) {
-		this.meno = meno;
+	public void setMemo(String memo) {
+		this.memo = memo;
 	}
 	public String getPhone() {
 		return phone;
@@ -389,6 +393,18 @@ public class TargetVO extends AbstractVO {
 	}
 	public void setVatRate(String vatRate) {
 		this.vatRate = vatRate;
+	}
+	public String getDefer_reason() {
+		return defer_reason;
+	}
+	public void setDefer_reason(String defer_reason) {
+		this.defer_reason = defer_reason;
+	}
+	public String getSafeOrderCnt() {
+		return safeOrderCnt;
+	}
+	public void setSafeOrderCnt(String safeOrderCnt) {
+		this.safeOrderCnt = safeOrderCnt;
 	}
 	
 }

@@ -40,13 +40,21 @@
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
         <fieldset>
         	<div class="form-group">
-        	    <label for="con_groupId"><h6><strong><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span>  지점선택 : </font></strong></h6></label>
-				<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${targetConVO.groupId}">
-                    <option value="">전체</option>
-                    <c:forEach var="groupVO" items="${group_comboList}" >
-                    	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
-                    </c:forEach>
-                </select>
+        	    <font style="color:#FF9900"><span class="glyphicon glyphicon-search"></span></font>
+        	    <c:choose>
+	    		<c:when test="${strAuth == '03'}">
+					<input type="hidden" id="con_groupId" name="con_groupId" value="${targetConVO.groupId}">
+					</c:when>
+					<c:otherwise>
+						<label for="con_groupId"><font style="color:#FF9900"> 지점선택 : </font></label>
+						<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${targetConVO.groupId}">
+		                    <option value="">전체</option>
+		                    <c:forEach var="groupVO" items="${group_comboList}" >
+		                    	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
+		                    </c:forEach>
+		                </select>
+					</c:otherwise>
+				</c:choose>
 				<label for="con_orderState"><h6><strong><font style="color:#FF9900"> 발주상태 : </font></strong></h6></label>
 				<select class="form-control" title="발주상태" id="con_orderState" name="con_orderState" value="">
                 	<option value="">전체</option>
@@ -55,7 +63,7 @@
                     </c:forEach>
            		</select>
 				<button type="button" class="btn btn-primary" onClick="javascript:fcTarget_listSearch()">search</button>
-	            <button type="button" class="btn" onClick="">excel</button>
+	            <!--  >button type="button" class="btn" onClick="">excel</button-->
             </div>
 	    </fieldset>
 	  </form:form>

@@ -40,6 +40,7 @@
   <result column="vat"        property="vat"  />
   <result column="orderCnt"        property="orderCnt"  />
   <result column="orderPrice"        property="orderPrice"  />
+  <result column="safeOrderCnt"        property="safeOrderCnt"  />
 </resultMap>
 
 <select id="getTargetPageList"  resultMap="targetVO" parameterType="com.offact.addys.vo.order.TargetVO" >
@@ -54,10 +55,12 @@
          T4.groupName,
 		 T2.companyCode,
          T3.companyName,
-         COUNT(T1.productCode) as orderCnt,
-	   	 SUM(T2.productPrice) as productPrice,
-	   	 SUM(round(T2.productPrice*T2.vatRate)) as vat,
-       (SUM(T2.productPrice)+SUM(round(T2.productPrice*T2.vatRate))) as orderPrice
+         SUM(T1.orderCnt) as orderCnt,/*안전재고 기준점 TOTAL  해당*/
+	   	 SUM(T1.orderCnt*T2.productPrice) as productPrice,/*안전재고 기준점 TOTAL 해당*/
+	   	 SUM(round((T1.orderCnt*T2.productPrice)*T2.vatRate)) as vat,/*안전재고 기준점 TOTAL 해당*/
+         (SUM(T1.orderCnt*T2.productPrice)+SUM(round((T1.orderCnt*T2.productPrice)*T2.vatRate))) as orderPrice,/*안전재고 기준점 TOTAL 해당*/
+         COUNT(T1.productCode) as safeOrderCnt,/*안전재고 기준점 발생품목수량*/
+         T1.stockDate /*재고현황 기준일*/
   From (
 	      Select TEMP.buyResult ,
 		         TEMP.stockCnt,
@@ -65,7 +68,9 @@
                  TEMP.holdStock,
 				 TEMP.groupID,
 				 TEMP.productCode,
-				 TEMP.orderCode 
+				 TEMP.orderCode,
+				 (TEMP.holdStock-TEMP.stockCnt) as orderCnt,
+				 TEMP.stockChk as stockDate
 		      From (
 					Select ifnull(I3.buyResult,'01') as buyResult ,
 						   ifnull(I2.stockDate,'19990101') as stockChk,/*재고기준일*/
@@ -225,7 +230,7 @@
 					     	AND I1.groupId = #{con_groupId}
 					   ) As TEMP
 					     Left Join adProductMaster T1 On TEMP.ProductCode = T1.ProductCode 
-		      Where TEMP.stockCnt  <![CDATA[<]]> TEMP.safeStock
+		      Where TEMP.stockCnt  <![CDATA[<]]> TEMP.holdStock
 					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk    
                     AND TEMP.buyResult = #{con_orderState}
 			  ) T1

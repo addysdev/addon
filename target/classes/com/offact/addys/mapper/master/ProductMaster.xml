@@ -58,13 +58,13 @@
                <when test="searchGubun.equals('01')">
            AND T1.productCode  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
-               <when test="searchGubun.equals('02')">
+               <when test="searchGubun.equals('03')">
            AND T1.productName  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
-               <when test="searchGubun.equals('03')">
+               <when test="searchGubun.equals('04')">
            AND T2.companyName  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
-               <when test="searchGubun.equals('04')">
+               <when test="searchGubun.equals('02')">
            AND T1.barCode  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
              </choose>

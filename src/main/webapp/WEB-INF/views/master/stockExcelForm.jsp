@@ -57,8 +57,8 @@ function uploadClose(msg){
 	  
 	 alert(msg);
 	 
-	 $('#salesExcelForm').dialog('close');
-	 fcSales_listSearch();
+	 $('#stockExcelForm').dialog('close');
+	 fcStock_listSearch();
 }
 </script>
 </head>
@@ -84,13 +84,20 @@ function uploadClose(msg){
         <input type="hidden" id="upload_stockDate" name="upload_stockDate" value="${stockConVO.start_stockDate}" />
     </div>
     <br><br>
-	<label for="con_groupId"><h6><strong><font style="color:#FF9900">  지점선택 : </font></strong></h6></label>
-	<select class="form-control" title="지점정보" id="upload_groupId" name="upload_groupId" value="${stockConVO.groupId}">
-        <option value="">전체</option>
-        <c:forEach var="groupVO" items="${group_comboList}" >
-        	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
-        </c:forEach>
-    </select>
+   	<c:choose>
+ 		<c:when test="${strAuth == '03'}">
+	<input type="hidden" id="upload_groupId" name="upload_groupId" value="${stockConVO.groupId}">
+	</c:when>
+	<c:otherwise>
+		<label for="con_groupId"><font style="color:#FF9900"> 지점선택 : </font></label>
+		<select class="form-control" title="지점정보" id="upload_groupId" name="upload_groupId" value="${stockConVO.groupId}">
+                  <option value="">전체</option>
+                  <c:forEach var="groupVO" items="${group_comboList}" >
+                  	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
+                  </c:forEach>
+              </select>
+	</c:otherwise>
+	</c:choose>
   <br><br> 
   <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 업로드 시 주의사항</font></strong></h4>
   <h6><strong><font id="avgStockAmt" style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 업로드 대상의 재고현황 일자와 지점을 꼭 선택해야 합니다.</font></strong></h6>

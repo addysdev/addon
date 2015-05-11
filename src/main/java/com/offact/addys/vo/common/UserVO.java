@@ -12,6 +12,7 @@ public class UserVO extends AbstractVO {
 	private String groupId;
 	private String groupName;
 	private String authId;
+	private String auth;
 	private String authName;
 	private String excelAuth;
 	private String password;
@@ -154,6 +155,12 @@ public class UserVO extends AbstractVO {
 	}
 	public void setInPassword(String inPassword) {
 		this.inPassword = inPassword;
+	}
+	public String getAuth() {
+		return auth;
+	}
+	public void setAuth(String auth) {
+		this.auth = auth;
 	}
 	
 }

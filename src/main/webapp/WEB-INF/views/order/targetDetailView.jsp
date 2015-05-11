@@ -36,6 +36,15 @@ function fcOrder_process(){
 			return;
 		}
 		
+		if(frm.deliveryEmail.value != 'kevin.jeon@offact.com'){
+			if(frm.deliveryEmail.value != 'soyung.shin@offact.com'){
+				if(frm.deliveryEmail.value != 'patrick.park@offact.com'){
+					alert('open이전까진 offact계정이외 메일전송 서비스가 불가합니다.');
+					return;
+				}
+			}
+		}
+		
 		if(smsCheckCnt > 0){
 			
 			if(frm.deliveryMobile.value==''){
@@ -81,64 +90,124 @@ function fcOrder_process(){
            }
     });
 }
+
 $(function() {
-
-    $( "#dialog" ).dialog({
-
+    $( "#deferdialog" ).dialog({
+      modal : true, //주위를 어둡게
       autoOpen: false,
-
       show: {
-
         effect: "blind",
-
         duration: 1000
-
       },
-
       hide: {
-
         effect: "explode",
-
         duration: 1000
-
       }
-
     });
 
- 
-
-    $( "#opener" ).click(function() {
-
-      $( "#dialog" ).dialog( "open" );
-
+    $( "#deferbtn" ).click(function() {
+      $( "#deferdialog" ).dialog( "open" );
     });
-
   });
 
+   $(function() {
+      $( "#deferpopclosebtn" ).click(function() {
+        $( "#deferdialog" ).dialog( "close" );
+      });
+    });
 
 
+function fcDefer_regist(){
+
+    	if($("#defer_reason_div").val()==''){
+    		alert('보류사유를 입력하세요!');
+    		return;
+    	}else{
+    		
+    		var checkedCnt = $('input:checkbox[ name="deferCheck"]:checked').length;
+
+        	if(checkedCnt <= 0){
+            	alert("보류 대상을 선택해 주세요!");
+            	return;
+            }
+            
+            var arrDeferProductId = "";
+            $('input:checkbox[name="deferCheck"]').each(function() {
+                if ($(this).is(":checked")) {
+                	arrDeferProductId += $(this).val() + "^";
+                }   
+            });
+            document.targetDetailForm.defer_reason.value=$("#defer_reason_div").val();
+            var paramString = $("#targetDetailForm").serialize() + "&arrDeferProductId="+arrDeferProductId;
+
+	  		$.ajax({
+		       type: "POST",
+		       async:false,
+		          url:  "<%= request.getContextPath() %>/order/deferregist",
+		          data:paramString,
+		          success: function(result) {
+	
+					if(result=='1'){
+							alert('보류처리를 성공했습니다.');
+					} else{
+							alert('보류처리를 실패했습니다.');
+					}
+
+					$('#deferdialog').dialog('close');
+					$('#targetDetailView').dialog('close');
+					fcTarget_listSearch();
+						
+		          },
+		          error:function(){
+
+		          $('#deferdialog').dialog('close');
+				  $('#targetDetailView').dialog('close');
+			      fcTarget_listSearch();
+		          }
+		    });
+    	}	
+	}
+    
+    function totalOrderAmt(){
+    	
+    	
+    	var amtCnt = $('input:text[ name="productPrice"]').length;
+    	
+    	var supplyamt=0;
+    	var vatamt=0;
+    	var totalamt=0;
+
+    	
+    	  totalamt=supplyamt+vatamt;
+    	
+    	  document.all('totalOrderAmt').innerText='함계 : '+addCommaStr(''+totalamt)+' 원'+'공급가 : '+addCommaStr(''+supplyuamt)+' 원'+'부가세 : '+addCommaStr(''+vatamt)+' 원';
+    }
+    
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
-	 <form:form commandName="targetVO" name="targetDetailForm" method="post" action="" >
-	   <input type="hidden" name="emailKey"             id="emailKey"            value="1" />
-	   <input type="hidden" name="smsKey"               id="smsKey"            value="0" />
+	 <form:form commandName="targetVO" id="targetDetailForm"  name="targetDetailForm" method="post" action="" >
+	   <input type="hidden" name="emailKey"             id="emailKey"            value="Y" />
+	   <input type="hidden" name="smsKey"               id="smsKey"            value="N" />
+	   <input type="hidden" name="faxKey"               id="faxKey"            value="N" />
+	   <input type="hidden" name="defer_reason"               id="defer_reason"            value="" />
+	   <input type="hidden" name="groupId"               id="groupId"            value="${targetVO.groupId}" />
+	   <input type="hidden" name="companyCode"               id="companyCode"            value="${targetVO.orderCode}" />
 	      <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-check"></span> 발주방법 : </font></strong>
 	          <input type="checkbox" id="emailCheck" name="emailCheck" value="" title="선택" checked disabled />e-mail
 	          <input type="checkbox" id="smsCheck" name="smsCheck" value="" title="선택" disabled />sms
 	      </h4>
 	      <tr>
 	      <div style="position:absolute; left:30px" > 
-	      <c:if test="${targetVO.orderCode != 'X'}"><button id="opener" type="button" class="btn btn-primary" >보류</button></c:if>
+	      <c:if test="${targetVO.orderCode != 'X'}"><button id="deferbtn" type="button" class="btn btn-primary" >보류</button></c:if>
 	      <c:if test="${targetVO.orderCode == 'X'}"><button type="button" class="btn btn-primary" onClick="fcDefer_modify('${targetVO.orderCode}')">보류수정</button></c:if>
 	      <c:if test="${targetVO.orderCode == 'X'}"><button type="button" class="btn btn-danger" onClick="fcDefer_cancel('${targetVO.orderCode}')">보류폐기</button></c:if>
 	      <c:if test="${targetVO.orderCode == 'X'}"><button type="button" class="btn btn-primary" onClick="fcDefer_Reason('${targetVO.orderCode}')">보류사유</button></c:if>
           </div >
-          <div id="dialog" title="보류사유를 입력하세요">
-			<p><textarea style='height:82px'  class="form-control" row="2" id="defer_reason" name="defer_reason" ></textarea></p>
-			<button type="button" class="btn btn-primary" onClick="fcDefer_regist()">save</button> <button type="button" class="btn btn-danger" onClick="fcDefer_regist()">cancel</button>
+          <div id="deferdialog" class="form-group" title="보류사유를 입력하세요">
+			<p><input type="text" class="form-control" id="defer_reason_div" name="defer_reason_div"  value=""  placeholder="보류사유"/></p>
+			<button id="defersavebtn" type="button" class="btn btn-primary" onClick="fcDefer_regist()">save</button> <button id="deferpopclosebtn" type="button" class="btn btn-danger">cancel</button>
           </div>
-          
           <div style="position:absolute; right:30px" > 
           <button type="button" class="btn btn-primary" onClick="fcTargetDetail_print()">출력</button>
           <button type="button" class="btn btn-primary" onClick="fcOrder_process()">발주</button>
@@ -231,9 +300,9 @@ $(function() {
 	  </form:form>
 	 </div>
 	 
-     <form:form commandName="targetVO" name="targetDetailListForm" method="post" action="" >
-      <p><span style="color:#FF9900">
-        <span class="glyphicon glyphicon-asterisk"></span> 
+     <form:form commandName="targetListVO" name="targetDetailListForm" method="post" action="" >
+      <p> <span class="glyphicon glyphicon-asterisk"></span> 
+          <span id="totalOrderAmt" style="color:#FF9900">
                     합계 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderPrice}" />
                     공급가 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.productPrice}" />
                     부가세 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.vat}" />
@@ -244,14 +313,15 @@ $(function() {
           <th rowspan='2' class='text-center' >보류</th>
           <th rowspan='2' class='text-center'>품목코드</th>
           <th rowspan='2' class='text-center'>상품명</th>
-          <th colspan='3' class='text-center'>발주</th>
+          <th colspan='4' class='text-center'>발주</th>
           <th colspan='3' class='text-center'>재고</th>
           <th rowspan='2' class='text-center'>비고</th>
       	</tr>
       	<tr style="background-color:#E6F3FF">
           <th class='text-center'>기준단가</th>
           <th class='text-center'>수량</th>
-          <th class='text-center'>증감</th>
+          <th class='text-center'>+</th>
+          <th class='text-center'>-</th>
           <th class='text-center'>안전</th>
           <th class='text-center'>보유</th>
           <th class='text-center'>전산</th>
@@ -259,12 +329,16 @@ $(function() {
 	    	<c:if test="${!empty targetDetailList}">
              <c:forEach items="${targetDetailList}" var="targetVO" varStatus="status">
              <tr id="select_tr_${targetVO.productCode}">
-                 <td><input type="checkbox" id="userCheck" name="userCheck" value="${targetVO.productCode}" title="선택" /></td>
+                 <td><input type="checkbox" id="deferCheck" name="deferCheck" value="${targetVO.productCode}" title="선택" /></td>
                  <td class='text-center'><c:out value="${targetVO.productCode}"></c:out></td>
                  <td class='text-left'><c:out value="${targetVO.productName}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.productPrice}" /></td>
+                 <input type="hidden" id="productPrice" name="productPrice" value="${targetVO.productPrice}" >
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderCnt}"/></td>
-                 <td class='text-right'><input style="width:40px" type="text" class="form-control" id="modify" name="modify" value="0"></td>
+                 <input type="hidden" id="orderCnt" name="orderCnt" value="${targetVO.orderCnt}" >
+                 <input type="hidden" id="vatRate" name="vatRate" value="${targetVO.vatRate}" >
+                 <td class='text-right'><c:if test="${strAuth != '03'}"><input style="width:35px" type="text" class="form-control" id="addcnt" name="addcnt" value="0"></c:if></td>
+                 <td class='text-right'><c:if test="${strAuth != '03'}"><input style="width:35px" type="text" class="form-control" id="losscnt" name="losscnt" value="0"></c:if></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeStock}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.holdStock}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.stockCnt}"/></td>
@@ -274,14 +348,13 @@ $(function() {
             </c:if>
            <c:if test="${empty targetDetailList}">
            <tr>
-           	<td colspan='10' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='11' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	  </table>
 	 </form:form>
 	</div>
 	<script type="text/javascript">
-
 
     $(function () {
         $('#datetimepicker1').datetimepicker(
@@ -309,4 +382,6 @@ $(function() {
             		forceParse: 0
                 });
     });
+    
+    totalOrderAmt();
 </script>

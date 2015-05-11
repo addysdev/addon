@@ -8,6 +8,7 @@
   <result column="groupId"      	   property="groupId"  />
   <result column="groupName"       	   property="groupName"  />
   <result column="authId"              property="authId"  />
+  <result column="auth"                property="auth"  />
   <result column="authName"            property="authName"  />
   <result column="excelAuth"           property="excelAuth"  />
   <result column="password"            property="password"  />
@@ -31,7 +32,8 @@
 					  ,T1.userName
 					  ,T1.groupId
 					  ,T2.groupName
-				  	  ,T1.authId   
+				  	  ,T1.authId
+				  	  ,T1.auth   
 				  	  ,CASE WHEN T1.authId = T1.userId Then '개인권한'
 						   ELSE T3.groupName
 					  END As authName
