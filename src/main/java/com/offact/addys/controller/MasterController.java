@@ -393,7 +393,53 @@ public class MasterController {
      return mv;
          
     }
+   /**
+    * 품목상세현황
+    *
+    * @param request
+    * @param response
+    * @param model
+    * @param locale
+    * @return
+    * @throws BizException
+    */
+   @RequestMapping(value = "/master/productmasterdetail")
+   public ModelAndView productMasterDetail(HttpServletRequest request, 
+   		                                 HttpServletResponse response,
+   		                                 String productCode ) throws BizException 
+   {
        
+	   //log Controller execute time start
+	   String logid=logid();
+	   long t1 = System.currentTimeMillis();
+	   logger.info("["+logid+"] Controller start ");
+	
+	   ModelAndView mv = new ModelAndView();
+	   
+	   ProductMasterVO productConVO = new ProductMasterVO();
+	   ProductMasterVO productMasterVO = new ProductMasterVO();
+	   StockMasterVO stockConVO = new StockMasterVO();
+	   List<StockMasterVO> stockMasterList = null;
+	   
+	   productConVO.setProductCode(productCode);
+	   stockConVO.setProductCode(productCode);
+	   
+       // 품목 상세조회
+	   productMasterVO = productMasterSvc.getProductDetail(productConVO);
+       mv.addObject("productMasterVO", productMasterVO);
+	
+	   // 품목 지점별 안전/보유재고현황
+       stockMasterList = stockMasterSvc.getStockList(stockConVO);
+	   mv.addObject("stockMasterList", stockMasterList);
+	  
+	   mv.setViewName("/master/productMasterDetail");
+	   
+	  //log Controller execute time end
+	  long t2 = System.currentTimeMillis();
+	  logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	 	
+	   return mv;
+   }   
     /**
   	 * Simply selects the home view to render by returning its name.
   	 * @throws BizException
@@ -938,6 +984,177 @@ public class MasterController {
    		return mv;
    	}
    /**
+    * 재고현황 일괄등록
+    *
+    * @param MultipartFileVO
+    * @param request
+    * @param response
+    * @param model
+    * @param locale
+    * @return
+    * @throws BizException
+    */
+   @RequestMapping({"/master/stockexcelimport"})
+   public ModelAndView stockExcelImport(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO, 
+   		                            HttpServletRequest request, 
+   		                            HttpServletResponse response, 
+   		                            String fileName, 
+   		                            String extension, 
+   		                            String upload_stockDate, 
+   		                            String upload_groupId ) throws IOException, BizException
+   {
+     
+     //log Controller execute time start
+	 String logid=logid();
+     long t1 = System.currentTimeMillis();
+     logger.info("["+logid+"] Controller start : fileVO" + fileVO);
+   			
+     ModelAndView mv = new ModelAndView();
+
+     HttpSession session = request.getSession();
+     String strUserId = (String)session.getAttribute("strUserId");
+
+     ResourceBundle rb = ResourceBundle.getBundle("config");
+     String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
+     
+     this.logger.debug("파일정보:" + fileName + extension);
+     this.logger.debug("file:" + fileVO);
+
+     List excelUploadList = new ArrayList();//업로드 대상 데이타
+     StockVO stockTotal = new StockVO();
+     
+     String stockDate=upload_stockDate.replace("-", "");
+     
+     stockTotal.setStockDate(stockDate);
+     stockTotal.setGroupId(upload_groupId);
+     stockTotal.setLastUserId(strUserId);
+     
+     String excelInfo = "";//excel 추출데이타
+     List rtnErrorList = new ArrayList(); //DB 에러 대상데이타
+     List rtnSuccessList = new ArrayList(); //DB 성공 대상데이타
+
+     if (fileName != null) {
+   	  
+       List<MultipartFile> files = fileVO.getFiles();
+       List fileNames = new ArrayList();
+       String orgFileName = null;
+
+       if ((files != null) && (files.size() > 0))
+       {
+         for (MultipartFile multipartFile : files)
+         {
+           orgFileName = multipartFile.getOriginalFilename();
+           String filePath = uploadFilePath;
+
+           File file = new File(filePath + orgFileName);
+           multipartFile.transferTo(file);
+           fileNames.add(orgFileName);
+         }
+    
+       }
+
+       String fname = uploadFilePath + orgFileName;
+
+       FileInputStream fileInput = null;
+
+       fileInput = new FileInputStream(fname);
+
+       XSSFWorkbook workbook = new XSSFWorkbook(fileInput);
+       XSSFSheet sheet = workbook.getSheetAt(0);//첫번째 sheet
+  
+       int TITLE_POINT =1;//타이틀 항목위치
+       int ROW_START = 2;//data row 시작지점
+       
+       int TOTAL_ROWS=sheet.getPhysicalNumberOfRows(); //전체 ROW 수를 가져온다.
+       int TOTAL_CELLS=sheet.getRow(TITLE_POINT).getPhysicalNumberOfCells(); //전체 셀의 항목 수를 가져온다.
+       
+       XSSFCell myCell = null;
+     
+       this.logger.debug("TOTAL_ROWS :" + TOTAL_ROWS);
+       this.logger.debug("TOTAL_CELLS :" + TOTAL_CELLS);
+           
+           try {
+ 
+	           for (int rowcnt = ROW_START; rowcnt < TOTAL_ROWS-2; rowcnt++) {
+	             
+	        	 StockVO stockVO = new StockVO();
+	             XSSFRow row = sheet.getRow(rowcnt);
+
+	             //cell type 구분하여 담기  
+	             String[] cellItemTmp = new String[TOTAL_CELLS]; 
+	             for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
+		            myCell = row.getCell(cellcnt); 
+		            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
+		            	cellItemTmp[cellcnt] = String.valueOf(myCell.getNumericCellValue()); 
+		            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
+		            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
+		            }else{//그외 cell type
+		            	cellItemTmp[cellcnt] = ""; 
+		            }
+		            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
+		            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
+		         }
+	         
+		         if(cellItemTmp[0] != ""){
+		        	 
+		        	 stockVO.setProductCode(cellItemTmp[0]); 
+		        	 stockVO.setStockCnt(cellItemTmp[3]);
+		        	 stockVO.setProductPrice(cellItemTmp[4]);
+		        	 stockVO.setStockPrice(cellItemTmp[5]);
+	
+		        	 stockVO.setLastUserId(strUserId);
+		        	 stockVO.setStockDate(stockDate);
+		        	 stockVO.setGroupId(upload_groupId);
+			
+			         excelUploadList.add(stockVO);
+			      }
+			     	
+			    }
+           }catch (Exception e){
+  
+	          excelInfo = excelInfo+"[error] : "+e.getMessage();
+	          StockVO stockVO = new StockVO();
+	          stockVO.setErrMsg(excelInfo);
+    	 
+	          this.logger.info("["+logid+"] Controller getErrMsg : "+stockVO.getErrMsg());
+         
+	          rtnErrorList.add(stockVO);
+
+	          mv.addObject("rtnErrorList", rtnErrorList);
+	          mv.addObject("rtnSuccessList", rtnSuccessList);
+
+	          mv.setViewName("/master/uploadResult");
+    	 
+	          //log Controller execute time end
+	          long t2 = System.currentTimeMillis();
+	          logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+  	 	
+	          return mv;
+    	   
+       	}
+     }
+     
+     //DB처리
+     Map rtmMap = this.stockSvc.regiExcelUpload(excelUploadList,stockTotal);
+
+     rtnErrorList = (List)rtmMap.get("rtnErrorList");
+     rtnSuccessList = (List)rtmMap.get("rtnSuccessList");
+
+     this.logger.info("rtnErrorList.size() :"+ rtnErrorList.size()+"rtnSuccessList.size() :"+ rtnSuccessList.size());
+  
+     mv.addObject("rtnErrorList", rtnErrorList);
+     mv.addObject("rtnSuccessList", rtnSuccessList);
+       
+     mv.setViewName("/master/uploadResult");
+
+     //log Controller execute time end
+     long t2 = System.currentTimeMillis();
+     logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+ 	
+     return mv;
+         
+    }
+   /**
     * 재고상세현황 관리화면
     *
     * @param request
@@ -1166,6 +1383,180 @@ public class MasterController {
   		return mv;
   	}
   /**
+   * 매출현황 일괄등록
+   *
+   * @param MultipartFileVO
+   * @param request
+   * @param response
+   * @param model
+   * @param locale
+   * @return
+   * @throws BizException
+   */
+  @RequestMapping({"/master/salesexcelimport"})
+  public ModelAndView salesExcelImport(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO, 
+  		                            HttpServletRequest request, 
+  		                            HttpServletResponse response, 
+  		                            String fileName, 
+  		                            String extension, 
+  		                            String upload_salesDate, 
+  		                            String upload_groupId ) throws IOException, BizException
+  {
+    
+    //log Controller execute time start
+    String logid=logid();
+    long t1 = System.currentTimeMillis();
+    logger.info("["+logid+"] Controller start : fileVO" + fileVO);
+  			
+    ModelAndView mv = new ModelAndView();
+
+    HttpSession session = request.getSession();
+    String strUserId = (String)session.getAttribute("strUserId");
+
+    ResourceBundle rb = ResourceBundle.getBundle("config");
+    String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
+    
+    this.logger.debug("파일정보:" + fileName + extension);
+    this.logger.debug("file:" + fileVO);
+
+    List excelUploadList = new ArrayList();//업로드 대상 데이타
+    SalesVO salesTotal = new SalesVO();
+    
+    String salesDate=upload_salesDate.replace("-", "");
+    
+    salesTotal.setSalesDate(salesDate);
+    salesTotal.setGroupId(upload_groupId);
+    salesTotal.setUpdateUserId(strUserId);
+    
+    String excelInfo = "";//excel 추출데이타
+    List rtnErrorList = new ArrayList(); //DB 에러 대상데이타
+    List rtnSuccessList = new ArrayList(); //DB 성공 대상데이타
+
+    if (fileName != null) {
+  	  
+      List<MultipartFile> files = fileVO.getFiles();
+      List fileNames = new ArrayList();
+      String orgFileName = null;
+
+      if ((files != null) && (files.size() > 0))
+      {
+        for (MultipartFile multipartFile : files)
+        {
+          orgFileName = multipartFile.getOriginalFilename();
+          String filePath = uploadFilePath;
+
+          File file = new File(filePath + orgFileName);
+          multipartFile.transferTo(file);
+          fileNames.add(orgFileName);
+        }
+   
+      }
+
+      String fname = uploadFilePath + orgFileName;
+
+      FileInputStream fileInput = null;
+
+      fileInput = new FileInputStream(fname);
+
+      XSSFWorkbook workbook = new XSSFWorkbook(fileInput);
+      XSSFSheet sheet = workbook.getSheetAt(0);//첫번째 sheet
+ 
+      int TITLE_POINT =1;//타이틀 항목위치
+      int ROW_START = 2;//data row 시작지점
+      
+      int TOTAL_ROWS=sheet.getPhysicalNumberOfRows(); //전체 ROW 수를 가져온다.
+      int TOTAL_CELLS=sheet.getRow(TITLE_POINT).getPhysicalNumberOfCells(); //전체 셀의 항목 수를 가져온다.
+      
+      XSSFCell myCell = null;
+    
+      this.logger.debug("TOTAL_ROWS :" + TOTAL_ROWS);
+      this.logger.debug("TOTAL_CELLS :" + TOTAL_CELLS);
+          
+          try {
+
+           for (int rowcnt = ROW_START; rowcnt < TOTAL_ROWS-3; rowcnt++) {
+             
+        	 SalesVO salesVO = new SalesVO();
+             XSSFRow row = sheet.getRow(rowcnt);
+
+             //cell type 구분하여 담기  
+             String[] cellItemTmp = new String[TOTAL_CELLS]; 
+             for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
+	            myCell = row.getCell(cellcnt); 
+	            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
+	            	cellItemTmp[cellcnt] = String.valueOf(myCell.getNumericCellValue()); 
+	            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
+	            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
+	            }else{//그외 cell type
+	            	cellItemTmp[cellcnt] = ""; 
+	            }
+	            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
+	            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
+	         }
+         
+	         if(cellItemTmp[0] != ""){
+	        	 
+	        	 salesVO.setProductCode(cellItemTmp[1]); 
+	        	 salesVO.setSalesCnt(cellItemTmp[4]);
+	        	 salesVO.setProductPrice(cellItemTmp[5]);
+	        	 salesVO.setSupplyPrice(cellItemTmp[6]);
+	        	 salesVO.setVat(cellItemTmp[7]);
+	        	 salesVO.setSalesPrice(cellItemTmp[8]);
+
+	        	 salesVO.setUpdateUserId(strUserId);
+	        	 salesVO.setSalesDate(salesDate);
+	        	 salesVO.setGroupId(upload_groupId);
+		
+		         excelUploadList.add(salesVO);
+
+		      }
+		     	
+		    }
+          }catch (Exception e){
+ 
+          excelInfo = excelInfo+"[error] : "+e.getMessage();
+          SalesVO salesVO = new SalesVO();
+          salesVO.setErrMsg(excelInfo);
+   	 
+          this.logger.info("["+logid+"] Controller getErrMsg : "+salesVO.getErrMsg());
+        
+          rtnErrorList.add(salesVO);
+
+          mv.addObject("rtnErrorList", rtnErrorList);
+          mv.addObject("rtnSuccessList", rtnSuccessList);
+
+          mv.setViewName("/master/uploadResult");
+   	 
+          //log Controller execute time end
+          long t2 = System.currentTimeMillis();
+          logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+ 	 	
+          return mv;
+   	   
+      	}
+    }
+    
+    //DB처리
+    Map rtmMap = this.salesSvc.regiExcelUpload(excelUploadList,salesTotal);
+
+    rtnErrorList = (List)rtmMap.get("rtnErrorList");
+    rtnSuccessList = (List)rtmMap.get("rtnSuccessList");
+
+    this.logger.info("rtnErrorList.size() :"+ rtnErrorList.size()+"rtnSuccessList.size() :"+ rtnSuccessList.size());
+ 
+    mv.addObject("rtnErrorList", rtnErrorList);
+    mv.addObject("rtnSuccessList", rtnSuccessList);
+      
+    mv.setViewName("/master/uploadResult");
+
+    //log Controller execute time end
+    long t2 = System.currentTimeMillis();
+    logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	
+    return mv;
+        
+   }
+  /**
    * 매출상세현황 관리화면
    *
    * @param request
@@ -1208,7 +1599,7 @@ public class MasterController {
   /**
    * 매출상세현황 목록조회
    * 
-   * @param SalesVO
+   * @param StockVO
    * @param request
    * @param response
    * @param model
@@ -1217,7 +1608,7 @@ public class MasterController {
    * @throws BizException
    */
   @RequestMapping(value = "/master/salesdetailpagelist")
-  public ModelAndView salesDetailPageList(@ModelAttribute("salesDetailConVO") SalesVO salesDetailConVO, 
+  public ModelAndView stockDetailPageList(@ModelAttribute("salesDetailConVO") SalesVO salesDetailConVO, 
   		                         HttpServletRequest request, 
   		                         HttpServletResponse response) throws BizException 
   {
@@ -1243,6 +1634,7 @@ public class MasterController {
 
       // totalCount 조회
       String totalCount = String.valueOf(salesSvc.getSalesDetailCnt(salesDetailConVO));
+      
       mv.addObject("totalCount", totalCount);
 
       mv.setViewName("/master/salesDetailPageList");

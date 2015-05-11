@@ -13,6 +13,21 @@ function fcStock_excelimport(){
         return;
     }
     
+    if($("#upload_stockDate").val() == ''){
+    	
+        alert('재고기준일을 선택하셔야 합니다.');
+        return;
+    }
+  
+    if($("#upload_groupId").val() == ''){
+  	
+        alert('재고 업로드 대상 지점을 선택하셔야 합니다.');
+        return;
+    }	  
+	    
+   // alert($("#upload_stockDate").val());
+   // alert($("#upload_groupId").val());
+
     var url;
     var frm = document.excel_form;
     var fileName = document.all.files.value;
@@ -22,20 +37,29 @@ function fcStock_excelimport(){
     var gap1 = fileName.substring(ln+1);
 
     if(gap1=="xls"){
-       url="<%= request.getContextPath() %>/master/stockexcelimport?fileName="+gap+"&extension="+gap1;
+       url="<%= request.getContextPath() %>/master/stockexcelimport?fileName="+gap+"&extension="+gap1+"&upload_stockDate="+$("#upload_stockDate").val()+"&upload_groupId="+$("#upload_groupId").val();
     }else if(gap1=="xlsx"){
-       url="<%= request.getContextPath() %>/master/stockexcelimport?fileName="+gap+"&extension="+gap1;
+       url="<%= request.getContextPath() %>/master/stockexcelimport?fileName="+gap+"&extension="+gap1+"&upload_stockDate="+$("#upload_stockDate").val()+"&upload_groupId="+$("#upload_groupId").val();
     }else{
         alert("엑셀파일만 올려주세요");
         return;
     }
-
+    commonDim(true);
     frm.action = url;
     frm.target="excel_import_result";
 
     frm.submit();        
 }
 
+function uploadClose(msg){
+	
+	 commonDim(false);
+	  
+	 alert(msg);
+	 
+	 $('#salesExcelForm').dialog('close');
+	 fcSales_listSearch();
+}
 </script>
 </head>
 <body>
@@ -51,17 +75,17 @@ function fcStock_excelimport(){
   <input type="file"  id="files" name="files" />
   <br><br> 
    <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 재고 기준 선택</font></strong></h4>
-	<label for="stockDate"><h6><strong><font style="color:#FF9900"> 재고일자 : </font></strong></h6></label>
-	<div style='width:150px' class='input-group date ' id='datetimepicker3' data-link-field="start_stockDate" data-link-format="yyyy-mm-dd">
+	<label for="start_stockDate"><h6><strong><font style="color:#FF9900"> 재고일자 : </font></strong></h6></label>
+	<div style='width:150px' class='input-group date ' id='datetimepicker3' data-link-field="upload_stockDate" data-link-format="yyyy-mm-dd">
         <input type='text' class="form-control" value="${stockConVO.start_stockDate}" />
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>
-        <input type="hidden" id="start_stockDate" name="start_stockDate" value="${stockConVO.start_stockDate}" />
+        <input type="hidden" id="upload_stockDate" name="upload_stockDate" value="${stockConVO.start_stockDate}" />
     </div>
     <br><br>
 	<label for="con_groupId"><h6><strong><font style="color:#FF9900">  지점선택 : </font></strong></h6></label>
-	<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${stockConVO.groupId}">
+	<select class="form-control" title="지점정보" id="upload_groupId" name="upload_groupId" value="${stockConVO.groupId}">
         <option value="">전체</option>
         <c:forEach var="groupVO" items="${group_comboList}" >
         	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
@@ -71,7 +95,7 @@ function fcStock_excelimport(){
   <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 업로드 시 주의사항</font></strong></h4>
   <h6><strong><font id="avgStockAmt" style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 업로드 대상의 재고현황 일자와 지점을 꼭 선택해야 합니다.</font></strong></h6>
   <h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 엑셀파일 업로드 양식을 다운로드 합니다. 
-  <a href="<%= request.getContextPath() %>/fileDownServlet?rFileName=UserUploadFormat.xls&sFileName=UserUploadFormat.xls&filePath=/down"><strong><font style="color:#428bca">[양식다운로드]</font></strong></a></font></strong></h6>
+  <a href="#"><strong><font style="color:#428bca">[양식다운로드]</font></strong></a></font></strong></h6>
   <h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 파일 업로드 결과는 서버의 log 경로에서 확인이 가능합니다.</font></strong></h6>
   </div>
   </fieldset>

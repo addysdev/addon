@@ -68,7 +68,7 @@ function uploadClose(msg){
   <br><br> 
   <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 업로드 시 주의사항</font></strong></h4>
   <h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 엑셀파일 업로드 양식을 다운로드 합니다. 
-  <a href="<%= request.getContextPath() %>/fileDownServlet?rFileName=UserUploadFormat.xls&sFileName=UserUploadFormat.xls&filePath=/down"><strong><font style="color:#428bca">[양식다운로드]</font></strong></a></font></strong></h6>
+  <a href="#"><strong><font style="color:#428bca">[양식다운로드]</font></strong></a></font></strong></h6>
   <h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 파일 업로드 결과는 서버의 log 경로에서 확인이 가능합니다.</font></strong></h6>
   </div>
   </fieldset>

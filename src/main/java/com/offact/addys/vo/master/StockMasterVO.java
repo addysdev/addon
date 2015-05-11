@@ -9,12 +9,15 @@ public class StockMasterVO extends AbstractVO {
 	
 	private String productCode;
 	private String groupId;
+	private String groupName;
 	private String safeStock;
 	private String holdStock;
 
 	private String createUserId;
+	private String createUserName;
 	private String createDateTime;
 	private String updateUserId;
+	private String updateUserName;
 	private String updateDateTime;
 	private String deletedYn;
 	
@@ -79,6 +82,24 @@ public class StockMasterVO extends AbstractVO {
 	}
 	public void setDeletedYn(String deletedYn) {
 		this.deletedYn = deletedYn;
+	}
+	public String getGroupName() {
+		return groupName;
+	}
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+	public String getCreateUserName() {
+		return createUserName;
+	}
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
 	}
 	
 	

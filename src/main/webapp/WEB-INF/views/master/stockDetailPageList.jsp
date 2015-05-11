@@ -7,7 +7,7 @@
         commonDim(true);
         $.ajax({
             type: "POST",
-            url:  "<%= request.getContextPath() %>/manage/stockdetailpagelist",
+            url:  "<%= request.getContextPath() %>/master/stockdetailpagelist",
               data:dataParam,
             success: function(result) {
                    commonDim(false);
@@ -27,6 +27,9 @@
 	      <tr>
 	        <th class='text-center'>품목코드</th>
             <th class='text-center'>품목명</th>
+            <th class='text-center'>수량</th>
+            <th class='text-center'>입고단가</th>
+            <th class='text-center'>금액</th>
          </tr>
 	    </thead>
 	    <tbody>
@@ -35,6 +38,9 @@
              <tr id="select_tr_${stockVO.productCode}">
 	              <td><c:out value="${stockVO.productCode}"></c:out></td>
 	              <td><c:out value="${stockVO.productName}"></c:out></td>
+	              <td><c:out value="${stockVO.stockCnt}"></c:out></td>
+	              <td><c:out value="${stockVO.productPrice}"></c:out></td>
+	              <td><c:out value="${stockVO.stockPrice}"></c:out></td>
               </tr>
              </c:forEach>
             </c:if>

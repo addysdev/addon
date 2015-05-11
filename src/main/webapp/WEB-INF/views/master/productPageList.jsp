@@ -18,6 +18,34 @@
             }
         });
     }
+    
+    // 품목 상세 페이지 Layup
+    function fcProduct_detailSearch(productCode) {
+
+    	$('#productDetail').dialog({
+            resizable : false, //사이즈 변경 불가능
+            draggable : true, //드래그 불가능
+            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+            width : 650,
+            height : 750,
+            modal : true, //주위를 어둡게
+
+            open:function(){
+                //팝업 가져올 url
+                $(this).load('<%= request.getContextPath() %>/master/productmasterdetail?productCode='+productCode);
+                //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
+                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+                    $("#productDetail").dialog('close');
+
+                    });
+            }
+            ,close:function(){
+                $('#productDetail').empty();
+            }
+        });
+    };
+
 
 </SCRIPT>
 
@@ -39,7 +67,7 @@
 	    	<c:if test="${!empty productList}">
              <c:forEach items="${productList}" var="productMasterVO" varStatus="status">
              <tr id="select_tr_${productMasterVO.productCode}">
-                 <td class='text-center'><a href="javascript:fcUserMaster_detailSearch('${productMasterVO.productCode}')"><c:out value="${productMasterVO.productCode}"></c:out></a></td>
+                 <td class='text-center'><a href="javascript:fcProduct_detailSearch('${productMasterVO.productCode}')"><c:out value="${productMasterVO.productCode}"></c:out></a></td>
                  <td class='text-center'><c:out value="${productMasterVO.barCode}"></c:out></td>
                  <td><c:out value="${productMasterVO.productName}"></c:out></td>
                  <td class='text-center'><c:out value="${productMasterVO.companyName}"></c:out></td>

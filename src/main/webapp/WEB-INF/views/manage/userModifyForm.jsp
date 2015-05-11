@@ -53,12 +53,14 @@
    		    <label for="userId"><h5><strong><font style="color:#FF9900">사용자ID : </font></strong></h5></label>
 			<input type="text" class="form-control"  tabindex="1" disabled value="${userVO.userId}">
 			<input type="hidden" id="userId" name="userId" value="${userVO.userId}" >
+			<br>
 			<label for="password"><h5><strong><font style="color:#FF9900">PASSWORD : </font></strong></h5></label>
 			<input type="password" class="form-control" id="password" name="password" tabindex="2" value="${userVO.password}" >
-			<input type="hidden" id="regPassword" name="regPassword" value="${userVO.password}" >      
+			<input type="hidden" id="regPassword" name="regPassword" value="${userVO.password}" > 
+			<br>     
 			<label for="userName"><h5><strong><font style="color:#FF9900">사용자명 : </font></strong></h5></label>
 			<input  type="text" class="form-control" id="userName"  name="userName" tabindex="3" value="${userVO.userName}">
-			&nbsp; &nbsp; &nbsp; &nbsp;
+			<br>
 	        <label for="groupId"><h5><strong><font style="color:#FF9900">조직 : </font></strong></h5></label>
 	    	<select class="form-control" title="지점정보" id="groupId" name="groupId" value="${userVO.groupId}">
                 <c:forEach var="groupVO" items="${group_comboList}" >
@@ -66,18 +68,20 @@
                 </c:forEach>
             </select>
             <input type="hidden" id="authId" name="authId" value="${userVO.authId}" >
-            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            <br>
 	    	<label for="auth"><h5><strong><font style="color:#FF9900">권한 : </font></strong></h5></label>
 			<select class="form-control" title="관리권한" id="auth" name="auth" value="${userVO.auth}">
                 <c:forEach var="codeVO" items="${code_comboList}" >
                 	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
                 </c:forEach>
        		</select>
-       		&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;
+       		<br>
 	    	<label for="email"><h5><strong><font style="color:#FF9900">email : </font></strong></h5></label>
 	    	<input type="text" class="form-control" id="email" name="email" tabindex="7" value="${userVO.email}">
+	    	<br>
 	    	<label for="officePhone"><h5><strong><font style="color:#FF9900">officePhone : </font></strong></h5></label>           
-	    	<input type="text" class="form-control" id="officePhone" name="officePhone" tabindex="8" value="${userVO.officePhone}">   
+	    	<input type="text" class="form-control" id="officePhone" name="officePhone" tabindex="8" value="${userVO.officePhone}">  
+	    	<br> 
 	    	<label for="mobliePhone"><h5><strong><font style="color:#FF9900">mobliePhone : </font></strong></h5></label>             
 	    	<input type="text" class="form-control" id="mobliePhone" name="mobliePhone" tabindex="9" value="${userVO.mobliePhone}">                            
           </td>

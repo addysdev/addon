@@ -4,13 +4,25 @@
 <script language="javascript">
 //초기세팅
 
-function fcSalse_excelimport(){
+function fcSales_excelimport(){
 
     if($("#files").val() == ''){
     	
         alert('등록 할 파일이 없습니다.');
         return;
     }
+    
+    if($("#upload_salesDate").val() == ''){
+    	
+        alert('매출기준일을 선택하셔야 합니다.');
+        return;
+    }
+  
+    if($("#upload_groupId").val() == ''){
+  	
+        alert('재고 업로드 대상 지점을 선택하셔야 합니다.');
+        return;
+    }	  
     
     var url;
     var frm = document.excel_form;
@@ -21,20 +33,28 @@ function fcSalse_excelimport(){
     var gap1 = fileName.substring(ln+1);
 
     if(gap1=="xls"){
-       url="<%= request.getContextPath() %>/master/salsexcelimport?fileName="+gap+"&extension="+gap1;
+       url="<%= request.getContextPath() %>/master/salesexcelimport?fileName="+gap+"&extension="+gap1+"&upload_salesDate="+$("#upload_salesDate").val()+"&upload_groupId="+$("#upload_groupId").val();
     }else if(gap1=="xlsx"){
-       url="<%= request.getContextPath() %>/master/salsexcelimport?fileName="+gap+"&extension="+gap1;
+       url="<%= request.getContextPath() %>/master/salesexcelimport?fileName="+gap+"&extension="+gap1+"&upload_salesDate="+$("#upload_salesDate").val()+"&upload_groupId="+$("#upload_groupId").val();
     }else{
         alert("엑셀파일만 올려주세요");
         return;
     }
-
+    commonDim(true);
     frm.action = url;
     frm.target="excel_import_result";
 
     frm.submit();        
 }
-
+function uploadClose(msg){
+	
+	 commonDim(false);
+	  
+	 alert(msg);
+	 
+	 $('#salesExcelForm').dialog('close');
+	 fcSales_listSearch();
+}
 </script>
 </head>
 <body>
@@ -51,16 +71,16 @@ function fcSalse_excelimport(){
   <br><br> 
    <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 매출 기준 선택</font></strong></h4>
 	<label for="start_salesDate"><h6><strong><font style="color:#FF9900"> 매출일자 : </font></strong></h6></label>
-	<div style='width:150px' class='input-group date ' id='datetimepicker1' data-link-field="start_salesDate" data-link-format="yyyy-mm-dd">
+	<div style='width:150px' class='input-group date ' id='datetimepicker3' data-link-field="upload_salesDate" data-link-format="yyyy-mm-dd">
         <input type='text' class="form-control" value="${salesConVO.start_salesDate}" />
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>
-        <input type="hidden" id="start_salesDate" name="start_salesDate" value="${salesConVO.start_salesDate}" />
+        <input type="hidden" id="upload_salesDate" name="upload_salesDate" value="${salesConVO.start_salesDate}" />
     </div>
     <br><br>
 	<label for="con_groupId"><h6><strong><font style="color:#FF9900">  지점선택 : </font></strong></h6></label>
-	<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${salesConVO.groupId}">
+	<select class="form-control" title="지점정보" id="upload_groupId" name="upload_groupId" value="${salesConVO.groupId}">
         <option value="">전체</option>
         <c:forEach var="groupVO" items="${group_comboList}" >
         	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
@@ -70,7 +90,7 @@ function fcSalse_excelimport(){
   <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 업로드 시 주의사항</font></strong></h4>
   <h6><strong><font id="avgStockAmt" style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 업로드 대상의 매출현황 일자와 지점을 꼭 선택해야 합니다.</font></strong></h6>
   <h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 엑셀파일 업로드 양식을 다운로드 합니다. 
-  <a href="<%= request.getContextPath() %>/fileDownServlet?rFileName=UserUploadFormat.xls&sFileName=UserUploadFormat.xls&filePath=/down"><strong><font style="color:#428bca">[양식다운로드]</font></strong></a></font></strong></h6>
+  <a href="#"><strong><font style="color:#428bca">[양식다운로드]</font></strong></a></font></strong></h6>
   <h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 파일 업로드 결과는 서버의 log 경로에서 확인이 가능합니다.</font></strong></h6>
   </div>
   </fieldset>

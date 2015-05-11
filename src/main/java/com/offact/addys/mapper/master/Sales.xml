@@ -12,7 +12,10 @@
   <result column="productCode"          property="productCode"  />
   <result column="productName"           property="productName"  />
   <result column="salesCnt"        property="salesCnt"  />
-  <result column="salesAmt"        property="salesAmt"  />
+  <result column="productPrice"        property="productPrice"  />
+  <result column="supplyPrice"        property="supplyPrice"  />
+  <result column="vat"        property="vat"  />
+  <result column="salesPrice"        property="salesPrice"  />
 </resultMap>
 
 <select id="getSalesPageList"  resultMap="salesVO" parameterType="com.offact.addys.vo.master.SalesVO" >
@@ -46,10 +49,13 @@
         SELECT T1.productCode
 			  ,T2.productName
 			  ,T1.salesCnt
-			  ,T1.salesAmt
+	          ,T1.productPrice
+	          ,T1.supplyPrice
+	          ,T1.vat
+	          ,T1.salesPrice
           FROM adSalesDetail T1
   			   Left Join adProductMaster T2 On T1.productCode=T2.productCode
- 			WHERE salesDate = ${salesDate}
+ 			WHERE salesDate = #{salesDate}
               AND groupId = #{groupId}
            <if test="searchValue != null and searchValue != ''" >
              <choose>
@@ -69,7 +75,7 @@
 		SELECT count(*) AS TOT_COUNT
   			FROM adSalesDetail T1
   			    Left Join adProductMaster T2 On T1.productCode=T2.productCode
- 			WHERE salesDate = ${salesDate}
+ 			WHERE salesDate = #{salesDate}
               AND groupId = #{groupId}
            <if test="searchValue != null and searchValue != ''" >
              <choose>
@@ -106,7 +112,7 @@
 		)values(
 				 #{salesDate}
 	  			, #{groupId}
-	  			, #{updateDateTime}
+	  			, now()
 	  			, #{updateUserId}
 		)
 		                        
@@ -118,13 +124,19 @@
             	,groupId
             	,productCode 
             	,salesCnt
-            	,salesAmt
+            	,productPrice
+            	,supplyPrice
+            	,vat
+            	,salesPrice
 		)values(
 				 #{salesDate}
 	  			, #{groupId}
 	  			, #{productCode}
 	  			, #{salesCnt}
-	  			, #{salesAmt}
+	  			, #{productPrice}
+	  			, #{supplyPrice}
+	  			, #{vat}
+	  			, #{salesPrice}
 		)
 		                        
 </insert>

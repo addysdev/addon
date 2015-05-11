@@ -178,6 +178,9 @@
   <!-- 보유재고 일괄등록-->
   <div id="holdStockExcelForm"  title="보유재고 일괄등록"></div>
 
+  <!-- 품목 상세페이지-->
+  <div id="productDetail"  title="품목 상세현황"></div>
+  
 </div>
 <br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>

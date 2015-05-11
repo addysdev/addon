@@ -55,7 +55,7 @@ public class SalesServiceImpl implements SalesService {
         return commonDao.selectOne("Sales.getSalesDetailCnt", sales);
     }
    
-    public Map<Object, Object> regiExcelUpload(List<SalesVO> excelUploadList ,SalesVO sales)
+    public Map<Object, Object> regiExcelUpload(List<SalesVO> excelUploadList ,SalesVO salesTotal)
     	    throws BizException
     	  {
     	    Map rtnMap = new HashMap();
@@ -63,10 +63,10 @@ public class SalesServiceImpl implements SalesService {
     	    List rtnSuccessList = new ArrayList();
     	    List rtnErrorList = new ArrayList();
     	    
-    	    this.commonDao.delete("Sales.salesDeleteAll", sales);
-    	    this.commonDao.insert("Sales.insertSales", sales);
+    	    this.commonDao.delete("Sales.salesDeleteAll", salesTotal);
+    	    this.commonDao.insert("Sales.insertSales", salesTotal);
     	    
-    	    this.commonDao.delete("Sales.salesDetailDeleteAll", sales);
+    	    this.commonDao.delete("Sales.salesDetailDeleteAll", salesTotal);
 
     	    int idx = 0;
 
@@ -78,7 +78,7 @@ public class SalesServiceImpl implements SalesService {
     	    	idx = i + 2;
     	    	SalesVO salesrVO = (SalesVO)excelUploadList.get(i);
     	    	salesrVO.setErrMsg("");
-                this.commonDao.insert("Sales.insertExcelSalesdDetail", sales);
+                this.commonDao.insert("Sales.insertExcelSalesdDetail", salesrVO);
                 rtnSuccessList.add(salesrVO);
     	      
     	      } catch (Exception e) {

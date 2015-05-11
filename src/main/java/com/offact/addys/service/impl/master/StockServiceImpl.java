@@ -55,7 +55,7 @@ public class StockServiceImpl implements StockService {
         return commonDao.selectOne("Stock.getStockDetailCnt", stock);
     }
    
-    public Map<Object, Object> regiExcelUpload(List<StockVO> excelUploadList ,StockVO stock)
+    public Map<Object, Object> regiExcelUpload(List<StockVO> excelUploadList ,StockVO stockTotal)
     	    throws BizException
     	  {
     	    Map rtnMap = new HashMap();
@@ -63,10 +63,10 @@ public class StockServiceImpl implements StockService {
     	    List rtnSuccessList = new ArrayList();
     	    List rtnErrorList = new ArrayList();
     	    
-    	    this.commonDao.delete("Stock.stockDeleteAll", stock);
-    	    this.commonDao.insert("Stock.insertStock", stock);
+    	    this.commonDao.delete("Stock.stockDeleteAll", stockTotal);
+    	    this.commonDao.insert("Stock.insertStock", stockTotal);
     	    
-    	    this.commonDao.delete("Stock.stockDetailDeleteAll", stock);
+    	    this.commonDao.delete("Stock.stockDetailDeleteAll", stockTotal);
 
     	    int idx = 0;
 
@@ -76,10 +76,10 @@ public class StockServiceImpl implements StockService {
     	      {
     	        
     	    	idx = i + 2;
-    	    	StockVO stockrVO = (StockVO)excelUploadList.get(i);
-    	    	stockrVO.setErrMsg("");
-                this.commonDao.insert("Stock.insertExcelStockdDetail", stock);
-                rtnSuccessList.add(stockrVO);
+    	    	StockVO stockVO = (StockVO)excelUploadList.get(i);
+    	    	stockVO.setErrMsg("");
+                this.commonDao.insert("Stock.insertExcelStockdDetail", stockVO);
+                rtnSuccessList.add(stockVO);
     	      
     	      } catch (Exception e) {
     	        

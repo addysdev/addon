@@ -17,8 +17,11 @@ public class SalesVO extends AbstractVO {
 	private String productCode;
 	private String productName;
 	
-	private int salseCnt;
-	private int salesAmt;
+	private String salesCnt;
+	private String productPrice;
+	private String supplyPrice;
+	private String vat;
+	private String salesPrice;
 
 	private String start_salesDate;
 	private String end_salesDate;
@@ -35,7 +38,7 @@ public class SalesVO extends AbstractVO {
     private String rowCount         = "10";
     private String page_limit_val1;
     private String page_limit_val2;
-
+    
 	public String getSalesDate() {
 		return salesDate;
 	}
@@ -84,20 +87,42 @@ public class SalesVO extends AbstractVO {
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-	public int getSalseCnt() {
-		return salseCnt;
+	public String getSalesCnt() {
+		return salesCnt;
 	}
-	public void setSalseCnt(int salseCnt) {
-		this.salseCnt = salseCnt;
+	public void setSalesCnt(String salesCnt) {
+		this.salesCnt = salesCnt;
 	}
-	
+	public String getProductPrice() {
+		return productPrice;
+	}
+	public void setProductPrice(String productPrice) {
+		this.productPrice = productPrice;
+	}
+	public String getSupplyPrice() {
+		return supplyPrice;
+	}
+	public void setSupplyPrice(String supplyPrice) {
+		this.supplyPrice = supplyPrice;
+	}
+	public String getVat() {
+		return vat;
+	}
+	public void setVat(String vat) {
+		this.vat = vat;
+	}
+	public String getSalesPrice() {
+		return salesPrice;
+	}
+	public void setSalesPrice(String salesPrice) {
+		this.salesPrice = salesPrice;
+	}
 	public String getStart_salesDate() {
 		return start_salesDate;
 	}
 	public void setStart_salesDate(String start_salesDate) {
 		this.start_salesDate = start_salesDate;
 	}
-
 	public String getEnd_salesDate() {
 		return end_salesDate;
 	}
@@ -158,11 +183,6 @@ public class SalesVO extends AbstractVO {
 	public void setPage_limit_val2(String page_limit_val2) {
 		this.page_limit_val2 = page_limit_val2;
 	}
-	public int getSalesAmt() {
-		return salesAmt;
-	}
-	public void setSalesAmt(int salesAmt) {
-		this.salesAmt = salesAmt;
-	}
+
 	
 }

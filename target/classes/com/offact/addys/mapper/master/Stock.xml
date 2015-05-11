@@ -12,6 +12,8 @@
   <result column="productCode"          property="productCode"  />
   <result column="productName"           property="productName"  />
   <result column="stockCnt"        property="stockCnt"  />
+  <result column="productPrice"        property="productPrice"  />
+  <result column="stockPrice"        property="stockPrice"  />
 </resultMap>
 
 <select id="getStockPageList"  resultMap="stockVO" parameterType="com.offact.addys.vo.master.StockVO" >
@@ -45,6 +47,8 @@
         SELECT T1.productCode
 			  ,T2.productName
 			  ,T1.stockCnt
+			  ,T1.productPrice
+			  ,T1.stockPrice
           FROM adStockDetail T1
   			   Left Join adProductMaster T2 On T1.productCode=T2.productCode
  			WHERE stockDate = ${stockDate}
@@ -104,7 +108,7 @@
 		)values(
 				 #{stockDate}
 	  			, #{groupId}
-	  			, #{stockDateTime}
+	  			, now()
 	  			, #{lastUserId}
 		)
 		                        
@@ -116,11 +120,15 @@
             	,groupId
             	,productCode 
             	,stockCnt
+            	,productPrice
+            	,stockPrice
 		)values(
 				 #{stockDate}
 	  			, #{groupId}
 	  			, #{productCode}
 	  			, #{stockCnt}
+	  			, #{productPrice}
+	  			, #{stockPrice}
 		)
 		                        
 </insert>

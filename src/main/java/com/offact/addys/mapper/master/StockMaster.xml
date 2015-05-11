@@ -5,6 +5,7 @@
 <resultMap id="stockMasterVO" type="com.offact.addys.vo.master.StockMasterVO" >
   <result column="productCode"      property="productCode"  />
   <result column="groupId"          property="groupId"  />
+  <result column="groupName"          property="groupName"  />
   <result column="safeStock"      property="safeStock"  />
   <result column="holdStock"      property="holdStock"  />
   <result column="createUserId"     property="createUserId"  />
@@ -19,6 +20,7 @@
 <select id="getStockList"  resultMap="stockMasterVO" parameterType="com.offact.addys.vo.master.StockMasterVO" >
         SELECT T1.productCode
 			  ,T1.groupId
+			  ,T4.groupName
 			  ,T1.safeStock
 			  ,T1.holdStock
 			  ,T1.createUserId
@@ -31,6 +33,7 @@
           FROM adStockMaster T1
                Left Join ofUser T2 On T1.createUserId=T2.userId
 			   Left Join ofUser T3 On T1.updateUserId=T3.userId
+			   Left Join ofGroup T4 On T1.groupId=T4.groupId
          WHERE T1.deletedYn='N'
            AND T1.productCode = #{productCode}
                

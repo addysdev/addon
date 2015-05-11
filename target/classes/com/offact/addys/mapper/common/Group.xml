@@ -28,9 +28,9 @@
         From ofGroup 
         Where deletedYn = 'N'
         	And groupStep=2              
-        <if test="groupId != null and groupId != '' and groupId != 'G00000'" >
+        <!--if test="groupId != null and groupId != '' and groupId != 'AD001' and groupId != 'G00000'" >
         	And groupId = #{groupId}
-        </if>
+        </if-->
         Order By groupId ASC
     </select>   
  
