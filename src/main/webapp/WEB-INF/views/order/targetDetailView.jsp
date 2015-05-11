@@ -170,18 +170,50 @@ function fcDefer_regist(){
     
     function totalOrderAmt(){
     	
-    	
-    	var amtCnt = $('input:text[ name="productPrice"]').length;
+    	var frm=document.targetDetailListForm;
+    	var amtCnt = frm.productPrice.length;
     	
     	var supplyamt=0;
     	var vatamt=0;
     	var totalamt=0;
-
     	
+    	for(i=0;i<amtCnt;i++){
+    		
+    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice[i].value))));
+    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt[i].value))));
+    		var vatRate=frm.vatRate[i].value;
+    		var sum_supplyAmt=productPrice*orderCnt;
+    		//alert(frm.vatRate[i].value);
+    		supplyamt=supplyamt+sum_supplyAmt;
+    		var sum_vatAmt=Math.round(sum_supplyAmt*vatRate);
+    		//alert(sum_vatAmt);
+    		vatamt=vatamt+sum_vatAmt;
+    	}
+
+    	  //alert(supplyamt);
+    	 // alert(vatamt);
     	  totalamt=supplyamt+vatamt;
     	
-    	  document.all('totalOrderAmt').innerText='함계 : '+addCommaStr(''+totalamt)+' 원'+'공급가 : '+addCommaStr(''+supplyuamt)+' 원'+'부가세 : '+addCommaStr(''+vatamt)+' 원';
+    	  document.all('totalOrderAmt').innerText='함계 : '+addCommaStr(''+totalamt)+' 공급가 : '+addCommaStr(''+supplyamt)+' 부가세 : '+addCommaStr(''+vatamt);
     }
+    
+    function fcAddLoss_Cnt(){
+    	
+    	var frm=document.targetDetailListForm;
+    	var amtCnt = frm.productPrice.length;
+    	
+		for(i=0;i<amtCnt;i++){
+    		
+			var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt[i].value))));
+			var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addcnt[i].value))));
+			var losscnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.losscnt[i].value))));
+    		
+			frm.orderCnt[i].value=addCommaStr(''+(orderCnt+addCnt-losscnt));
+		}
+    	
+    	totalOrderAmt();
+    }
+ 
     
 </SCRIPT>
 	<div class="container-fluid">
@@ -337,8 +369,8 @@ function fcDefer_regist(){
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderCnt}"/></td>
                  <input type="hidden" id="orderCnt" name="orderCnt" value="${targetVO.orderCnt}" >
                  <input type="hidden" id="vatRate" name="vatRate" value="${targetVO.vatRate}" >
-                 <td class='text-right'><c:if test="${strAuth != '03'}"><input style="width:35px" type="text" class="form-control" id="addcnt" name="addcnt" value="0"></c:if></td>
-                 <td class='text-right'><c:if test="${strAuth != '03'}"><input style="width:35px" type="text" class="form-control" id="losscnt" name="losscnt" value="0"></c:if></td>
+                 <td class='text-right'><c:if test="${strAuth != '03'}"><input style="width:35px" type="text" class="form-control" id="addcnt" name="addcnt" onKeyup="fcAddLoss_Cnt()" value="0"></c:if></td>
+                 <td class='text-right'><c:if test="${strAuth != '03'}"><input style="width:35px" type="text" class="form-control" id="losscnt" name="losscnt" onKeyup="fcAddLoss_Cnt()" value="0"></c:if></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeStock}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.holdStock}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.stockCnt}"/></td>
