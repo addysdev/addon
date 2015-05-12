@@ -30,15 +30,15 @@ function fcOrder_process(){
 		
 		frm.emailKey.value='Y';
 		
-		if(frm.deliveryEmail.value==''){
+		if(frm.email.value==''){
 			
 			alert('발주 대상 이메일 주소가 없습니다.');
 			return;
 		}
 		
-		if(frm.deliveryEmail.value != 'kevin.jeon@offact.com'){
-			if(frm.deliveryEmail.value != 'soyung.shin@offact.com'){
-				if(frm.deliveryEmail.value != 'patrick.park@offact.com'){
+		if(frm.email.value != 'kevin.jeon@offact.com'){
+			if(frm.email.value != 'soyung.shin@offact.com'){
+				if(frm.email.value != 'patrick.park@offact.com'){
 					alert('open이전까진 offact계정이외 메일전송 서비스가 불가합니다.');
 					return;
 				}
@@ -47,30 +47,52 @@ function fcOrder_process(){
 		
 		if(smsCheckCnt > 0){
 			
-			if(frm.deliveryMobile.value==''){
+			if(frm.mobilePhone.value==''){
 				
 				alert('발주 대상 sms 번호가 없습니다.');
 				return;
 			}
 			
-			if(!confirm("발주 처리 하시겠습니까?\n상품 주문서는 이메일["+frm.deliveryEmail.value+"] 과\nSMS ["+frm.deliveryMobile.value+"] 로 전송됩니다."))
+			if(!confirm("발주 처리 하시겠습니까?\n상품 주문서는 이메일["+frm.email.value+"] 과\nSMS ["+frm.mobilePhone.value+"] 로 전송됩니다."))
 				return;
 			
 		}else{
 			
 			frm.smsKey.value='N';
 			
-			if(!confirm("발주 처리 하시겠습니까?\n상품 주문서는 이메일["+frm.deliveryEmail.value+"]로 전송됩니다."))
+			if(!confirm("발주 처리 하시겠습니까?\n상품 주문서는 이메일["+frm.email.value+"]로 전송됩니다."))
 				return;
 		}
 
     }
 	
+	
+    var frm = document.targetDetailListForm;
+    
+   	if(frm.seqs.length>1){
+   		for(i=0;i<frm.seqs.length;i++){
+			frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
+   			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
+   			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
+   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.StockDate[i].value);
+
+   		}
+   	}else{
+   		
+		frm.seqs.value=fillSpace(frm.productCode.value)+
+		'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
+		'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
+		'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.StockDate.value);
+
+
+   	}
+	
+	
     $.ajax({
         type: "POST",
         async:false,
            url:  "<%= request.getContextPath() %>/order/orderProcess",
-           data:$("#targetDetailForm").serialize(),
+           data:$("#targetDetailForm").serialize()+'&'+$("#targetDetailListForm").serialize(),
            success: function(result) {
 
 				if(result=='true'){
@@ -137,9 +159,30 @@ function fcDefer_regist(){
                 	arrDeferProductId += $(this).val() + "^";
                 }   
             });
-            document.targetDetailForm.defer_reason.value=$("#defer_reason_div").val();
-            var paramString = $("#targetDetailForm").serialize() + "&arrDeferProductId="+arrDeferProductId;
+            
+            var frm = document.targetDetailListForm;
+       
+           	if(frm.seqs.length>1){
+           		for(i=0;i<frm.seqs.length;i++){
+   					frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
+           			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
+           			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
+           			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.StockDate[i].value);
+     
+           		}
+           	}else{
+           		
+   				frm.seqs.value=fillSpace(frm.productCode.value)+
+       			'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
+       			'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
+       			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.StockDate.value);
 
+
+           	}
+            	
+            document.targetDetailForm.deferReason.value=$("#defer_reason_div").val();
+            var paramString = $("#targetDetailForm").serialize()+ "&arrDeferProductId="+arrDeferProductId+'&'+$("#targetDetailListForm").serialize();
+ 
 	  		$.ajax({
 		       type: "POST",
 		       async:false,
@@ -183,37 +226,125 @@ function fcDefer_regist(){
     		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt[i].value))));
     		var vatRate=frm.vatRate[i].value;
     		var sum_supplyAmt=productPrice*orderCnt;
-    		//alert(frm.vatRate[i].value);
+
     		supplyamt=supplyamt+sum_supplyAmt;
     		var sum_vatAmt=Math.round(sum_supplyAmt*vatRate);
-    		//alert(sum_vatAmt);
+
     		vatamt=vatamt+sum_vatAmt;
     	}
 
-    	  //alert(supplyamt);
-    	 // alert(vatamt);
     	  totalamt=supplyamt+vatamt;
     	
-    	  document.all('totalOrderAmt').innerText='함계 : '+addCommaStr(''+totalamt)+' 공급가 : '+addCommaStr(''+supplyamt)+' 부가세 : '+addCommaStr(''+vatamt);
+    	  document.all('totalOrderAmt').innerText='합계 : '+addCommaStr(''+totalamt)+'원 공급가 : '+addCommaStr(''+supplyamt)+'원 부가세 : '+addCommaStr(''+vatamt)+'원';
     }
     
-    function fcAddLoss_Cnt(){
+    function fcAdd_Cnt(index){
     	
     	var frm=document.targetDetailListForm;
     	var amtCnt = frm.productPrice.length;
     	
-		for(i=0;i<amtCnt;i++){
+    	
+    	if(amtCnt > 1){
     		
-			var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt[i].value))));
-			var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addcnt[i].value))));
-			var losscnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.losscnt[i].value))));
+    		frm.lossCnt[index-1].value=0;
+    	    
+    		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
+    		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
+			var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt[index-1].value))));
+
+			var orderCnt=(orderCntRaw-addCnt);
+	
+			if(orderCntRaw<orderCnt || 0>orderCnt){
+				alert('재고수량 추가는 보유재고범위를 넘을수 없습니다.');
+				frm.orderCnt[index-1].value=orderCntRaw;
+				document.all('orderCntView')[index-1].innerText=orderCntRaw;
+				frm.addCnt[index-1].value=0;
+				return;
+			}else{
+				frm.orderCnt[index-1].value=orderCnt;
+				document.all('orderCntView')[index-1].innerText=orderCnt;
+			}
+			
+
+    	}else{
     		
-			frm.orderCnt[i].value=addCommaStr(''+(orderCnt+addCnt-losscnt));
-		}
+			frm.lossCnt.value=0;
+    	    
+    		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
+    		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
+			var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt.value))));
+	
+			var orderCnt=(orderCntRaw-addCnt);
+		
+			if(orderCntRaw<orderCnt || 0>orderCnt){
+				alert('재고수량 추가는 보유재고범위를 넘을수 없습니다.');
+				frm.orderCnt.value=orderCntRaw;
+				document.all('orderCntView').innerText=orderCntRaw;
+				frm.addCnt.value=0;
+				return;
+			}else{
+				frm.orderCnt.value=orderCnt;
+				document.all('orderCntView').innerText=orderCnt;
+			}
+			
+    	}
+		
     	
     	totalOrderAmt();
     }
  
+	function fcLoss_Cnt(index){
+    	
+    	var frm=document.targetDetailListForm;
+    	var amtCnt = frm.productPrice.length;
+    	
+    	
+    	if(amtCnt > 1){
+    		
+    		frm.addCnt[index-1].value=0;
+    	    
+    		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
+    		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
+			var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt[index-1].value))));
+
+			var orderCnt=(orderCntRaw+lossCnt);
+	
+			if(holdStock<orderCnt){
+				alert('재고수량은 보유재고수량을 넘을수 없습니다.');
+				frm.orderCnt[index-1].value=orderCntRaw;
+				document.all('orderCntView')[index-1].innerText=orderCntRaw;
+				frm.lossCnt[index-1].value=0;
+				return;
+			}else{
+				frm.orderCnt[index-1].value=orderCnt;
+				document.all('orderCntView')[index-1].innerText=orderCnt;
+			}
+
+    	}else{
+    		
+			frm.addCnt.value=0;
+    	    
+    		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
+    		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
+			var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt.value))));
+
+			var orderCnt=(orderCntRaw+lossCnt);
+	
+			if(holdStock<orderCnt){
+				alert('재고수량은 보유재고수량을 넘을수 없습니다.');
+				frm.orderCnt.value=orderCntRaw;
+				document.all('orderCntView').innerText=orderCntRaw;
+				frm.lossCnt.value=0;
+				return;
+			}else{
+				frm.orderCnt.value=orderCnt;
+				document.all('orderCntView').innerText=orderCnt;
+			}
+			
+    	}
+		
+    	totalOrderAmt();
+    }
     
 </SCRIPT>
 	<div class="container-fluid">
@@ -222,9 +353,9 @@ function fcDefer_regist(){
 	   <input type="hidden" name="emailKey"             id="emailKey"            value="Y" />
 	   <input type="hidden" name="smsKey"               id="smsKey"            value="N" />
 	   <input type="hidden" name="faxKey"               id="faxKey"            value="N" />
-	   <input type="hidden" name="defer_reason"               id="defer_reason"            value="" />
+	   <input type="hidden" name="deferReason"               id="deferReason"            value="" />
 	   <input type="hidden" name="groupId"               id="groupId"            value="${targetVO.groupId}" />
-	   <input type="hidden" name="companyCode"               id="companyCode"            value="${targetVO.orderCode}" />
+	   <input type="hidden" name="companyCode"               id="companyCode"            value="${targetVO.companyCode}" />
 	      <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-check"></span> 발주방법 : </font></strong>
 	          <input type="checkbox" id="emailCheck" name="emailCheck" value="" title="선택" checked disabled />e-mail
 	          <input type="checkbox" id="smsCheck" name="smsCheck" value="" title="선택" disabled />sms
@@ -250,55 +381,55 @@ function fcDefer_regist(){
 	 	<tr>
           <th rowspan='9' class='text-center' style="background-color:#E6F3FF">수신</th>
           <th class='text-center'  style="background-color:#E6F3FF" >수신</th>
-          <th class='text-center'><input type="text" class="form-control" id="companyName" name="companyName"  value="${targetVO.companyName}(${targetVO.deliveryCharge})" placeholder="수신" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="deliveryCharge" name="deliveryCharge"  value="${targetVO.companyName}(${targetVO.deliveryCharge})" placeholder="수신" /></th>
           <th rowspan='9' class='text-center'  style="background-color:#E6F3FF">발신</th>
           <th class='text-center' style="background-color:#E6F3FF">발신</th>
-          <th class='text-center'><input type="text" class="form-control" id="groupName" name="groupName"  value="ADDYS ${targetVO.groupName}" placeholder="발신"/></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderCharge" name="orderCharge"  value="ADDYS ${targetVO.groupName}" placeholder="발신"/></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF" >참조</th>
-          <th class='text-center'><input type="text" class="form-control" id="deleveryEtc" name=""deleveryEtc""  value="물류팀" placeholder="참조" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="deleveryEtc" name="deleveryEtc"  value="물류팀" placeholder="참조" /></th>
           <th class='text-center' style="background-color:#E6F3FF" >참조</th>
           <th class='text-center'><input type="text" class="form-control" id="orderUserName" name="orderUserName"  value="${targetVO.orderUserName}" placeholder="참조" /></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">핸드폰</th>
-          <th class='text-center'><input type="text" class="form-control" id="deliveryMobile" name="deliveryMobile"  value="${targetVO.deliveryMobile}"  placeholder="핸드폰"/></th>
-          <th class='text-center' style="background-color:#E6F3FF">핸드폰</th>
           <th class='text-center'><input type="text" class="form-control" id="mobilePhone" name="mobilePhone"  value="${targetVO.mobilePhone}"  placeholder="핸드폰"/></th>
+          <th class='text-center' style="background-color:#E6F3FF">핸드폰</th>
+          <th class='text-center'><input type="text" class="form-control" id="orderMobilePhone" name="orderMobilePhone"  value="${targetVO.orderMobilePhone}"  placeholder="핸드폰"/></th>
       	</tr>
       	<tr>
-          <th class='text-center' style="background-color:#E6F3FF">e-mail</th>
-          <th class='text-center'><input type="text" class="form-control" id="deliveryEmail" name="deliveryEmail"  value="${targetVO.deliveryEmail}" placeholder="e-mail" /></th>
           <th class='text-center' style="background-color:#E6F3FF">e-mail</th>
           <th class='text-center'><input type="text" class="form-control" id="email" name="email"  value="${targetVO.email}" placeholder="e-mail" /></th>
+          <th class='text-center' style="background-color:#E6F3FF">e-mail</th>
+          <th class='text-center'><input type="text" class="form-control" id="orderEmail" name="orderEmail"  value="${targetVO.orderEmail}" placeholder="e-mail" /></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">tel</th>
-          <th class='text-center'><input type="text" class="form-control" id="phone" name="phone"  value="${targetVO.deliveryTel}" placeholder="tel" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="telNumber" name="telNumber"  value="${targetVO.telNumber}" placeholder="tel" /></th>
           <th class='text-center' style="background-color:#E6F3FF">tel</th>
-          <th class='text-center'><input type="text" class="form-control" id="deliveryTel" name="deliveryTel"  value="${targetVO.phone}" placeholder="tel" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderTelNumber" name="orderTelNumber"  value="${targetVO.orderTelNumber}" placeholder="tel" /></th>
       	</tr>
       	<th class='text-center' style="background-color:#E6F3FF">fax</th>
-          <th class='text-center'><input type="text" class="form-control" id="deliveryFax" name="deliveryFax"  value="${targetVO.deliveryFax}" placeholder="fax" /></th>
-          <th class='text-center' style="background-color:#E6F3FF">fax</th>
           <th class='text-center'><input type="text" class="form-control" id="faxNumber" name="faxNumber"  value="${targetVO.faxNumber}" placeholder="fax" /></th>
+          <th class='text-center' style="background-color:#E6F3FF">fax</th>
+          <th class='text-center'><input type="text" class="form-control" id="orderFaxNumber" name="orderFaxNumber"  value="${targetVO.orderFaxNumber}" placeholder="fax" /></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">발주일자</th>
           <th class='text-center'>
           	
-          		<div style='width:150px' class='input-group date ' id='datetimepicker1' data-link-field="orderDateTime" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" value="${targetVO.orderDateTime}" />
+          		<div style='width:150px' class='input-group date ' id='datetimepicker1' data-link-field="orderDate" data-link-format="yyyy-mm-dd">
+	                <input type='text' class="form-control" value="${targetVO.orderDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>
 	                </span>
-	                <input type="hidden" id="orderDateTime" name="orderDateTime" value="${targetVO.orderDateTime}" />
+	                <input type="hidden" id="orderDate" name="orderDate" value="${targetVO.orderDate}" />
 	            </div>
 	         
           </th>
           <th rowspan='2' class='text-center' style="background-color:#E6F3FF">배송주소</th>
-          <th rowspan='2' class='text-center'><textarea style='height:82px'  class="form-control" row="2" id="address" name="address" >서울특별시 영등포구 여의도동 54-6 영창빌딩 6층 물류팀</textarea></th>
+          <th rowspan='2' class='text-center'><textarea style='height:82px'  class="form-control" row="2" id="orderAddress" name="orderAddress" >서울특별시 영등포구 여의도동 54-6 영창빌딩 6층 물류팀</textarea></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">납품일자</th>
@@ -318,7 +449,7 @@ function fcDefer_regist(){
           <th class='text-center' style="background-color:#E6F3FF">납품방법</th>
           <th class='text-center'><input type="text" class="form-control" id="deliveryMethod" name="deliveryMethod"  value="택배배송" placeholder="납품방버" /></th>
           <th class='text-center' style="background-color:#E6F3FF">결재방법</th>
-          <th class='text-center'><input type="text" class="form-control" id="approvedMethod" name="approvedMethod"  value="입금지정일.현금" placeholder="결재방법" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="payMethod" name="payMethod"  value="입금지정일.현금" placeholder="결재방법" /></th>
       	</tr>
       	<tr>
           <th colspan='2' class='text-center' style="background-color:#E6F3FF">SMS내용</th>
@@ -326,13 +457,13 @@ function fcDefer_regist(){
       	</tr>
       	<tr>
           <th colspan='2' class='text-center' style="background-color:#E6F3FF">메모</th>
-          <th colspan='4' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="" placeholder="메모" /></th>
+          <th colspan='4' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="메모" placeholder="메모" /></th>
       	</tr>
 	  </table>
 	  </form:form>
 	 </div>
 	 
-     <form:form commandName="targetListVO" name="targetDetailListForm" method="post" action="" >
+     <form:form commandName="targetListVO" id="targetDetailListForm" name="targetDetailListForm" method="post" action="" >
       <p> <span class="glyphicon glyphicon-asterisk"></span> 
           <span id="totalOrderAmt" style="color:#FF9900">
                     합계 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderPrice}" />
@@ -345,8 +476,8 @@ function fcDefer_regist(){
           <th rowspan='2' class='text-center' >보류</th>
           <th rowspan='2' class='text-center'>품목코드</th>
           <th rowspan='2' class='text-center'>상품명</th>
-          <th colspan='4' class='text-center'>발주</th>
-          <th colspan='3' class='text-center'>재고</th>
+          <th colspan='2' class='text-center'>발주</th>
+          <th colspan='5' class='text-center'>재고</th>
           <th rowspan='2' class='text-center'>비고</th>
       	</tr>
       	<tr style="background-color:#E6F3FF">
@@ -360,17 +491,33 @@ function fcDefer_regist(){
       	</tr>
 	    	<c:if test="${!empty targetDetailList}">
              <c:forEach items="${targetDetailList}" var="targetVO" varStatus="status">
-             <tr id="select_tr_${targetVO.productCode}">
+             	 <input type="hidden" id="seqs" name="seqs" >
+	             <c:choose>
+		    		<c:when test="${targetVO.stockCnt<targetVO.safeStock}">
+						<tr id="select_tr_${targetVO.productCode}" style="color:red">
+					</c:when>
+					<c:otherwise>
+						<tr id="select_tr_${targetVO.productCode}">
+					</c:otherwise>
+				</c:choose>
+				 <input type="hidden" name="productCode" value="${targetVO.productCode}">
+				 <input type="hidden" name="productName" value="${targetVO.productName}">
+				 <input type="hidden" name="safeStock" value="${targetVO.safeStock}">
+				 <input type="hidden" name="stockCnt" value="${targetVO.stockCnt}">
+				 <input type="hidden" name="etc" value="">
+				 <input type="hidden" name="StockDate" value="${targetVO.stockDate}">
                  <td><input type="checkbox" id="deferCheck" name="deferCheck" value="${targetVO.productCode}" title="선택" /></td>
                  <td class='text-center'><c:out value="${targetVO.productCode}"></c:out></td>
                  <td class='text-left'><c:out value="${targetVO.productName}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.productPrice}" /></td>
                  <input type="hidden" id="productPrice" name="productPrice" value="${targetVO.productPrice}" >
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderCnt}"/></td>
+                 <td class='text-right' id='orderCntView' name='orderCntView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderCnt}"/></td>
                  <input type="hidden" id="orderCnt" name="orderCnt" value="${targetVO.orderCnt}" >
+                 <input type="hidden" id="orderCntRaw" name="orderCntRaw" value="${targetVO.orderCnt}" >
                  <input type="hidden" id="vatRate" name="vatRate" value="${targetVO.vatRate}" >
-                 <td class='text-right'><c:if test="${strAuth != '03'}"><input style="width:35px" type="text" class="form-control" id="addcnt" name="addcnt" onKeyup="fcAddLoss_Cnt()" value="0"></c:if></td>
-                 <td class='text-right'><c:if test="${strAuth != '03'}"><input style="width:35px" type="text" class="form-control" id="losscnt" name="losscnt" onKeyup="fcAddLoss_Cnt()" value="0"></c:if></td>
+                 <input type="hidden" id="holdStock" name="holdStock" value="${targetVO.holdStock}" >
+                 <td class='text-right'><input style="width:35px" type="text" class="form-control" id="addCnt" name="addCnt" onKeyup="fcAdd_Cnt('${status.count}')" value="0"></td>
+                 <td class='text-right'><input style="width:35px" type="text" class="form-control" id="lossCnt" name="lossCnt" onKeyup="fcLoss_Cnt('${status.count}')" value="0"></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeStock}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.holdStock}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.stockCnt}"/></td>

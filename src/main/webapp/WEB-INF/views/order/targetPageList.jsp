@@ -75,8 +75,8 @@
 	    	<c:if test="${!empty targetList}">
              <c:forEach items="${targetList}" var="targetVO" varStatus="status">
              <tr id="select_tr_${targetVO.groupId}_${targetVO.companyCode}">
-                 <td><a href="javascript:fcTarget_detail('${targetVO.orderCode}','${targetVO.groupId}','${targetVO.groupName}','${targetVO.companyCode}','${targetVO.companyName}','${targetVO.buyResult}','${targetVO.productPrice}','${targetVO.vat}','${targetVO.orderPrice}')">
-                 <c:out value="${targetVO.buyResultView}"></c:out></a></td>
+                 <td><a href="javascript:fcTarget_detail('${targetVO.orderCode}','${targetVO.groupId}','${targetVO.groupName}','${targetVO.companyCode}','${targetVO.companyName}','${targetVO.orderState}','${targetVO.productPrice}','${targetVO.vat}','${targetVO.orderPrice}')">
+                 <c:out value="${targetVO.orderStateView}"></c:out></a></td>
                  <td class='text-center'><c:out value="${targetVO.groupName}"></c:out></td>
                  <td><c:out value="${targetVO.companyName}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeOrderCnt}"/></td>

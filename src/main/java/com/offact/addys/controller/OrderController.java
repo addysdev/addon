@@ -281,24 +281,26 @@ public class OrderController {
 
         //발주기본 정보
         targetVO.setOrderCode(orderCode);
+        targetVO.setGroupId(strGroupId);
         targetVO.setGroupName(groupName);
         targetVO.setProductPrice(productPrice);
         targetVO.setVat(vat);
         targetVO.setOrderPrice(orderPrice);
         
         targetVO.setOrderUserName(strUserName);
-        targetVO.setOrderDateTime(strToday);
-        targetVO.setMobilePhone(strMobliePhone);
-        targetVO.setPhone(strOfficePhone);
-        targetVO.setEmail(strEmail);
-        targetVO.setFaxNumber("");
+        targetVO.setOrderDate(strToday);
+        targetVO.setOrderMobilePhone(strMobliePhone);
+        targetVO.setOrderTelNumber(strOfficePhone);
+        targetVO.setOrderEmail(strEmail);
+        targetVO.setOrderFaxNumber("");
         
+        targetVO.setCompanyCode(companyVO.getCompanyCode());
         targetVO.setCompanyName(companyVO.getCompanyName());
         targetVO.setDeliveryCharge(companyVO.getChargeName());
-        targetVO.setDeliveryMobile(companyVO.getMobilePhone());
-        targetVO.setDeliveryFax(companyVO.getFaxNumber());
-        targetVO.setDeliveryTel(companyVO.getCompanyPhone());
-        targetVO.setDeliveryEmail(companyVO.getEmail());
+        targetVO.setMobilePhone(companyVO.getMobilePhone());
+        targetVO.setFaxNumber(companyVO.getFaxNumber());
+        targetVO.setTelNumber(companyVO.getCompanyPhone());
+        targetVO.setEmail(companyVO.getEmail());
         targetVO.setDeliveryDate(strDeliveryDay);
         
         mv.addObject("targetVO", targetVO);
@@ -351,20 +353,29 @@ public class OrderController {
 		long t1 = System.currentTimeMillis();
 		logger.info("["+logid+"] Controller start : targetVO" + targetVO);
 		
-		logger.info("["+logid+"] @@@@@@@@ : targetVO.getDeliveryEmail" + targetVO.getDeliveryEmail());
-		
+		logger.info("["+logid+"] @@@@@@@@ : targetVO.getDeliveryEmail" + targetVO.getEmail());
+
 		boolean mailResult=false;
+		
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
 		
 		 //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
         Date currentTime = new Date();
         String strToday = simpleDateFormat.format(currentTime);
 
-		String ordercode="O"+targetVO.getGroupId()+targetVO.getCompanyCode()+strToday;
-  
+		String orderCode="O"+targetVO.getGroupId()+targetVO.getCompanyCode()+strToday;
+		
+	    String[] orders = request.getParameterValues("seqs");
+		
+		String orderDate=targetVO.getOrderDate().replace("-", "");
+		String deliveryDate=targetVO.getDeliveryDate().replace("-", "");
+
 		ResourceBundle rb = ResourceBundle.getBundle("config");
 	    String uploadFilePath = rb.getString("offact.upload.path") + "html/";
-	    String szFileName = uploadFilePath+ordercode+".html";                    // 파일 이름
+	    String szFileName = uploadFilePath+orderCode+".html";                    // 파일 이름
         String szContent = "";
 	    
 		try{
@@ -654,8 +665,8 @@ public class OrderController {
 			List<String> attcheFileName= new ArrayList();
 			List<File> files = new ArrayList();
 			
-			toEmails.add(targetVO.getDeliveryEmail());
-			attcheFileName.add(ordercode+".html");
+			toEmails.add(targetVO.getEmail());
+			attcheFileName.add(orderCode+".html");
 			files.add(file);
 			
 			mail.setToEmails(toEmails);
@@ -672,6 +683,15 @@ public class OrderController {
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+		
+		targetVO.setOrderCode(orderCode);
+	    targetVO.setOrderUserId(strUserId);
+	    targetVO.setOrderState("03");
+	    targetVO.setOrderDate(orderDate);
+	    targetVO.setDeliveryDate(deliveryDate);
+
+        int retVal=targetSvc.regiOrderProcess(orders , targetVO);
+		
        
 		//log Controller execute time end
        	long t2 = System.currentTimeMillis();
@@ -692,7 +712,7 @@ public class OrderController {
      */
     @RequestMapping({"/order/deferregist"})
     public @ResponseBody
-    String deferRegist(@ModelAttribute("targetVO") TargetVO targetVO, 
+    String deferRegist(@ModelAttribute("targetVO") TargetVO targetVO,
     		           @RequestParam(value="arrDeferProductId", required=false, defaultValue="") String arrDeferProductId,
     		           HttpServletRequest request) throws BizException
     {
@@ -704,20 +724,32 @@ public class OrderController {
 			
 		// 사용자 세션정보
         HttpSession session = request.getSession();
-        String updateuserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
         Date currentTime = new Date();
         String strToday = simpleDateFormat.format(currentTime);
-		
-        String ordercode="O"+targetVO.getGroupId()+targetVO.getCompanyCode()+strToday;
+      
+        String orderCode="O"+targetVO.getGroupId()+targetVO.getCompanyCode()+strToday.replace("-", "");;
 		  
-		
-        logger.info("@#@#@# targetVO.getDefer_reason : " + targetVO.getDefer_reason());
-	    logger.info("@#@#@# arrDeferProductId : " + arrDeferProductId);
+	    String[] defers = request.getParameterValues("seqs");
 
-        int retVal=1;//this.userManageSvc.userDeleteProc(updateuserId , arrDelUserId);
+        logger.info("@#@#@# targetVO.getDefer_reason : " + targetVO.getDeferReason());
+       // logger.info("@#@#@# defers : " + defers.length);
+	    logger.info("@#@#@# arrDeferProductId : " + arrDeferProductId);
+	    
+	    String orderDate=targetVO.getOrderDate().replace("-", "");
+	    String deliveryDate=targetVO.getDeliveryDate().replace("-", "");
+	    
+	    targetVO.setOrderCode(orderCode);
+	    targetVO.setDeferUserId(strUserId);
+	    targetVO.setDeferType("T");
+	    targetVO.setOrderState("02");
+	    targetVO.setOrderDate(orderDate);
+	    targetVO.setDeliveryDate(deliveryDate);
+
+        int retVal=targetSvc.regiDeferProcess(defers , targetVO ,arrDeferProductId);
 		
 		//log Controller execute time end
 	 	long t2 = System.currentTimeMillis();

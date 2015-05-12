@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.offact.framework.exception.BizException;
+import com.offact.addys.vo.master.StockVO;
 import com.offact.addys.vo.order.TargetVO;
 
 /**
@@ -37,4 +38,23 @@ public interface TargetService {
      */
     public List<TargetVO> getTargetDetailList(TargetVO target) throws BizException;
    
+    /**
+     * 발주 보류처리
+     * 
+     * @param TargetVO
+     * @return
+     * @throws BizException
+     */
+    public int regiDeferProcess(String[] deferlist , TargetVO target ,String arrDeferProductId)
+    	    throws BizException;
+    
+    /**
+     * 발주 처리
+     * 
+     * @param TargetVO
+     * @return
+     * @throws BizException
+     */
+    public int regiOrderProcess(String[] orderlist , TargetVO target)
+    	    throws BizException;
 }

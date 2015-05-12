@@ -13,43 +13,66 @@ public class TargetVO extends AbstractVO {
 	private String groupName;
 	private String companyCode;
 	private String companyName;
-	private String orderDateTime;
-	private String orderUserID;
-	private String orderUserName;
 	private String faxKey;
 	private String smsKey;
 	private String emailKey;
-	private String faxNumber;
 	private String mobilePhone;
-	private String phone;
 	private String email;
+	private String telNumber;
+	private String faxNumber;
+	private String orderDate;
+	private String deliveryDate;
+	private String deliveryMethod;
+	private String deliveryCharge;
+	private String deliveryEtc;
+	private String orderCharge;
 	private String orderEtc;
+	private String orderMobilePhone;
+	private String orderEmail;
+	private String orderTelNumber;
+	private String orderFaxNumber;
 	private String orderAdress;
+	private String payMethod;
+	private String sms;
+	private String memo;
+	private String deferDateTime;
+	private String deferUserId;
+	private String deferUserName;
 	private String buyResult;
 	private String buyResultView;
 	private String buyDateTime;
 	private String buyUserId;
 	private String buyUserName;
-	private String deliveryDate;
-	private String deliveryEtc;
-	private String deliveryMethod;
-	private String deliveryCharge;
+	private String orderDateTime;
+	private String orderUserId;
+	private String orderUserName;
+	private String orderState;
+	private String orderStateView;
 	
-	private String deliveryMobile;
-	private String deliveryEmail;
-	private String deliveryTel;
-	private String deliveryFax;
+	private String createUserId;
+	private String updateUserId;
 	
-	private String memo;
+	private String etc;
 	
+	//상세 추가항목
+	private String productCode;
+	private String productName;
+	private String stockDate;
+	private String stockCnt;
+	private String safeStock;
+	private String holdStock;
 	private String orderCnt;
 	private String orderPrice;
 	private String productPrice;
 	private String vatRate;
 	private String vat;
-	private String safeOrderCnt;
 	
-	private String defer_reason;
+	private String addCnt;
+	private String lossCnt;
+	
+	private String safeOrderCnt;
+	private String deferReason;
+	private String deferType;
 	
 	private String con_groupId;
 	private String con_orderState;
@@ -59,13 +82,6 @@ public class TargetVO extends AbstractVO {
     private String searchValue;
 	
 	private String errMsg;
-	//상세 추가항목
-	private String productCode;
-	private String productName;
-	private String stockDate;
-	private String stockCnt;
-	private String safeStock;
-	private String holdStock;
 	
 	// /** for paging */
     private String totalCount       = "0";
@@ -73,7 +89,6 @@ public class TargetVO extends AbstractVO {
     private String rowCount         = "10";
     private String page_limit_val1;
     private String page_limit_val2;
-    
 	public String getOrderCode() {
 		return orderCode;
 	}
@@ -104,24 +119,6 @@ public class TargetVO extends AbstractVO {
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
 	}
-	public String getOrderDateTime() {
-		return orderDateTime;
-	}
-	public void setOrderDateTime(String orderDateTime) {
-		this.orderDateTime = orderDateTime;
-	}
-	public String getOrderUserID() {
-		return orderUserID;
-	}
-	public void setOrderUserID(String orderUserID) {
-		this.orderUserID = orderUserID;
-	}
-	public String getOrderUserName() {
-		return orderUserName;
-	}
-	public void setOrderUserName(String orderUserName) {
-		this.orderUserName = orderUserName;
-	}
 	public String getFaxKey() {
 		return faxKey;
 	}
@@ -140,12 +137,6 @@ public class TargetVO extends AbstractVO {
 	public void setEmailKey(String emailKey) {
 		this.emailKey = emailKey;
 	}
-	public String getFaxNumber() {
-		return faxNumber;
-	}
-	public void setFaxNumber(String faxNumber) {
-		this.faxNumber = faxNumber;
-	}
 	public String getMobilePhone() {
 		return mobilePhone;
 	}
@@ -158,17 +149,125 @@ public class TargetVO extends AbstractVO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getTelNumber() {
+		return telNumber;
+	}
+	public void setTelNumber(String telNumber) {
+		this.telNumber = telNumber;
+	}
+	public String getFaxNumber() {
+		return faxNumber;
+	}
+	public void setFaxNumber(String faxNumber) {
+		this.faxNumber = faxNumber;
+	}
+	public String getOrderDate() {
+		return orderDate;
+	}
+	public void setOrderDate(String orderDate) {
+		this.orderDate = orderDate;
+	}
+	public String getDeliveryDate() {
+		return deliveryDate;
+	}
+	public void setDeliveryDate(String deliveryDate) {
+		this.deliveryDate = deliveryDate;
+	}
+	public String getDeliveryMethod() {
+		return deliveryMethod;
+	}
+	public void setDeliveryMethod(String deliveryMethod) {
+		this.deliveryMethod = deliveryMethod;
+	}
+	public String getDeliveryCharge() {
+		return deliveryCharge;
+	}
+	public void setDeliveryCharge(String deliveryCharge) {
+		this.deliveryCharge = deliveryCharge;
+	}
+	public String getDeliveryEtc() {
+		return deliveryEtc;
+	}
+	public void setDeliveryEtc(String deliveryEtc) {
+		this.deliveryEtc = deliveryEtc;
+	}
+	public String getOrderCharge() {
+		return orderCharge;
+	}
+	public void setOrderCharge(String orderCharge) {
+		this.orderCharge = orderCharge;
+	}
 	public String getOrderEtc() {
 		return orderEtc;
 	}
 	public void setOrderEtc(String orderEtc) {
 		this.orderEtc = orderEtc;
 	}
+	public String getOrderMobilePhone() {
+		return orderMobilePhone;
+	}
+	public void setOrderMobilePhone(String orderMobilePhone) {
+		this.orderMobilePhone = orderMobilePhone;
+	}
+	public String getOrderEmail() {
+		return orderEmail;
+	}
+	public void setOrderEmail(String orderEmail) {
+		this.orderEmail = orderEmail;
+	}
+	public String getOrderTelNumber() {
+		return orderTelNumber;
+	}
+	public void setOrderTelNumber(String orderTelNumber) {
+		this.orderTelNumber = orderTelNumber;
+	}
+	public String getOrderFaxNumber() {
+		return orderFaxNumber;
+	}
+	public void setOrderFaxNumber(String orderFaxNumber) {
+		this.orderFaxNumber = orderFaxNumber;
+	}
 	public String getOrderAdress() {
 		return orderAdress;
 	}
 	public void setOrderAdress(String orderAdress) {
 		this.orderAdress = orderAdress;
+	}
+	public String getPayMethod() {
+		return payMethod;
+	}
+	public void setPayMethod(String payMethod) {
+		this.payMethod = payMethod;
+	}
+	public String getSms() {
+		return sms;
+	}
+	public void setSms(String sms) {
+		this.sms = sms;
+	}
+	public String getMemo() {
+		return memo;
+	}
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
+	public String getDeferDateTime() {
+		return deferDateTime;
+	}
+	public void setDeferDateTime(String deferDateTime) {
+		this.deferDateTime = deferDateTime;
+	}
+	public String getDeferUserId() {
+		return deferUserId;
+	}
+	public void setDeferUserId(String deferUserId) {
+		this.deferUserId = deferUserId;
+	}
+	public String getDeferUserName() {
+		return deferUserName;
+	}
+	public void setDeferUserName(String deferUserName) {
+		this.deferUserName = deferUserName;
 	}
 	public String getBuyResult() {
 		return buyResult;
@@ -200,84 +299,36 @@ public class TargetVO extends AbstractVO {
 	public void setBuyUserName(String buyUserName) {
 		this.buyUserName = buyUserName;
 	}
-	public String getDeliveryDate() {
-		return deliveryDate;
+	public String getOrderDateTime() {
+		return orderDateTime;
 	}
-	public void setDeliveryDate(String deliveryDate) {
-		this.deliveryDate = deliveryDate;
-	}
-	public String getDeliveryEtc() {
-		return deliveryEtc;
-	}
-	public void setDeliveryEtc(String deliveryEtc) {
-		this.deliveryEtc = deliveryEtc;
-	}
-	public String getDeliveryMethod() {
-		return deliveryMethod;
-	}
-	public void setDeliveryMethod(String deliveryMethod) {
-		this.deliveryMethod = deliveryMethod;
-	}
-	public String getDeliveryCharge() {
-		return deliveryCharge;
-	}
-	public void setDeliveryCharge(String deliveryCharge) {
-		this.deliveryCharge = deliveryCharge;
-	}
-	public String getOrderCnt() {
-		return orderCnt;
-	}
-	public void setOrderCnt(String orderCnt) {
-		this.orderCnt = orderCnt;
+	public void setOrderDateTime(String orderDateTime) {
+		this.orderDateTime = orderDateTime;
 	}
 	
-	public String getOrderPrice() {
-		return orderPrice;
+	public String getOrderUserId() {
+		return orderUserId;
 	}
-	public void setOrderPrice(String orderPrice) {
-		this.orderPrice = orderPrice;
+	public void setOrderUserId(String orderUserId) {
+		this.orderUserId = orderUserId;
 	}
-	public String getVat() {
-		return vat;
+	public String getOrderUserName() {
+		return orderUserName;
 	}
-	public void setVat(String vat) {
-		this.vat = vat;
+	public void setOrderUserName(String orderUserName) {
+		this.orderUserName = orderUserName;
 	}
-	public String getCon_groupId() {
-		return con_groupId;
+	public String getOrderState() {
+		return orderState;
 	}
-	public void setCon_groupId(String con_groupId) {
-		this.con_groupId = con_groupId;
+	public void setOrderState(String orderState) {
+		this.orderState = orderState;
 	}
-	public String getCon_orderState() {
-		return con_orderState;
+	public String getOrderStateView() {
+		return orderStateView;
 	}
-	public void setCon_orderState(String con_orderState) {
-		this.con_orderState = con_orderState;
-	}
-	public String getCon_companyCode() {
-		return con_companyCode;
-	}
-	public void setCon_companyCode(String con_companyCode) {
-		this.con_companyCode = con_companyCode;
-	}
-	public String getSearchGubun() {
-		return searchGubun;
-	}
-	public void setSearchGubun(String searchGubun) {
-		this.searchGubun = searchGubun;
-	}
-	public String getSearchValue() {
-		return searchValue;
-	}
-	public void setSearchValue(String searchValue) {
-		this.searchValue = searchValue;
-	}
-	public String getErrMsg() {
-		return errMsg;
-	}
-	public void setErrMsg(String errMsg) {
-		this.errMsg = errMsg;
+	public void setOrderStateView(String orderStateView) {
+		this.orderStateView = orderStateView;
 	}
 	public String getProductCode() {
 		return productCode;
@@ -315,6 +366,102 @@ public class TargetVO extends AbstractVO {
 	public void setHoldStock(String holdStock) {
 		this.holdStock = holdStock;
 	}
+	public String getOrderCnt() {
+		return orderCnt;
+	}
+	public void setOrderCnt(String orderCnt) {
+		this.orderCnt = orderCnt;
+	}
+	public String getOrderPrice() {
+		return orderPrice;
+	}
+	public void setOrderPrice(String orderPrice) {
+		this.orderPrice = orderPrice;
+	}
+	public String getProductPrice() {
+		return productPrice;
+	}
+	public void setProductPrice(String productPrice) {
+		this.productPrice = productPrice;
+	}
+	public String getVatRate() {
+		return vatRate;
+	}
+	public void setVatRate(String vatRate) {
+		this.vatRate = vatRate;
+	}
+	public String getVat() {
+		return vat;
+	}
+	public void setVat(String vat) {
+		this.vat = vat;
+	}
+	public String getAddCnt() {
+		return addCnt;
+	}
+	public void setAddCnt(String addCnt) {
+		this.addCnt = addCnt;
+	}
+	public String getLossCnt() {
+		return lossCnt;
+	}
+	public void setLossCnt(String lossCnt) {
+		this.lossCnt = lossCnt;
+	}
+	public String getSafeOrderCnt() {
+		return safeOrderCnt;
+	}
+	public void setSafeOrderCnt(String safeOrderCnt) {
+		this.safeOrderCnt = safeOrderCnt;
+	}
+	public String getDeferReason() {
+		return deferReason;
+	}
+	public void setDeferReason(String deferReason) {
+		this.deferReason = deferReason;
+	}
+	public String getDeferType() {
+		return deferType;
+	}
+	public void setDeferType(String deferType) {
+		this.deferType = deferType;
+	}
+	public String getCon_groupId() {
+		return con_groupId;
+	}
+	public void setCon_groupId(String con_groupId) {
+		this.con_groupId = con_groupId;
+	}
+	public String getCon_orderState() {
+		return con_orderState;
+	}
+	public void setCon_orderState(String con_orderState) {
+		this.con_orderState = con_orderState;
+	}
+	public String getCon_companyCode() {
+		return con_companyCode;
+	}
+	public void setCon_companyCode(String con_companyCode) {
+		this.con_companyCode = con_companyCode;
+	}
+	public String getSearchGubun() {
+		return searchGubun;
+	}
+	public void setSearchGubun(String searchGubun) {
+		this.searchGubun = searchGubun;
+	}
+	public String getSearchValue() {
+		return searchValue;
+	}
+	public void setSearchValue(String searchValue) {
+		this.searchValue = searchValue;
+	}
+	public String getErrMsg() {
+		return errMsg;
+	}
+	public void setErrMsg(String errMsg) {
+		this.errMsg = errMsg;
+	}
 	public String getTotalCount() {
 		return totalCount;
 	}
@@ -345,66 +492,23 @@ public class TargetVO extends AbstractVO {
 	public void setPage_limit_val2(String page_limit_val2) {
 		this.page_limit_val2 = page_limit_val2;
 	}
-	public String getDeliveryMobile() {
-		return deliveryMobile;
+	public String getEtc() {
+		return etc;
 	}
-	public void setDeliveryMobile(String deliveryMobile) {
-		this.deliveryMobile = deliveryMobile;
+	public void setEtc(String etc) {
+		this.etc = etc;
 	}
-	public String getDeliveryEmail() {
-		return deliveryEmail;
+	public String getCreateUserId() {
+		return createUserId;
 	}
-	public void setDeliveryEmail(String deliveryEmail) {
-		this.deliveryEmail = deliveryEmail;
+	public void setCreateUserId(String createUserId) {
+		this.createUserId = createUserId;
 	}
-	public String getDeliveryTel() {
-		return deliveryTel;
+	public String getUpdateUserId() {
+		return updateUserId;
 	}
-	public void setDeliveryTel(String deliveryTel) {
-		this.deliveryTel = deliveryTel;
+	public void setUpdateUserId(String updateUserId) {
+		this.updateUserId = updateUserId;
 	}
-	public String getDeliveryFax() {
-		return deliveryFax;
-	}
-	public void setDeliveryFax(String deliveryFax) {
-		this.deliveryFax = deliveryFax;
-	}
-	
-	public String getMemo() {
-		return memo;
-	}
-	public void setMemo(String memo) {
-		this.memo = memo;
-	}
-	public String getPhone() {
-		return phone;
-	}
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-	public String getProductPrice() {
-		return productPrice;
-	}
-	public void setProductPrice(String productPrice) {
-		this.productPrice = productPrice;
-	}
-	public String getVatRate() {
-		return vatRate;
-	}
-	public void setVatRate(String vatRate) {
-		this.vatRate = vatRate;
-	}
-	public String getDefer_reason() {
-		return defer_reason;
-	}
-	public void setDefer_reason(String defer_reason) {
-		this.defer_reason = defer_reason;
-	}
-	public String getSafeOrderCnt() {
-		return safeOrderCnt;
-	}
-	public void setSafeOrderCnt(String safeOrderCnt) {
-		this.safeOrderCnt = safeOrderCnt;
-	}
-	
+    
 }

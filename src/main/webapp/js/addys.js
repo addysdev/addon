@@ -3133,3 +3133,15 @@ function fnMenuApply(){
 		            obj.value = obj.value.substring(0,maxLength);
 		        }
 		    }
+		    
+		    function fillSpace(val){
+
+		    	if(typeof val =="undefined" || val == null){
+		    		return ' ';
+		    	}
+		    	if(val.length==0){
+		    		return ' ';
+		    	}
+
+		        return val;
+		    }
