@@ -30,7 +30,7 @@
                Left Join ofGroup T2 On T1.groupId=T2.groupId
           	   Left Join ofUser T3 On T1.lastUserId=T3.userId
           	   Left Join adStockDetail T4 On T1.stockDate = T4.stockDate And T1.groupId=T4.groupId
-         WHERE T1.stockDate between REPLACE('${start_stockDate}', '-', '')  and REPLACE('${end_stockDate}', '-', '')
+         WHERE T1.stockDate between  #{start_stockDate} and #{end_stockDate}
             <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}
            </if>
@@ -42,7 +42,7 @@
 <select id="getStockCnt" resultType="int">
 		SELECT count(*) AS TOT_COUNT
   			FROM adStock
- 			 WHERE stockDate between REPLACE('${start_stockDate}', '-', '')  and REPLACE('${end_stockDate}', '-', '')
+ 			 WHERE stockDate between #{start_stockDate} and #{end_stockDate}
             <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND groupId = #{con_groupId}
            </if>
@@ -56,7 +56,7 @@
 			  ,T1.stockPrice
           FROM adStockDetail T1
   			   Left Join adProductMaster T2 On T1.productCode=T2.productCode
- 			WHERE stockDate = ${stockDate}
+ 			WHERE stockDate = #{stockDate}
               AND groupId = #{groupId}
            <if test="searchValue != null and searchValue != ''" >
              <choose>
@@ -76,7 +76,7 @@
 		SELECT count(*) AS TOT_COUNT
   			FROM adStockDetail T1
   			    Left Join adProductMaster T2 On T1.productCode=T2.productCode
- 			WHERE stockDate = ${stockDate}
+ 			WHERE stockDate = #{stockDate}
               AND groupId = #{groupId}
            <if test="searchValue != null and searchValue != ''" >
              <choose>

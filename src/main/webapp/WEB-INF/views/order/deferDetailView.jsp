@@ -22,7 +22,7 @@ function fcTargetDetail_print(){
 //발주처리
 function fcOrder_process(){
 	
-	var frm=document.targetDetailForm;
+	var frm=document.deferDetailForm;
 	var emailCheckCnt = $('input:checkbox[ name="emailCheck"]:checked').length;
 	var smsCheckCnt = $('input:checkbox[ name="smsCheck"]:checked').length;
 
@@ -67,7 +67,7 @@ function fcOrder_process(){
     }
 	
 	
-    var frm = document.targetDetailListForm;
+    var frm = document.deferDetailListForm;
     
    	if(frm.seqs.length>1){
    		for(i=0;i<frm.seqs.length;i++){
@@ -92,7 +92,7 @@ function fcOrder_process(){
         type: "POST",
         async:false,
            url:  "<%= request.getContextPath() %>/order/orderProcess",
-           data:$("#targetDetailForm").serialize()+'&'+$("#targetDetailListForm").serialize(),
+           data:$("#deferDetailForm").serialize()+'&'+$("#deferDetailListForm").serialize(),
            success: function(result) {
         	   
         	    resultMsg(result);
@@ -111,7 +111,7 @@ function fcOrder_process(){
 }
 
 $(function() {
-    $( "#deferdialog" ).dialog({
+    $( "#defermodifydialog" ).dialog({
       modal : true, //주위를 어둡게
       autoOpen: false,
       show: {
@@ -124,19 +124,43 @@ $(function() {
       }
     });
 
-    $( "#deferbtn" ).click(function() {
-      $( "#deferdialog" ).dialog( "open" );
+    $( "#defermodifybtn" ).click(function() {
+      $( "#defermodifydialog" ).dialog( "open" );
     });
   });
 
    $(function() {
-      $( "#deferpopclosebtn" ).click(function() {
-        $( "#deferdialog" ).dialog( "close" );
+      $( "#defermodifypopclosebtn" ).click(function() {
+        $( "#defermodifydialog" ).dialog( "close" );
       });
     });
 
+   $(function() {
+	    $( "#defercanceldialog" ).dialog({
+	      modal : true, //주위를 어둡게
+	      autoOpen: false,
+	      show: {
+	        effect: "blind",
+	        duration: 1000
+	      },
+	      hide: {
+	        effect: "explode",
+	        duration: 1000
+	      }
+	    });
 
-function fcDefer_regist(){
+	    $( "#defercancelbtn" ).click(function() {
+	      $( "#defercanceldialog" ).dialog( "open" );
+	    });
+	  });
+
+	   $(function() {
+	      $( "#defercancelpopclosebtn" ).click(function() {
+	        $( "#defercanceldialog" ).dialog( "close" );
+	      });
+	    });
+
+function fcDefer_modify(){
 
     	if($("#defer_reason_div").val()==''){
     		alert('보류사유를 입력하세요!');
@@ -157,7 +181,7 @@ function fcDefer_regist(){
                 }   
             });
             
-            var frm = document.targetDetailListForm;
+            var frm = document.deferDetailListForm;
        
            	if(frm.seqs.length>1){
            		for(i=0;i<frm.seqs.length;i++){
@@ -177,39 +201,36 @@ function fcDefer_regist(){
 
            	}
             	
-            document.targetDetailForm.deferReason.value=$("#defer_reason_div").val();
+            document.deferDetailForm.deferReason.value=$("#defer_reason_div").val();
             var paramString = $("#targetDetailForm").serialize()+ "&arrDeferProductId="+arrDeferProductId+'&'+$("#targetDetailListForm").serialize();
  
-            if (confirm('발주대상건을 보류처리 하시겠습니까?')){    
-            
-		  		$.ajax({
-			       type: "POST",
-			       async:false,
-			          url:  "<%= request.getContextPath() %>/order/deferregist",
-			          data:paramString,
-			          success: function(result) {
-		
-			        	resultMsg(result);
+	  		$.ajax({
+		       type: "POST",
+		       async:false,
+		          url:  "<%= request.getContextPath() %>/order/defermodify",
+		          data:paramString,
+		          success: function(result) {
 	
-						$('#deferdialog').dialog('close');
-						$('#targetDetailView').dialog('close');
-						fcTarget_listSearch();
-							
-			          },
-			          error:function(){
-	
-			          $('#deferdialog').dialog('close');
-					  $('#targetDetailView').dialog('close');
-				      fcTarget_listSearch();
-			          }
-			    });
-            }
+		        	resultMsg(result);
+
+					$('#deferdialog').dialog('close');
+					$('#targetDetailView').dialog('close');
+					fcTarget_listSearch();
+						
+		          },
+		          error:function(){
+
+		          $('#deferdialog').dialog('close');
+				  $('#targetDetailView').dialog('close');
+			      fcTarget_listSearch();
+		          }
+		    });
     	}	
 	}
     
     function totalOrderAmt(){
     	
-    	var frm=document.targetDetailListForm;
+    	var frm=document.deferDetailListForm;
     	var amtCnt = frm.productPrice.length;
     	
     	var supplyamt=0;
@@ -236,7 +257,7 @@ function fcDefer_regist(){
     
     function fcAdd_Cnt(index){
     	
-    	var frm=document.targetDetailListForm;
+    	var frm=document.deferDetailListForm;
     	var amtCnt = frm.productPrice.length;
     	
     	
@@ -291,7 +312,7 @@ function fcDefer_regist(){
  
 	function fcLoss_Cnt(index){
     	
-    	var frm=document.targetDetailListForm;
+    	var frm=document.deferDetailListForm;
     	var amtCnt = frm.productPrice.length;
     	
     	
@@ -351,25 +372,30 @@ function fcDefer_regist(){
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
-	 <form:form commandName="targetVO" id="targetDetailForm"  name="targetDetailForm" method="post" action="" >
+	 <form:form commandName="deferVO" id="deferDetailForm"  name="targetDetailForm" method="post" action="" >
 	   <input type="hidden" name="emailKey"             id="emailKey"            value="Y" />
 	   <input type="hidden" name="smsKey"               id="smsKey"            value="N" />
 	   <input type="hidden" name="faxKey"               id="faxKey"            value="N" />
 	   <input type="hidden" name="deferReason"               id="deferReason"            value="" />
-	   <input type="hidden" name="groupId"               id="groupId"            value="${targetVO.groupId}" />
-	   <input type="hidden" name="con_groupId"               id="con_groupId"            value="${targetVO.con_groupId}" />
-	   <input type="hidden" name="companyCode"               id="companyCode"            value="${targetVO.companyCode}" />
+	   <input type="hidden" name="groupId"               id="groupId"            value="${deferVO.groupId}" />
+	   <input type="hidden" name="companyCode"               id="companyCode"            value="${deferVO.companyCode}" />
 	      <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-check"></span> 발주방법 : </font></strong>
 	          <input type="checkbox" id="emailCheck" name="emailCheck" value="" title="선택" checked disabled />e-mail
 	          <input type="checkbox" id="smsCheck" name="smsCheck" value="" title="선택" disabled />sms
 	      </h4>
 	      <tr>
-	      <div style="position:absolute; left:30px" > 
-	      <button id="deferbtn" type="button" class="btn btn-primary" >보류</button>
+	      <div style="position:absolute; left:30px" >
+	      <button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button>
+	      <button id="defercancelbtn"  type="button" class="btn btn-danger" >보류폐기</button>
+	      <button type="button" class="btn btn-primary">보류사유</button>
           </div >
-          <div id="deferdialog" class="form-group" title="보류사유를 입력하세요">
-			<p><input type="text" class="form-control" id="defer_reason_div" name="defer_reason_div"  value=""  placeholder="보류사유"/></p>
-			<button id="defersavebtn" type="button" class="btn btn-primary" onClick="fcDefer_regist()">save</button> <button id="deferpopclosebtn" type="button" class="btn btn-danger">cancel</button>
+          <div id="defermodifydialog" class="form-group" title="보류수정사유를 입력하세요">
+			<p><input type="text" class="form-control" id="defer_modify_reason_div" name="defer_reason_div"  value=""  placeholder="보류수정사유"/></p>
+			<button id="defermodifysavebtn" type="button" class="btn btn-primary" onClick="fcDefer_modify('${deferVO.orderCode}')">save</button> <button id="defermodifypopclosebtn" type="button" class="btn btn-danger">cancel</button>
+          </div>
+          <div id="defercanceldialog" class="form-group" title="보류폐기사유를 입력하세요">
+			<p><input type="text" class="form-control" id="defer_cancel_reason_div" name="defer_reason_div"  value=""  placeholder="보류수정사유"/></p>
+			<button id="defercancelsavebtn" type="button" class="btn btn-primary" onClick="fcDefer_cancel('${deferVO.orderCode}')">save</button> <button id="defercancelpopclosebtn" type="button" class="btn btn-danger">cancel</button>
           </div>
           <div style="position:absolute; right:30px" > 
           <button type="button" class="btn btn-primary" onClick="fcTargetDetail_print()">출력</button>
@@ -381,50 +407,50 @@ function fcDefer_regist(){
 	 	<tr>
           <th rowspan='9' class='text-center' style="background-color:#E6F3FF">수신</th>
           <th class='text-center'  style="background-color:#E6F3FF" >수신</th>
-          <th class='text-center'><input type="text" class="form-control" id="deliveryCharge" name="deliveryCharge"  value="${targetVO.companyName}(${targetVO.deliveryCharge})" placeholder="수신" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="deliveryCharge" name="deliveryCharge"  value="${deferVO.deliveryCharge}" placeholder="수신" /></th>
           <th rowspan='9' class='text-center'  style="background-color:#E6F3FF">발신</th>
           <th class='text-center' style="background-color:#E6F3FF">발신</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderCharge" name="orderCharge"  value="ADDYS ${targetVO.groupName}" placeholder="발신"/></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderCharge" name="orderCharge"  value="${deferVO.orderCharge}" placeholder="발신"/></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF" >참조</th>
-          <th class='text-center'><input type="text" class="form-control" id="deleveryEtc" name="deleveryEtc"  value="물류팀" placeholder="참조" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="deleveryEtc" name="deleveryEtc"  value="${deferVO.deliveryEtc}" placeholder="참조" /></th>
           <th class='text-center' style="background-color:#E6F3FF" >참조</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderEtc" name="orderEtc"  value="${targetVO.orderUserName}" placeholder="참조" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderUserName" name="orderUserName"  value="${deferVO.orderEtc}" placeholder="참조" /></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">핸드폰</th>
-          <th class='text-center'><input type="text" class="form-control" id="mobilePhone" name="mobilePhone"  value="${targetVO.mobilePhone}"  placeholder="핸드폰"/></th>
+          <th class='text-center'><input type="text" class="form-control" id="mobilePhone" name="mobilePhone"  value="${deferVO.mobilePhone}"  placeholder="핸드폰"/></th>
           <th class='text-center' style="background-color:#E6F3FF">핸드폰</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderMobilePhone" name="orderMobilePhone"  value="${targetVO.orderMobilePhone}"  placeholder="핸드폰"/></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderMobilePhone" name="orderMobilePhone"  value="${deferVO.orderMobilePhone}"  placeholder="핸드폰"/></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">e-mail</th>
-          <th class='text-center'><input type="text" class="form-control" id="email" name="email"  value="${targetVO.email}" placeholder="e-mail" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="email" name="email"  value="${deferVO.email}" placeholder="e-mail" /></th>
           <th class='text-center' style="background-color:#E6F3FF">e-mail</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderEmail" name="orderEmail"  value="${targetVO.orderEmail}" placeholder="e-mail" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderEmail" name="orderEmail"  value="${deferVO.orderEmail}" placeholder="e-mail" /></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">tel</th>
-          <th class='text-center'><input type="text" class="form-control" id="telNumber" name="telNumber"  value="${targetVO.telNumber}" placeholder="tel" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="telNumber" name="telNumber"  value="${deferVO.telNumber}" placeholder="tel" /></th>
           <th class='text-center' style="background-color:#E6F3FF">tel</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderTelNumber" name="orderTelNumber"  value="${targetVO.orderTelNumber}" placeholder="tel" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderTelNumber" name="orderTelNumber"  value="${deferVO.orderTelNumber}" placeholder="tel" /></th>
       	</tr>
       	<th class='text-center' style="background-color:#E6F3FF">fax</th>
-          <th class='text-center'><input type="text" class="form-control" id="faxNumber" name="faxNumber"  value="${targetVO.faxNumber}" placeholder="fax" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="faxNumber" name="faxNumber"  value="${deferVO.faxNumber}" placeholder="fax" /></th>
           <th class='text-center' style="background-color:#E6F3FF">fax</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderFaxNumber" name="orderFaxNumber"  value="${targetVO.orderFaxNumber}" placeholder="fax" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderFaxNumber" name="orderFaxNumber"  value="${deferVO.orderFaxNumber}" placeholder="fax" /></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">발주일자</th>
           <th class='text-center'>
           	
           		<div style='width:150px' class='input-group date ' id='datetimepicker1' data-link-field="orderDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" value="${targetVO.orderDate}" />
+	                <input type='text' class="form-control" value="${deferVO.orderDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>
 	                </span>
-	                <input type="hidden" id="orderDate" name="orderDate" value="${targetVO.orderDate}" />
+	                <input type="hidden" id="orderDate" name="orderDate" value="${deferVO.orderDate}" />
 	            </div>
 	         
           </th>
@@ -436,39 +462,36 @@ function fcDefer_regist(){
           <th class='text-center'>
           		
           		<div  style='width:150px' class='input-group date ' id='datetimepicker2' data-link-field="deliveryDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" value="${targetVO.deliveryDate}" />
+	                <input type='text' class="form-control" value="${deferVO.deliveryDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>
 	                </span>
-	                <input type="hidden" id="deliveryDate" name="deliveryDate" value="${targetVO.deliveryDate}" />
+	                <input type="hidden" id="deliveryDate" name="deliveryDate" value="${deferVO.deliveryDate}" />
 	            </div>
              
           </th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">납품방법</th>
-          <th class='text-center'><input type="text" class="form-control" id="deliveryMethod" name="deliveryMethod"  value="택배배송" placeholder="납품방버" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="deliveryMethod" name="deliveryMethod"  value="${deferVO.deliveryMethod}" placeholder="납품방버" /></th>
           <th class='text-center' style="background-color:#E6F3FF">결재방법</th>
-          <th class='text-center'><input type="text" class="form-control" id="payMethod" name="payMethod"  value="입금지정일.현금" placeholder="결재방법" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="payMethod" name="payMethod"  value="${deferVO.payMethod}" placeholder="결재방법" /></th>
       	</tr>
       	<tr>
           <th colspan='2' class='text-center' style="background-color:#E6F3FF">SMS내용</th>
-          <th colspan='4' class='text-center'><input type="text" class="form-control" id="sms" name="sms"  value="${targetVO.deliveryCharge}님 ADDYS ${targetVO.groupName}에서 발주서를 보냈습니다.당일처리 부탁드립니다." placeholder="SMS" /></th>
+          <th colspan='4' class='text-center'><input type="text" class="form-control" id="sms" name="sms"  value="${deferVO.sms}" placeholder="SMS" /></th>
       	</tr>
       	<tr>
           <th colspan='2' class='text-center' style="background-color:#E6F3FF">메모</th>
-          <th colspan='4' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="" placeholder="메모" /></th>
+          <th colspan='4' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${deferVO.memo}" placeholder="메모" /></th>
       	</tr>
 	  </table>
 	  </form:form>
 	 </div>
 	 
-     <form:form commandName="targetListVO" id="targetDetailListForm" name="targetDetailListForm" method="post" action="" >
+     <form:form commandName="deferListVO" id="deferDetailListForm" name="deferDetailListForm" method="post" action="" >
       <p> <span class="glyphicon glyphicon-asterisk"></span> 
           <span id="totalOrderAmt" style="color:#FF9900">
-                    합계 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderPrice}" />
-                    공급가 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.productPrice}" />
-                    부가세 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.vat}" />
         </span>
       </p>       
 	  <table class="table table-bordered" >
@@ -489,43 +512,43 @@ function fcDefer_regist(){
           <th class='text-center'>보유</th>
           <th class='text-center'>전산</th>
       	</tr>
-	    	<c:if test="${!empty targetDetailList}">
-             <c:forEach items="${targetDetailList}" var="targetVO" varStatus="status">
+	    	<c:if test="${!empty deferDetailList}">
+             <c:forEach items="${deferDetailList}" var="deferVO" varStatus="status">
              	 <input type="hidden" id="seqs" name="seqs" >
 	             <c:choose>
-		    		<c:when test="${targetVO.stockCnt<targetVO.safeStock}">
-						<tr id="select_tr_${targetVO.productCode}" style="color:red">
+		    		<c:when test="${deferVO.stockCnt<deferVO.safeStock}">
+						<tr id="select_tr_${deferVO.productCode}" style="color:red">
 					</c:when>
 					<c:otherwise>
-						<tr id="select_tr_${targetVO.productCode}">
+						<tr id="select_tr_${deferVO.productCode}">
 					</c:otherwise>
 				</c:choose>
-				 <input type="hidden" name="productCode" value="${targetVO.productCode}">
-				 <input type="hidden" name="productName" value="${targetVO.productName}">
-				 <input type="hidden" name="safeStock" value="${targetVO.safeStock}">
-				 <input type="hidden" name="stockCnt" value="${targetVO.stockCnt}">
-				 <input type="hidden" name="etc" value="">
-				 <input type="hidden" name="stockDate" value="${targetVO.stockDate}">
-                 <td class='text-center'><input type="checkbox" id="deferCheck" name="deferCheck" value="${targetVO.productCode}" title="선택" /></td>
-                 <td class='text-center'><c:out value="${targetVO.productCode}"></c:out></td>
-                 <td class='text-left'><c:out value="${targetVO.productName}"></c:out></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.productPrice}" /></td>
-                 <input type="hidden" id="productPrice" name="productPrice" value="${targetVO.productPrice}" >
-                 <td class='text-right' id='orderCntView' name='orderCntView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderCnt}"/></td>
-                 <input type="hidden" id="orderCnt" name="orderCnt" value="${targetVO.orderCnt}" >
-                 <input type="hidden" id="orderCntRaw" name="orderCntRaw" value="${targetVO.orderCnt}" >
-                 <input type="hidden" id="vatRate" name="vatRate" value="${targetVO.vatRate}" >
-                 <input type="hidden" id="holdStock" name="holdStock" value="${targetVO.holdStock}" >
+				 <input type="hidden" name="productCode" value="${deferVO.productCode}">
+				 <input type="hidden" name="productName" value="${deferVO.productName}">
+				 <input type="hidden" name="safeStock" value="${deferVO.safeStock}">
+				 <input type="hidden" name="stockCnt" value="${deferVO.stockCnt}">
+				 <input type="hidden" name="etc" value="${deferVO.etc}">
+				 <input type="hidden" name="stockDate" value="${deferVO.stockDate}">
+                 <td class='text-center'><input type="checkbox" id="deferCheck" name="deferCheck" value="${deferVO.productCode}" title="선택" /></td>
+                 <td class='text-center'><c:out value="${deferVO.productCode}"></c:out></td>
+                 <td class='text-left'><c:out value="${deferVO.productName}"></c:out></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${deferVO.productPrice}" /></td>
+                 <input type="hidden" id="productPrice" name="productPrice" value="${deferVO.productPrice}" >
+                 <td class='text-right' id='orderCntView' name='orderCntView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${deferVO.orderCnt}"/></td>
+                 <input type="hidden" id="orderCnt" name="orderCnt" value="${deferVO.orderCnt}" >
+                 <input type="hidden" id="orderCntRaw" name="orderCntRaw" value="${deferVO.orderCnt}" >
+                 <input type="hidden" id="vatRate" name="vatRate" value="${deferVO.vatRate}" >
+                 <input type="hidden" id="holdStock" name="holdStock" value="${deferVO.holdStock}" >
                  <td class='text-right'><input style="width:35px" type="text" class="form-control" id="addCnt" name="addCnt" onKeyup="fcAdd_Cnt('${status.count}')" value="0"></td>
                  <td class='text-right'><input style="width:35px" type="text" class="form-control" id="lossCnt" name="lossCnt" onKeyup="fcLoss_Cnt('${status.count}')" value="0"></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeStock}"/></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.holdStock}"/></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.stockCnt}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${deferVO.safeStock}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${deferVO.holdStock}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${deferVO.stockCnt}"/></td>
                  <td class='text-right'><c:out value=""></c:out></td>
               </tr>
              </c:forEach>
             </c:if>
-           <c:if test="${empty targetDetailList}">
+           <c:if test="${empty deferDetailList}">
            <tr>
            	<td colspan='11' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>

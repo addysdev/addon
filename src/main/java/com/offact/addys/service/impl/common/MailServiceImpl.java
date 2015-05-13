@@ -12,9 +12,11 @@ import com.offact.framework.db.SqlSessionCommonDao;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.service.common.MailService;
 import com.offact.addys.vo.common.EmailVO;
+
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.MailException;
+
 import javax.mail.internet.*;
 
 /**
@@ -32,7 +34,7 @@ public class MailServiceImpl implements MailService {
 
 	@Override
 
-	public boolean sendMail(EmailVO mail) {
+	public boolean sendMail(EmailVO mail) throws BizException{
 
         MimeMessage message = mailSender.createMimeMessage();
 
@@ -43,23 +45,18 @@ public class MailServiceImpl implements MailService {
             messageHelper.setSubject(mail.getSubject());
 
             // 수신인 다수
-       
-           String[] toArrayResult = new String[mail.getToEmails().size()];
+            String[] toArrayResult = new String[mail.getToEmails().size()];
 
             for(int i=0; i<mail.getToEmails().size(); i++){
 
             	toArrayResult[i] =  mail.getToEmails().get(i);
 
-              }
-    
+            }
             messageHelper.setTo(toArrayResult);
-
             messageHelper.setFrom(mail.getFromEmail(), mail.getSubject());
-
             messageHelper.setText(mail.getMsg(), true);
 
             // 여러개의 파일첨부시
-
             if(mail.getFile()!=null){
 
             	for(int i=0; i< mail.getFile().size(); i++){
@@ -69,32 +66,23 @@ public class MailServiceImpl implements MailService {
             			messageHelper.addAttachment(mail.getAttcheFileName().get(i), mail.getFile().get(i));
 
             		}
-
             	}
-
             }
 
             logger.debug("Send Mail Subject : {}"+mail.getSubject());
 
             mailSender.send(message);
 
-            return true;
+           
 
-        } catch (MailException e) {
+        } catch(Exception e){
+	    	
+	    	e.printStackTrace();
+	    	throw new BizException(e.getMessage());
+	
+	    }
 
-            e.printStackTrace();
-
-             return false;
-
-        } catch (Exception ex) {
-
-        	ex.printStackTrace();
-
-              	 return false;
-
-        }
-
-		
+        return true;
 
 	}
 

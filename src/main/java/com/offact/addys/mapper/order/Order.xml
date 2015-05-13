@@ -33,7 +33,23 @@
 </resultMap>
 
 <select id="getOrderPageList"  resultMap="orderVO" parameterType="com.offact.addys.vo.order.OrderVO" >
-
+ /*
+     Select T5.codeName as orderStateView,
+           T2.groupId,
+           T3.groupName,
+		       T2.companyCode,
+           T4.companyName,
+	   	     T1.orderResultCnt,
+           T1.orderResultPrice,
+           T1.orderVatRate
+  From adOrderDetail T1
+       Left Join adOrder T2 On T1.orderCode=T2.orderCode
+       Left Join ofGroup T3 On T2.groupId =T3.groupId
+       Left Join adCompany T4 On T2.companyCode = T4.companyCode
+       Left Join ofCode T5 On T2.orderState = T5.codeId and T5.codeGroupId = 'OD02'
+  Where T2.orderState='03'
+ 
+ */
   Select T1.buyResult,
          T1.groupID,
          T4.groupName,

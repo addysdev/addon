@@ -28,6 +28,14 @@
     		
     	}
     	
+    	var url='<%= request.getContextPath() %>/order/targetdetailview';
+    	
+    	if(orderState=='02'){//보류상태 URL
+    		
+    		url='<%= request.getContextPath() %>/order/deferdetailview';
+
+    	}
+    	
     	$('#targetDetailView').dialog({
             resizable : false, //사이즈 변경 불가능
             draggable : true, //드래그 불가능
@@ -39,10 +47,10 @@
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load('<%= request.getContextPath() %>/order/targetdetailview?orderCode='+orderCode+'&groupId='+groupId+
+                $(this).load(url+'?orderCode='+orderCode+'&groupId='+groupId+
                 		'&groupName='+encodeURIComponent(groupName)+'&companyCode='+companyCode+
                 		'&orderState='+orderState+'&productPrice='+productPrice+'&vat='+vat+'&orderPrice='+orderPrice);
-                //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
+               
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#targetDetailView").dialog('close');
 

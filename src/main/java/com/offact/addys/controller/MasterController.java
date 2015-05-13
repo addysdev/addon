@@ -1024,7 +1024,7 @@ public class MasterController {
      List excelUploadList = new ArrayList();//업로드 대상 데이타
      StockVO stockTotal = new StockVO();
      
-     String stockDate=upload_stockDate.replace("-", "");
+     String stockDate=upload_stockDate;
      
      stockTotal.setStockDate(stockDate);
      stockTotal.setGroupId(upload_groupId);
@@ -1424,7 +1424,7 @@ public class MasterController {
     List excelUploadList = new ArrayList();//업로드 대상 데이타
     SalesVO salesTotal = new SalesVO();
     
-    String salesDate=upload_salesDate.replace("-", "");
+    String salesDate=upload_salesDate;
     
     salesTotal.setSalesDate(salesDate);
     salesTotal.setGroupId(upload_groupId);

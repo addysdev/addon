@@ -32,7 +32,7 @@
                Left Join ofGroup T2 On T1.groupId=T2.groupId
           	   Left Join ofUser T3 On T1.updateUserId=T3.userId
           	   Left Join adSalesDetail T4 On T1.salesDate = T4.salesDate And T1.groupId=T4.groupId
-         WHERE T1.salesDate between REPLACE('${start_salesDate}', '-', '')  and REPLACE('${end_salesDate}', '-', '')
+         WHERE T1.salesDate between #{start_salesDate} and #{end_salesDate}
             <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}
            </if>
@@ -44,7 +44,7 @@
 <select id="getSalesCnt" resultType="int">
 		SELECT count(*) AS TOT_COUNT
   			FROM adSales
- 			 WHERE salesDate between REPLACE('${start_salesDate}', '-', '')  and REPLACE('${end_salesDate}', '-', '')
+ 			 WHERE salesDate between #{start_salesDate} and #{end_salesDate}
             <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND groupId = #{con_groupId}
            </if>

@@ -282,6 +282,7 @@ public class OrderController {
         //발주기본 정보
         targetVO.setOrderCode(orderCode);
         targetVO.setGroupId(strGroupId);
+        targetVO.setCon_groupId(groupId);
         targetVO.setGroupName(groupName);
         targetVO.setProductPrice(productPrice);
         targetVO.setVat(vat);
@@ -310,6 +311,74 @@ public class OrderController {
         mv.addObject("targetDetailList", targetDetailList);
 
         mv.setViewName("/order/targetDetailView");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    /**
+     * 보류대상 상세조회
+     * 
+     * @param targetConVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/deferdetailview")
+    public ModelAndView deferDetailView( HttpServletRequest request, 
+    		                              HttpServletResponse response,
+    		                              String orderCode,
+    		                              String groupId,
+    		                              String groupName,
+    		                              String companyCode,
+    		                              String orderState,
+    		                              String productPrice,
+    		                              String vat,
+    		                              String orderPrice) throws BizException 
+    {   	
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : groupId : [" + groupId+"] groupName : ["+groupName+
+				"] companyCode : ["+companyCode+"] orderState : ["+orderState+"]");
+
+        ModelAndView mv = new ModelAndView();
+        List<TargetVO> deferDetailList = null;
+        
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+         
+        String strToday = simpleDateFormat.format(currentTime);
+        
+        TargetVO deferConVO = new TargetVO();
+        TargetVO deferVO = new TargetVO();
+
+        deferConVO.setOrderCode(orderCode);
+
+        // 조회조건저장
+        mv.addObject("deferConVO", deferConVO);
+        
+        //보류대상 정보
+        deferVO=targetSvc.getDeferDetail(deferConVO);
+        
+        //보류대상 상세정보
+        deferDetailList=targetSvc.getDeferDetailList(deferConVO);
+ 
+        mv.addObject("deferVO", deferVO);
+        mv.addObject("deferDetailList", deferDetailList);
+   
+        mv.setViewName("/order/deferDetailView");
         
         //log Controller execute time end
        	long t2 = System.currentTimeMillis();
@@ -351,11 +420,11 @@ public class OrderController {
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : targetVO" + targetVO);
 		
+		logger.info("["+logid+"] Controller start : targetVO" + targetVO);
 		logger.info("["+logid+"] @@@@@@@@ : targetVO.getDeliveryEmail" + targetVO.getEmail());
 
-		boolean mailResult=false;
+		boolean orderResult=false;
 		
 		// 사용자 세션정보
         HttpSession session = request.getSession();
@@ -366,19 +435,55 @@ public class OrderController {
         Date currentTime = new Date();
         String strToday = simpleDateFormat.format(currentTime);
 
-		String orderCode="O"+targetVO.getGroupId()+targetVO.getCompanyCode()+strToday;
+        //주문코드 생성
+		String orderCode="O"+targetVO.getCon_groupId()+targetVO.getCompanyCode()+strToday;
 		
 	    String[] orders = request.getParameterValues("seqs");
-		
-		String orderDate=targetVO.getOrderDate().replace("-", "");
-		String deliveryDate=targetVO.getDeliveryDate().replace("-", "");
+
+		String orderDate=targetVO.getOrderDate();
+		String deliveryDate=targetVO.getDeliveryDate();
+
+	    targetVO.setOrderCode(orderCode);
+	    targetVO.setOrderUserId(strUserId);
+	    targetVO.setOrderState("03");
+	    targetVO.setOrderDate(orderDate);
+	    targetVO.setDeliveryDate(deliveryDate);
+	    targetVO.setCreateUserId(strUserId);
+
+	    try{//01.발주처리
+	    
+	    	int dbResult=targetSvc.regiOrderProcess(orders , targetVO);
+	    	
+	    	if(dbResult<1){//처리내역이 없을경우
+	    		
+	    		//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+		        return "order0001";
+		        
+	    	}
+	   
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+	        return "order0002\n[errorMsg] : "+errMsg;
+	    	
+	    }
 
 		ResourceBundle rb = ResourceBundle.getBundle("config");
 	    String uploadFilePath = rb.getString("offact.upload.path") + "html/";
 	    String szFileName = uploadFilePath+orderCode+".html";                    // 파일 이름
         String szContent = "";
 	    
-		try{
+		try{//메일전송 발주처리
             /* 파일을 생성해서 내용 쓰기 */
 	        
 	        File file = new File(szFileName);                        // 파일 생성
@@ -677,27 +782,51 @@ public class OrderController {
 			mail.setMsg("addys 상품 주문서 메일입니다.\n확인하신 후 발송처리 부탁드립니다.");
 			mail.setSubject("[애디스다이렉트] 상품주문서 발송메일");
 	
-			mailResult=mailSvc.sendMail(mail);
-			logger.debug("mail result :"+mailResult);
+			try{
+				orderResult=mailSvc.sendMail(mail);
+				logger.debug("mail result :"+orderResult);
+				
+				if(orderResult==false){
+					
+					//log Controller execute time end
+			       	long t2 = System.currentTimeMillis();
+			       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	
+			        return "order0003";
+					
+				}
+			}catch(BizException e){
+		       	
+		    	e.printStackTrace();
+		        String errMsg = e.getMessage();
+		        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+				
+				//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+		        return "order0003\n[errorMsg] : "+errMsg;
+		    	
+		    }
 		
 		}catch(IOException e){
+			
 			e.printStackTrace();
-		}
-		
-		targetVO.setOrderCode(orderCode);
-	    targetVO.setOrderUserId(strUserId);
-	    targetVO.setOrderState("03");
-	    targetVO.setOrderDate(orderDate);
-	    targetVO.setDeliveryDate(deliveryDate);
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
 
-        int retVal=targetSvc.regiOrderProcess(orders , targetVO);
-		
-       
+	        return "order0004\n[errorMsg] : "+errMsg;
+		}
+
 		//log Controller execute time end
        	long t2 = System.currentTimeMillis();
        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 
-      return ""+mailResult;
+      return "order0000";
     }
     /**
      * 보류 처리
@@ -722,6 +851,8 @@ public class OrderController {
 		long t1 = System.currentTimeMillis();
 		logger.info("["+logid+"] Controller start : targetVO" + targetVO);
 			
+		String deferResult="defer0000";
+		
 		// 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
@@ -730,32 +861,58 @@ public class OrderController {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
         Date currentTime = new Date();
         String strToday = simpleDateFormat.format(currentTime);
-      
-        String orderCode="O"+targetVO.getGroupId()+targetVO.getCompanyCode()+strToday.replace("-", "");;
-		  
+       
 	    String[] defers = request.getParameterValues("seqs");
 
         logger.info("@#@#@# targetVO.getDefer_reason : " + targetVO.getDeferReason());
-       // logger.info("@#@#@# defers : " + defers.length);
-	    logger.info("@#@#@# arrDeferProductId : " + arrDeferProductId);
+        logger.info("@#@#@# arrDeferProductId : " + arrDeferProductId);
 	    
-	    String orderDate=targetVO.getOrderDate().replace("-", "");
-	    String deliveryDate=targetVO.getDeliveryDate().replace("-", "");
+	    String orderDate=targetVO.getOrderDate();
+	    String deliveryDate=targetVO.getDeliveryDate();
 	    
+        //주뭄코드
+        String orderCode="O"+targetVO.getCon_groupId()+targetVO.getCompanyCode()+strToday.replace("-", "");;
+		 
 	    targetVO.setOrderCode(orderCode);
 	    targetVO.setDeferUserId(strUserId);
 	    targetVO.setDeferType("T");
 	    targetVO.setOrderState("02");
 	    targetVO.setOrderDate(orderDate);
 	    targetVO.setDeliveryDate(deliveryDate);
+  
+        try{//01.보류처리
+    	    
+        	int dbResult=targetSvc.regiDeferProcess(defers , targetVO ,arrDeferProductId);
+             
+	    	if(dbResult<1){//처리내역이 없을경우
+	    		
+	    		//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 
-        int retVal=targetSvc.regiDeferProcess(defers , targetVO ,arrDeferProductId);
+		        return "defer0001";
+		        
+	    	}
+	   
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+	        return "defer0002\n[errorMsg] : "+errMsg;
+	    	
+	    }
 		
 		//log Controller execute time end
 	 	long t2 = System.currentTimeMillis();
 	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 
-    return ""+retVal;
+    return deferResult;
     }
 	 /**
      * 검수대상 화면

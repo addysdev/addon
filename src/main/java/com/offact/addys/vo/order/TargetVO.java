@@ -69,6 +69,7 @@ public class TargetVO extends AbstractVO {
 	
 	private String addCnt;
 	private String lossCnt;
+	private String deferCheck;
 	
 	private String safeOrderCnt;
 	private String deferReason;
@@ -509,6 +510,12 @@ public class TargetVO extends AbstractVO {
 	}
 	public void setUpdateUserId(String updateUserId) {
 		this.updateUserId = updateUserId;
+	}
+	public String getDeferCheck() {
+		return deferCheck;
+	}
+	public void setDeferCheck(String deferCheck) {
+		this.deferCheck = deferCheck;
 	}
     
 }

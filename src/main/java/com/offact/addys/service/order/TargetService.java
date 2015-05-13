@@ -57,4 +57,20 @@ public interface TargetService {
      */
     public int regiOrderProcess(String[] orderlist , TargetVO target)
     	    throws BizException;
+   
+    /**
+     * 보류대상 상세조회
+     * 
+     * @return
+     * @throws BizException
+     */
+    public TargetVO getDeferDetail(TargetVO defer) throws BizException;
+    
+    /**
+     * 보류대상 상세목록 조회
+     * 
+     * @return
+     * @throws BizException
+     */
+    public List<TargetVO> getDeferDetailList(TargetVO defer) throws BizException;
 }
