@@ -79,7 +79,9 @@ public class TargetServiceImpl implements TargetService {
 		    	targetDetailVo.setSafeStock(StringUtil.nvl(r_data[6],""));
 		    	targetDetailVo.setHoldStock(StringUtil.nvl(r_data[7],""));
 		    	targetDetailVo.setStockCnt(StringUtil.nvl(r_data[8],""));
-		    	targetDetailVo.setStockDate(StringUtil.nvl(r_data[10].replace("-", ""),""));
+		    	targetDetailVo.setStockDate(StringUtil.nvl(r_data[10],""));
+		    	targetDetailVo.setVatRate(StringUtil.nvl(r_data[11],""));
+		    	targetDetailVo.setEtc(StringUtil.nvl(r_data[12],""));
 		    	targetDetailVo.setCreateUserId(targetVo.getDeferUserId());
 		    	
 	            retVal=this.commonDao.insert("Target.insertDeferDetail", targetDetailVo);
@@ -146,8 +148,10 @@ public class TargetServiceImpl implements TargetService {
 				targetDetailVo.setSafeStock(StringUtil.nvl(r_data[6],""));
 				targetDetailVo.setHoldStock(StringUtil.nvl(r_data[7],""));
 				targetDetailVo.setStockCnt(StringUtil.nvl(r_data[8],""));
-				targetDetailVo.setStockDate(StringUtil.nvl(r_data[10].replace("-", ""),""));
-				targetDetailVo.setCreateUserId(targetVo.getCreateUserId());
+				targetDetailVo.setStockDate(StringUtil.nvl(r_data[10],""));
+				targetDetailVo.setVatRate(StringUtil.nvl(r_data[11],""));
+		    	targetDetailVo.setEtc(StringUtil.nvl(r_data[12],""));
+				targetDetailVo.setCreateUserId(targetVo.getOrderUserId());
 				
 			    retVal=this.commonDao.insert("Target.insertOrderDetail", targetDetailVo);
 			

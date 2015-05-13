@@ -75,21 +75,22 @@
 
 <select id="getProductCnt" resultType="int">
 		SELECT count(*) AS TOT_COUNT
-  			FROM adProductMaster
- 			WHERE deletedYn='N'
+  			FROM adProductMaster T1
+  				Left Join adCompany T2 On T1.companyCode=T2.companyCode
+ 			WHERE T1.deletedYn='N'
            	<if test="searchValue != null and searchValue != ''" >
              <choose>
                <when test="searchGubun.equals('01')">
-           AND productCode  LIKE CONCAT('%', #{searchValue}, '%')
+           AND T1.productCode  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
                <when test="searchGubun.equals('02')">
-           AND productName  LIKE CONCAT('%', #{searchValue}, '%')
+           AND T1.productName  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
                <when test="searchGubun.equals('03')">
-           AND companyName  LIKE CONCAT('%', #{searchValue}, '%')
+           AND T2.companyName  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
                <when test="searchGubun.equals('04')">
-           AND barCode  LIKE CONCAT('%', #{searchValue}, '%')
+           AND T1.barCode  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
              </choose>
            </if>

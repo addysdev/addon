@@ -36,11 +36,17 @@ function fcOrder_process(){
 			return;
 		}
 		
-		if(frm.email.value != 'kevin.jeon@offact.com'){
-			if(frm.email.value != 'soyung.shin@offact.com'){
-				if(frm.email.value != 'patrick.park@offact.com'){
-					alert('open이전까진 offact계정이외 메일전송 서비스가 불가합니다.');
-					return;
+		if(frm.email.value != 'pjh@addys.co.kr'){
+			if(frm.email.value != 'toaduddlf@naver.com'){
+				if(frm.email.value != 'ideal314@naver.com'){
+					if(frm.email.value != 'kevin.jeon@offact.com'){
+						if(frm.email.value != 'soyung.shin@offact.com'){
+							if(frm.email.value != 'patrick.park@offact.com'){
+								alert('테스트 기간에는 정해진 메일주소가 아닌 고객메일로는 발주[e-mail] 처리가 불가합니다.\n수신메일 주소를 본인 메일로 변경하여 테스트 하시기 바랍니다.');
+								return;
+							}
+						}
+					}
 				}
 			}
 		}
@@ -74,15 +80,15 @@ function fcOrder_process(){
 			frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
    			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
    			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
-   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.stockDate[i].value);
+   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value);
 
    		}
    	}else{
    		
-		frm.seqs.value=fillSpace(frm.productCode.value)+
-		'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
-		'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
-		'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.stockDate.value);
+			frm.seqs.value=fillSpace(frm.productCode.value)+
+			'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
+			'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
+			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value);
 
 
    	}
@@ -164,7 +170,7 @@ function fcDefer_regist(){
    					frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
            			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
            			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
-           			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.stockDate[i].value);
+           			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value);
      
            		}
            	}else{
@@ -172,7 +178,7 @@ function fcDefer_regist(){
    				frm.seqs.value=fillSpace(frm.productCode.value)+
        			'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
        			'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
-       			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.stockDate.value);
+       			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value);
 
 
            	}
@@ -216,22 +222,37 @@ function fcDefer_regist(){
     	var vatamt=0;
     	var totalamt=0;
     	
-    	for(i=0;i<amtCnt;i++){
+    	if(amtCnt>1){
+	    	for(i=0;i<amtCnt;i++){
+	    		
+	    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice[i].value))));
+	    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt[i].value))));
+	    		var vatRate=frm.vatRate[i].value;
+	    		var sum_supplyAmt=productPrice*orderCnt;
+	
+	    		supplyamt=supplyamt+sum_supplyAmt;
+	    		var sum_vatAmt=Math.round(sum_supplyAmt*vatRate);
+	
+	    		vatamt=vatamt+sum_vatAmt;
+	    	}
+	    	
+    	}else{
     		
-    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice[i].value))));
-    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt[i].value))));
-    		var vatRate=frm.vatRate[i].value;
+    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice.value))));
+    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt.value))));
+    		var vatRate=frm.vatRate.value;
     		var sum_supplyAmt=productPrice*orderCnt;
 
     		supplyamt=supplyamt+sum_supplyAmt;
     		var sum_vatAmt=Math.round(sum_supplyAmt*vatRate);
 
     		vatamt=vatamt+sum_vatAmt;
+    		
     	}
 
     	  totalamt=supplyamt+vatamt;
     	
-    	  document.all('totalOrderAmt').innerText='합계 : '+addCommaStr(''+totalamt)+'원 공급가 : '+addCommaStr(''+supplyamt)+'원 부가세 : '+addCommaStr(''+vatamt)+'원';
+    	  document.all('totalOrderAmt').innerText='[합계] : '+addCommaStr(''+totalamt)+' 원  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
     }
     
     function fcAdd_Cnt(index){
@@ -372,7 +393,7 @@ function fcDefer_regist(){
 			<button id="defersavebtn" type="button" class="btn btn-primary" onClick="fcDefer_regist()">save</button> <button id="deferpopclosebtn" type="button" class="btn btn-danger">cancel</button>
           </div>
           <div style="position:absolute; right:30px" > 
-          <button type="button" class="btn btn-primary" onClick="fcTargetDetail_print()">출력</button>
+          <button type="button" class="btn btn-success" onClick="fcTargetDetail_print()">출력</button>
           <button type="button" class="btn btn-primary" onClick="fcOrder_process()">발주</button>
           </div>
           </tr>
@@ -465,11 +486,8 @@ function fcDefer_regist(){
 	 
      <form:form commandName="targetListVO" id="targetDetailListForm" name="targetDetailListForm" method="post" action="" >
       <p> <span class="glyphicon glyphicon-asterisk"></span> 
-          <span id="totalOrderAmt" style="color:#FF9900">
-                    합계 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderPrice}" />
-                    공급가 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.productPrice}" />
-                    부가세 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.vat}" />
-        </span>
+          <span id="totalOrderAmt" style="color:red">
+          </span>
       </p>       
 	  <table class="table table-bordered" >
       	<tr style="background-color:#E6F3FF">

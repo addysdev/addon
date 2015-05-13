@@ -36,11 +36,17 @@ function fcOrder_process(){
 			return;
 		}
 		
-		if(frm.email.value != 'kevin.jeon@offact.com'){
-			if(frm.email.value != 'soyung.shin@offact.com'){
-				if(frm.email.value != 'patrick.park@offact.com'){
-					alert('open이전까진 offact계정이외 메일전송 서비스가 불가합니다.');
-					return;
+		if(frm.email.value != 'pjh@addys.co.kr'){
+			if(frm.email.value != 'toaduddlf@naver.com'){
+				if(frm.email.value != 'ideal314@naver.com'){
+					if(frm.email.value != 'kevin.jeon@offact.com'){
+						if(frm.email.value != 'soyung.shin@offact.com'){
+							if(frm.email.value != 'patrick.park@offact.com'){
+								alert('테스트 기간에는 정해진 메일주소가 아닌 고객메일로는 발주[e-mail] 처리가 불가합니다.\n수신메일 주소를 본인 메일로 변경하여 테스트 하시기 바랍니다.');
+								return;
+							}
+						}
+					}
 				}
 			}
 		}
@@ -162,6 +168,9 @@ $(function() {
 
 function fcDefer_modify(){
 
+	alert('개발중입니다.');
+	return;
+	
     	if($("#defer_reason_div").val()==''){
     		alert('보류사유를 입력하세요!');
     		return;
@@ -227,7 +236,21 @@ function fcDefer_modify(){
 		    });
     	}	
 	}
+    function fcDefer_cancel(){
+    	
+
+    	alert('개발중입니다.');
+    	return;
+    	
+    }
     
+    function fcDefer_list(){
+    	
+
+    	alert('개발중입니다.');
+    	return;
+    	
+    }
     function totalOrderAmt(){
     	
     	var frm=document.deferDetailListForm;
@@ -237,22 +260,36 @@ function fcDefer_modify(){
     	var vatamt=0;
     	var totalamt=0;
     	
-    	for(i=0;i<amtCnt;i++){
+    	if(amtCnt>1){
+	    	for(i=0;i<amtCnt;i++){
+	    		
+	    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice[i].value))));
+	    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt[i].value))));
+	    		var vatRate=frm.vatRate[i].value;
+	    		var sum_supplyAmt=productPrice*orderCnt;
+	
+	    		supplyamt=supplyamt+sum_supplyAmt;
+	    		var sum_vatAmt=Math.round(sum_supplyAmt*vatRate);
+	
+	    		vatamt=vatamt+sum_vatAmt;
+	    	}
+    	}else{
     		
-    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice[i].value))));
-    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt[i].value))));
-    		var vatRate=frm.vatRate[i].value;
+    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice.value))));
+    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt.value))));
+    		var vatRate=frm.vatRate.value;
     		var sum_supplyAmt=productPrice*orderCnt;
 
     		supplyamt=supplyamt+sum_supplyAmt;
     		var sum_vatAmt=Math.round(sum_supplyAmt*vatRate);
 
     		vatamt=vatamt+sum_vatAmt;
+    		
     	}
 
     	  totalamt=supplyamt+vatamt;
     	
-    	  document.all('totalOrderAmt').innerText='합계 : '+addCommaStr(''+totalamt)+'원 공급가 : '+addCommaStr(''+supplyamt)+'원 부가세 : '+addCommaStr(''+vatamt)+'원';
+    	  document.all('totalOrderAmt').innerText='[합계] : '+addCommaStr(''+totalamt)+' 원  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
     }
     
     function fcAdd_Cnt(index){
@@ -387,18 +424,18 @@ function fcDefer_modify(){
 	      <div style="position:absolute; left:30px" >
 	      <button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button>
 	      <button id="defercancelbtn"  type="button" class="btn btn-danger" >보류폐기</button>
-	      <button type="button" class="btn btn-primary">보류사유</button>
+	      <button id="deferlistbtn"  type="button" class="btn btn-info" onClick="fcDefer_list()">보류사유</button>
           </div >
           <div id="defermodifydialog" class="form-group" title="보류수정사유를 입력하세요">
 			<p><input type="text" class="form-control" id="defer_modify_reason_div" name="defer_reason_div"  value=""  placeholder="보류수정사유"/></p>
-			<button id="defermodifysavebtn" type="button" class="btn btn-primary" onClick="fcDefer_modify('${deferVO.orderCode}')">save</button> <button id="defermodifypopclosebtn" type="button" class="btn btn-danger">cancel</button>
+			<button id="defermodifysavebtn" type="button" class="btn btn-primary" onClick="fcDefer_modify()">save</button> <button id="defermodifypopclosebtn" type="button" class="btn btn-danger">cancel</button>
           </div>
           <div id="defercanceldialog" class="form-group" title="보류폐기사유를 입력하세요">
 			<p><input type="text" class="form-control" id="defer_cancel_reason_div" name="defer_reason_div"  value=""  placeholder="보류수정사유"/></p>
-			<button id="defercancelsavebtn" type="button" class="btn btn-primary" onClick="fcDefer_cancel('${deferVO.orderCode}')">save</button> <button id="defercancelpopclosebtn" type="button" class="btn btn-danger">cancel</button>
+			<button id="defercancelsavebtn" type="button" class="btn btn-primary" onClick="fcDefer_cancel()">save</button> <button id="defercancelpopclosebtn" type="button" class="btn btn-danger">cancel</button>
           </div>
           <div style="position:absolute; right:30px" > 
-          <button type="button" class="btn btn-primary" onClick="fcTargetDetail_print()">출력</button>
+          <button type="button" class="btn btn-success" onClick="fcTargetDetail_print()">출력</button>
           <button type="button" class="btn btn-primary" onClick="fcOrder_process()">발주</button>
           </div>
           </tr>
@@ -491,7 +528,7 @@ function fcDefer_modify(){
 	 
      <form:form commandName="deferListVO" id="deferDetailListForm" name="deferDetailListForm" method="post" action="" >
       <p> <span class="glyphicon glyphicon-asterisk"></span> 
-          <span id="totalOrderAmt" style="color:#FF9900">
+          <span id="totalOrderAmt" style="color:red">
         </span>
       </p>       
 	  <table class="table table-bordered" >
@@ -529,7 +566,14 @@ function fcDefer_modify(){
 				 <input type="hidden" name="stockCnt" value="${deferVO.stockCnt}">
 				 <input type="hidden" name="etc" value="${deferVO.etc}">
 				 <input type="hidden" name="stockDate" value="${deferVO.stockDate}">
-                 <td class='text-center'><input type="checkbox" id="deferCheck" name="deferCheck" value="${deferVO.productCode}" title="선택" /></td>
+                 <c:choose>
+		    		<c:when test="${deferVO.deferCheck=='Y'}">
+						<td class='text-center'><input type="checkbox" id="deferCheck" name="deferCheck" value="${targetVO.productCode}" title="선택" checked/></td>
+					</c:when>
+					<c:otherwise>
+						<td class='text-center'><input type="checkbox" id="deferCheck" name="deferCheck" value="${targetVO.productCode}" title="선택" /></td>
+					</c:otherwise>
+				</c:choose>
                  <td class='text-center'><c:out value="${deferVO.productCode}"></c:out></td>
                  <td class='text-left'><c:out value="${deferVO.productName}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${deferVO.productPrice}" /></td>

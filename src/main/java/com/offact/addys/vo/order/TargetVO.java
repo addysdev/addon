@@ -31,7 +31,7 @@ public class TargetVO extends AbstractVO {
 	private String orderEmail;
 	private String orderTelNumber;
 	private String orderFaxNumber;
-	private String orderAdress;
+	private String orderAddress;
 	private String payMethod;
 	private String sms;
 	private String memo;
@@ -51,6 +51,10 @@ public class TargetVO extends AbstractVO {
 	
 	private String createUserId;
 	private String updateUserId;
+	
+	private String deletedYn;
+	private String deletedUserId;
+	private String deletedDateTime;
 	
 	private String etc;
 	
@@ -228,11 +232,11 @@ public class TargetVO extends AbstractVO {
 	public void setOrderFaxNumber(String orderFaxNumber) {
 		this.orderFaxNumber = orderFaxNumber;
 	}
-	public String getOrderAdress() {
-		return orderAdress;
+	public String getOrderAddress() {
+		return orderAddress;
 	}
-	public void setOrderAdress(String orderAdress) {
-		this.orderAdress = orderAdress;
+	public void setOrderAddress(String orderAddress) {
+		this.orderAddress = orderAddress;
 	}
 	public String getPayMethod() {
 		return payMethod;
@@ -516,6 +520,24 @@ public class TargetVO extends AbstractVO {
 	}
 	public void setDeferCheck(String deferCheck) {
 		this.deferCheck = deferCheck;
+	}
+	public String getDeletedYn() {
+		return deletedYn;
+	}
+	public void setDeletedYn(String deletedYn) {
+		this.deletedYn = deletedYn;
+	}
+	public String getDeletedUserId() {
+		return deletedUserId;
+	}
+	public void setDeletedUserId(String deletedUserId) {
+		this.deletedUserId = deletedUserId;
+	}
+	public String getDeletedDateTime() {
+		return deletedDateTime;
+	}
+	public void setDeletedDateTime(String deletedDateTime) {
+		this.deletedDateTime = deletedDateTime;
 	}
     
 }

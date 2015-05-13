@@ -94,7 +94,7 @@
   <!-- 조회결과리스트 -->
   <div id=recoveryPageList></div>
 
-  <button type="button" class="btn btn-primary" onClick="">회수등록</button>
+  <button type="button" class="btn btn-primary" onClick="alert('개발중입니다.')">회수등록</button>
 </div>
 <br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>

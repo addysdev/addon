@@ -78,7 +78,6 @@
         <button type="button" class="btn btn-primary" onClick="goLogout()">logout</button>
       </p>
       <ul class="nav nav-pills" role="tablist">
-        <li class="active"><a href="<%= request.getContextPath() %>/order/targetmanage">Home</a></li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">발주 <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">

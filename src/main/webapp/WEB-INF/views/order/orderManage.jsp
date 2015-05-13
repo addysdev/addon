@@ -79,8 +79,12 @@
            		</select>
            		<label for="searchGubun"><h6><strong><font style="color:#FF9900"> 검색조건 : </font></strong></h6></label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
-                	<option value="01" >매장명</option>
-                    <option value="02" >발주자</option>
+                	<option value="01" >발주자ID</option>
+                    <option value="02" >발주자명</option>
+                    <option value="03" >업체코드</option>
+                    <option value="04" >업체명</option>
+                    <option value="05" >품목코드</option>
+                    <option value="06" >품목명</option>
            		</select>
 				<label class="sr-only" for="searchValue"> 조회값 </label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${orderConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
@@ -93,7 +97,9 @@
   <br>
   <!-- 조회결과리스트 -->
   <div id=orderPageList></div>
-
+  <!-- 검수 상세처리화면-->
+  <div id="orderDetailView"  title="검수 처리화면"></div>
+  <!-- //검수 상세처리화면 -->
 </div>
 <br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>

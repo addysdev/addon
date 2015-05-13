@@ -22,7 +22,7 @@
   <result column="deliveryCharge"        property="deliveryCharge"  />
   <result column="orderCharge"        property="orderCharge"  />
   <result column="orderEtc"        property="orderEtc"  />
-  <result column="orderAdress"        property="orderAdress"  />
+  <result column="orderAddress"        property="orderAddress"  />
   <result column="orderFaxNumber"        property="orderFaxNumber"  />
   <result column="orderMobilePhone"        property="orderMobilePhone"  />
   <result column="orderEmail"        property="orderEmail"  />
@@ -114,7 +114,7 @@
 											   E2.buyDateTime,
                                                E2.orderDateTime
 											From  adOrderDetail E1 
-												  Left Join adOrder E2 On E1.orderCode=E2.orderCode 
+												  Left Join adOrder E2 On E1.orderCode=E2.orderCode And E2.deletedYn='N'
 									   ) As I3 On I1.productCode = I3.productCode And I1.groupID = I3.groupID 
 					     Where 1=1 
 					     <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
@@ -174,7 +174,7 @@
 												      E2.buyDateTime,
                                             	      E2.orderDateTime
 											   From  adOrderDetail E1 
-												 	 Left Join adOrder E2 On E1.orderCode=E2.orderCode 
+												 	 Left Join adOrder E2 On E1.orderCode=E2.orderCode  And E2.deletedYn='N' 
 									 ) As I3 On I1.productCode = I3.productCode And I1.groupID = I3.groupID 
 					    		Where 1=1 
 					     		<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
@@ -206,12 +206,12 @@
          T3.companyName,
          T1.productCode,
          T2.productName,
-         date_format(date(T1.stockDate),'%Y-%m-%d') as stockDate,
+         T2.vatRate,
+         T1.stockDate,
 	   	 T1.stockCnt,
 	   	 T1.safeStock,
 	   	 T1.holdStock,
 	   	 T2.productPrice,
-         T2.vatRate,
          (T1.holdStock-T1.StockCnt) as orderCnt
   From (
 	      Select TEMP.orderState,
@@ -303,7 +303,7 @@
             	,orderEmail
             	,orderTelNumber
             	,orderFaxNumber
-            	,orderAdress
+            	,orderAddress
             	,payMethod
             	,sms
             	,memo
@@ -332,7 +332,7 @@
 	  			, #{orderEmail}
 	  			, #{orderTelNumber}
 	  			, #{orderFaxNumber}
-	  			, #{orderAdress}
+	  			, #{orderAddress}
 	  			, #{payMethod}
 	  			, #{sms}
 	  			, #{memo}
@@ -422,7 +422,7 @@
             	,orderEmail
             	,orderTelNumber
             	,orderFaxNumber
-            	,orderAdress
+            	,orderAddress
             	,payMethod
             	,sms
             	,memo
@@ -451,7 +451,7 @@
 	  			, #{orderEmail}
 	  			, #{orderTelNumber}
 	  			, #{orderFaxNumber}
-	  			, #{orderAdress}
+	  			, #{orderAddress}
 	  			, #{payMethod}
 	  			, #{sms}
 	  			, #{memo}
@@ -468,8 +468,13 @@
 		insert into adOrderDetail (
 				 orderCode
             	,productCode
-            	,stockDate 
+            	,stockDate
+            	,orderPrice
+            	,orderResultPrice
             	,orderCnt
+            	,orderResultCnt
+            	,vatRate
+            	,orderVatRate
             	,etc
             	,stockCnt
             	,safeStock
@@ -485,7 +490,12 @@
 				 #{orderCode}
 	  			, #{productCode}
 	  			, #{stockDate}
+	  			, #{productPrice}
+	  			, #{productPrice}
 	  			, #{orderCnt}
+	  			, #{orderCnt}
+	  			, #{vatRate}
+	  			, #{vatRate}
 	  			, #{etc}
 	  			, #{stockCnt}
 	  			, #{safeStock}
@@ -517,7 +527,7 @@
          orderEmail,
          orderTelNumber,
          orderFaxNumber,
-         orderAdress,
+         orderAddress,
          payMethod,
          sms,
          memo
