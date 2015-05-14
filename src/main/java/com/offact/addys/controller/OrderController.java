@@ -348,7 +348,7 @@ public class OrderController {
 				"] companyCode : ["+companyCode+"] orderState : ["+orderState+"]");
 
         ModelAndView mv = new ModelAndView();
-        List<TargetVO> deferDetailList = null;
+        List<TargetVO> targetDetailList = null;
         
         // 사용자 세션정보
         HttpSession session = request.getSession();
@@ -361,22 +361,27 @@ public class OrderController {
          
         String strToday = simpleDateFormat.format(currentTime);
         
-        TargetVO deferConVO = new TargetVO();
-        TargetVO deferVO = new TargetVO();
+        TargetVO targetConVO = new TargetVO();
+        TargetVO targetVO = new TargetVO();
 
-        deferConVO.setOrderCode(orderCode);
+        targetConVO.setOrderCode(orderCode);
+        targetConVO.setCon_groupId(groupId);
+        targetConVO.setCon_orderState(orderState);
+        targetConVO.setGroupName(groupName);
+        targetConVO.setCon_companyCode(companyCode);
 
         // 조회조건저장
-        mv.addObject("deferConVO", deferConVO);
+        mv.addObject("targetConVO", targetConVO);
         
         //보류대상 정보
-        deferVO=targetSvc.getDeferDetail(deferConVO);
+        targetVO=targetSvc.getDeferDetail(targetConVO);
+        targetVO.setOrderCode(orderCode);
         
         //보류대상 상세정보
-        deferDetailList=targetSvc.getDeferDetailList(deferConVO);
+        targetDetailList=targetSvc.getDeferDetailList(targetConVO);
  
-        mv.addObject("deferVO", deferVO);
-        mv.addObject("deferDetailList", deferDetailList);
+        mv.addObject("targetVO", targetVO);
+        mv.addObject("targetDetailList", targetDetailList);
    
         mv.setViewName("/order/deferDetailView");
         
@@ -411,7 +416,7 @@ public class OrderController {
      * @return
      * @throws BizException
      */
-    @RequestMapping(value = "/order/orderProcess", method = RequestMethod.POST)
+    @RequestMapping(value = "/order/orderprocess", method = RequestMethod.POST)
     public @ResponseBody
     String orderProcess(@ModelAttribute("targetVO") TargetVO targetVO, 
     		          HttpServletRequest request, 
@@ -436,7 +441,13 @@ public class OrderController {
         String strToday = simpleDateFormat.format(currentTime);
 
         //주문코드 생성
-		String orderCode="O"+targetVO.getCon_groupId()+t1;
+		String orderCode="";
+		
+		if(targetVO.getOrderCode().equals("X")){
+			orderCode="O"+targetVO.getCon_groupId()+t1;
+		}else{
+			orderCode=targetVO.getOrderCode();
+		}
 		
 	    String[] orders = request.getParameterValues("seqs");
 
@@ -838,9 +849,9 @@ public class OrderController {
      * @return
      * @throws BizException
      */
-    @RequestMapping({"/order/deferregist"})
+    @RequestMapping({"/order/deferprocess"})
     public @ResponseBody
-    String deferRegist(@ModelAttribute("targetVO") TargetVO targetVO,
+    String deferProcess(@ModelAttribute("targetVO") TargetVO targetVO,
     		           @RequestParam(value="arrDeferProductId", required=false, defaultValue="") String arrDeferProductId,
     		           HttpServletRequest request) throws BizException
     {
@@ -869,8 +880,14 @@ public class OrderController {
 	    String orderDate=targetVO.getOrderDate();
 	    String deliveryDate=targetVO.getDeliveryDate();
 	    
-        //주뭄코드
-        String orderCode="O"+targetVO.getCon_groupId()+t1;
+	   //주문코드 생성
+  		String orderCode="";
+  		
+  		if(targetVO.getOrderCode().equals("X")){
+  			orderCode="O"+targetVO.getCon_groupId()+t1;
+  		}else{
+  			orderCode=targetVO.getOrderCode();
+  		}
 		 
 	    targetVO.setOrderCode(orderCode);
 	    targetVO.setDeferUserId(strUserId);
@@ -882,6 +899,81 @@ public class OrderController {
         try{//01.보류처리
     	    
         	int dbResult=targetSvc.regiDeferProcess(defers , targetVO ,arrDeferProductId);
+             
+	    	if(dbResult<1){//처리내역이 없을경우
+	    		
+	    		//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+		        return "defer0001";
+		        
+	    	}
+	   
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+	        return "defer0002\n[errorMsg] : "+errMsg;
+	    	
+	    }
+		
+		//log Controller execute time end
+	 	long t2 = System.currentTimeMillis();
+	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+    return deferResult;
+    }
+    /**
+     * 보류 처리
+     *
+     * @param TargetVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping({"/order/defercancel"})
+    public @ResponseBody
+    String deferCancel(@ModelAttribute("targetVO") TargetVO targetVO,
+    		           HttpServletRequest request) throws BizException
+    {
+      
+	    //log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : targetVO" + targetVO);
+			
+		String deferResult="defer0000";
+		
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+       
+        logger.info("@#@#@# targetVO.getDefer_reason : " + targetVO.getDeferReason());
+	    
+	    targetVO.setDeferUserId(strUserId);
+	    targetVO.setDeferType("T");
+	    targetVO.setOrderState("01");
+	    targetVO.setDeletedYn("Y");
+	    targetVO.setDeletedUserId(strUserId);
+  
+        try{//01.보류처리
+    	    
+        	int dbResult=targetSvc.regiDeferCancel(targetVO);
              
 	    	if(dbResult<1){//처리내역이 없을경우
 	    		
@@ -1036,7 +1128,7 @@ public class OrderController {
     /**
      * 검수대상 상세조회
      * 
-     * @param targetConVO
+     * @param orderCode
      * @param request
      * @param response
      * @param model
@@ -1096,7 +1188,7 @@ public class OrderController {
     /**
      * 검수보류 처리
      *
-     * @param TargetVO
+     * @param OrderVO
      * @param request
      * @param response
      * @param model
@@ -1104,9 +1196,9 @@ public class OrderController {
      * @return
      * @throws BizException
      */
-    @RequestMapping({"/order/orderdeferregist"})
+    @RequestMapping({"/order/orderdeferprocess"})
     public @ResponseBody
-    String orderDeferRegist(@ModelAttribute("orderVO") OrderVO orderVO,
+    String orderDeferProcess(@ModelAttribute("orderVO") OrderVO orderVO,
     		                @RequestParam(value="arrCheckProductId", required=false, defaultValue="") String arrCheckProductId,
     		           HttpServletRequest request) throws BizException
     {
@@ -1160,6 +1252,150 @@ public class OrderController {
 	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
 
 	        return "defer0002\n[errorMsg] : "+errMsg;
+	    	
+	    }
+		
+		//log Controller execute time end
+	 	long t2 = System.currentTimeMillis();
+	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+    return deferResult;
+    }
+    /**
+     * 검수보류폐기 처리
+     *
+     * @param OrderVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping({"/order/orderdefercancel"})
+    public @ResponseBody
+    String orderDeferCancel(@ModelAttribute("orderVO") OrderVO orderVO,
+    		           HttpServletRequest request) throws BizException
+    {
+      
+	    //log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : orderVO" + orderVO);
+			
+		String deferResult="defer0000";
+		
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+
+        logger.info("@#@#@# orderVO.getDefer_reason : " + orderVO.getDeferReason());
+ 
+	    orderVO.setDeferUserId(strUserId);
+	    orderVO.setDeferType("O");
+	    orderVO.setOrderState("03");//검수대기로변경
+  
+        try{//01.보류처리
+    	    
+        	int dbResult=orderSvc.regiDeferCancel(orderVO);
+             
+	    	if(dbResult<1){//처리내역이 없을경우
+	    		
+	    		//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+		        return "defer0001";
+		        
+	    	}
+	   
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+	        return "defer0002\n[errorMsg] : "+errMsg;
+	    	
+	    }
+		
+		//log Controller execute time end
+	 	long t2 = System.currentTimeMillis();
+	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+    return deferResult;
+    }
+    /**
+     * 발주 취소 처리
+     *
+     * @param TargetVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping({"/order/ordercancel"})
+    public @ResponseBody
+    String orderCancel(@ModelAttribute("orderVO") OrderVO orderVO,
+    		           HttpServletRequest request) throws BizException
+    {
+      
+	    //log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : orderVO" + orderVO);
+			
+		String deferResult="order0010";
+		
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+
+	    orderVO.setDeletedYn("Y");
+	    orderVO.setDeletedUserId(strUserId);
+	    orderVO.setOrderState("01");//발주대기로변경
+  
+        try{//01.취소처리
+    	    
+        	int dbResult=orderSvc.regiOrderCancel(orderVO);
+             
+	    	if(dbResult<1){//처리내역이 없을경우
+	    		
+	    		//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+		        return "order0011";
+		        
+	    	}
+	   
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+	        return "order0012\n[errorMsg] : "+errMsg;
 	    	
 	    }
 		

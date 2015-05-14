@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.offact.framework.exception.BizException;
 import com.offact.addys.vo.master.StockVO;
+import com.offact.addys.vo.order.OrderVO;
 import com.offact.addys.vo.order.TargetVO;
 
 /**
@@ -73,4 +74,14 @@ public interface TargetService {
      * @throws BizException
      */
     public List<TargetVO> getDeferDetailList(TargetVO defer) throws BizException;
+    
+    /**
+     * 발주 보류폐기
+     * 
+     * @param TargetVO
+     * @return
+     * @throws BizException
+     */
+    public int regiDeferCancel(TargetVO target)
+    	    throws BizException;
 }

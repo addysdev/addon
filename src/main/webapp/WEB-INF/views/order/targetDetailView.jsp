@@ -1,7 +1,9 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <SCRIPT>
  
-
+/*
+ * 화면 POPUP
+ */
 function tmt_winLaunch(theURL,winName,targetName,features) {
 	
 	var targetRandom=Math.random();
@@ -19,7 +21,9 @@ function fcTargetDetail_print(){
     tmt_winLaunch('<%= request.getContextPath()%>/order/targetdetailprint' , 'orderPrintObj', 'orderPrintObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
 	
 }
-//발주처리
+/*
+ * 발주처리
+ */
 function fcOrder_process(){
 	
 	var frm=document.targetDetailForm;
@@ -80,7 +84,7 @@ function fcOrder_process(){
 			frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
    			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
    			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
-   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value);
+   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value);
 
    		}
    	}else{
@@ -88,7 +92,7 @@ function fcOrder_process(){
 			frm.seqs.value=fillSpace(frm.productCode.value)+
 			'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
 			'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
-			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value);
+			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value);
 
 
    	}
@@ -97,7 +101,7 @@ function fcOrder_process(){
     $.ajax({
         type: "POST",
         async:false,
-           url:  "<%= request.getContextPath() %>/order/orderProcess",
+           url:  "<%= request.getContextPath() %>/order/orderprocess",
            data:$("#targetDetailForm").serialize()+'&'+$("#targetDetailListForm").serialize(),
            success: function(result) {
         	   
@@ -115,7 +119,9 @@ function fcOrder_process(){
            }
     });
 }
-
+/*
+ * 보류사유 입력화면
+ */
 $(function() {
     $( "#deferdialog" ).dialog({
       modal : true, //주위를 어둡게
@@ -140,8 +146,9 @@ $(function() {
         $( "#deferdialog" ).dialog( "close" );
       });
     });
-
-
+/*
+ * 보류등록
+ */
 function fcDefer_regist(){
 
     	if($("#defer_reason_div").val()==''){
@@ -170,7 +177,7 @@ function fcDefer_regist(){
    					frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
            			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
            			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
-           			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value);
+           			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value);
      
            		}
            	}else{
@@ -178,20 +185,21 @@ function fcDefer_regist(){
    				frm.seqs.value=fillSpace(frm.productCode.value)+
        			'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
        			'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
-       			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value);
+       			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value);
 
 
            	}
             	
-            document.targetDetailForm.deferReason.value=$("#defer_reason_div").val();
-            var paramString = $("#targetDetailForm").serialize()+ "&arrDeferProductId="+arrDeferProductId+'&'+$("#targetDetailListForm").serialize();
- 
+
             if (confirm('발주대상건을 보류처리 하시겠습니까?')){    
-            
+                
+            	document.targetDetailForm.deferReason.value=$("#defer_reason_div").val();
+                var paramString = $("#targetDetailForm").serialize()+ "&arrDeferProductId="+arrDeferProductId+'&'+$("#targetDetailListForm").serialize();
+     
 		  		$.ajax({
 			       type: "POST",
 			       async:false,
-			          url:  "<%= request.getContextPath() %>/order/deferregist",
+			          url:  "<%= request.getContextPath() %>/order/deferprocess",
 			          data:paramString,
 			          success: function(result) {
 		
@@ -204,112 +212,118 @@ function fcDefer_regist(){
 			          },
 			          error:function(){
 	
+			          alert('보류 처리 호출오류!');
 			          $('#deferdialog').dialog('close');
 					  $('#targetDetailView').dialog('close');
 				      fcTarget_listSearch();
 			          }
 			    });
-            }
-    	}	
-	}
-    
-    function totalOrderAmt(){
-    	
-    	var frm=document.targetDetailListForm;
-    	var amtCnt = frm.productPrice.length;
-    	
-    	var supplyamt=0;
-    	var vatamt=0;
-    	var totalamt=0;
-    	
-    	if(amtCnt>1){
-	    	for(i=0;i<amtCnt;i++){
-	    		
-	    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice[i].value))));
-	    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt[i].value))));
-	    		var vatRate=frm.vatRate[i].value;
-	    		var sum_supplyAmt=productPrice*orderCnt;
-	
-	    		supplyamt=supplyamt+sum_supplyAmt;
-	    		var sum_vatAmt=Math.round(sum_supplyAmt*vatRate);
-	
-	    		vatamt=vatamt+sum_vatAmt;
-	    	}
-	    	
-    	}else{
-    		
-    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice.value))));
-    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt.value))));
-    		var vatRate=frm.vatRate.value;
-    		var sum_supplyAmt=productPrice*orderCnt;
+         }
+    }	
+}
+/*
+ * 총금액합계
+ */    
+ function totalOrderAmt(){
+ 	
+ 	var frm=document.targetDetailListForm;
+ 	var amtCnt = frm.productPrice.length;
+ 	
+ 	var supplyamt=0;
+ 	var vatamt=0;
+ 	var totalamt=0;
+ 	
+ 	if(amtCnt>1){
+  	for(i=0;i<amtCnt;i++){
+  		
+  		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice[i].value))));
+  		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt[i].value))));
+  		var vatRate=frm.vatRate[i].value;
+  		var sum_supplyAmt=productPrice*orderCnt;
 
-    		supplyamt=supplyamt+sum_supplyAmt;
-    		var sum_vatAmt=Math.round(sum_supplyAmt*vatRate);
+  		supplyamt=supplyamt+sum_supplyAmt;
+  		var sum_vatAmt=Math.round(sum_supplyAmt*vatRate);
 
-    		vatamt=vatamt+sum_vatAmt;
-    		
-    	}
+  		vatamt=vatamt+sum_vatAmt;
+  	}
+  	
+ 	}else{
+ 		
+ 		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice.value))));
+ 		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt.value))));
+ 		var vatRate=frm.vatRate.value;
+ 		var sum_supplyAmt=productPrice*orderCnt;
 
-    	  totalamt=supplyamt+vatamt;
-    	
-    	  document.all('totalOrderAmt').innerText='[합계] : '+addCommaStr(''+totalamt)+' 원  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
-    }
-    
-    function fcAdd_Cnt(index){
-    	
-    	var frm=document.targetDetailListForm;
-    	var amtCnt = frm.productPrice.length;
-    	
-    	
-    	if(amtCnt > 1){
-    		
-    		frm.lossCnt[index-1].value=0;
-    	    
-    		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
-    		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
-			var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt[index-1].value))));
+ 		supplyamt=supplyamt+sum_supplyAmt;
+ 		var sum_vatAmt=Math.round(sum_supplyAmt*vatRate);
 
-			var orderCnt=(orderCntRaw-addCnt);
-	
-			if(orderCntRaw<orderCnt || 0>orderCnt){
-				alert('재고수량 추가는 보유재고범위를 넘을수 없습니다.');
-				frm.orderCnt[index-1].value=orderCntRaw;
-				document.all('orderCntView')[index-1].innerText=orderCntRaw;
-				frm.addCnt[index-1].value=0;
-				return;
-			}else{
-				frm.orderCnt[index-1].value=orderCnt;
-				document.all('orderCntView')[index-1].innerText=orderCnt;
-			}
-			
+ 		vatamt=vatamt+sum_vatAmt;
+ 		
+ 	}
 
-    	}else{
-    		
-			frm.lossCnt.value=0;
-    	    
-    		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
-    		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
-			var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt.value))));
-	
-			var orderCnt=(orderCntRaw-addCnt);
-		
-			if(orderCntRaw<orderCnt || 0>orderCnt){
-				alert('재고수량 추가는 보유재고범위를 넘을수 없습니다.');
-				frm.orderCnt.value=orderCntRaw;
-				document.all('orderCntView').innerText=orderCntRaw;
-				frm.addCnt.value=0;
-				return;
-			}else{
-				frm.orderCnt.value=orderCnt;
-				document.all('orderCntView').innerText=orderCnt;
-			}
-			
-    	}
-		
-    	
-    	totalOrderAmt();
-    }
- 
+ 	  totalamt=supplyamt+vatamt;
+ 	
+ 	  document.all('totalOrderAmt').innerText='[합계] : '+addCommaStr(''+totalamt)+' 원  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
+ }
+ /*
+  * 재고증가
+  */    
+ function fcAdd_Cnt(index){
+ 	
+ 	var frm=document.targetDetailListForm;
+ 	var amtCnt = frm.productPrice.length;
+ 	
+ 	
+ 	if(amtCnt > 1){
+ 		
+ 		frm.lossCnt[index-1].value=0;
+ 	    
+ 		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
+ 		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
+		var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt[index-1].value))));
+
+		var orderCnt=(orderCntRaw-addCnt);
+
+		if(orderCntRaw<orderCnt || 0>orderCnt){
+			alert('재고수량 추가는 보유재고범위를 넘을수 없습니다.');
+			frm.orderCnt[index-1].value=orderCntRaw;
+			document.all('orderCntView')[index-1].innerText=orderCntRaw;
+			frm.addCnt[index-1].value=0;
+			return;
+		}else{
+			frm.orderCnt[index-1].value=orderCnt;
+			document.all('orderCntView')[index-1].innerText=orderCnt;
+		}
+
+
+ 	}else{
+ 		
+		frm.lossCnt.value=0;
+ 	    
+ 		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
+ 		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
+		var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt.value))));
+
+		var orderCnt=(orderCntRaw-addCnt);
+
+		if(orderCntRaw<orderCnt || 0>orderCnt){
+			alert('재고수량 추가는 보유재고범위를 넘을수 없습니다.');
+			frm.orderCnt.value=orderCntRaw;
+			document.all('orderCntView').innerText=orderCntRaw;
+			frm.addCnt.value=0;
+			return;
+		}else{
+			frm.orderCnt.value=orderCnt;
+			document.all('orderCntView').innerText=orderCnt;
+		}
+
+ 	}
+
+ 	totalOrderAmt();
+ }
+ /*
+  * 재고감소
+  */ 
 	function fcLoss_Cnt(index){
     	
     	var frm=document.targetDetailListForm;
@@ -368,7 +382,35 @@ function fcDefer_regist(){
 		
     	$("input:checkbox[id='deferCheck']").prop("checked", $("#deferCheckAll").is(":checked"));
     }
-    
+ // 비고 상세 페이지 리스트 Layup
+    function fcEtc_detail(orderCode,productCode,productName) {
+    	
+    	$('#targetEtcView').attr('title','타이틀');
+    	var url='<%= request.getContextPath() %>/order/targetetc';
+
+    	$('#targetEtcView').dialog({
+            resizable : false, //사이즈 변경 불가능
+            draggable : true, //드래그 불가능
+            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+            width : 340,
+            height : 270,
+            modal : true, //주위를 어둡게
+
+            open:function(){
+                //팝업 가져올 url
+                $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode);
+               
+                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+                    $("#targetEtcView").dialog('close');
+
+                    });
+            }
+            ,close:function(){
+                $('#targetEtcView').empty();
+            }
+        });
+    };
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -377,6 +419,7 @@ function fcDefer_regist(){
 	   <input type="hidden" name="smsKey"               id="smsKey"            value="N" />
 	   <input type="hidden" name="faxKey"               id="faxKey"            value="N" />
 	   <input type="hidden" name="deferReason"               id="deferReason"            value="" />
+	    <input type="hidden" name="orderCode"               id="orderCode"            value="X" />
 	   <input type="hidden" name="groupId"               id="groupId"            value="${targetVO.groupId}" />
 	   <input type="hidden" name="con_groupId"               id="con_groupId"            value="${targetVO.con_groupId}" />
 	   <input type="hidden" name="companyCode"               id="companyCode"            value="${targetVO.companyCode}" />
@@ -389,7 +432,7 @@ function fcDefer_regist(){
 	      <button id="deferbtn" type="button" class="btn btn-primary" >보류</button>
           </div >
           <div id="deferdialog" class="form-group" title="보류사유를 입력하세요">
-			<p><input type="text" class="form-control" id="defer_reason_div" name="defer_reason_div"  value=""  placeholder="보류사유"/></p>
+			<p><textarea style='height:82px' row="3" class="form-control" id="defer_reason_div" name="defer_reason_div"  value=""  placeholder="보류사유"/></p>
 			<button id="defersavebtn" type="button" class="btn btn-primary" onClick="fcDefer_regist()">save</button> <button id="deferpopclosebtn" type="button" class="btn btn-danger">cancel</button>
           </div>
           <div style="position:absolute; right:30px" > 
@@ -409,7 +452,7 @@ function fcDefer_regist(){
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF" >참조</th>
-          <th class='text-center'><input type="text" class="form-control" id="deleveryEtc" name="deleveryEtc"  value="물류팀" placeholder="참조" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="deliveryEtc" name="deliveryEtc"  value="물류팀" placeholder="참조" /></th>
           <th class='text-center' style="background-color:#E6F3FF" >참조</th>
           <th class='text-center'><input type="text" class="form-control" id="orderEtc" name="orderEtc"  value="${targetVO.orderUserName}" placeholder="참조" /></th>
       	</tr>
@@ -539,7 +582,7 @@ function fcDefer_regist(){
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeStock}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.holdStock}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.stockCnt}"/></td>
-                 <td class='text-right'><c:out value=""></c:out></td>
+                 <td class='text-right'><img id="etcbtn" onClick="fcEtc_detail('X','${targetVO.productCode}','${targetVO.productName}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고"></td>
               </tr>
              </c:forEach>
             </c:if>
@@ -551,6 +594,9 @@ function fcDefer_regist(){
 	  </table>
 	 </form:form>
 	</div>
+	  <div id="targetEtcView"  title="비고"></div>
+  <!-- //검수 상세처리화면 -->
+</div>
 	<script type="text/javascript">
 
     $(function () {

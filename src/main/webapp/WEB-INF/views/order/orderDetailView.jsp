@@ -99,10 +99,43 @@ $(function() {
 	        $( "#deferregdialog" ).dialog( "close" );
 	      });
 	    });
-	   
-	   function fcDefer_regist(){
+	 //메모등록
+	    $(function() {
+	    $( "#memoregdialog" ).dialog({
+	      modal : true, //주위를 어둡게
+	      autoOpen: false,
+	      show: {
+	        effect: "blind",
+	        duration: 1000
+	      },
+	      hide: {
+	        effect: "explode",
+	        duration: 1000
+	      }
+	    });
 
-	    	if($("#defer_reg_reason_div").val()==''){
+	    $( "#memoregbtn" ).click(function() {
+	      $( "#memoregdialog" ).dialog( "open" );
+	    });
+	  });
+
+	   $(function() {
+	      $( "#memoregpopclosebtn" ).click(function() {
+	        $( "#memoregdialog" ).dialog( "close" );
+	      });
+	    });
+	   
+	   function fcDefer_process(reason){
+
+		   var defer_reason;
+		   
+		   if('R'==reason){
+			   defer_reason=$("#defer_reg_reason_div").val();
+		   }else{
+			   defer_reason=$("#defer_modify_reason_div").val();
+		   }
+		   
+	    	if(defer_reason==''){
 	    		alert('보류사유를 입력하세요!');
 	    		return;
 	    	}else{
@@ -113,7 +146,11 @@ $(function() {
 	                	 arrCheckProductId += $(this).val() + "^";
 	                 }   
 	             });
-	       
+	             
+	             if(arrCheckProductId==''){
+	            	 arrCheckProductId="^";
+	             }
+	    
 	            var frm = document.orderDetailListForm;
 	    
 	           	if(frm.seqs.length>1){
@@ -131,106 +168,84 @@ $(function() {
 
 	           	}
 	
-	            document.orderDetailForm.deferReason.value=$("#defer_reg_reason_div").val();
+	            if (confirm('검수내용을 보류처리 하시겠습니까?')){ 
+	            	
+	            document.orderDetailForm.deferReason.value=defer_reason;
 	            var paramString = $("#orderDetailForm").serialize()+ "&arrCheckProductId="+arrCheckProductId+'&'+$("#orderDetailListForm").serialize();
-	 
-		  		$.ajax({
-			       type: "POST",
-			       async:false,
-			          url:  "<%= request.getContextPath() %>/order/orderdeferregist",
-			          data:paramString,
-			          success: function(result) {
-		
-			        	resultMsg(result);
 
-						$('#deferregdialog').dialog('close');
-						$('#orderDetailView').dialog('close');
-						fcOrder_listSearch();
+			  		$.ajax({
+				       type: "POST",
+				       async:false,
+				          url:  "<%= request.getContextPath() %>/order/orderdeferprocess",
+				          data:paramString,
+				          success: function(result) {
+			
+				        	resultMsg(result);
 							
-			          },
-			          error:function(){
-
-			          $('#deferregdialog').dialog('close');
-					  $('#orderDetailView').dialog('close');
-					  fcOrder_listSearch();
-			          }
-			    });
+				        	if(reason=='R'){
+				        		$('#deferregdialog').dialog('close');
+				        	}else{
+				        		$('#defermodifydialog').dialog('close');
+				        	}
+							$('#orderDetailView').dialog('close');
+							fcOrder_listSearch();
+								
+				          },
+				          error:function(){
+				          
+				          alert('보류 처리 호출오류!');
+				          if(reason=='R'){
+				        		$('#deferregdialog').dialog('close');
+				        	}else{
+				        		$('#defermodifydialog').dialog('close');
+				        	}
+						  $('#orderDetailView').dialog('close');
+						  fcOrder_listSearch();
+				          }
+				    });
+            	
+	            }
 	    	}	
 		}
-	function fcDefer_modify(){
-alert('개발중입니다.');
-return;
-    	if($("#defer_reason_div").val()==''){
-    		alert('보류사유를 입력하세요!');
-    		return;
-    	}else{
-    		
-    		var checkedCnt = $('input:checkbox[ name="deferCheck"]:checked').length;
-
-        	if(checkedCnt <= 0){
-            	alert("보류 대상을 선택해 주세요!");
-            	return;
-            }
-            
-            var arrDeferProductId = "";
-            $('input:checkbox[name="deferCheck"]').each(function() {
-                if ($(this).is(":checked")) {
-                	arrDeferProductId += $(this).val() + "^";
-                }   
-            });
-            
-            var frm = document.deferDetailListForm;
-       
-           	if(frm.seqs.length>1){
-           		for(i=0;i<frm.seqs.length;i++){
-   					frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
-           			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
-           			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
-           			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.stockDate[i].value);
-     
-           		}
-           	}else{
-           		
-   				frm.seqs.value=fillSpace(frm.productCode.value)+
-       			'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
-       			'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
-       			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.stockDate.value);
-
-
-           	}
-            	
-            document.deferDetailForm.deferReason.value=$("#defer_reason_div").val();
-            var paramString = $("#targetDetailForm").serialize()+ "&arrDeferProductId="+arrDeferProductId+'&'+$("#targetDetailListForm").serialize();
- 
-	  		$.ajax({
-		       type: "POST",
-		       async:false,
-		          url:  "<%= request.getContextPath() %>/order/defermodify",
-		          data:paramString,
-		          success: function(result) {
 	
-		        	resultMsg(result);
-
-					$('#deferdialog').dialog('close');
-					$('#targetDetailView').dialog('close');
-					fcTarget_listSearch();
-						
-		          },
-		          error:function(){
-
-		          $('#deferdialog').dialog('close');
-				  $('#targetDetailView').dialog('close');
-			      fcTarget_listSearch();
-		          }
-		    });
-    	}	
-	}
     function fcDefer_cancel(){
     	
+    	if($("#defer_cancel_reason_div").val()==''){
+    		alert('보류폐기 사유를 입력하세요!');
+    		return;
+    	}
 
-    	alert('개발중입니다.');
-    	return;
-    	
+    	 if (confirm('보류내용을 폐기 하시겠습니까?')){ 
+        	 
+    		 document.orderDetailForm.deferReason.value=$("#defer_cancel_reason_div").val();
+        	 var paramString = $("#orderDetailForm").serialize();
+        	 
+	 		$.ajax({
+	       type: "POST",
+	       async:false,
+	          url:  "<%= request.getContextPath() %>/order/orderdefercancel",
+	          data:paramString,
+	          success: function(result) {
+	
+	        	resultMsg(result);
+				
+	        	$('#defercanceldialog').dialog('close');
+				$('#orderDetailView').dialog('close');
+				fcOrder_listSearch();
+					
+	          },
+	          error:function(){
+	          
+	          alert('보류 처리 호출오류!');
+	          $('#defercanceldialog').dialog('close');
+			  $('#orderDetailView').dialog('close');
+			  fcOrder_listSearch();
+	          }
+	    	
+	 		});
+	 		
+    	 } 
+
     }
     
     function fcDefer_list(){
@@ -239,6 +254,38 @@ return;
     	alert('개발중입니다.');
     	return;
     	
+    }
+    
+    function fcOrder_cancel(){
+    	
+    	 if (confirm('발주 내용을 취소 하시겠습니까?')){ 
+        	 
+           var paramString = $("#orderDetailForm").serialize();
+        	 
+	 		$.ajax({
+	       type: "POST",
+	       async:false,
+	          url:  "<%= request.getContextPath() %>/order/ordercancel",
+	          data:paramString,
+	          success: function(result) {
+	
+	        	resultMsg(result);
+				
+				$('#orderDetailView').dialog('close');
+				fcOrder_listSearch();
+					
+	          },
+	          error:function(){
+	          
+	          alert('취소 처리 호출오류!');
+			  $('#orderDetailView').dialog('close');
+			  fcOrder_listSearch();
+	          }
+	    	
+	 		});
+	 		
+    	 } 
+
     }
     function totalOrderAmt(){
     	
@@ -291,6 +338,8 @@ return;
     	var frm=document.orderDetailListForm;
     	var amtCnt = frm.productCode.length;
     	
+    	var chkCnt=0;
+    	
     	if(amtCnt > 1){
 			for(i=0;i<amtCnt;i++){
 	    		
@@ -298,6 +347,7 @@ return;
 	    			frm.orderResultPrice[i].disabled=true;
 	    			frm.orderResultCnt[i].disabled=true;
 	    			frm.orderVatRate[i].disabled=true;
+	    			chkCnt++;
 	    		}else{
 	    			frm.orderResultPrice[i].disabled=false;
 	    			frm.orderResultCnt[i].disabled=false;
@@ -310,12 +360,21 @@ return;
     			frm.orderResultPrice.disabled=true;
     			frm.orderResultCnt.disabled=true;
     			frm.orderVatRate.disabled=true;
+    			chkCnt++;
 	   		}else{
 	   			frm.orderResultPrice.disabled=false;
     			frm.orderResultCnt.disabled=false;
     			frm.orderVatRate.disabled=false;
 	   		}
 	  	}
+    	
+    	if(amtCnt==chkCnt){//검수버튼 활성화
+    		
+    		document.all('checkbtn').disabled=false;
+    		
+    	}else{
+    		document.all('checkbtn').disabled=true;
+    	}
 
     }
    
@@ -325,7 +384,7 @@ return;
     	$("input:checkbox[id='orderCheck']").prop("checked", $("#orderCheckAll").is(":checked"));
     	totalCheck();
     }
-    
+
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -343,25 +402,29 @@ return;
 	      <c:if test="${orderVO.orderState=='04'}"><button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button></c:if>
 	      <c:if test="${orderVO.orderState=='04'}"><button id="defercancelbtn"  type="button" class="btn btn-danger" >보류폐기</button></c:if>
 	      <c:if test="${orderVO.orderState=='04'}"><button type="button" class="btn btn-info" onClick="fcDefer_list()">보류사유</button></c:if>
-	      <c:if test="${orderVO.orderState=='03'}"><button type="button" class="btn btn-primary">검수완료</button></c:if>
+	      <c:if test="${orderVO.orderState=='03'}"><button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcCheck_Process()">검수완료</button></c:if>
 	      <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-default">엑셀변환</button></c:if>
 	      <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-primary">등록완료</button></c:if>
           </div>
           <div id="deferregdialog" class="form-group" title="보류사유를 입력하세요">
-			<p><input type="text" class="form-control" id="defer_reg_reason_div" name="defer_reg_reason_div"  value=""  placeholder="보류사유"/></p>
-			<button id="deferregsavebtn" type="button" class="btn btn-primary" onClick="fcDefer_regist()">save</button> <button id="deferregpopclosebtn" type="button" class="btn btn-danger">cancel</button>
+			<p><textarea style='height:82px' row="3" class="form-control" id="defer_reg_reason_div" name="defer_reg_reason_div"  value=""  placeholder="보류사유"/></p>
+			<button id="deferregsavebtn" type="button" class="btn btn-primary" onClick="fcDefer_process('R')">save</button> <button id="deferregpopclosebtn" type="button" class="btn btn-danger">cancel</button>
           </div>
           <div id="defermodifydialog" class="form-group" title="보류수정사유를 입력하세요">
-			<p><input type="text" class="form-control" id="defer_modify_reason_div" name="defer_modify_reason_div"  value=""  placeholder="보류수정사유"/></p>
-			<button id="defermodifysavebtn" type="button" class="btn btn-primary" onClick="fcDefer_modify()">save</button> <button id="defermodifypopclosebtn" type="button" class="btn btn-danger">cancel</button>
+			<p><textarea  style='height:82px' row="3" class="form-control" id="defer_modify_reason_div" name="defer_modify_reason_div"  value=""  placeholder="보류수정사유"/></p>
+			<button id="defermodifysavebtn" type="button" class="btn btn-primary" onClick="fcDefer_process('M')">save</button> <button id="defermodifypopclosebtn" type="button" class="btn btn-danger">cancel</button>
           </div>
           <div id="defercanceldialog" class="form-group" title="보류폐기사유를 입력하세요">
-			<p><input type="text" class="form-control" id="defer_cancel_reason_div" name="defer_cancel_reason_div"  value=""  placeholder="보류수정사유"/></p>
+			<p><textarea style='height:82px' row="3" class="form-control" id="defer_cancel_reason_div" name="defer_cancel_reason_div"  value=""  placeholder="보류폐기사유"/></p>
 			<button id="defercancelsavebtn" type="button" class="btn btn-primary" onClick="fcDefer_cancel()">save</button> <button id="defercancelpopclosebtn" type="button" class="btn btn-danger">cancel</button>
+          </div>
+          <div id="memoregdialog" class="form-group" title="메모내용을 입력하세요">
+			<p><textarea style='height:82px' row="3" class="form-control" id="memo_reg_div" name="memo_reg_div"  value=""  placeholder="메모내용"/></p>
+			<button id="memoregsavebtn" type="button" class="btn btn-primary" onClick="fcMemo_reg()">save</button> <button id="memoregpopclosebtn" type="button" class="btn btn-danger">cancel</button>
           </div>
           <div style="position:absolute; right:30px" > 
           <button type="button" class="btn btn-success" onClick="fcOrderDetail_print()">출력</button>
-          <button type="button" class="btn btn-warning" onClick="alert('개발중입니다.')">취소</button>
+          <button type="button" class="btn btn-warning" onClick="fcOrder_cancel()">취소</button>
           <button type="button" class="btn btn-primary" onClick="alert('개발중입니다.')">재송부</button>
           </div>
           </tr>
@@ -429,7 +492,7 @@ return;
           <th colspan='4' class='text-center'><input  disabled type="text" class="form-control" id="sms" name="sms"  value="${orderVO.sms}" placeholder="SMS" /></th>
       	</tr>
       	<tr>
-          <th colspan='2' class='text-center' style="background-color:#E6F3FF">메모&nbsp;<button id="memoaddbtn" type="button" class="btn btn-xs btn-primary" onClick="alert('개발중입니다.');">추가</button>&nbsp;<button id="memoinfobtn" type="button" class="btn btn-xs btn-info"  onClick="alert('개발중입니다.')"; >보기</button></th>
+          <th colspan='2' class='text-center' style="background-color:#E6F3FF">메모&nbsp;<button id="memoregbtn" type="button" class="btn btn-xs btn-primary" >추가</button>&nbsp;<button id="memoinfobtn" type="button" class="btn btn-xs btn-info"  onClick="alert('개발중입니다.')"; >보기</button></th>
           <th colspan='4' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${orderVO.memo}" placeholder="메모" /></th>
       	</tr>
 	  </table>

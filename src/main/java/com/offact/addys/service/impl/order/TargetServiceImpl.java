@@ -17,6 +17,7 @@ import com.offact.framework.db.SqlSessionCommonDao;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.service.order.TargetService;
 import com.offact.addys.vo.master.StockVO;
+import com.offact.addys.vo.order.OrderVO;
 import com.offact.addys.vo.order.TargetVO;
 
 /**
@@ -79,9 +80,9 @@ public class TargetServiceImpl implements TargetService {
 		    	targetDetailVo.setSafeStock(StringUtil.nvl(r_data[6],""));
 		    	targetDetailVo.setHoldStock(StringUtil.nvl(r_data[7],""));
 		    	targetDetailVo.setStockCnt(StringUtil.nvl(r_data[8],""));
-		    	targetDetailVo.setStockDate(StringUtil.nvl(r_data[10],""));
-		    	targetDetailVo.setVatRate(StringUtil.nvl(r_data[11],""));
-		    	targetDetailVo.setEtc(StringUtil.nvl(r_data[12],""));
+		    	targetDetailVo.setStockDate(StringUtil.nvl(r_data[9],""));
+		    	targetDetailVo.setVatRate(StringUtil.nvl(r_data[10],""));
+		    	targetDetailVo.setEtc(StringUtil.nvl(r_data[11],""));
 		    	targetDetailVo.setCreateUserId(targetVo.getDeferUserId());
 		    	
 	            retVal=this.commonDao.insert("Target.insertDeferDetail", targetDetailVo);
@@ -148,9 +149,9 @@ public class TargetServiceImpl implements TargetService {
 				targetDetailVo.setSafeStock(StringUtil.nvl(r_data[6],""));
 				targetDetailVo.setHoldStock(StringUtil.nvl(r_data[7],""));
 				targetDetailVo.setStockCnt(StringUtil.nvl(r_data[8],""));
-				targetDetailVo.setStockDate(StringUtil.nvl(r_data[10],""));
-				targetDetailVo.setVatRate(StringUtil.nvl(r_data[11],""));
-		    	targetDetailVo.setEtc(StringUtil.nvl(r_data[12],""));
+				targetDetailVo.setStockDate(StringUtil.nvl(r_data[9],""));
+				targetDetailVo.setVatRate(StringUtil.nvl(r_data[10],""));
+		    	targetDetailVo.setEtc(StringUtil.nvl(r_data[11],""));
 				targetDetailVo.setCreateUserId(targetVo.getOrderUserId());
 				
 			    retVal=this.commonDao.insert("Target.insertOrderDetail", targetDetailVo);
@@ -182,4 +183,27 @@ public class TargetServiceImpl implements TargetService {
 
        return deferList;
    }
+   @Override
+   public int regiDeferCancel(TargetVO targetVo)
+   	    throws BizException
+	{
+	    int retVal=-1;
+	    
+	    try{//보류사유 등록 /보류처리
+	
+	    	this.commonDao.insert("Target.deferReasonInsert", targetVo);
+	    	retVal=this.commonDao.update("Target.updateDefer", targetVo);
+	    	this.commonDao.update("Target.updateDeferDetail", targetVo);
+
+	    }catch(Exception e){
+	    	
+	    	e.printStackTrace();
+	    	e.printStackTrace();
+	    	throw new BizException(e.getMessage());
+
+	    }
+	
+	    return retVal;
+	    
+  }
 }

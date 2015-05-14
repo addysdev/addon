@@ -341,6 +341,31 @@
 	  			, #{orderState}
 	  			
 		)
+		ON DUPLICATE KEY UPDATE faxKey = #{faxKey}
+            	                ,smsKey = #{smsKey}
+            	                ,emailKey = #{emailKey}
+            	                ,deliveryCharge = #{deliveryCharge}
+            					,deliveryEtc = #{deliveryEtc}
+            					,mobilePhone = #{mobilePhone}
+            					,email = #{email}
+            					,telNumber = #{telNumber}
+            					,faxNumber = #{faxNumber}
+            					,orderDate = #{orderDate}
+            					,deliveryDate = #{deliveryDate}
+            					,deliveryMethod = #{deliveryMethod}
+            					,orderCharge = #{orderCharge}
+            					,orderEtc = #{orderEtc}
+            					,orderMobilePhone = #{orderMobilePhone}
+            					,orderEmail = #{orderEmail}
+            					,orderTelNumber = #{orderTelNumber}
+            					,orderFaxNumber = #{orderFaxNumber}
+            					,orderAddress = #{orderAddress}
+            					,payMethod = #{payMethod}
+            					,sms = #{sms}
+            					,memo = #{memo}
+            					,deferDateTime = now()
+            					,deferUserId = #{deferUserId}
+            					,orderState = #{orderState}
 		                        
 </insert>
 
@@ -379,6 +404,24 @@
 	  			, 'N'
 	  			, 'N'
 		)
+				ON DUPLICATE KEY UPDATE stockDate = #{stockDate}
+            					,orderPrice  = #{productPrice}
+            					,orderResultPrice  = #{productPrice} 
+            					,orderCnt  = #{orderCnt}
+            					,orderResultCnt  = #{orderCnt}
+            					,vatRate  = #{vatRate}
+            					,orderVatRate  = #{vatRate}
+            					,etc  = #{etc}
+            					,stockCnt  = #{stockCnt}
+            					,safeStock  = #{safeStock}
+            					,holdStock  = #{holdStock}
+            					,lossCnt  = #{lossCnt}
+            					,addCnt  = #{addCnt}
+            					,memo  = #{memo}
+            					,updateUserId  = #{createUserId}
+            					,updateDateTime  = now()
+            					,deletedYn  = 'N'
+            					,deferCheck  = 'N'
 		                        
 </insert>
 
@@ -458,8 +501,34 @@
 	  			, now()
 	  			, #{orderUserId}
 	  			, #{orderState}
+		)	  			
+	  	ON DUPLICATE KEY UPDATE faxKey = #{faxKey}
+            	                ,smsKey = #{smsKey}
+            	                ,emailKey = #{emailKey}
+            	                ,deliveryCharge = #{deliveryCharge}
+            					,deliveryEtc = #{deliveryEtc}
+            					,mobilePhone = #{mobilePhone}
+            					,email = #{email}
+            					,telNumber = #{telNumber}
+            					,faxNumber = #{faxNumber}
+            					,orderDate = #{orderDate}
+            					,deliveryDate = #{deliveryDate}
+            					,deliveryMethod = #{deliveryMethod}
+            					,orderCharge = #{orderCharge}
+            					,orderEtc = #{orderEtc}
+            					,orderMobilePhone = #{orderMobilePhone}
+            					,orderEmail = #{orderEmail}
+            					,orderTelNumber = #{orderTelNumber}
+            					,orderFaxNumber = #{orderFaxNumber}
+            					,orderAddress = #{orderAddress}
+            					,payMethod = #{payMethod}
+            					,sms = #{sms}
+            					,memo = #{memo}
+            					,orderDateTime = now()
+            					,orderUserId = #{orderUserId}
+            					,orderState = #{orderState}
 	  			
-		)
+
 		                        
 </insert>
 
@@ -508,6 +577,24 @@
 	  			, 'N'
 	  			, 'N'
 		)
+		ON DUPLICATE KEY UPDATE stockDate = #{stockDate}
+            					,orderPrice  = #{productPrice}
+            					,orderResultPrice  = #{productPrice} 
+            					,orderCnt  = #{orderCnt}
+            					,orderResultCnt  = #{orderCnt}
+            					,vatRate  = #{vatRate}
+            					,orderVatRate  = #{vatRate}
+            					,etc  = #{etc}
+            					,stockCnt  = #{stockCnt}
+            					,safeStock  = #{safeStock}
+            					,holdStock  = #{holdStock}
+            					,lossCnt  = #{lossCnt}
+            					,addCnt  = #{addCnt}
+            					,memo  = #{memo}
+            					,updateUserId  = #{createUserId}
+            					,updateDateTime  = now()
+            					,deletedYn  = 'N'
+            					,deferCheck  = 'N'
 		                        
 </insert>
 
@@ -516,6 +603,7 @@
   Select deliveryCharge,
          deliveryEtc,
          email,
+         mobilePhone,
          telNumber,
          faxNumber,
          orderDate,
@@ -566,4 +654,26 @@
   
  	
 </select>
+
+<update id="updateDefer"  parameterType="com.offact.addys.vo.order.TargetVO" >
+		update adOrder 
+			set
+				orderState = #{orderState}
+            	,deletedUserId = #{deletedUserId}
+            	,deletedDateTime = now()
+            	,deletedYn='Y'
+		where orderCode = #{orderCode}
+		                        
+</update>
+
+<update id="updateDeferDetail"  parameterType="com.offact.addys.vo.order.TargetVO" >
+	
+		update adOrderDetail 
+			set
+				 deletedYn = 'Y'
+            	,updateUserId = #{deletedUserId}
+            	,updateDateTime = now()
+		where orderCode = #{orderCode}
+		                        
+</update>
 </mapper>

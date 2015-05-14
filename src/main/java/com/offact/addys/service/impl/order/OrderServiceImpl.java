@@ -91,19 +91,21 @@ public class OrderServiceImpl implements OrderService {
 	
 		      //검수대상품목 리스트 삭제 업데이트
 		      this.commonDao.update("Order.checkDeletesProc", orderVo);
-	    
 		      arrCheckProductId = arrCheckProductId.substring(0, arrCheckProductId.lastIndexOf("^"));
+
 		      String[] arrCheckId = arrCheckProductId.split("\\^");
 
-		      for (int i = 0; i < arrCheckId.length; i++) {
-		    	Map updateMap = new HashMap();
-	
-		    	updateMap.put("orderCode", orderVo.getOrderCode());
-		    	updateMap.put("productCode", arrCheckId[i]);
-	        
-		    	this.commonDao.update("Order.checkUpdateProc", updateMap);
-	
-		      }
+			   if(!"".equals(arrCheckProductId.trim())){  
+			      for (int i = 0; i < arrCheckId.length; i++) {
+			    	Map updateMap = new HashMap();
+		
+			    	updateMap.put("orderCode", orderVo.getOrderCode());
+			    	updateMap.put("productCode", arrCheckId[i]);
+		        
+			    	this.commonDao.update("Order.checkUpdateProc", updateMap);
+		
+			      }
+			   }
 		    
 	    }catch(Exception e){
 	    	
@@ -116,4 +118,49 @@ public class OrderServiceImpl implements OrderService {
 	    return retVal;
 	    
    }
+    @Override
+    public int regiDeferCancel(OrderVO orderVo)
+    	    throws BizException
+	{
+	    int retVal=-1;
+	    
+	    try{//보류사유 등록 /보류처리
+	
+	    	this.commonDao.insert("Order.deferReasonInsert", orderVo);
+	    	retVal=this.commonDao.update("Order.updateDefer", orderVo);
+	
+	    }catch(Exception e){
+	    	
+	    	e.printStackTrace();
+	    	e.printStackTrace();
+	    	throw new BizException(e.getMessage());
+
+	    }
+	
+	    return retVal;
+	    
+   }
+    @Override
+    public int regiOrderCancel(OrderVO orderVo)
+    	    throws BizException
+ 	{
+ 	    int retVal=-1;
+ 	    
+ 	    try{//보류사유 등록 /보류처리
+ 	
+ 	    	retVal=this.commonDao.update("Order.updateOrder", orderVo);
+ 	    	this.commonDao.update("Order.updateOrderDetail", orderVo);
+
+ 	    }catch(Exception e){
+ 	    	
+ 	    	e.printStackTrace();
+ 	    	e.printStackTrace();
+ 	    	throw new BizException(e.getMessage());
+
+ 	    }
+ 	
+ 	    return retVal;
+ 	    
+   }
+ 
 }

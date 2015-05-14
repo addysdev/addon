@@ -126,7 +126,8 @@
                </when>
              </choose>
            </if>
-          And T2.orderState != '02'
+           And T2.orderState not in ( '01','02')
+           And T2.deletedYn='N'
     ) as TEMP
     group by TEMP.orderStateView,
            TEMP.orderCode,
@@ -181,7 +182,8 @@
                		</when>
              	</choose>
            		</if>
-                And T2.orderState != '02'
+                And T2.orderState not in ( '01','02')
+                And T2.deletedYn='N'
                 group by T2.orderCode
 		) As TOT
         
@@ -307,5 +309,27 @@
   				orderCheck = 'Y'
  		Where orderCode = #{orderCode}
  			  And productCode = #{productCode}
+</update>
+
+<update id="updateOrder"  parameterType="com.offact.addys.vo.order.OrderVO" >
+		update adOrder 
+			set
+				orderState = #{orderState}
+            	,deletedUserId = #{deletedUserId}
+            	,deletedDateTime = now()
+            	,deletedYn='Y'
+		where orderCode = #{orderCode}
+		                        
+</update>
+
+<update id="updateOrderDetail"  parameterType="com.offact.addys.vo.order.OrderVO" >
+	
+		update adOrderDetail 
+			set
+				 deletedYn = 'Y'
+            	,updateUserId = #{deletedUserId}
+            	,updateDateTime = now()
+		where orderCode = #{orderCode}
+		                        
 </update>
 </mapper>

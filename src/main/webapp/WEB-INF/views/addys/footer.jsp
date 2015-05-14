@@ -20,6 +20,7 @@
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/locales/bootstrap-datetimepicker.kr.js" charset="UTF-8"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.number.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/addys.js"></script>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/js/utils.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/errorMsg.js"></script>
 	
 	

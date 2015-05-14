@@ -55,4 +55,23 @@ public interface OrderService {
      */
     public int regiDeferProcess(String[] deferlist , OrderVO order, String arrCheckProductId)
     	    throws BizException;
+    /**
+     * 발주 보류폐기
+     * 
+     * @param TargetVO
+     * @return
+     * @throws BizException
+     */
+    public int regiDeferCancel(OrderVO order)
+    	    throws BizException;
+    
+    /**
+     * 발주 취소
+     * 
+     * @param TargetVO
+     * @return
+     * @throws BizException
+     */
+    public int regiOrderCancel(OrderVO order)
+    	    throws BizException;
 }
