@@ -58,6 +58,7 @@ import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.CompanyVO;
 import com.offact.addys.vo.common.EmailVO;
+import com.offact.addys.vo.common.CommentVO;
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.master.StockVO;
 import com.offact.addys.vo.order.TargetVO;
@@ -891,7 +892,6 @@ public class OrderController {
 		 
 	    targetVO.setOrderCode(orderCode);
 	    targetVO.setDeferUserId(strUserId);
-	    targetVO.setDeferType("T");
 	    targetVO.setOrderState("02");
 	    targetVO.setOrderDate(orderDate);
 	    targetVO.setDeliveryDate(deliveryDate);
@@ -966,7 +966,6 @@ public class OrderController {
         logger.info("@#@#@# targetVO.getDefer_reason : " + targetVO.getDeferReason());
 	    
 	    targetVO.setDeferUserId(strUserId);
-	    targetVO.setDeferType("T");
 	    targetVO.setOrderState("01");
 	    targetVO.setDeletedYn("Y");
 	    targetVO.setDeletedUserId(strUserId);
@@ -1224,7 +1223,6 @@ public class OrderController {
         logger.info("@#@#@# orderVO.getDefer_reason : " + orderVO.getDeferReason());
  
 	    orderVO.setDeferUserId(strUserId);
-	    orderVO.setDeferType("O");
 	    orderVO.setOrderState("04");
   
         try{//01.보류처리
@@ -1297,7 +1295,6 @@ public class OrderController {
         logger.info("@#@#@# orderVO.getDefer_reason : " + orderVO.getDeferReason());
  
 	    orderVO.setDeferUserId(strUserId);
-	    orderVO.setDeferType("O");
 	    orderVO.setOrderState("03");//검수대기로변경
   
         try{//01.보류처리
@@ -1405,4 +1402,419 @@ public class OrderController {
 
     return deferResult;
     }
+   
+    /**
+     * 메모관리
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/memomanage")
+    public ModelAndView memoManage(HttpServletRequest request, 
+    		                       HttpServletResponse response,
+		                           String orderCode,
+		                           String memo) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start memo:"+memo);
+
+        ModelAndView mv = new ModelAndView();
+        
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        // 조회조건저장
+        mv.addObject("orderCode", orderCode);
+        mv.addObject("memo", memo);
+
+        mv.setViewName("/order/memoManage");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    /**
+     * 메모내용
+     * 
+     * @param orderCode
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/memolist")
+    public ModelAndView memoList( @ModelAttribute("commentVO") CommentVO commentVO,
+    		                      HttpServletRequest request) throws BizException 
+    {   	
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : commentVO : " + commentVO);
+
+        ModelAndView mv = new ModelAndView();
+ 
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+         
+        String strToday = simpleDateFormat.format(currentTime);
+
+        List<CommentVO> commentList = new ArrayList();
+
+        //품목 비고 정보
+        commentList=commonSvc.getCommentList(commentVO);
+
+        mv.addObject("commentList", commentList);
+        
+        mv.setViewName("/order/memoList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    /**
+     * 메모추가
+     * 
+     * @param orderCode
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/memoaddlist")
+    public ModelAndView memoAddList( @ModelAttribute("commentVO") CommentVO commentVO,
+    		                      HttpServletRequest request) throws BizException 
+    {   	
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : commentVO : " + commentVO);
+
+        ModelAndView mv = new ModelAndView();
+ 
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        commentVO.setCommentUserId(strUserId);
+
+        try{//01.메모추가
+    	    
+        	int dbResult=commonSvc.regiCommentInsert(commentVO);
+
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+	    }
+
+        List<CommentVO> commentList = new ArrayList();
+
+        //품목 비고 정보
+        commentList=commonSvc.getCommentList(commentVO);
+
+        mv.addObject("commentList", commentList);
+        
+        mv.setViewName("/order/memoList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    /**
+     * 품목 비고관리
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/etcmanage")
+    public ModelAndView etcManage(HttpServletRequest request, 
+    		                       HttpServletResponse response,
+		                           String orderCode,
+		                           String productCode,
+		                           String productName,
+		                           String etc) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start [orderCode]:"+orderCode+"[productCode]:"+productCode+"[productName]:"+productName+"[etc]:"+etc);
+
+        ModelAndView mv = new ModelAndView();
+        
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        // 조회조건저장
+        mv.addObject("orderCode", orderCode);
+        mv.addObject("productCode", productCode);
+        mv.addObject("productName", productName);
+        mv.addObject("etc", etc);
+
+        mv.setViewName("/order/etcManage");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    /**
+     * 품목 비고내용
+     * 
+     * @param orderCode
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/etclist")
+    public ModelAndView etcList( @ModelAttribute("commentVO") CommentVO commentVO,
+    		                      HttpServletRequest request) throws BizException 
+    {   	
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : commentVO : " + commentVO);
+
+        ModelAndView mv = new ModelAndView();
+ 
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+
+        List<CommentVO> commentList = new ArrayList();
+
+        //품목 비고 정보
+        commentList=commonSvc.getProductEtcList(commentVO);
+
+        mv.addObject("commentList", commentList);
+        
+        mv.setViewName("/order/etcList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    /**
+     * 품목 비고추가
+     * 
+     * @param orderCode
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/etcaddlist")
+    public ModelAndView etcAddList( @ModelAttribute("commentVO") CommentVO commentVO,
+    		                      HttpServletRequest request) throws BizException 
+    {   	
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : commentVO : " + commentVO);
+
+        ModelAndView mv = new ModelAndView();
+ 
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        commentVO.setCommentUserId(strUserId);
+
+        try{//01.메모추가
+    	    
+        	int dbResult=commonSvc.regiCommentInsert(commentVO);
+
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+	    }
+
+        List<CommentVO> commentList = new ArrayList();
+
+        //품목 비고 정보
+        commentList=commonSvc.getProductEtcList(commentVO);
+
+        mv.addObject("commentList", commentList);
+        
+        mv.setViewName("/order/etcAddList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    /**
+     * 보류사유 리스트
+     * 
+     * @param orderCode
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/deferreasonlist")
+    public ModelAndView deferReasonList( HttpServletRequest request, 
+    		                              HttpServletResponse response,
+    		                              String orderCode,
+    		                              String category) throws BizException 
+    {   	
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : orderCode : [" + orderCode+"]");
+
+        ModelAndView mv = new ModelAndView();
+ 
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+         
+        String strToday = simpleDateFormat.format(currentTime);
+
+        List<CommentVO> commentList = new ArrayList();
+
+        CommentVO commentConVO = new CommentVO();
+        commentConVO.setOrderCode(orderCode);
+        commentConVO.setCommentCategory(category);
+ 
+        //보류사유 정보
+        commentList=commonSvc.getCommentList(commentConVO);
+
+        mv.addObject("commentConVO", commentConVO);
+        mv.addObject("commentList", commentList);
+        
+        mv.setViewName("/order/deferReasonList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    /**
+     * 검수완료 처리
+     *
+     * @param OrderVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping({"/order/ordercomplete"})
+    public @ResponseBody
+    String orderComplete(@ModelAttribute("orderVO") OrderVO orderVO,
+                         @RequestParam(value="arrCheckProductId", required=false, defaultValue="") String arrCheckProductId,
+    		             HttpServletRequest request) throws BizException
+    {
+      
+	    //log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : orderVO" + orderVO);
+			
+		String deferResult="check0000";
+		
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+       
+	    String[] orders = request.getParameterValues("seqs");
+
+	    orderVO.setBuyUserId(strUserId);
+	    orderVO.setOrderState("06");
+  
+        try{//01.검수처리
+    	    
+        	int dbResult=orderSvc.regiOrderComplete(orders , orderVO , arrCheckProductId);
+             
+	    	if(dbResult<1){//처리내역이 없을경우
+	    		
+	    		//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+		        return "check0001";
+		        
+	    	}
+	   
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+	        return "check0002\n[errorMsg] : "+errMsg;
+	    	
+	    }
+		
+		//log Controller execute time end
+	 	long t2 = System.currentTimeMillis();
+	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+    return deferResult;
+  }
 }

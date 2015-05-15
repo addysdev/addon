@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Comment">
+
+  <resultMap id="commentVO" type="com.offact.addys.vo.common.CommentVO" >
+    <result column="idx" property="idx"  />
+    <result column="orderCode" property="orderCode"  />
+    <result column="productCode" property="productCode"  />
+    <result column="productName" property="productName"  />
+    <result column="commentCategory" property="commentCategory"  />
+    <result column="commentType" property="commentType"  />
+    <result column="commentTypeView" property="commentTypeView"  />
+    <result column="comment"     property="comment"  />
+    <result column="commentDateTime"   property="commentDateTime"  />
+    <result column="commentUserId"   property="commentUserId"  />
+    <result column="commentUserName"     property="commentUserName"  />
+  </resultMap>
+ 
+    <select id="getCommnetList"  resultMap="commentVO" parameterType="com.offact.addys.vo.common.CommentVO" >
+        SELECT T1.idx,
+               T1.orderCode,
+               T1.productCode,
+               T1.commentCategory, 
+               Case T1.commentType When 'R' Then '[등록]'
+  						   When 'M' Then '[수정]'
+  						   When 'D' Then '[폐기]'
+  						   Else ''
+         				   End commentTypeView,
+               T1.commentType,
+               T1.comment,
+               T1.commentDateTime,
+               T1.commentUserId,
+               T2.userName as commentUserName
+        From adComment T1 
+        	 Left Join ofUser T2 On T1.commentUserId=T2.userId
+        Where orderCode = #{orderCode}
+              And commentCategory = #{commentCategory}
+        Order By commentDateTime DESC
+    </select>   
+    
+ <insert id="CommnetInsert"  parameterType="com.offact.addys.vo.common.CommentVO" >
+		
+		insert into adComment (
+				 orderCode
+				,productCode
+				,commentCategory
+            	,commentType
+            	,comment 
+            	,commentDateTime
+            	,commentUserId
+		)values(
+				  #{orderCode}
+				, #{productCode}
+	  			, #{commentCategory}
+	  			, #{commentType}
+	  			, #{comment}
+	  			, now()
+	  			, #{commentUserId}
+		)
+		                        
+</insert>
+
+    <select id="getProductEtcList"  resultMap="commentVO" parameterType="com.offact.addys.vo.common.CommentVO" >
+        SELECT T1.idx,
+               T1.orderCode,
+               T1.productCode,
+               T1.commentCategory, 
+               T1.commentType,
+               T1.comment,
+               T1.commentDateTime,
+               T1.commentUserId,
+               T2.userName as commentUserName
+        From adComment T1 
+        	 Left Join ofUser T2 On T1.commentUserId=T2.userId
+        Where orderCode = #{orderCode}
+              And productCode = #{productCode}
+        Order By commentDateTime DESC
+    </select> 
+    
+</mapper>

@@ -382,35 +382,7 @@ function fcDefer_regist(){
 		
     	$("input:checkbox[id='deferCheck']").prop("checked", $("#deferCheckAll").is(":checked"));
     }
- // 비고 상세 페이지 리스트 Layup
-    function fcEtc_detail(orderCode,productCode,productName) {
-    	
-    	$('#targetEtcView').attr('title','타이틀');
-    	var url='<%= request.getContextPath() %>/order/targetetc';
 
-    	$('#targetEtcView').dialog({
-            resizable : false, //사이즈 변경 불가능
-            draggable : true, //드래그 불가능
-            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
-
-            width : 340,
-            height : 270,
-            modal : true, //주위를 어둡게
-
-            open:function(){
-                //팝업 가져올 url
-                $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode);
-               
-                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
-                    $("#targetEtcView").dialog('close');
-
-                    });
-            }
-            ,close:function(){
-                $('#targetEtcView').empty();
-            }
-        });
-    };
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -419,7 +391,8 @@ function fcDefer_regist(){
 	   <input type="hidden" name="smsKey"               id="smsKey"            value="N" />
 	   <input type="hidden" name="faxKey"               id="faxKey"            value="N" />
 	   <input type="hidden" name="deferReason"               id="deferReason"            value="" />
-	    <input type="hidden" name="orderCode"               id="orderCode"            value="X" />
+	   <input type="hidden" name="deferType"               id="deferType"            value="R" />
+	   <input type="hidden" name="orderCode"               id="orderCode"            value="X" />
 	   <input type="hidden" name="groupId"               id="groupId"            value="${targetVO.groupId}" />
 	   <input type="hidden" name="con_groupId"               id="con_groupId"            value="${targetVO.con_groupId}" />
 	   <input type="hidden" name="companyCode"               id="companyCode"            value="${targetVO.companyCode}" />
@@ -539,7 +512,6 @@ function fcDefer_regist(){
           <th rowspan='2' class='text-center'>상품명</th>
           <th colspan='2' class='text-center'>발주</th>
           <th colspan='5' class='text-center'>재고</th>
-          <th rowspan='2' class='text-center'>비고</th>
       	</tr>
       	<tr style="background-color:#E6F3FF">
           <th class='text-center'>기준단가</th>
@@ -549,7 +521,7 @@ function fcDefer_regist(){
           <th class='text-center'>안전</th>
           <th class='text-center'>보유</th>
           <th class='text-center'>전산</th>
-      	</tr>
+        </tr>
 	    	<c:if test="${!empty targetDetailList}">
              <c:forEach items="${targetDetailList}" var="targetVO" varStatus="status">
              	 <input type="hidden" id="seqs" name="seqs" >
@@ -565,7 +537,6 @@ function fcDefer_regist(){
 				 <input type="hidden" name="productName" value="${targetVO.productName}">
 				 <input type="hidden" name="safeStock" value="${targetVO.safeStock}">
 				 <input type="hidden" name="stockCnt" value="${targetVO.stockCnt}">
-				 <input type="hidden" name="etc" value="">
 				 <input type="hidden" name="stockDate" value="${targetVO.stockDate}">
                  <td class='text-center'><input type="checkbox" id="deferCheck" name="deferCheck" value="${targetVO.productCode}" title="선택" /></td>
                  <td class='text-center'><c:out value="${targetVO.productCode}"></c:out></td>
@@ -582,21 +553,19 @@ function fcDefer_regist(){
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeStock}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.holdStock}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.stockCnt}"/></td>
-                 <td class='text-right'><img id="etcbtn" onClick="fcEtc_detail('X','${targetVO.productCode}','${targetVO.productName}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고"></td>
-              </tr>
+                 <tr>
+	             	<td colspan='10' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="" placeholder="비고" /></td>
+	             </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty targetDetailList}">
            <tr>
-           	<td colspan='11' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='10' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	  </table>
 	 </form:form>
 	</div>
-	  <div id="targetEtcView"  title="비고"></div>
-  <!-- //검수 상세처리화면 -->
-</div>
 	<script type="text/javascript">
 
     $(function () {

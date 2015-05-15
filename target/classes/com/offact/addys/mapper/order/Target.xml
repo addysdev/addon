@@ -260,18 +260,20 @@
               Left Join adCompany T3 On T2.companyCode = T3.companyCode 
               Left Join ofGroup T4 On T1.groupId = T4.groupId 
  	Where T2.companyCode =  #{con_companyCode}
- 	
+ 	Order by T1.productCode ASC
 </select>
 
 <insert id="deferReasonInsert"  parameterType="com.offact.addys.vo.order.TargetVO" >
-		insert into adDeferReason (
+		insert into adComment (
 				 orderCode
-            	,deferType
-            	,deferReason 
-            	,deferDateTime
-            	,deferUserId
+				,commentCategory
+            	,commentType
+            	,comment 
+            	,commentDateTime
+            	,commentUserId
 		)values(
 				 #{orderCode}
+				, '01'
 	  			, #{deferType}
 	  			, #{deferReason}
 	  			, now()
@@ -651,7 +653,7 @@
        Left Join adProductMaster T5 On T1.productCode = T5.productCode
   Where T2.orderState='02'
         And T1.orderCode = #{orderCode}
-  
+  Order by T1.productCode ASC
  	
 </select>
 

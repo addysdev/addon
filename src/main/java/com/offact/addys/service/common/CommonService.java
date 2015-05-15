@@ -10,7 +10,7 @@ import com.offact.framework.exception.BizException;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CompanyVO;
-
+import com.offact.addys.vo.common.CommentVO;
 /**
  * @author 4530
  */
@@ -40,4 +40,29 @@ public interface CommonService {
      * @throws BizException
      */
     public CompanyVO getCompanyDetail(CompanyVO company) throws BizException;
+    /**
+     * comment 조회
+     * 
+     * @return
+     * @throws BizException
+     */
+    public List<CommentVO> getCommentList(CommentVO comment) throws BizException;
+    /**
+     * 품목별 비고 조회
+     * 
+     * @return
+     * @throws BizException
+     */
+    public List<CommentVO> getProductEtcList(CommentVO comment) throws BizException;
+    /**
+     * comment저장
+     * 
+     * @param TargetVO
+     * @return
+     * @throws BizException
+     */
+    public int regiCommentInsert(CommentVO comment)
+    	    throws BizException;
+    
+    
 }

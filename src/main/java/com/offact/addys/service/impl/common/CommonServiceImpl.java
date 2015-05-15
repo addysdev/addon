@@ -12,12 +12,11 @@ import org.springframework.stereotype.Service;
 import com.offact.framework.util.StringUtil;
 import com.offact.framework.db.SqlSessionCommonDao;
 import com.offact.framework.exception.BizException;
-
 import com.offact.addys.service.common.CommonService;
-
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CompanyVO;
+import com.offact.addys.vo.common.CommentVO;
 
 /**
  * @author 4530
@@ -52,5 +51,40 @@ public class CommonServiceImpl implements CommonService {
 
        return companyDetail;
    }
+   @Override
+   public List<CommentVO> getCommentList(CommentVO comment) throws BizException {
+   	
+       List<CommentVO> commentList = commonDao.selectList("Comment.getCommnetList", comment);
 
+       return commentList;
+   }
+
+   @Override
+   public int regiCommentInsert(CommentVO comment)
+   	    throws BizException
+	{
+	    int retVal=-1;
+	    
+	    try{
+	
+	    	retVal=this.commonDao.insert("Comment.CommnetInsert", comment);
+	
+	    }catch(Exception e){
+	    	
+	    	e.printStackTrace();
+	    	e.printStackTrace();
+	    	throw new BizException(e.getMessage());
+
+	    }
+	
+	    return retVal;
+	    
+  }
+   @Override
+   public List<CommentVO> getProductEtcList(CommentVO comment) throws BizException {
+   	
+       List<CommentVO> commentList = commonDao.selectList("Comment.getProductEtcList", comment);
+
+       return commentList;
+   }
 }

@@ -210,6 +210,8 @@ function fcDefer_modify(){
             if (confirm('보류내용을 수정 하시겠습니까?')){ 
             	
                 document.deferDetailForm.deferReason.value=$("#defer_modify_reason_div").val();
+                document.deferDetailForm.deferType.value='M';
+                
                 var paramString = $("#deferDetailForm").serialize()+ "&arrDeferProductId="+arrDeferProductId+'&'+$("#deferDetailListForm").serialize();
      	
 		  		$.ajax({
@@ -246,6 +248,7 @@ function fcDefer_modify(){
     	if (confirm('보류내용을 폐기 하시겠습니까?')){ 
    		 
    		 document.deferDetailForm.deferReason.value=$("#defer_cancel_reason_div").val();
+   		 document.deferDetailForm.deferType.value='M';
 		 var paramString = $("#deferDetailForm").serialize();
 
 	 		$.ajax({
@@ -276,13 +279,36 @@ function fcDefer_modify(){
     	
     }
     
-    function fcDefer_list(){
+    // 보류 상세 페이지 리스트 Layup
+    function fcDefer_list(orderCode) {
     	
+    	//$('#targetEtcView').attr('title',productName);
+    	var url='<%= request.getContextPath() %>/order/deferreasonlist';
 
-    	alert('개발중입니다.');
-    	return;
-    	
-    }
+    	$('#deferReasonList').dialog({
+            resizable : false, //사이즈 변경 불가능
+            draggable : true, //드래그 불가능
+            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+            width : 800,
+            height : 400,
+            modal : true, //주위를 어둡게
+
+            open:function(){
+                //팝업 가져올 url
+              //  $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode+'&productNaem='+encodeURIComponent(productName));
+                $(this).load(url+'?orderCode='+orderCode+'&category=01');
+               
+                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+                    $("#deferReasonList").dialog('close');
+
+                    });
+            }
+            ,close:function(){
+                $('#deferReasonList').empty();
+            }
+        });
+    };
     function totalOrderAmt(){
     	
     	var frm=document.deferDetailListForm;
@@ -437,7 +463,7 @@ function fcDefer_modify(){
 		
     	$("input:checkbox[id='deferCheck']").prop("checked", $("#deferCheckAll").is(":checked"));
     }
-    
+
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -446,6 +472,7 @@ function fcDefer_modify(){
 	   <input type="hidden" name="smsKey"               id="smsKey"            value="N" />
 	   <input type="hidden" name="faxKey"               id="faxKey"            value="N" />
 	   <input type="hidden" name="deferReason"               id="deferReason"            value="" />
+	   <input type="hidden" name="deferType"               id="deferType"            value="" />
 	   <input type="hidden" name="orderCode"               id="orderCode"            value="${targetVO.orderCode}" />
 	   <input type="hidden" name="groupId"               id="groupId"            value="${targetVO.groupId}" />
 	   <input type="hidden" name="con_groupId"               id="con_groupId"            value="${targetVO.con_groupId}" />
@@ -458,7 +485,7 @@ function fcDefer_modify(){
 	      <div style="position:absolute; left:30px" >
 	      <button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button>
 	      <button id="defercancelbtn"  type="button" class="btn btn-danger" >보류폐기</button>
-	      <button id="deferlistbtn"  type="button" class="btn btn-info" onClick="fcDefer_list()">보류사유</button>
+	      <button id="deferlistbtn"  type="button" class="btn btn-info" onClick="fcDefer_list('${targetVO.orderCode}')">보류사유</button>
           </div >
           <div id="defermodifydialog" class="form-group" title="보류수정사유를 입력하세요">
 			<p><textarea style='height:82px' row="3" class="form-control" id="defer_modify_reason_div" name="defer_modify_reason_div"  value=""  placeholder="보류수정사유"/></p>
@@ -572,7 +599,6 @@ function fcDefer_modify(){
           <th rowspan='2' class='text-center'>상품명</th>
           <th colspan='2' class='text-center'>발주</th>
           <th colspan='5' class='text-center'>재고</th>
-          <th rowspan='2' class='text-center'>비고</th>
       	</tr>
       	<tr style="background-color:#E6F3FF">
           <th class='text-center'>기준단가</th>
@@ -598,7 +624,6 @@ function fcDefer_modify(){
 				 <input type="hidden" name="productName" value="${targetVO.productName}">
 				 <input type="hidden" name="safeStock" value="${targetVO.safeStock}">
 				 <input type="hidden" name="stockCnt" value="${targetVO.stockCnt}">
-				 <input type="hidden" name="etc" value="${targetVO.etc}">
 				 <input type="hidden" name="stockDate" value="${targetVO.stockDate}">
                  <c:choose>
 		    		<c:when test="${targetVO.deferCheck=='Y'}">
@@ -622,18 +647,22 @@ function fcDefer_modify(){
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeStock}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.holdStock}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.stockCnt}"/></td>
-                 <td class='text-right'><c:out value=""></c:out></td>
+                 <tr>
+	             	<td colspan='10' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${targetVO.etc}" placeholder="비고" /></td>
+	             </tr>
               </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty targetDetailList}">
            <tr>
-           	<td colspan='11' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='10' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	  </table>
 	 </form:form>
 	</div>
+	<div id="deferReasonList"  title="보류사유"></div>
+    <!-- //검수 상세처리화면 -->
 	<script type="text/javascript">
 
     $(function () {

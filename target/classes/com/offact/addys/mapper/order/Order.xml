@@ -220,7 +220,8 @@
 
 <select id="getOrderDetailList"  resultMap="orderVO" parameterType="com.offact.addys.vo.order.OrderVO" >
 
-    Select T2.groupId,
+    Select T1.orderCode,
+           T2.groupId,
            T3.groupName,
 		   T2.companyCode,
 		   T5.barCode,
@@ -242,25 +243,28 @@
            T1.lossCnt,
            T1.etc,
            T1.deferCheck,
-           T1.orderCheck
+           T1.orderCheck,
+           T2.orderState
   From adOrderDetail T1
        Left Join adOrder T2 On T1.orderCode=T2.orderCode
        Left Join ofGroup T3 On T2.groupId =T3.groupId
        Left Join adCompany T4 On T2.companyCode = T4.companyCode
        Left Join adProductMaster T5 On T1.productCode = T5.productCode
   Where T1.orderCode = #{orderCode}
-  
+  Order by T1.productCode ASC
 </select>
 
 <insert id="deferReasonInsert"  parameterType="com.offact.addys.vo.order.OrderVO" >
-		insert into adDeferReason (
+		insert into adComment (
 				 orderCode
-            	,deferType
-            	,deferReason 
-            	,deferDateTime
-            	,deferUserId
+				,commentCategory
+            	,commentType
+            	,comment 
+            	,commentDateTime
+            	,commentUserId
 		)values(
 				 #{orderCode}
+				, '02'
 	  			, #{deferType}
 	  			, #{deferReason}
 	  			, now()
@@ -330,6 +334,32 @@
             	,updateUserId = #{deletedUserId}
             	,updateDateTime = now()
 		where orderCode = #{orderCode}
+		                        
+</update>
+
+<update id="updateCheck"  parameterType="com.offact.addys.vo.order.OrderVO" >
+		update adOrder 
+			set
+				orderState = #{orderState}
+            	,buyUserId = #{buyUserId}
+            	,buyDateTime = now()
+		where orderCode = #{orderCode}
+		                        
+</update>
+
+<update id="updateCheckDetail"  parameterType="com.offact.addys.vo.order.OrderVO" >
+	
+		update adOrderDetail 
+			set
+				orderResultPrice = #{orderResultPrice}
+            	,orderResultCnt = #{orderResultCnt}
+            	,orderVatRate = #{orderVatRate}
+            	,updateUserId = #{updateUserId}
+            	,orderCheck = 'Y'
+            	,updateDateTime = now()
+		where orderCode = #{orderCode}
+	  		  and productCode = #{productCode}
+
 		                        
 </update>
 </mapper>

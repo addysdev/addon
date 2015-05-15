@@ -162,5 +162,46 @@ public class OrderServiceImpl implements OrderService {
  	    return retVal;
  	    
    }
- 
+    @Override
+    public int regiOrderComplete(String[] deferList ,OrderVO orderVo,String arrCheckProductId)
+    	    throws BizException
+	{
+	    int retVal=-1;
+	    
+	    try{//검수처리
+	
+	    	this.commonDao.update("Order.updateCheck", orderVo);
+	
+	    	String[] r_data=null;
+	
+		    for(int i=0;i<deferList.length;i++){
+	
+		        r_data = StringUtil.getTokens(deferList[i], "|");
+		        
+		        OrderVO orderDetailVo = new OrderVO();
+		    	
+		        orderDetailVo.setOrderCode(orderVo.getOrderCode());
+		        orderDetailVo.setProductCode(StringUtil.nvl(r_data[0],""));
+		        orderDetailVo.setBarCode(StringUtil.nvl(r_data[1],""));
+		        orderDetailVo.setOrderResultPrice(StringUtil.nvl(r_data[2],""));
+		        orderDetailVo.setOrderResultCnt(StringUtil.nvl(r_data[3],""));
+		        orderDetailVo.setOrderVatRate(StringUtil.nvl(r_data[4],""));
+		        orderDetailVo.setEtc(StringUtil.nvl(r_data[5],""));
+		        orderDetailVo.setUpdateUserId(orderVo.getDeferUserId());
+		    	
+	            retVal=this.commonDao.update("Order.updateCheckDetail", orderDetailVo);
+		      
+		      }
+		    
+	    }catch(Exception e){
+	    	
+	    	e.printStackTrace();
+	    	e.printStackTrace();
+	    	throw new BizException(e.getMessage());
+
+	    }
+	
+	    return retVal;
+	    
+   }
 }
