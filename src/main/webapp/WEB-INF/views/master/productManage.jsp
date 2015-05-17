@@ -149,9 +149,9 @@
         	<div class="form-group">
 				<label for="searchGubun"><h6><strong><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span> 검색조건 :</font></strong></h6></label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
-                	<option value="01" >품목코드</option>
+                	<option value="03" >품목명</option>
+                    <option value="01" >품목코드</option>
                 	<option value="02" >바코드</option>
-                    <option value="03" >품목명</option>
                     <option value="04" >구매처명</option>
            		</select>
 				<label class="sr-only" for="searchValue"> 조회값 </label>

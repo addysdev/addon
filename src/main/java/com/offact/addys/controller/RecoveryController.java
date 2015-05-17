@@ -50,6 +50,7 @@ import com.offact.addys.service.common.CommonService;
 import com.offact.addys.service.recovery.RecoveryService;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CodeVO;
+import com.offact.addys.vo.order.TargetVO;
 import com.offact.addys.vo.recovery.RecoveryVO;
 import com.offact.addys.vo.MultipartFileVO;
 
@@ -91,7 +92,7 @@ public class RecoveryController {
      * @throws BizException
      */
     @RequestMapping(value = "/recovery/recoverymanage")
-    public ModelAndView targetManage(HttpServletRequest request, 
+    public ModelAndView recoveryManage(HttpServletRequest request, 
     		                       HttpServletResponse response) throws BizException 
     {
         
@@ -114,9 +115,15 @@ public class RecoveryController {
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
         Date currentTime = new Date();
-        String strToday = simpleDateFormat.format(currentTime);
+        Date deliveryTime = new Date();
+        int movedate=-7;//(1:내일 ,-1:어제)
         
-        recoveryConVO.setStart_recoveryDate(strToday);
+        deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+        
+        String strToday = simpleDateFormat.format(currentTime);
+        String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+        
+        recoveryConVO.setStart_recoveryDate(strDeliveryDay);
         recoveryConVO.setEnd_recoveryDate(strToday);
         
         // 조회조건저장
@@ -154,7 +161,7 @@ public class RecoveryController {
      * @throws BizException
      */
     @RequestMapping(value = "/recovery/recoverypagelist")
-    public ModelAndView targetPageList(@ModelAttribute("recoveryConVO") RecoveryVO recoveryConVO, 
+    public ModelAndView recoveryPageList(@ModelAttribute("recoveryConVO") RecoveryVO recoveryConVO, 
     		                         HttpServletRequest request, 
     		                         HttpServletResponse response) throws BizException 
     {
@@ -174,7 +181,7 @@ public class RecoveryController {
 
         // 상태 값 null 일때 공백처리
         if (recoveryConVO.getCon_recoveryState() == null) {
-        	recoveryConVO.setCon_groupId("G00000");
+        	recoveryConVO.setCon_recoveryState("");
         }
 
         // 조회조건저장
@@ -200,5 +207,193 @@ public class RecoveryController {
        	
         return mv;
     }
+	 /**
+     * 회수등록 화면
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/recovery/recoveryregistform")
+    public ModelAndView recoveryRegistForm(HttpServletRequest request, 
+    		                               HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start ");
+
+        ModelAndView mv = new ModelAndView();
+       
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        Date deliveryTime = new Date();
+        int movedate=3;//(1:내일 ,-1:어제)
+        
+        deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+        
+        String strToday = simpleDateFormat.format(currentTime);
+        String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+        
+        //회수 마감일 세팅
+        mv.addObject("recoveryClosingDate", strDeliveryDay);
+        
+        //조직정보 조회
+        GroupVO group = new GroupVO();
+        group.setGroupId("G00000");
+        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+        mv.addObject("group_comboList", group_comboList);
+        
+        mv.setViewName("/recovery/recoveryRegistForm");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    /**
+     * 회수 등록 처리
+     *
+     * @param TargetVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping({"/recovery/recoveryregist"})
+    public @ResponseBody
+    String recoveryRegist(@ModelAttribute("recoveryVO") RecoveryVO recoveryVO,
+    		              @RequestParam(value="arrCheckGroupId", required=false, defaultValue="") String arrCheckGroupId,
+    		              @RequestParam(value="arrSelectProductId", required=false, defaultValue="") String arrSelectProductId,
+    		              HttpServletRequest request) throws BizException
+    {
+      
+	    //log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : recoveryVO" + recoveryVO);
+			
+		String deferResult="recovery0000";
+		
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
+        logger.info("@#@#@# arrCheckGroupId: " + arrCheckGroupId);
+        logger.info("@#@#@# arrSelectProductId : " + arrSelectProductId);
+	    
+
+	    recoveryVO.setRecoveryState("01");
+	    recoveryVO.setRegUserId(strUserId);
+	    recoveryVO.setCreateUserId(strUserId);
+	   
+        try{//01.회수처리
+       
+            int dbResult=recoverySvc.regiRecoveryRegist(recoveryVO , arrCheckGroupId ,arrSelectProductId);
+             
+	    	if(dbResult<1){//처리내역이 없을경우
+	    		
+	    		//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+		        return "recovery0001";
+		        
+	    	}
 	
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+	        return "recoveryr0002\n[errorMsg] : "+errMsg;
+	    	
+	    }
+
+		//log Controller execute time end
+	 	long t2 = System.currentTimeMillis();
+	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+    return deferResult;
+    }
+    /**
+     * 보류대상 상세조회
+     * 
+     * @param targetConVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/recovery/recoverydetailview")
+    public ModelAndView recoveryDetailView( HttpServletRequest request, 
+    		                              HttpServletResponse response,
+    		                              String recoveryCode,
+    		                              String groupId,
+    		                              String groupName,
+    		                              String recoveryState,
+    		                              String regDateTime,
+    		                              String recoveryClosingDate) throws BizException 
+    {   	
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : groupId : [" + groupId+"] groupName : ["+groupName+
+				"] recoveryState : ["+recoveryState+"] regDateTime : ["+regDateTime+"] recoveryClosingDate : ["+recoveryClosingDate+"]");
+
+        ModelAndView mv = new ModelAndView();
+        List<RecoveryVO> recoveryDetailList = null;
+        
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+         
+        String strToday = simpleDateFormat.format(currentTime);
+        
+        RecoveryVO recoveryConVO = new RecoveryVO();
+
+        recoveryConVO.setRecoveryCode(recoveryCode);
+        recoveryConVO.setCon_groupId(groupId);
+        recoveryConVO.setCon_recoveryState(recoveryState);
+        recoveryConVO.setGroupName(groupName);
+        recoveryConVO.setRegDateTime(regDateTime);
+        recoveryConVO.setRecoveryClosingDate(recoveryClosingDate);
+
+        // 조회조건저장
+        mv.addObject("recoveryConVO", recoveryConVO);
+
+        
+        //회수대상 상세정보
+        recoveryDetailList=recoverySvc.getRecoveryDetailList(recoveryConVO);
+
+        mv.addObject("recoveryDetailList", recoveryDetailList);
+   
+        mv.setViewName("/recovery/recoveryDetailView");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
 }

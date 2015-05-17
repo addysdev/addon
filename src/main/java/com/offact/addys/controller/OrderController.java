@@ -1038,9 +1038,15 @@ public class OrderController {
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
         Date currentTime = new Date();
-        String strToday = simpleDateFormat.format(currentTime);
+        Date deliveryTime = new Date();
+        int movedate=-7;//(1:내일 ,-1:어제)
         
-        orderConVO.setStart_orderDate(strToday);
+        deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+        
+        String strToday = simpleDateFormat.format(currentTime);
+        String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+        
+        orderConVO.setStart_orderDate(strDeliveryDay);
         orderConVO.setEnd_orderDate(strToday);
 
         // 조회조건저장

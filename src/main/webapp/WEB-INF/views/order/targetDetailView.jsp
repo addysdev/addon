@@ -526,7 +526,7 @@ function fcDefer_regist(){
              <c:forEach items="${targetDetailList}" var="targetVO" varStatus="status">
              	 <input type="hidden" id="seqs" name="seqs" >
 	             <c:choose>
-		    		<c:when test="${targetVO.stockCnt<targetVO.safeStock}">
+		    		<c:when test="${targetVO.stockCnt<=targetVO.safeStock}">
 						<tr id="select_tr_${targetVO.productCode}" style="color:red">
 					</c:when>
 					<c:otherwise>

@@ -7,34 +7,47 @@ import com.offact.addys.vo.AbstractVO;
  *
  */
 public class RecoveryVO extends AbstractVO {
-	
+
+	private String companyName;
 	private String recoveryCode;
 	private String groupId;
 	private String groupName;
-	private String companyCode;
-	private String companyName;
+	private String recoveryClosingDate;
 	private String recoveryDateTime;
 	private String recoveryUserID;
 	private String recoveryUserName;
-	private String regResult;
+	private String recoveryState;
+	private String recoveryStateView;
 	private String regDateTime;
 	private String regUserId;
 	private String regUserName;
-	
+	private String completeDateTime;
+	private String completeUserId;
+	private String completeUserName;
+
 	private String productCode;
+	private String productName;
+	private String productPrice;
 	private String stockDate;
 	private String recoveryCnt;
 	private String stockCnt;
-	private String lossAddCnt;
+	private String addCnt;
+	private String lossCnt;
 	private String memo;
 	private String recoveryResultCnt;
+	private String recoveryResultPrice;
 	private String recoveryMemo;
+	private String recoveryYn;
+	private String createUserId;
+	private String createUserName;
+	private String createDateTime;
 	private String updateUserId;
 	private String updateUserName;
 	private String updateDateTime;
 	
 	private String con_groupId;
 	private String con_recoveryState;
+	private String regroupid;
 	
     private String searchGubun;
     private String searchValue;
@@ -50,7 +63,6 @@ public class RecoveryVO extends AbstractVO {
     private String rowCount         = "10";
     private String page_limit_val1;
     private String page_limit_val2;
-    
 	public String getRecoveryCode() {
 		return recoveryCode;
 	}
@@ -69,17 +81,11 @@ public class RecoveryVO extends AbstractVO {
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
-	public String getCompanyCode() {
-		return companyCode;
+	public String getRecoveryClosingDate() {
+		return recoveryClosingDate;
 	}
-	public void setCompanyCode(String companyCode) {
-		this.companyCode = companyCode;
-	}
-	public String getCompanyName() {
-		return companyName;
-	}
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
+	public void setRecoveryClosingDate(String recoveryClosingDate) {
+		this.recoveryClosingDate = recoveryClosingDate;
 	}
 	public String getRecoveryDateTime() {
 		return recoveryDateTime;
@@ -99,11 +105,11 @@ public class RecoveryVO extends AbstractVO {
 	public void setRecoveryUserName(String recoveryUserName) {
 		this.recoveryUserName = recoveryUserName;
 	}
-	public String getRegResult() {
-		return regResult;
+	public String getRecoveryState() {
+		return recoveryState;
 	}
-	public void setRegResult(String regResult) {
-		this.regResult = regResult;
+	public void setRecoveryState(String recoveryState) {
+		this.recoveryState = recoveryState;
 	}
 	public String getRegDateTime() {
 		return regDateTime;
@@ -123,11 +129,35 @@ public class RecoveryVO extends AbstractVO {
 	public void setRegUserName(String regUserName) {
 		this.regUserName = regUserName;
 	}
+	public String getCompleteDateTime() {
+		return completeDateTime;
+	}
+	public void setCompleteDateTime(String completeDateTime) {
+		this.completeDateTime = completeDateTime;
+	}
+	public String getCompleteUserId() {
+		return completeUserId;
+	}
+	public void setCompleteUserId(String completeUserId) {
+		this.completeUserId = completeUserId;
+	}
+	public String getCompleteUserName() {
+		return completeUserName;
+	}
+	public void setCompleteUserName(String completeUserName) {
+		this.completeUserName = completeUserName;
+	}
 	public String getProductCode() {
 		return productCode;
 	}
 	public void setProductCode(String productCode) {
 		this.productCode = productCode;
+	}
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
 	public String getStockDate() {
 		return stockDate;
@@ -147,11 +177,17 @@ public class RecoveryVO extends AbstractVO {
 	public void setStockCnt(String stockCnt) {
 		this.stockCnt = stockCnt;
 	}
-	public String getLossAddCnt() {
-		return lossAddCnt;
+	public String getAddCnt() {
+		return addCnt;
 	}
-	public void setLossAddCnt(String lossAddCnt) {
-		this.lossAddCnt = lossAddCnt;
+	public void setAddCnt(String addCnt) {
+		this.addCnt = addCnt;
+	}
+	public String getLossCnt() {
+		return lossCnt;
+	}
+	public void setLossCnt(String lossCnt) {
+		this.lossCnt = lossCnt;
 	}
 	public String getMemo() {
 		return memo;
@@ -170,6 +206,12 @@ public class RecoveryVO extends AbstractVO {
 	}
 	public void setRecoveryMemo(String recoveryMemo) {
 		this.recoveryMemo = recoveryMemo;
+	}
+	public String getRecoveryYn() {
+		return recoveryYn;
+	}
+	public void setRecoveryYn(String recoveryYn) {
+		this.recoveryYn = recoveryYn;
 	}
 	public String getUpdateUserId() {
 		return updateUserId;
@@ -213,6 +255,18 @@ public class RecoveryVO extends AbstractVO {
 	public void setSearchValue(String searchValue) {
 		this.searchValue = searchValue;
 	}
+	public String getStart_recoveryDate() {
+		return start_recoveryDate;
+	}
+	public void setStart_recoveryDate(String start_recoveryDate) {
+		this.start_recoveryDate = start_recoveryDate;
+	}
+	public String getEnd_recoveryDate() {
+		return end_recoveryDate;
+	}
+	public void setEnd_recoveryDate(String end_recoveryDate) {
+		this.end_recoveryDate = end_recoveryDate;
+	}
 	public String getErrMsg() {
 		return errMsg;
 	}
@@ -249,17 +303,53 @@ public class RecoveryVO extends AbstractVO {
 	public void setPage_limit_val2(String page_limit_val2) {
 		this.page_limit_val2 = page_limit_val2;
 	}
-	public String getStart_recoveryDate() {
-		return start_recoveryDate;
+	public String getRecoveryResultPrice() {
+		return recoveryResultPrice;
 	}
-	public void setStart_recoveryDate(String start_recoveryDate) {
-		this.start_recoveryDate = start_recoveryDate;
+	public void setRecoveryResultPrice(String recoveryResultPrice) {
+		this.recoveryResultPrice = recoveryResultPrice;
 	}
-	public String getEnd_recoveryDate() {
-		return end_recoveryDate;
+	public String getRecoveryStateView() {
+		return recoveryStateView;
 	}
-	public void setEnd_recoveryDate(String end_recoveryDate) {
-		this.end_recoveryDate = end_recoveryDate;
+	public void setRecoveryStateView(String recoveryStateView) {
+		this.recoveryStateView = recoveryStateView;
+	}
+	public String getRegroupid() {
+		return regroupid;
+	}
+	public void setRegroupid(String regroupid) {
+		this.regroupid = regroupid;
+	}
+	public String getCreateUserId() {
+		return createUserId;
+	}
+	public void setCreateUserId(String createUserId) {
+		this.createUserId = createUserId;
+	}
+	public String getCreateUserName() {
+		return createUserName;
+	}
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+	public String getCreateDateTime() {
+		return createDateTime;
+	}
+	public void setCreateDateTime(String createDateTime) {
+		this.createDateTime = createDateTime;
+	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	public String getProductPrice() {
+		return productPrice;
+	}
+	public void setProductPrice(String productPrice) {
+		this.productPrice = productPrice;
 	}
 	
 }

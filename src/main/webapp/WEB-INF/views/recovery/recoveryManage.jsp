@@ -29,7 +29,34 @@
             return true;
         }
     }
-    
+    // 회수 등록  Layup
+    function fcRecovery_registForm() {
+    	
+    	var url='<%= request.getContextPath() %>/recovery/recoveryregistform';
+
+    	$('#recoveryRegForm').dialog({
+            resizable : false, //사이즈 변경 불가능
+            draggable : true, //드래그 불가능
+            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+            width : 650,
+            height : 750,
+            modal : true, //주위를 어둡게
+
+            open:function(){
+                //팝업 가져올 url
+                $(this).load(url);
+               
+                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+                    $("#recoveryRegForm").dialog('close');
+
+                    });
+            }
+            ,close:function(){
+                $('#recoveryRegForm').empty();
+            }
+        });
+    };
 </SCRIPT>
 <div class="container">
 	<h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 회수 리스트</font></strong></h4>
@@ -77,13 +104,6 @@
                     	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
                     </c:forEach>
            		</select>
-           		<label for="searchGubun"><h6><strong><font style="color:#FF9900"> 검색조건 : </font></strong></h6></label>
-				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
-                	<option value="01" >매장명</option>
-                    <option value="02" >발주자</option>
-           		</select>
-				<label class="sr-only" for="searchValue"> 조회값 </label>
-				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${productConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
 				<button type="button" class="btn btn-primary" onClick="javascript:fcRecovery_listSearch()">search</button>
 	            <!-- >button type="button" class="btn" onClick="">excel</button -->
             </div>
@@ -93,8 +113,13 @@
   <br>
   <!-- 조회결과리스트 -->
   <div id=recoveryPageList></div>
-
-  <button type="button" class="btn btn-primary" onClick="alert('개발중입니다.')">회수등록</button>
+  <c:if test="${strAuth != '03'}"><button type="button" class="btn btn-primary" onClick="fcRecovery_registForm()">회수등록</button></c:if>
+  
+  <div id="recoveryRegForm"  title="회수대상 등록"></div>
+  <!-- //회수 등록화면 -->
+    <!--회수 상세처리화면-->
+  <div id="recoveryDetailView"  title="회수 상세처리화면"></div>
+  <!-- //회수 상세처리화면 -->
 </div>
 <br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>

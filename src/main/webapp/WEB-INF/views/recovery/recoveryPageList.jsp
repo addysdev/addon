@@ -18,6 +18,34 @@
             }
         });
     }
+    // 회수 상세 페이지 리스트 Layup
+    function fcRecovery_detail(recoveryCode,groupId,groupName,recoveryState,regDateTime,recoveryClosingDate) {
+   
+    	var url='<%= request.getContextPath() %>/recovery/recoverydetailview';
+
+    	$('#recoveryDetailView').dialog({
+            resizable : false, //사이즈 변경 불가능
+            draggable : true, //드래그 불가능
+            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+            width : 950,
+            height : 850,
+            modal : true, //주위를 어둡게
+
+            open:function(){
+                //팝업 가져올 url
+                $(this).load(url+'?recoveryCode='+recoveryCode+'&groupId='+groupId);
+               
+                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+                    $("#recoveryDetailView").dialog('close');
+
+                    });
+            }
+            ,close:function(){
+                $('#recoveryDetailView').empty();
+            }
+        });
+    };
 
 </SCRIPT>
      <form:form commandName="recoveryVO" name="recoveryPageListForm" method="post" action="" >
@@ -27,24 +55,24 @@
 	      <tr>
 	        <th>회수상태</th>
             <th>회수번호</th>
-            <th>회수일자</th>
-            <th>화수자</th>
+            <th>회수요청일자</th>
+            <th>회수마감일자</th>
             <th>매장명</th>
-            <th>회수대상수량</th>
+            <th>회수수량</th>
             <th>회수금액</th>
 	      </tr>
 	    </thead>
 	    <tbody>
 	    	<c:if test="${!empty recoveryList}">
-             <c:forEach items="${recoveryList}" var="userListVO" varStatus="status">
-             <tr id="select_tr_${recoveryVO.recoveryCode}">
-                 <td><c:out value=""></c:out></td>
-                 <td><a href="javascript:fcUserManage_detailSearch('${recoveryVO.recoveryCode}')"><c:out value="${recoveryVO.recoveryCode}"></c:out></a></td>
-                 <td><c:out value=""></c:out></td>
-                 <td><c:out value=""></c:out></td>
-                 <td><c:out value=""></c:out></td>
-                 <td><c:out value="10"></c:out></td>
-                 <td><c:out value="50000"></c:out></td>
+             <c:forEach items="${recoveryList}" var="recoveryVO" varStatus="status">
+             <tr id="select_tr_${recoveryVO.recoveryStateView}">
+                 <td><c:out value="${recoveryVO.recoveryStateView}"></c:out></td>
+                 <td><a href="javascript:fcRecovery_detail('${recoveryVO.recoveryCode}','${recoveryVO.groupId}','${recoveryVO.groupName}','${recoveryVO.recoveryState}','${recoveryVO.regDateTime}','${recoveryVO.recoveryClosingDate}')"><c:out value="${recoveryVO.recoveryCode}"></c:out></a></td>
+                 <td><c:out value="${recoveryVO.regDateTime}"></c:out></td>
+                 <td><c:out value="${recoveryVO.recoveryClosingDate}"></c:out></td>
+                 <td><c:out value="${recoveryVO.groupName}"></c:out></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.recoveryResultCnt}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.recoveryResultPrice}"/></td>
               </tr>
              </c:forEach>
             </c:if>

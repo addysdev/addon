@@ -101,9 +101,13 @@
 					       I3.orderCode
 						From adStockMaster I1
 							 Left Join(
-										Select Max(stockDate) as stockDate,stockCnt,groupID,productCode 
-                                        	From adStockDetail 
-											Group by  stockCnt,groupID,productCode
+										 Select groupID,productCode,stockDate,
+                     							(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
+                							From ( 
+                        						Select groupId,productCode , max(stockDate) as stockDate 
+                       								 From adStockDetail 
+                        						Group By  groupID,productCode 
+                        						) A1
 									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID 
 							 Left Join(
 										Select E1.orderCode ,
@@ -161,9 +165,13 @@
 					        		 I1.productCode
 							  	From adStockMaster I1
 							 		 Left Join(
-										       Select Max(stockDate) as stockDate,stockCnt,groupID,productCode 
-                                        	   	From adStockDetail 
-											    Group by  stockCnt,groupID,productCode
+										 Select groupID,productCode,stockDate,
+                     							(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
+                							From ( 
+                        						Select groupId,productCode , max(stockDate) as stockDate 
+                       								 From adStockDetail 
+                        						Group By  groupID,productCode 
+                        						) A1
 									 ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID 
 							 		 Left Join(
 										       Select E1.orderCode ,
@@ -233,9 +241,13 @@
 					       I1.productCode
 						From adStockMaster I1
 							 Left Join(
-										Select Max(stockDate) as stockDate,stockCnt,groupID,productCode 
-                                        	From adStockDetail 
-											Group by  stockCnt,groupID,productCode
+										Select groupID,productCode,stockDate,
+                     							(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
+                							From ( 
+                        						Select groupId,productCode , max(stockDate) as stockDate 
+                       								 From adStockDetail 
+                        						Group By  groupID,productCode 
+                        						) A1
 									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID 
 							 Left Join(
 										Select E1.orderCode ,

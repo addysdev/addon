@@ -83,13 +83,13 @@
                <when test="searchGubun.equals('01')">
            AND T1.productCode  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
-               <when test="searchGubun.equals('02')">
+               <when test="searchGubun.equals('03')">
            AND T1.productName  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
-               <when test="searchGubun.equals('03')">
+               <when test="searchGubun.equals('04')">
            AND T2.companyName  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
-               <when test="searchGubun.equals('04')">
+               <when test="searchGubun.equals('02')">
            AND T1.barCode  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
              </choose>
@@ -166,7 +166,7 @@
 	  		    , #{group2Name}
 	  		    , #{group3}
 	  		    , #{group3Name}
-	  		    , 'Y'
+	  		    , 'N'
 	  			, #{createUserId}
 	  			, now()
 	  			, #{deletedYn}
@@ -182,12 +182,20 @@
 		                        group2Name = #{group2Name},
 		                        group3 = #{group3},
 		                        group3Name = #{group3Name},
-		                        recoveryYn = 'Y',
+		                        recoveryYn = 'N',
 		                        updateUserId = #{updateUserId},
 		                        updateDateTime =now(),
 		                        deletedYn = #{deletedYn}
 		                        
 </insert>
 
+<update id="productRecoveryUpdate" parameterType="java.util.Map" >
+        Update adProductMaster
+       		Set
+  				recoveryYn = 'Y'
+            	,updateUserId = #{updateUserId}
+            	,updateDateTime = now()
+ 		Where productCode = #{productCode}
+</update>
 
 </mapper>
