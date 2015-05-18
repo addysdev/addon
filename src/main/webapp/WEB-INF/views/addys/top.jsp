@@ -75,7 +75,7 @@
         <button type="button" class="btn btn-default btn-sm">
           <span class="glyphicon glyphicon-home"></span> <%=strGroupName %>(<%=strGroupId %>) 
         </button> 
-        <button type="button" class="btn btn-primary" onClick="goLogout()">logout</button>
+        <button type="button" class="btn btn-primary" onClick="goLogout()">로그아웃</button>
       </p>
       <ul class="nav nav-pills" role="tablist">
         <li class="dropdown">

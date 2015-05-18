@@ -194,6 +194,12 @@ function delFile(obj){
 			    </c:forEach>
 	         </th>
 	      	</tr>
+	      	<tr>
+	          <th class='text-center' style="background-color:#E6F3FF" >메모</th>
+	          <th>
+	 			<input type="text" class="form-control" id="memo" name="memo"  value="" placeholder="메모" />
+	         </th>
+	      	</tr>
 		  </table>
 		  </form:form>
         <!-- 조회결과리스트 -->

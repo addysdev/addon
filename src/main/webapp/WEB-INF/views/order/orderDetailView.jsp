@@ -544,33 +544,33 @@ $(function() {
 	      <tr>
 	      <div style="position:absolute; left:30px" >
 	      <c:if test="${orderVO.orderState=='03'}"><button id="deferbtn" type="button" class="btn btn-primary" >보류</button></c:if>
-	      <c:if test="${orderVO.orderState=='04'}"><button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button></c:if>
+	      <!--  >button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button-->
 	      <c:if test="${orderVO.orderState=='04'}"><button id="defercancelbtn"  type="button" class="btn btn-danger" >보류폐기</button></c:if>
 	      <c:if test="${orderVO.orderState=='04'}"><button type="button" class="btn btn-info" onClick="fcDefer_list('${orderVO.orderCode}')">보류사유</button></c:if>
 	      <c:if test="${orderVO.orderState=='03'}"><button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcOrder_complete()">검수완료</button></c:if>
 	      <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-default">엑셀변환</button></c:if>
-	      <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-primary">등록완료</button></c:if>
+	      <c:if test="${orderVO.orderState=='03'}"><button type="button" class="btn btn-success" onClick="fcOrderDetail_print()">인쇄</button></c:if>
           </div>
           <div id="deferregdialog" class="form-group" title="보류사유를 입력하세요">
 			<p><textarea style='height:82px' row="3" class="form-control" id="defer_reg_reason_div" name="defer_reg_reason_div"  value=""  placeholder="보류사유"/></p>
-			<button id="deferregsavebtn" type="button" class="btn btn-primary" onClick="fcDefer_process('R')">save</button> <button id="deferregpopclosebtn" type="button" class="btn btn-danger">cancel</button>
+			<button id="deferregsavebtn" type="button" class="btn btn-primary" onClick="fcDefer_process('R')">저장</button> <button id="deferregpopclosebtn" type="button" class="btn btn-danger">취소</button>
           </div>
           <div id="defermodifydialog" class="form-group" title="보류수정사유를 입력하세요">
 			<p><textarea  style='height:82px' row="3" class="form-control" id="defer_modify_reason_div" name="defer_modify_reason_div"  value=""  placeholder="보류수정사유"/></p>
-			<button id="defermodifysavebtn" type="button" class="btn btn-primary" onClick="fcDefer_process('M')">save</button> <button id="defermodifypopclosebtn" type="button" class="btn btn-danger">cancel</button>
+			<button id="defermodifysavebtn" type="button" class="btn btn-primary" onClick="fcDefer_process('M')">저장</button> <button id="defermodifypopclosebtn" type="button" class="btn btn-danger">취소</button>
           </div>
           <div id="defercanceldialog" class="form-group" title="보류폐기사유를 입력하세요">
 			<p><textarea style='height:82px' row="3" class="form-control" id="defer_cancel_reason_div" name="defer_cancel_reason_div"  value=""  placeholder="보류폐기사유"/></p>
-			<button id="defercancelsavebtn" type="button" class="btn btn-primary" onClick="fcDefer_cancel()">save</button> <button id="defercancelpopclosebtn" type="button" class="btn btn-danger">cancel</button>
+			<button id="defercancelsavebtn" type="button" class="btn btn-primary" onClick="fcDefer_cancel()">저장</button> <button id="defercancelpopclosebtn" type="button" class="btn btn-danger">취소</button>
           </div>
           <div id="memoregdialog" class="form-group" title="메모내용을 입력하세요">
 			<p><textarea style='height:82px' row="3" class="form-control" id="memo_reg_div" name="memo_reg_div"  value=""  placeholder="메모내용"/></p>
-			<button id="memoregsavebtn" type="button" class="btn btn-primary" onClick="fcMemo_reg()">save</button> <button id="memoregpopclosebtn" type="button" class="btn btn-danger">cancel</button>
+			<button id="memoregsavebtn" type="button" class="btn btn-primary" onClick="fcMemo_reg()">저장</button> <button id="memoregpopclosebtn" type="button" class="btn btn-danger">취소</button>
           </div>
-          <div style="position:absolute; right:30px" > 
-          <button type="button" class="btn btn-success" onClick="fcOrderDetail_print()">출력</button>
-          <c:if test="${orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-warning" onClick="fcOrder_cancel()">취소</button></c:if>
-          <c:if test="${orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-primary" onClick="alert('개발중입니다.')">재송부</button></c:if>
+          <div style="position:absolute; right:30px" >
+          <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-warning" onClick="fcOrder_cancel()">취소</button></c:if>
+          <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-primary" onClick="alert('개발중입니다.')">재송부</button></c:if>
+          <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-primary">등록완료</button></c:if>
           </div>
           </tr>
           <br><br>

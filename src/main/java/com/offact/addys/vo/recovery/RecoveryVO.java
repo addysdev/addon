@@ -34,9 +34,11 @@ public class RecoveryVO extends AbstractVO {
 	private String addCnt;
 	private String lossCnt;
 	private String memo;
+	private String memoCnt;
 	private String recoveryResultCnt;
 	private String recoveryResultPrice;
 	private String recoveryMemo;
+	private String recoveryMemoCnt;
 	private String recoveryYn;
 	private String createUserId;
 	private String createUserName;
@@ -350,6 +352,18 @@ public class RecoveryVO extends AbstractVO {
 	}
 	public void setProductPrice(String productPrice) {
 		this.productPrice = productPrice;
+	}
+	public String getMemoCnt() {
+		return memoCnt;
+	}
+	public void setMemoCnt(String memoCnt) {
+		this.memoCnt = memoCnt;
+	}
+	public String getRecoveryMemoCnt() {
+		return recoveryMemoCnt;
+	}
+	public void setRecoveryMemoCnt(String recoveryMemoCnt) {
+		this.recoveryMemoCnt = recoveryMemoCnt;
 	}
 	
 }

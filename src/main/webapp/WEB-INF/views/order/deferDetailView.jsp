@@ -483,21 +483,21 @@ function fcDefer_modify(){
 	      </h4>
 	      <tr>
 	      <div style="position:absolute; left:30px" >
-	      <button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button>
+	      <!-- >button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button -->
 	      <button id="defercancelbtn"  type="button" class="btn btn-danger" >보류폐기</button>
 	      <button id="deferlistbtn"  type="button" class="btn btn-info" onClick="fcDefer_list('${targetVO.orderCode}')">보류사유</button>
+	      <!--button type="button" class="btn btn-success" onClick="fcTargetDetail_print()">인쇄</button-->
           </div >
           <div id="defermodifydialog" class="form-group" title="보류수정사유를 입력하세요">
 			<p><textarea style='height:82px' row="3" class="form-control" id="defer_modify_reason_div" name="defer_modify_reason_div"  value=""  placeholder="보류수정사유"/></p>
-			<button id="defermodifysavebtn" type="button" class="btn btn-primary" onClick="fcDefer_modify()">save</button> <button id="defermodifypopclosebtn" type="button" class="btn btn-danger">cancel</button>
+			<button id="defermodifysavebtn" type="button" class="btn btn-primary" onClick="fcDefer_modify()">저장</button> <button id="defermodifypopclosebtn" type="button" class="btn btn-danger">취소</button>
           </div>
           <div id="defercanceldialog" class="form-group" title="보류폐기사유를 입력하세요">
 			<p><textarea style='height:82px' row="3" class="form-control" id="defer_cancel_reason_div" name="defer_cancel_reason_div"  value=""  placeholder="보류폐기사유"/></p>
-			<button id="defercancelsavebtn" type="button" class="btn btn-primary" onClick="fcDefer_cancel()">save</button> <button id="defercancelpopclosebtn" type="button" class="btn btn-danger">cancel</button>
+			<button id="defercancelsavebtn" type="button" class="btn btn-primary" onClick="fcDefer_cancel()">저장</button> <button id="defercancelpopclosebtn" type="button" class="btn btn-danger">취소</button>
           </div>
-          <div style="position:absolute; right:30px" > 
-          <button type="button" class="btn btn-success" onClick="fcTargetDetail_print()">출력</button>
-          <button type="button" class="btn btn-primary" onClick="fcOrder_process()">발주</button>
+          <div style="position:absolute; right:30px" >
+          <!--button type="button" class="btn btn-primary" onClick="fcOrder_process()">발주</button -->
           </div>
           </tr>
           <br><br>
@@ -589,32 +589,34 @@ function fcDefer_modify(){
 	 
      <form:form commandName="deferListVO" id="deferDetailListForm" name="deferDetailListForm" method="post" action="" >
       <p> <span class="glyphicon glyphicon-asterisk"></span> 
+          <span style="color:blue"> [전체갯수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetDetailList.size()}" /> 건</span>
           <span id="totalOrderAmt" style="color:red">
         </span>
       </p>       
 	  <table class="table table-bordered" >
       	<tr style="background-color:#E6F3FF">
-          <th rowspan='2' class='text-center' >보류<br><input type="checkbox"  id="deferCheckAll"  name="deferCheckAll" onchange="fcDefer_checkAll();" title="전체선택" /></th>
+          <!-- >th rowspan='2' class='text-center' >보류<br><input type="checkbox"  id="deferCheckAll"  name="deferCheckAll" onchange="fcDefer_checkAll();" title="전체선택" /></th -->
+          <th rowspan='2' class='text-center' >no</th>
           <th rowspan='2' class='text-center'>품목코드</th>
           <th rowspan='2' class='text-center'>상품명</th>
-          <th colspan='2' class='text-center'>발주</th>
-          <th colspan='5' class='text-center'>재고</th>
+          <th colspan='3' class='text-center'>재고</th>
+          <th colspan='4' class='text-center'>발주</th>
       	</tr>
       	<tr style="background-color:#E6F3FF">
+      	  <th class='text-center'>안전</th>
+          <th class='text-center'>보유</th>
+          <th class='text-center'>전산</th>
           <th class='text-center'>기준단가</th>
           <th class='text-center'>수량</th>
           <th class='text-center'>+</th>
           <th class='text-center'>-</th>
-          <th class='text-center'>안전</th>
-          <th class='text-center'>보유</th>
-          <th class='text-center'>전산</th>
       	</tr>
 	    	<c:if test="${!empty targetDetailList}">
              <c:forEach items="${targetDetailList}" var="targetVO" varStatus="status">
              	 <input type="hidden" id="seqs" name="seqs" >
 	             <c:choose>
 		    		<c:when test="${targetVO.stockCnt<targetVO.safeStock}">
-						<tr id="select_tr_${targetVO.productCode}" style="color:red">
+						<tr id="select_tr_${targetVO.productCode}" style="background-color:#FEE2B4;color:red">
 					</c:when>
 					<c:otherwise>
 						<tr id="select_tr_${targetVO.productCode}">
@@ -625,16 +627,13 @@ function fcDefer_modify(){
 				 <input type="hidden" name="safeStock" value="${targetVO.safeStock}">
 				 <input type="hidden" name="stockCnt" value="${targetVO.stockCnt}">
 				 <input type="hidden" name="stockDate" value="${targetVO.stockDate}">
-                 <c:choose>
-		    		<c:when test="${targetVO.deferCheck=='Y'}">
-						<td class='text-center'><input type="checkbox" id="deferCheck" name="deferCheck" value="${targetVO.productCode}" title="선택" checked/></td>
-					</c:when>
-					<c:otherwise>
-						<td class='text-center'><input type="checkbox" id="deferCheck" name="deferCheck" value="${targetVO.productCode}" title="선택" /></td>
-					</c:otherwise>
-				</c:choose>
+                 <!--  >td class='text-center'><input type="checkbox" id="deferCheck" name="deferCheck" value="${targetVO.productCode}" title="선택" /></td-->
+				 <td class='text-center'><c:out value="${status.count}"></c:out></td>
                  <td class='text-center'><c:out value="${targetVO.productCode}"></c:out></td>
                  <td class='text-left'><c:out value="${targetVO.productName}"></c:out></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeStock}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.holdStock}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.stockCnt}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.productPrice}" /></td>
                  <input type="hidden" id="productPrice" name="productPrice" value="${targetVO.productPrice}" >
                  <td class='text-right' id='orderCntView' name='orderCntView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderCnt}"/></td>
@@ -644,9 +643,6 @@ function fcDefer_modify(){
                  <input type="hidden" id="holdStock" name="holdStock" value="${targetVO.holdStock}" >
                  <td class='text-right'><input style="width:35px" type="text" class="form-control" id="addCnt" name="addCnt" onKeyup="fcAdd_Cnt('${status.count}')" value="${targetVO.addCnt}"></td>
                  <td class='text-right'><input style="width:35px" type="text" class="form-control" id="lossCnt" name="lossCnt" onKeyup="fcLoss_Cnt('${status.count}')" value="${targetVO.lossCnt}"></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeStock}"/></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.holdStock}"/></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.stockCnt}"/></td>
                  <tr>
 	             	<td colspan='10' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${targetVO.etc}" placeholder="비고" /></td>
 	             </tr>

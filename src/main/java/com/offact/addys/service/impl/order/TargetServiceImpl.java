@@ -91,7 +91,7 @@ public class TargetServiceImpl implements TargetService {
 	
 		      //바주대상품목 리스트 삭제 업데이트
 		      this.commonDao.update("Target.deferDeletesProc", targetVo);
-	    
+	    /*
 		      arrDeferProductId = arrDeferProductId.substring(0, arrDeferProductId.lastIndexOf("^"));
 		      String[] arrDeferId = arrDeferProductId.split("\\^");
 	      
@@ -106,7 +106,7 @@ public class TargetServiceImpl implements TargetService {
 		    	retVal=this.commonDao.update("Target.deferUpdateProc", updateMap);
 	
 		    }
-		    
+		  */  
 	    }catch(Exception e){
 	    	
 	    	e.printStackTrace();

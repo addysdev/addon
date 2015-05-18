@@ -54,11 +54,11 @@ function fcMemo_add(){
     			</font></strong></h5>
 	  <form:form commandName="commentVO" id="memoForm" name="memoForm" method="post" action="" >
 	  <input type="hidden" name="orderCode"          id="orderCode"         value="${orderCode}"  />
-	  <input type="hidden" name="commentCategory"          id="commentCategory"         value="03"  />
+	  <input type="hidden" name="commentCategory"          id="commentCategory"         value="${category}"  />
 	  <br>
 	  <table class="table table-bordered" >
 	 	<tr>
-          <th class='text-center' style="background-color:#E6F3FF;width:120px" >발주서 메모</th>
+          <th class='text-center' style="background-color:#E6F3FF;width:120px" >메모</th>
           <th><input type="text" class="form-control" value="${memo}" placeholder="메모" disabled /></th>
       	</tr>
       	<tr>

@@ -55,11 +55,11 @@ function fcEtc_add(){
 	  <form:form commandName="commentVO" id="etcForm" name="etcForm" method="post" action="" >
 	  <input type="hidden" name="orderCode"          id="orderCode"         value="${orderCode}"  />
 	  <input type="hidden" name="productCode"          id="productCode"         value="${productCode}"  />
-	  <input type="hidden" name="commentCategory"          id="commentCategory"         value="04"  />
+	  <input type="hidden" name="commentCategory"          id="commentCategory"         value="${category}"  />
 	  <br>
 	  <table class="table table-bordered" >
 	 	<tr>
-          <th class='text-center' style="background-color:#E6F3FF;width:120px" >발주서 비고</th>
+          <th class='text-center' style="background-color:#E6F3FF;width:120px" >비고</th>
           <th><input type="text" class="form-control" value="${etc}" placeholder="비고" disabled /></th>
       	</tr>
       	<tr>
@@ -70,8 +70,7 @@ function fcEtc_add(){
 	  </form:form>
   <!-- //조회 -->
   <!-- 조회결과리스트 -->
-  <div id=etcList>
-  </div>
+  <div id=etcList></div>
   <!-- //조회결과리스트 -->
 </div>
 <script>

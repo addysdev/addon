@@ -28,9 +28,9 @@ function resultMsg(result){
 	 result=result.replace('check0002','비고 comment를 정상적으로 등록하지 못 했습니다..\n시스템 관리자에게 문의하세요.');
 	 
 	//회수 등록처리
-	 result=result.replace('recover0000','회수 품목 요청을 완료했습니다.');
-	 result=result.replace('recover0001','처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
-	 result=result.replace('recover0002','회수 품목 요청을 정상적으로 처리하지 못 했습니다..\n시스템 관리자에게 문의하세요.');
+	 result=result.replace('recovery0000','회수 품목 요청을 완료했습니다.');
+	 result=result.replace('recovery0001','처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
+	 result=result.replace('recovery0002','회수 품목 요청을 정상적으로 처리하지 못 했습니다..\n시스템 관리자에게 문의하세요.');
 	 
 	 alert(result);
 

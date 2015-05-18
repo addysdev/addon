@@ -63,10 +63,7 @@
 <select id="getTargetPageList"  resultMap="targetVO" parameterType="com.offact.addys.vo.order.TargetVO" >
 
   Select ifnull(T1.orderCode,'X') as orderCode,
-         Case T1.orderState When '01' Then '대기'
-  						   When '02' Then '보류'
-  						   Else ''
-         				   End orderStateView,
+         T5.codeName As orderStateView,
          T1.orderState,
          T1.groupID,
          T4.groupName,
@@ -135,6 +132,7 @@
               Left Join adProductMaster T2 On T1.ProductCode = T2.ProductCode
               Left Join adCompany T3 On T2.companyCode = T3.companyCode 
               Left Join ofGroup T4 On T1.groupID = T4.groupID 
+              Left Join ofCode T5 On T1.orderState = T5.codeId and T5.codeGroupId = 'OD01'
 			  Group By T1.groupID,
 			           T2.companyCode
 			  LIMIT ${page_limit_val1} , ${page_limit_val2}
@@ -259,6 +257,10 @@
                                                E2.orderDateTime
 											From  adOrderDetail E1 
 												  Left Join adOrder E2 On E1.orderCode=E2.orderCode 
+										    Where 1=1
+										    <if test="con_orderState != null and con_orderState != '08'" >
+           										And E1.deletedYn='N'
+           									</if>
 									   ) As I3 On I1.productCode = I3.productCode And I1.groupID = I3.groupID 
 					     Where 1=1 
 					     	AND I1.groupId = #{con_groupId}

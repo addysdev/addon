@@ -34,7 +34,8 @@
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load(url+'?recoveryCode='+recoveryCode+'&groupId='+groupId);
+                $(this).load(url+'?recoveryCode='+recoveryCode+'&groupId='+groupId+'&groupName='+encodeURIComponent(groupName)+
+                		'&recoveryState='+recoveryState);
                
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#recoveryDetailView").dialog('close');

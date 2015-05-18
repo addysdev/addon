@@ -192,8 +192,8 @@
            		</select>
 				<label class="sr-only" for="searchValue"> 조회값 </label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${userConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
-				<button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_listSearch()">search</button>
-	            <button type="button" class="btn" onClick="">excel</button>
+				<button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_listSearch()">조회</button>
+	            <!-- >button type="button" class="btn" onClick="">excel</button -->
             </div>
 	    </fieldset>
 	  </form:form>
@@ -204,8 +204,8 @@
   
   <!-- //사용자 등록/삭제 -->
   <button type="button" class="btn btn-primary" onClick="fcUserManage_excelForm()">사용자 일괄등록</button>
-  <button type="button" class="btn btn-primary" onClick="fcUserManage_regForm()">regist</button>
-  <button type="button" class="btn btn-danger" onClick="fcUserManage_delete()">delete</button>
+  <button type="button" class="btn btn-primary" onClick="fcUserManage_regForm()">등록</button>
+  <button type="button" class="btn btn-danger" onClick="fcUserManage_delete()">삭제</button>
   
   <!-- 사용자 일괄등록-->
   <div id="userExcelForm"  title="사용자 일괄등록"></div>

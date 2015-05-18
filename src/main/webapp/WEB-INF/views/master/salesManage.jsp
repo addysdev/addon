@@ -97,7 +97,7 @@
 		                </select>
 					</c:otherwise>
 				</c:choose>
-                <button type="button" class="btn btn-primary" onClick="javascript:fcSales_listSearch()">search</button>
+                <button type="button" class="btn btn-primary" onClick="javascript:fcSales_listSearch()">조회</button>
                 <!--  >button type="button" class="btn" onClick="">excel</button-->
         	</div>
       	</fieldset>
@@ -109,7 +109,7 @@
   </div>
   <!-- //조회결과리스트 -->
   <!-- //사용자 등록/삭제 -->
-  <button type="button" class="btn btn-primary" onClick="fcSales_excelForm()">매출현황 excel 업로드</button>
+  <button type="button" class="btn btn-primary" onClick="fcSales_excelForm()">매출현황 엑셀 업로드</button>
   <!-- 재고현황 일괄등록-->
   <div id="salesExcelForm"  title="매출현황 일괄등록"></div>
   <!-- //재고현황 일괄등록 -->

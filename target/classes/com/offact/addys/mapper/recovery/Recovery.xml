@@ -27,9 +27,11 @@
   <result column="addCnt"           property="addCnt"  />  
   <result column="lossCnt"           property="lossCnt"  />
   <result column="memo"           property="memo"  />
+  <result column="memoCnt"           property="memoCnt"  />
   <result column="recoveryResultCnt"           property="recoveryResultCnt"  />
   <result column="recoveryResultPrice"           property="recoveryResultPrice"  />
   <result column="recoveryMemo"           property="recoveryMemo"  />
+  <result column="recoveryMemoCnt"           property="recoveryMemoCnt"  />
   <result column="recoveryYn"           property="recoveryYn"  />
   <result column="updateUserId"           property="updateUserId"  />
   <result column="updateUserName"           property="updateUserName"  />
@@ -151,6 +153,26 @@
 			           
 </select>
 
+<select id="getRecoveryDetail"  resultMap="recoveryVO" parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
+
+  Select T1.recoveryCode,
+         T1.groupId,
+         T2.groupName,
+         T1.recoveryState,
+         T1.regDateTime,
+         T1.regUserId,
+         T3.userName as regUserName,
+         T1.recoveryClosingDate,
+         T1.memo,
+         count(T4.idx) as memoCnt
+    From adRecovery T1
+         Left Join ofGroup T2 On T1.groupId=T2.groupId
+         Left Join ofUser T3 On T1.regUserId=T3.userId
+         Left Join adComment T4 On T1.recoveryCode = T4.orderCode And T4.commentCategory='05'
+    Where T1.recoveryCode = #{recoveryCode}
+    
+</select>
+
 <select id="getRecoveryDetailList"  resultMap="recoveryVO" parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
 
   Select T5.companyName,
@@ -162,13 +184,17 @@
          T4.lossCnt,
          T4.productPrice,
          T4.recoveryYn,
-         T4.recoveryMemo
+         T4.recoveryMemo,
+         count(T6.idx) as recoveryMemoCnt,
+         T4.recoveryState
     From (
-          Select T3.companyCode,
+          Select  T1.recoveryCode,
+               T1.recoveryState, 
+               T3.companyCode,
                T2.productCode,
                T3.productName,
-        		   K1.stockCnt,
-        		   T2.lossCnt,
+        	   K1.stockCnt,
+        	   T2.lossCnt,
                T2.addCnt,
                Case T1.recoveryState When '01' Then K1.stockCnt Else T2.recoveryResultCnt End recoveryResultCnt,
         		   T3.productPrice,
@@ -188,10 +214,10 @@
                         						Group By  groupId,productCode 
                         						) A1
                  ) As K1 On T1.groupId = K1.groupId And T2.productCode = K1.productCode
-            Where T1.regDateTime between concat('2015-05-10',' 00:00:00') and concat('2015-05-17',' 23:59:59')
-                  And T1.recoveryCode = 'RAD0011431843445468'
+            Where T1.recoveryCode = #{recoveryCode}
            ) As T4
            Left Join adCompany T5 On T4.companyCode = T5.companyCode
+           Left Join adComment T6 On T4.recoveryCode = T6.orderCode  And T4.productCode=T6.productCode And T6.commentCategory='06'
      Where T4.deletedYn='N'
      Order by T4.productCode asc
 </select>
@@ -217,6 +243,7 @@ insert into adRecovery (
         ,regDateTime
         ,recoveryState
         ,deletedYn
+        ,memo
 		)values(
 				 #{recoveryCode}
 				 , #{groupId}
@@ -225,6 +252,7 @@ insert into adRecovery (
 	  			, now()
 	  			, '01'
                 , 'N'
+                ,#{memo}
 		)
 		                        
 </insert>

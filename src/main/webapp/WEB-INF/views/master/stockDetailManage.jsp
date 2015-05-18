@@ -50,8 +50,8 @@
            		</select>
 				<label class="sr-only" for="searchValue"> 조회값 </label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${productConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
-				<button type="button" class="btn btn-primary" onClick="javascript:fcStockDetail_listSearch()">search</button>
-	            <button type="button" class="btn" onClick="">excel</button>
+				<button type="button" class="btn btn-primary" onClick="javascript:fcStockDetail_listSearch()">조회</button>
+	            <!-- >button type="button" class="btn" onClick="">excel</button -->
             </div>
 	    </fieldset>
         </form:form>

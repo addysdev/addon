@@ -65,6 +65,7 @@ public class RecoveryServiceImpl implements RecoveryService {
 		    	recoveryVO.setRecoveryCode(recoveryCode);
 		    	recoveryVO.setRecoveryClosingDate(recovery.getRecoveryClosingDate());
 		    	recoveryVO.setRegUserId(recovery.getRegUserId());
+		    	recoveryVO.setMemo(recovery.getMemo());
 		    	
 		    	retVal=this.commonDao.insert("Recovery.recoveryInsert", recoveryVO);
 		    	
@@ -111,6 +112,10 @@ public class RecoveryServiceImpl implements RecoveryService {
 	    return retVal;
 	    
    }
+    @Override
+    public RecoveryVO getRecoveryDetail(RecoveryVO recoveryCon) throws BizException {
+        return commonDao.selectOne("Recovery.getRecoveryDetail", recoveryCon);
+    }
     @Override
     public List<RecoveryVO> getRecoveryDetailList(RecoveryVO recovery) throws BizException {
     	

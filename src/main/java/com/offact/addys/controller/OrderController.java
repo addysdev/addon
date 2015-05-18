@@ -966,7 +966,7 @@ public class OrderController {
         logger.info("@#@#@# targetVO.getDefer_reason : " + targetVO.getDeferReason());
 	    
 	    targetVO.setDeferUserId(strUserId);
-	    targetVO.setOrderState("01");
+	    targetVO.setOrderState("08");
 	    targetVO.setDeletedYn("Y");
 	    targetVO.setDeletedUserId(strUserId);
   
@@ -1423,6 +1423,7 @@ public class OrderController {
     public ModelAndView memoManage(HttpServletRequest request, 
     		                       HttpServletResponse response,
 		                           String orderCode,
+		                           String category,
 		                           String memo) throws BizException 
     {
         
@@ -1440,6 +1441,7 @@ public class OrderController {
         
         // 조회조건저장
         mv.addObject("orderCode", orderCode);
+        mv.addObject("category", category);
         mv.addObject("memo", memo);
 
         mv.setViewName("/order/memoManage");
@@ -1567,6 +1569,7 @@ public class OrderController {
     public ModelAndView etcManage(HttpServletRequest request, 
     		                       HttpServletResponse response,
 		                           String orderCode,
+		                           String category,
 		                           String productCode,
 		                           String productName,
 		                           String etc) throws BizException 
@@ -1586,6 +1589,7 @@ public class OrderController {
         
         // 조회조건저장
         mv.addObject("orderCode", orderCode);
+        mv.addObject("category", category);
         mv.addObject("productCode", productCode);
         mv.addObject("productName", productName);
         mv.addObject("etc", etc);

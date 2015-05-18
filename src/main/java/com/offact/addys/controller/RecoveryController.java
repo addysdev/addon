@@ -342,19 +342,12 @@ public class RecoveryController {
      */
     @RequestMapping(value = "/recovery/recoverydetailview")
     public ModelAndView recoveryDetailView( HttpServletRequest request, 
-    		                              HttpServletResponse response,
-    		                              String recoveryCode,
-    		                              String groupId,
-    		                              String groupName,
-    		                              String recoveryState,
-    		                              String regDateTime,
-    		                              String recoveryClosingDate) throws BizException 
+    		                              String recoveryCode) throws BizException 
     {   	
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : groupId : [" + groupId+"] groupName : ["+groupName+
-				"] recoveryState : ["+recoveryState+"] regDateTime : ["+regDateTime+"] recoveryClosingDate : ["+recoveryClosingDate+"]");
+		logger.info("["+logid+"] Controller start : recoveryCode : [" + recoveryCode+"]");
 
         ModelAndView mv = new ModelAndView();
         List<RecoveryVO> recoveryDetailList = null;
@@ -371,16 +364,13 @@ public class RecoveryController {
         String strToday = simpleDateFormat.format(currentTime);
         
         RecoveryVO recoveryConVO = new RecoveryVO();
+        RecoveryVO recoveryVO = new RecoveryVO();
 
         recoveryConVO.setRecoveryCode(recoveryCode);
-        recoveryConVO.setCon_groupId(groupId);
-        recoveryConVO.setCon_recoveryState(recoveryState);
-        recoveryConVO.setGroupName(groupName);
-        recoveryConVO.setRegDateTime(regDateTime);
-        recoveryConVO.setRecoveryClosingDate(recoveryClosingDate);
 
-        // 조회조건저장
-        mv.addObject("recoveryConVO", recoveryConVO);
+        recoveryVO=recoverySvc.getRecoveryDetail(recoveryConVO);
+
+        mv.addObject("recoveryVO", recoveryVO);
 
         
         //회수대상 상세정보

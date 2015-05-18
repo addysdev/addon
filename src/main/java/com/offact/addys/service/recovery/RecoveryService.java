@@ -38,6 +38,14 @@ public interface RecoveryService {
      */
     public int regiRecoveryRegist(RecoveryVO recovery, String arrCheckGroupId ,String arrSelectProductId)
     	    throws BizException;
+    
+    /**
+     * 회수대상 상세 조회
+     * 
+     * @return
+     * @throws BizException
+     */
+    public RecoveryVO getRecoveryDetail(RecoveryVO recoveryCon) throws BizException;
     /**
      * 회수대상 상세목록 조회
      * 

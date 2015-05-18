@@ -62,7 +62,7 @@
                     	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
                     </c:forEach>
            		</select>
-				<button type="button" class="btn btn-primary" onClick="javascript:fcTarget_listSearch()">search</button>
+				<button type="button" class="btn btn-primary" onClick="javascript:fcTarget_listSearch()">조회</button>
 	            <!--  >button type="button" class="btn" onClick="">excel</button-->
             </div>
 	    </fieldset>
