@@ -46,7 +46,7 @@
             </c:if>
            <c:if test="${empty stockDetailList}">
               <tr>
-                  <td colspan='2' class='text-center'>조회된 데이터가 없습니다.</td>
+                  <td colspan='5' class='text-center'>조회된 데이터가 없습니다.</td>
               </tr>
           </c:if>
 	    </tbody>

@@ -1340,7 +1340,7 @@ public class OrderController {
     /**
      * 발주 취소 처리
      *
-     * @param TargetVO
+     * @param OrderVO
      * @param request
      * @param response
      * @param model
@@ -1372,7 +1372,7 @@ public class OrderController {
 
 	    orderVO.setDeletedYn("Y");
 	    orderVO.setDeletedUserId(strUserId);
-	    orderVO.setOrderState("01");//발주대기로변경
+	    orderVO.setOrderState("09");//발주취소로변경
   
         try{//01.취소처리
     	    
@@ -1408,7 +1408,77 @@ public class OrderController {
 
     return deferResult;
     }
-   
+    /**
+     * 발주 등록 처리
+     *
+     * @param OrderVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping({"/order/orderbuy"})
+    public @ResponseBody
+    String orderBuy(@ModelAttribute("orderVO") OrderVO orderVO,
+    		           HttpServletRequest request) throws BizException
+    {
+      
+	    //log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : orderVO" + orderVO);
+			
+		String deferResult="order0020";
+		
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+
+	    orderVO.setDeletedYn("N");
+	    orderVO.setBuyUserId(strUserId);
+	    orderVO.setOrderState("07");//등록완료로변경
+  
+        try{//01.취소처리
+    	    
+        	int dbResult=orderSvc.regiOrderBuy(orderVO);
+             
+	    	if(dbResult<1){//처리내역이 없을경우
+	    		
+	    		//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+		        return "order0021";
+		        
+	    	}
+	   
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+	        return "order0022\n[errorMsg] : "+errMsg;
+	    	
+	    }
+		
+		//log Controller execute time end
+	 	long t2 = System.currentTimeMillis();
+	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+    return deferResult;
+    }
     /**
      * 메모관리
      *

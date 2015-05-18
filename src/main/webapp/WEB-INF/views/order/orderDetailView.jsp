@@ -215,7 +215,7 @@ $(function() {
     		return;
     	}
 
-    	 if (confirm('보류내용을 폐기 하시겠습니까?')){ 
+    	 if (confirm('보류내용을 폐기 하시겠습니까?\n폐기 하실 경우 검수대기 상태로 변경 됩니다.\n폐기 사유는 검수대기 상태에서 확인 가능합니다.')){ 
         	 
     		 document.orderDetailForm.deferReason.value=$("#defer_cancel_reason_div").val();
     		 document.orderDetailForm.deferType.value='D';
@@ -282,7 +282,7 @@ $(function() {
     
     function fcOrder_cancel(){
     	
-    	 if (confirm('발주 내용을 취소 하시겠습니까?')){ 
+    	 if (confirm('발주 내용을 취소 하시겠습니까?\n취소하 실 경우 모든 발주내용은 발주대기 상태에 포함됩니다.')){ 
         	 
            var paramString = $("#orderDetailForm").serialize();
         	 
@@ -311,6 +311,81 @@ $(function() {
     	 } 
 
     }
+    function fcOrder_buy(){
+    	
+   	 if (confirm('eccount 매입처리를 하셨습니까?\n본 과정은 수정되지 않습니다')){ 
+       	 
+   		 if (confirm('등록 완료 하시겠습니까?\n처리시 본 매입건은 종료 됩니다.')){ 
+   	       	 
+          var paramString = $("#orderDetailForm").serialize();
+       	 
+	 		$.ajax({
+	       type: "POST",
+	       async:false,
+	          url:  "<%= request.getContextPath() %>/order/orderbuy",
+	          data:paramString,
+	          success: function(result) {
+	
+	        	resultMsg(result);
+				
+				$('#orderDetailView').dialog('close');
+				fcOrder_listSearch();
+					
+	          },
+	          error:function(){
+	          
+	          alert('등록 처리 호출오류!');
+			  $('#orderDetailView').dialog('close');
+			  fcOrder_listSearch();
+	          }
+	    	
+	 		});
+   		 }	
+   	 } 
+
+   }
+function totalTargetAmt(){
+    	
+    	var frm=document.orderDetailListForm;
+    	var amtCnt = frm.productCode.length;
+    	
+    	var supplyamt=0;
+    	var vatamt=0;
+    	var totalamt=0;
+    	
+    	if(amtCnt > 1){
+    		
+	    	for(i=0;i<amtCnt;i++){
+	    		
+	    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderPrice[i].value))));
+	    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt[i].value))));
+	    		var vatAmt=frm.orderVatRate[i].value;
+	    		
+	    		var sum_supplyAmt=productPrice*orderCnt;
+	    		supplyamt=supplyamt+sum_supplyAmt;
+	    		
+	    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
+	    		vatamt=vatamt+sum_vatAmt;
+	    	}
+	    	
+    	}else{
+    		
+    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderPrice.value))));
+    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt.value))));
+    		var vatAmt=frm.orderVatRate.value;
+    		var sum_supplyAmt=productPrice*orderCnt;
+
+    		var sum_supplyAmt=productPrice*orderCnt;
+    		supplyamt=supplyamt+sum_supplyAmt;
+    		
+    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
+    		vatamt=vatamt+sum_vatAmt;
+    	}
+
+    	  totalamt=supplyamt+vatamt;
+    	
+    	  document.all('totalTargetAmt').innerText='[합계] : '+addCommaStr(''+totalamt)+' 원  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
+    }
     function totalOrderAmt(){
     	
     	var frm=document.orderDetailListForm;
@@ -326,30 +401,33 @@ $(function() {
 	    		
 	    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultPrice[i].value))));
 	    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultCnt[i].value))));
-	    		var vatRate=frm.orderVatRate[i].value;
+	    		var vatAmt=frm.orderVatRate[i].value;
 	    		var sum_supplyAmt=productPrice*orderCnt;
 	
+	    		var sum_supplyAmt=productPrice*orderCnt;
 	    		supplyamt=supplyamt+sum_supplyAmt;
-	    		var sum_vatAmt=Math.round(sum_supplyAmt*vatRate);
+	    		
+	    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
+	    		vatamt=vatamt+sum_vatAmt;
 	
 	    		document.all('orderTotalPriceView')[i].innerText=addCommaStr(''+(productPrice*orderCnt));
 	
-	    		vatamt=vatamt+sum_vatAmt;
 	    	}
 	    	
     	}else{
     		
     		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultPrice.value))));
     		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultCnt.value))));
-    		var vatRate=frm.orderVatRate.value;
+    		var vatAmt=frm.orderVatRate.value;
     		var sum_supplyAmt=productPrice*orderCnt;
 
+    		var sum_supplyAmt=productPrice*orderCnt;
     		supplyamt=supplyamt+sum_supplyAmt;
-    		var sum_vatAmt=Math.round(sum_supplyAmt*vatRate);
+    		
+    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
+    		vatamt=vatamt+sum_vatAmt;
 
     		document.all('orderTotalPriceView').innerText=addCommaStr(''+(productPrice*orderCnt));
-
-    		vatamt=vatamt+sum_vatAmt;
     	}
 
     	  totalamt=supplyamt+vatamt;
@@ -393,10 +471,11 @@ $(function() {
 	  	}
     	
     	if(amtCnt==chkCnt){//검수버튼 활성화
-    		
+    		frm.orderCheckAll.checked=true;
     		document.all('checkbtn').disabled=false;
     		
     	}else{
+    		frm.orderCheckAll.checked=false;
     		document.all('checkbtn').disabled=true;
     	}
 
@@ -546,7 +625,7 @@ $(function() {
 	      <c:if test="${orderVO.orderState=='03'}"><button id="deferbtn" type="button" class="btn btn-primary" >보류</button></c:if>
 	      <!--  >button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button-->
 	      <c:if test="${orderVO.orderState=='04'}"><button id="defercancelbtn"  type="button" class="btn btn-danger" >보류폐기</button></c:if>
-	      <c:if test="${orderVO.orderState=='04'}"><button type="button" class="btn btn-info" onClick="fcDefer_list('${orderVO.orderCode}')">보류사유</button></c:if>
+	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" class="btn btn-info" onClick="fcDefer_list('${orderVO.orderCode}')">보류사유</button></c:if>
 	      <c:if test="${orderVO.orderState=='03'}"><button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcOrder_complete()">검수완료</button></c:if>
 	      <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-default">엑셀변환</button></c:if>
 	      <c:if test="${orderVO.orderState=='03'}"><button type="button" class="btn btn-success" onClick="fcOrderDetail_print()">인쇄</button></c:if>
@@ -570,7 +649,7 @@ $(function() {
           <div style="position:absolute; right:30px" >
           <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-warning" onClick="fcOrder_cancel()">취소</button></c:if>
           <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-primary" onClick="alert('개발중입니다.')">재송부</button></c:if>
-          <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-primary">등록완료</button></c:if>
+          <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-primary" onClick="fcOrder_buy()">등록완료</button></c:if>
           </div>
           </tr>
           <br><br>
@@ -647,9 +726,15 @@ $(function() {
 	 
      <form:form commandName="orderListVO" id="orderDetailListForm" name="orderDetailListForm" method="post" action="" >
       <p> <span class="glyphicon glyphicon-asterisk"></span> 
+      <span style="color:blue"> [전체갯수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderDetailList.size()}" /> 건  [발주금액 Total] :</span>
+          <span id="totalTargetAmt" style="color:gray">
+        </span>
+      </p>  
+      <p><span class="glyphicon glyphicon-asterisk"></span> 
+          <span style="color:blue"> [검수금액 Total] :</span>
           <span id="totalOrderAmt" style="color:red">
         </span>
-      </p>       
+      </p>     
 	  <table class="table table-bordered" >
       	<tr style="background-color:#E6F3FF">
           <th rowspan='2' class='text-center' >검수<br>
@@ -684,10 +769,10 @@ $(function() {
 		    		<c:when test="${orderVO.orderState!='06' && orderVO.orderState!='07'}">
 	                 <c:choose>
 			    		<c:when test="${orderVO.orderCheck=='Y'}">
-							<td class='text-center'><input type="checkbox" id="orderCheck" name="orderCheck" value="${orderVO.productCode}" title="선택" checked onChange="totalCheck()" /></td>
+							<td class='text-center'>${status.count}.<input type="checkbox" id="orderCheck" name="orderCheck" value="${orderVO.productCode}" title="선택" checked onChange="totalCheck()" /></td>
 						</c:when>
 						<c:otherwise>
-							<td class='text-center'><input type="checkbox" id="orderCheck" name="orderCheck" value="${orderVO.productCode}" title="선택" onChange="totalCheck()" /></td>
+							<td class='text-center'>${status.count}.<input type="checkbox" id="orderCheck" name="orderCheck" value="${orderVO.productCode}" title="선택" onChange="totalCheck()" /></td>
 						</c:otherwise>
 					</c:choose>
 					</c:when>
@@ -699,10 +784,12 @@ $(function() {
                  <td class='text-center'><c:out value="${orderVO.barCode}"></c:out></td>
                  <td class='text-left'><c:out value="${orderVO.productName}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.orderPrice}" /></td>
-                 <td class='text-right'><input style="width:45px" type="text" class="form-control" id="orderVatRate" name="orderVatRate" onKeyup="totalOrderAmt()" value="${orderVO.orderVatRate}"></td>
+                 <input type="hidden" name="orderPrice" value="${orderVO.orderPrice}">
+                 <td class='text-right'><input style="width:80px" type="text" class="form-control" id="orderVatRate" name="orderVatRate" onKeyup="totalOrderAmt()" value="${orderVO.orderVatRate}"></td>
                  <td class='text-right'><input style="width:80px" type="text" class="form-control" id="orderResultPrice" name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderResultPrice}"></td>
                  <td class='text-right' id='orderTotalPriceView' name='orderTotalPriceView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="0"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.orderCnt}"/></td>
+                 <input type="hidden" name="orderCnt" value="${orderVO.orderCnt}">
                  <td class='text-right'><input style="width:35px" type="text" class="form-control" id="orderResultCnt" name="orderResultCnt" onKeyup="totalOrderAmt()" value="${orderVO.orderResultCnt}"></td>
                  <td class='text-right'><img id="etcbtn" onClick="fcEtc_detail('${orderVO.orderCode}','${orderVO.productCode}','${orderVO.productName}','${orderVO.etc}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고"></td>
                   <tr>
@@ -754,6 +841,7 @@ $(function() {
                 });
     });
     
+    totalTargetAmt();
     totalOrderAmt();
     totalCheck();
     

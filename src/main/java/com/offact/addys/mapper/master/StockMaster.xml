@@ -27,8 +27,8 @@
 			  ,T2.userName As createUserName
 			  ,T1.updateUserId
 			  ,T3.userName As updateUserName
-			  ,T1.createDateTime 
-			  ,T1.updateDateTime
+			  ,DATE_FORMAT(T1.createDateTime,'%Y-%m-%d %T') as createDateTime  
+			  ,DATE_FORMAT(T1.updateDateTime,'%Y-%m-%d %T') as updateDateTime
 			  ,T1.deletedYn
           FROM adStockMaster T1
                Left Join ofUser T2 On T1.createUserId=T2.userId

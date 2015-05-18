@@ -71,7 +71,7 @@
     
     Select TEMP.orderStateView,
            TEMP.orderCode,
-           TEMP.orderDateTime,
+           DATE_FORMAT(TEMP.orderDateTime, '%Y-%m-%d') as orderDateTime,
            TEMP.orderUserName,
            TEMP.groupId,
            TEMP.groupName,
@@ -315,7 +315,7 @@
  			  And productCode = #{productCode}
 </update>
 
-<update id="updateOrder"  parameterType="com.offact.addys.vo.order.OrderVO" >
+<update id="updateCancelOrder"  parameterType="com.offact.addys.vo.order.OrderVO" >
 		update adOrder 
 			set
 				orderState = #{orderState}
@@ -330,9 +330,20 @@
 	
 		update adOrderDetail 
 			set
-				 deletedYn = 'Y'
-            	,updateUserId = #{deletedUserId}
+				 deletedYn = #{deletedYn}
+            	,updateUserId = #{updateUserId}
             	,updateDateTime = now()
+		where orderCode = #{orderCode}
+		                        
+</update>
+
+<update id="updateBuyOrder"  parameterType="com.offact.addys.vo.order.OrderVO" >
+		update adOrder 
+			set
+				orderState = #{orderState}
+            	,buyUserId = #{buyUserId}
+            	,buyDateTime = now()
+            	,buyResult = 'Y'
 		where orderCode = #{orderCode}
 		                        
 </update>

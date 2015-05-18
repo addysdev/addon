@@ -148,7 +148,29 @@ public class OrderServiceImpl implements OrderService {
  	    
  	    try{//보류사유 등록 /보류처리
  	
- 	    	retVal=this.commonDao.update("Order.updateOrder", orderVo);
+ 	    	retVal=this.commonDao.update("Order.updateCancelOrder", orderVo);
+ 	    	this.commonDao.update("Order.updateOrderDetail", orderVo);
+
+ 	    }catch(Exception e){
+ 	    	
+ 	    	e.printStackTrace();
+ 	    	e.printStackTrace();
+ 	    	throw new BizException(e.getMessage());
+
+ 	    }
+ 	
+ 	    return retVal;
+ 	    
+   }
+    @Override
+    public int regiOrderBuy(OrderVO orderVo)
+    	    throws BizException
+ 	{
+ 	    int retVal=-1;
+ 	    
+ 	    try{//보류사유 등록 /보류처리
+ 	
+ 	    	retVal=this.commonDao.update("Order.updateBuyOrder", orderVo);
  	    	this.commonDao.update("Order.updateOrderDetail", orderVo);
 
  	    }catch(Exception e){

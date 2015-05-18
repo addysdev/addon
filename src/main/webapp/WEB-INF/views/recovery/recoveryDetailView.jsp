@@ -1,119 +1,123 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <SCRIPT>
+
+//회수처리
+function fcRecovery_process(){
+
+        var frm = document.recoveryDetailListForm;
+   /*
+    	if(frm.seqs.length>1){
+       		for(i=0;i<frm.seqs.length;i++){
+				frm.seqs[i].value=fillSpace(frm.recoveryCode[i].value)+
+       			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
+       			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
+       			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value);
  
-function fcDefer_modify(){
-	
-    	if($("#defer_modify_reason_div").val()==''){
-    		alert('보류사유를 입력하세요!');
-    		return;
-    	}else{
-    		
-    		var checkedCnt = $('input:checkbox[ name="deferCheck"]:checked').length;
+       		}
+       	}else{
+       		
+			frm.seqs.value=fillSpace(frm.productCode.value)+
+   			'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
+   			'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
+   			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value);
 
-        	if(checkedCnt <= 0){
-            	alert("보류 대상을 선택해 주세요!");
-            	return;
-            }
+
+       	}
+*/
+        if (confirm('회수 요청건을 처리 하시겠습니까?')){ 
+        	
+        	return;
+        	
+            document.deferDetailForm.deferReason.value=$("#defer_modify_reason_div").val();
+            document.deferDetailForm.deferType.value='M';
             
-            var arrDeferProductId = "";
-            $('input:checkbox[name="deferCheck"]').each(function() {
-                if ($(this).is(":checked")) {
-                	arrDeferProductId += $(this).val() + "^";
-                }   
-            });
-            
-            var frm = document.deferDetailListForm;
-       
-        	if(frm.seqs.length>1){
-           		for(i=0;i<frm.seqs.length;i++){
-   					frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
-           			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
-           			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
-           			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value);
-     
-           		}
-           	}else{
-           		
-   				frm.seqs.value=fillSpace(frm.productCode.value)+
-       			'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
-       			'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
-       			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value);
-
-
-           	}
-
-            if (confirm('보류내용을 수정 하시겠습니까?')){ 
-            	
-                document.deferDetailForm.deferReason.value=$("#defer_modify_reason_div").val();
-                document.deferDetailForm.deferType.value='M';
-                
-                var paramString = $("#deferDetailForm").serialize()+ "&arrDeferProductId="+arrDeferProductId+'&'+$("#deferDetailListForm").serialize();
-     	
-		  		$.ajax({
-			       type: "POST",
-			       async:false,
-			          url:  "<%= request.getContextPath() %>/order/deferprocess",
-			          data:paramString,
-			          success: function(result) {
-		
-			        	resultMsg(result);
-	
-						$('#defermodifydialog').dialog('close');
-						$('#targetDetailView').dialog('close');
-						fcTarget_listSearch();
-							
-			          },
-			          error:function(){
-	
-			          alert('호출오류!');
-					  $('#targetDetailView').dialog('close');
-				     
-			          }
-			    });
-            }
-    	}	
-	}
-    function fcDefer_cancel(){
-    	
-    	if($("#defer_cancel_reason_div").val()==''){
-    		alert('보류폐기 사유를 입력하세요!');
-    		return;
-    	}
-   	    
-    	if (confirm('보류내용을 폐기 하시겠습니까?')){ 
-   		 
-   		 document.deferDetailForm.deferReason.value=$("#defer_cancel_reason_div").val();
-   		 document.deferDetailForm.deferType.value='M';
-		 var paramString = $("#deferDetailForm").serialize();
-
+            var paramString = $("#deferDetailForm").serialize()+ "&arrDeferProductId="+arrDeferProductId+'&'+$("#deferDetailListForm").serialize();
+ 	
 	 		$.ajax({
+		       type: "POST",
+		       async:false,
+		          url:  "<%= request.getContextPath() %>/order/deferprocess",
+		          data:paramString,
+		          success: function(result) {
+		
+		        	resultMsg(result);
+		
+					$('#defermodifydialog').dialog('close');
+					$('#targetDetailView').dialog('close');
+					fcTarget_listSearch();
+						
+		          },
+		          error:function(){
+		
+		          alert('호출오류!');
+				  $('#targetDetailView').dialog('close');
+			     
+		          }
+		    });
+	   }
+	
+	}
+//회수 검수처리
+function fcRecovery_complete(){
+
+    var arrDeferProductId = "";
+    $('input:checkbox[name="deferCheck"]').each(function() {
+        if ($(this).is(":checked")) {
+        	arrDeferProductId += $(this).val() + "^";
+        }   
+    });
+    
+    var frm = document.deferDetailListForm;
+
+	if(frm.seqs.length>1){
+   		for(i=0;i<frm.seqs.length;i++){
+				frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
+   			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
+   			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
+   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value);
+
+   		}
+   	}else{
+   		
+			frm.seqs.value=fillSpace(frm.productCode.value)+
+			'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
+			'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
+			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value);
+
+
+   	}
+
+    if (confirm('보류내용을 수정 하시겠습니까?')){ 
+    	
+        document.deferDetailForm.deferReason.value=$("#defer_modify_reason_div").val();
+        document.deferDetailForm.deferType.value='M';
+        
+        var paramString = $("#deferDetailForm").serialize()+ "&arrDeferProductId="+arrDeferProductId+'&'+$("#deferDetailListForm").serialize();
+	
+  		$.ajax({
 	       type: "POST",
 	       async:false,
-	          url:  "<%= request.getContextPath() %>/order/defercancel",
+	          url:  "<%= request.getContextPath() %>/order/deferprocess",
 	          data:paramString,
 	          success: function(result) {
-	
+
 	        	resultMsg(result);
-				
-	        	$('#defercanceldialog').dialog('close');
+
+				$('#defermodifydialog').dialog('close');
 				$('#targetDetailView').dialog('close');
 				fcTarget_listSearch();
 					
 	          },
 	          error:function(){
-	          
-	          alert('보류 처리 호출오류!');
-	          $('#defercanceldialog').dialog('close');
+
+	          alert('호출오류!');
 			  $('#targetDetailView').dialog('close');
-			  fcTarget_listSearch();
+		     
 	          }
-	    	
-	 		});
-	 		
-    	 } 
-    	
+	    });
     }
-    
+
+}
     function totalRecoveryAmt(){
     	
     	var frm=document.recoveryDetailListForm;
@@ -220,7 +224,7 @@ function fcDefer_modify(){
     	$("input:checkbox[id='recoveryCheck']").prop("checked", $("#recoveryCheckAll").is(":checked"));
     }
 	
- // 보류 상세 페이지 리스트 Layup
+ // 메모 페이지 리스트 Layup
     function fcMemo_detail(orderCode,memo) {
     	
     	//$('#targetEtcView').attr('title',productName);
@@ -286,10 +290,10 @@ function fcDefer_modify(){
           <div style="position:absolute; right:30px" > 
           <c:choose>
     		<c:when test="${recoveryVO.recoveryState!='01' && strAuth!= '03'}">
-				<button type="button" class="btn btn-primary" onClick="fcOrder_process()">검수</button>
+				<button type="button" class="btn btn-primary" onClick="fcRecovery_complete()">검수완료</button>
 			</c:when>
 			<c:otherwise>
-				<button type="button" class="btn btn-primary" onClick="fcOrder_process()">회수</button>
+				<button type="button" class="btn btn-primary" onClick="fcRecovery_process()">회수</button>
 			</c:otherwise>
 		  </c:choose>
           </div>

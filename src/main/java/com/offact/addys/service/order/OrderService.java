@@ -74,7 +74,15 @@ public interface OrderService {
      */
     public int regiOrderCancel(OrderVO order)
     	    throws BizException;
-    
+    /**
+     * 발주 업데이트
+     * 
+     * @param TargetVO
+     * @return
+     * @throws BizException
+     */
+    public int regiOrderBuy(OrderVO order)
+    	    throws BizException;
     /**
      * 검수처리
      * 

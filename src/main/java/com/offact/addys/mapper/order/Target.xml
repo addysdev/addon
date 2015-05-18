@@ -62,9 +62,12 @@
 
 <select id="getTargetPageList"  resultMap="targetVO" parameterType="com.offact.addys.vo.order.TargetVO" >
 
-  Select ifnull(T1.orderCode,'X') as orderCode,
-         T5.codeName As orderStateView,
-         T1.orderState,
+  Select Case T1.orderState When '07' Then 'X' Else ifnull(T1.orderCode,'X') End orderCode,
+         Case T1.orderState When '02' Then '발주보류'
+  						    Else '발주대기'
+         				    End orderStateView,
+         /* T5.codeName As orderStateView,*/
+         Case T1.orderState When '07' Then '01' Else T1.orderState End orderState,
          T1.groupID,
          T4.groupName,
 		 T2.companyCode,
@@ -85,38 +88,69 @@
 				 TEMP.orderCode,
 				 (TEMP.holdStock-TEMP.stockCnt) as orderCnt,
 				 TEMP.stockChk as stockDate
-		      From (
-					Select ifnull(I3.orderState,'01') as orderState ,
-						   ifnull(I2.stockDate,'1999-01-01') as stockChk,/*재고기준일*/
-						   DATE_FORMAT(ifnull(I3.orderDateTime,'1999-01-01 00:00:00'), '%Y-%m-%d') as orderChk,/*발주기준일*/
-                           DATE_FORMAT(ifnull(I3.buyDateTime,'1999-01-01 00:00:00'), '%Y-%m-%d') as buyChk,/*발주완료기준일*/
-						   ifnull(I2.stockCnt,0) as stockCnt, 
-					       ifnull(I1.safeStock,0) as safeStock,
-                           ifnull(I1.holdStock,0) as holdStock,
-						   I1.groupID,
+		    From (
+					Select I1.groupID,
 					       I1.productCode,
-					       I3.orderCode
-						From adStockMaster I1
-							 Left Join(
-										 Select groupID,productCode,stockDate,
-                     							(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
-                							From ( 
-                        						Select groupId,productCode , max(stockDate) as stockDate 
-                       								 From adStockDetail 
+					       ifnull(I1.safeStock,0) as safeStock,/*안전재고수량*/
+                           ifnull(I1.holdStock,0) as holdStock,/*보유재고수량*/
+                           ifnull(I2.stockCnt,0) as stockCnt,/*재고수량*/ 
+						   ifnull(I2.stockDate,'1999-01-01') as stockChk,/*재고기준일*/
+               		       /*ifnull(I3.deferDate,'1999-01-01') as deferChk,*//*보류기준일*/
+						   /*ifnull(I4.orderDate,'1999-01-01') as orderChk,*//*발주기준일*/
+               			   ifnull(I5.buyDate,'1999-01-01') as buyChk,/*구매기준일*/
+                           ifnull(I6.orderState,'01') as orderState,/*최신발주상태*/
+					       I6.orderCode/*최신발주코드*/
+					  From adStockMaster I1
+						   Left Join(
+									 Select groupID,productCode,stockDate,
+                     						(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
+                					 	From ( 
+                        					  Select groupId,productCode , max(stockDate) as stockDate 
+                       						  	From adStockDetail 
                         						Group By  groupID,productCode 
-                        						) A1
-									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID 
-							 Left Join(
-										Select E1.orderCode ,
-											   E1.productCode,
-										       E2.groupID ,
-										       E2.buyResult ,
-										       E2.orderState ,
-											   E2.buyDateTime,
-                                               E2.orderDateTime
-											From  adOrderDetail E1 
-												  Left Join adOrder E2 On E1.orderCode=E2.orderCode And E2.deletedYn='N'
-									   ) As I3 On I1.productCode = I3.productCode And I1.groupID = I3.groupID 
+                        					 ) As A1
+									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID /*재고기준일*/
+						/* Left Join(
+									 Select groupID,productCode,deferDate
+                					 	From ( 
+                        					  Select C2.groupId,C1.productCode , max(C2.deferDateTime) as deferDate 
+                       						  	From adOrderDetail C1
+                                       				Left Join adOrder C2 On C1.orderCode=C2.orderCode
+                        							Group By  groupID,productCode 
+                        					 ) As A2
+									  ) As I3 On I1.productCode = I3.productCode And I1.groupID = I3.groupID *//*보류기준일*/
+                		/* Left Join(
+									 Select groupID,productCode,orderDate
+                						 From ( 
+                        					   Select C4.groupId,C3.productCode , max(C4.orderDateTime) as orderDate 
+                       						     From adOrderDetail C3
+                                                     Left Join adOrder C4 On C3.orderCode=C4.orderCode
+                        							 Group By  groupID,productCode 
+                        					  ) As A3
+									 ) As I4 On I1.productCode = I4.productCode And I1.groupID = I4.groupID *//*주문기준일*/
+                           Left Join(
+									 Select groupID,productCode,buyDate
+                					 	From ( 
+                        					  Select C6.groupId,C5.productCode , max(C6.buyDateTime) as buyDate 
+                       						  	From adOrderDetail C5
+                                       				Left Join adOrder C6 On C5.orderCode=C6.orderCode
+                        							Group By  groupID,productCode 
+                        					 ) As A4
+									 ) As I5 On I1.productCode = I5.productCode And I1.groupID = I5.groupID /*구매기준일*/   
+                           Left Join(
+									  Select groupID,productCode,updateDate,
+                           					(Select orderCode From adOrderDetail Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime)  as orderCode,
+                           					(Select C10.orderState 
+                               					From adOrderDetail C9
+                                    				Left Join adOrder C10 On C9.orderCode = C10.orderCode
+                               					Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime) as orderState
+                					  	From ( 
+                        					  Select C8.groupId,C7.productCode,C8.orderCode,C8.orderState, max(C7.updateDateTime) as updateDate 
+                       						  	From adOrderDetail C7
+                                       				Left Join adOrder C8 On C7.orderCode=C8.orderCode
+                        							Group By  groupID,productCode 
+                        					 ) A5
+									) As I6 On I1.productCode = I6.productCode And I1.groupID = I6.groupID /*업데이트상태 및 주문번호*/  
 					     Where 1=1 
 					     <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            					AND I1.groupId = #{con_groupId}
@@ -127,12 +161,15 @@
 					<if test="con_orderState != null and con_orderState != ''" >
            				AND TEMP.orderState = #{con_orderState}
            			</if>
-           			AND TEMP.orderState in ('01','02')
+           			<if test="con_orderState != null and con_orderState != ''" >
+           				AND TEMP.orderState = #{con_orderState}
+           			</if>
+           			AND TEMP.orderState in ('01','02','07','08','09')
 			  ) T1
               Left Join adProductMaster T2 On T1.ProductCode = T2.ProductCode
               Left Join adCompany T3 On T2.companyCode = T3.companyCode 
               Left Join ofGroup T4 On T1.groupID = T4.groupID 
-              Left Join ofCode T5 On T1.orderState = T5.codeId and T5.codeGroupId = 'OD01'
+               /*  Left Join ofCode T5 On T1.orderState = T5.codeId and T5.codeGroupId = 'OD01'*/
 			  Group By T1.groupID,
 			           T2.companyCode
 			  LIMIT ${page_limit_val1} , ${page_limit_val2}
@@ -140,67 +177,120 @@
 </select>
 
 <select id="getTargetCnt" resultType="int">
-	SELECT count(*) AS TOT_COUNT
-		From (
-  			   Select T1.groupID,
-                      T2.companyCode
-			   	From (
-	      			  Select TEMP.orderState ,
-		                     TEMP.stockCnt,
-				             TEMP.safeStock,
-                             TEMP.holdStock,
-				             TEMP.groupID,
-				             TEMP.productCode
-		              	From (
-					          Select ifnull(I3.orderState,'01') as orderState ,
-						      		 ifnull(I2.stockDate,'1999-01-01') as stockChk,/*재고기준일*/
-						      		 DATE_FORMAT(ifnull(I3.orderDateTime,'1999-01-01 00:00:00'), '%Y-%m-%d') as orderChk,/*발주기준일*/
-                             		 DATE_FORMAT(ifnull(I3.buyDateTime,'1999-01-01 00:00:00'), '%Y-%m-%d') as buyChk,/*발주완료기준일*/
-						     		 ifnull(I2.stockCnt,0) as stockCnt, 
-					         		 ifnull(I1.safeStock,0) as safeStock,
-                            		 ifnull(I1.holdStock,0) as holdStock,
-						    		 I1.groupID,
-					        		 I1.productCode
-							  	From adStockMaster I1
-							 		 Left Join(
-										 Select groupID,productCode,stockDate,
-                     							(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
-                							From ( 
-                        						Select groupId,productCode , max(stockDate) as stockDate 
-                       								 From adStockDetail 
+
+SELECT count(*) AS TOT_COUNT
+From (
+  Select Case T1.orderState When '07' Then 'X' Else ifnull(T1.orderCode,'X') End orderCode,
+         Case T1.orderState When '02' Then '발주보류'
+  						    Else '발주대기'
+         				    End orderStateView,
+         /* T5.codeName As orderStateView,*/
+         Case T1.orderState When '07' Then '01' Else T1.orderState End orderState,
+         T1.groupID,
+         T4.groupName,
+		 T2.companyCode,
+         T3.companyName,
+         SUM(T1.orderCnt) as orderCnt,/*안전재고 기준점 TOTAL  해당*/
+	   	 SUM(T1.orderCnt*T2.productPrice) as productPrice,/*안전재고 기준점 TOTAL 해당*/
+	   	 SUM(round((T1.orderCnt*T2.productPrice)*T2.vatRate)) as vat,/*안전재고 기준점 TOTAL 해당*/
+         (SUM(T1.orderCnt*T2.productPrice)+SUM(round((T1.orderCnt*T2.productPrice)*T2.vatRate))) as orderPrice,/*안전재고 기준점 TOTAL 해당*/
+         COUNT(T1.productCode) as safeOrderCnt,/*안전재고 기준점 발생품목수량*/
+         date_format(date(T1.stockDate),'%Y-%m-%d') as stockDate  /*재고현황 기준일*/
+  From (
+	      Select TEMP.orderState ,
+		         TEMP.stockCnt,
+				 TEMP.safeStock,
+                 TEMP.holdStock,
+				 TEMP.groupID,
+				 TEMP.productCode,
+				 TEMP.orderCode,
+				 (TEMP.holdStock-TEMP.stockCnt) as orderCnt,
+				 TEMP.stockChk as stockDate
+		    From (
+					Select I1.groupID,
+					       I1.productCode,
+					       ifnull(I1.safeStock,0) as safeStock,/*안전재고수량*/
+                           ifnull(I1.holdStock,0) as holdStock,/*보유재고수량*/
+                           ifnull(I2.stockCnt,0) as stockCnt,/*재고수량*/ 
+						   ifnull(I2.stockDate,'1999-01-01') as stockChk,/*재고기준일*/
+               		       /*ifnull(I3.deferDate,'1999-01-01') as deferChk,*//*보류기준일*/
+						   /*ifnull(I4.orderDate,'1999-01-01') as orderChk,*//*발주기준일*/
+               			   ifnull(I5.buyDate,'1999-01-01') as buyChk,/*구매기준일*/
+                           ifnull(I6.orderState,'01') as orderState,/*최신발주상태*/
+					       I6.orderCode/*최신발주코드*/
+					  From adStockMaster I1
+						   Left Join(
+									 Select groupID,productCode,stockDate,
+                     						(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
+                					 	From ( 
+                        					  Select groupId,productCode , max(stockDate) as stockDate 
+                       						  	From adStockDetail 
                         						Group By  groupID,productCode 
-                        						) A1
-									 ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID 
-							 		 Left Join(
-										       Select E1.orderCode ,
-											   		  E1.productCode,
-										      		  E2.groupID ,
-										    	      E2.buyResult ,
-										    	      E2.orderState ,
-												      E2.buyDateTime,
-                                            	      E2.orderDateTime
-											   From  adOrderDetail E1 
-												 	 Left Join adOrder E2 On E1.orderCode=E2.orderCode  And E2.deletedYn='N' 
-									 ) As I3 On I1.productCode = I3.productCode And I1.groupID = I3.groupID 
-					    		Where 1=1 
-					     		<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
-           							AND I1.groupId = #{con_groupId}
-           				 		</if>
+                        					 ) As A1
+									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID /*재고기준일*/
+						/* Left Join(
+									 Select groupID,productCode,deferDate
+                					 	From ( 
+                        					  Select C2.groupId,C1.productCode , max(C2.deferDateTime) as deferDate 
+                       						  	From adOrderDetail C1
+                                       				Left Join adOrder C2 On C1.orderCode=C2.orderCode
+                        							Group By  groupID,productCode 
+                        					 ) As A2
+									  ) As I3 On I1.productCode = I3.productCode And I1.groupID = I3.groupID *//*보류기준일*/
+                		/* Left Join(
+									 Select groupID,productCode,orderDate
+                						 From ( 
+                        					   Select C4.groupId,C3.productCode , max(C4.orderDateTime) as orderDate 
+                       						     From adOrderDetail C3
+                                                     Left Join adOrder C4 On C3.orderCode=C4.orderCode
+                        							 Group By  groupID,productCode 
+                        					  ) As A3
+									 ) As I4 On I1.productCode = I4.productCode And I1.groupID = I4.groupID *//*주문기준일*/
+                           Left Join(
+									 Select groupID,productCode,buyDate
+                					 	From ( 
+                        					  Select C6.groupId,C5.productCode , max(C6.buyDateTime) as buyDate 
+                       						  	From adOrderDetail C5
+                                       				Left Join adOrder C6 On C5.orderCode=C6.orderCode
+                        							Group By  groupID,productCode 
+                        					 ) As A4
+									 ) As I5 On I1.productCode = I5.productCode And I1.groupID = I5.groupID /*구매기준일*/   
+                           Left Join(
+									  Select groupID,productCode,updateDate,
+                           					(Select orderCode From adOrderDetail Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime)  as orderCode,
+                           					(Select C10.orderState 
+                               					From adOrderDetail C9
+                                    				Left Join adOrder C10 On C9.orderCode = C10.orderCode
+                               					Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime) as orderState
+                					  	From ( 
+                        					  Select C8.groupId,C7.productCode,C8.orderCode,C8.orderState, max(C7.updateDateTime) as updateDate 
+                       						  	From adOrderDetail C7
+                                       				Left Join adOrder C8 On C7.orderCode=C8.orderCode
+                        							Group By  groupID,productCode 
+                        					 ) A5
+									) As I6 On I1.productCode = I6.productCode And I1.groupID = I6.groupID /*업데이트상태 및 주문번호*/  
+					     Where 1=1 
+					     <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           					AND I1.groupId = #{con_groupId}
+           				 </if>
 					   ) As TEMP
-					     Left Join adProductMaster T1 On TEMP.ProductCode = T1.ProductCode 
-			  Where TEMP.stockCnt <![CDATA[<=]]>  TEMP.safeStock 
-					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk     
+		      Where TEMP.stockCnt  <![CDATA[<=]]> TEMP.safeStock
+					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk    
 					<if test="con_orderState != null and con_orderState != ''" >
            				AND TEMP.orderState = #{con_orderState}
            			</if>
-           			AND TEMP.orderState in ('01','02')
+           			<if test="con_orderState != null and con_orderState != ''" >
+           				AND TEMP.orderState = #{con_orderState}
+           			</if>
+           			AND TEMP.orderState in ('01','02','07','08','09')
 			  ) T1
               Left Join adProductMaster T2 On T1.ProductCode = T2.ProductCode
               Left Join adCompany T3 On T2.companyCode = T3.companyCode 
               Left Join ofGroup T4 On T1.groupID = T4.groupID 
+               /*  Left Join ofCode T5 On T1.orderState = T5.codeId and T5.codeGroupId = 'OD01'*/
 			  Group By T1.groupID,
 			           T2.companyCode
-			 ) As TOT
+	) As TOT
 			           
 </select>
 
@@ -228,47 +318,76 @@
 				 TEMP.productCode,
 				 TEMP.stockChk As stockDate
 		      From (
-					Select ifnull(I3.orderState,'01') as orderState ,
+					Select I1.groupID,
+					       I1.productCode,
+					       ifnull(I1.safeStock,0) as safeStock,/*안전재고수량*/
+                           ifnull(I1.holdStock,0) as holdStock,/*보유재고수량*/
+                           ifnull(I2.stockCnt,0) as stockCnt,/*재고수량*/ 
 						   ifnull(I2.stockDate,'1999-01-01') as stockChk,/*재고기준일*/
-						   DATE_FORMAT(ifnull(I3.orderDateTime,'1999-01-01 00:00:00'), '%Y-%m-%d') as orderChk,/*발주기준일*/
-                           DATE_FORMAT(ifnull(I3.buyDateTime,'1999-01-01 00:00:00'), '%Y-%m-%d') as buyChk,/*발주완료기준일*/
-						   ifnull(I2.stockCnt,0) as stockCnt, 
-					       ifnull(I1.safeStock,0) as safeStock,
-                           ifnull(I1.holdStock,0) as holdStock,
-						   I1.groupId,
-					       I1.productCode
-						From adStockMaster I1
-							 Left Join(
-										Select groupID,productCode,stockDate,
-                     							(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
-                							From ( 
-                        						Select groupId,productCode , max(stockDate) as stockDate 
-                       								 From adStockDetail 
+               		       /*ifnull(I3.deferDate,'1999-01-01') as deferChk,*//*보류기준일*/
+						   /*ifnull(I4.orderDate,'1999-01-01') as orderChk,*//*발주기준일*/
+               			   ifnull(I5.buyDate,'1999-01-01') as buyChk,/*구매기준일*/
+                           ifnull(I6.orderState,'01') as orderState,/*최신발주상태*/
+					       I6.orderCode/*최신발주코드*/
+					  From adStockMaster I1
+						   Left Join(
+									 Select groupID,productCode,stockDate,
+                     						(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
+                					 	From ( 
+                        					  Select groupId,productCode , max(stockDate) as stockDate 
+                       						  	From adStockDetail 
                         						Group By  groupID,productCode 
-                        						) A1
-									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID 
-							 Left Join(
-										Select E1.orderCode ,
-											   E1.productCode,
-										       E2.groupId ,
-										       E2.buyResult ,
-										       E2.orderState ,
-											   E2.buyDateTime,
-                                               E2.orderDateTime
-											From  adOrderDetail E1 
-												  Left Join adOrder E2 On E1.orderCode=E2.orderCode 
-										    Where 1=1
-										    <if test="con_orderState != null and con_orderState != '08'" >
-           										And E1.deletedYn='N'
-           									</if>
-									   ) As I3 On I1.productCode = I3.productCode And I1.groupID = I3.groupID 
+                        					 ) As A1
+									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID /*재고기준일*/
+						/* Left Join(
+									 Select groupID,productCode,deferDate
+                					 	From ( 
+                        					  Select C2.groupId,C1.productCode , max(C2.deferDateTime) as deferDate 
+                       						  	From adOrderDetail C1
+                                       				Left Join adOrder C2 On C1.orderCode=C2.orderCode
+                        							Group By  groupID,productCode 
+                        					 ) As A2
+									  ) As I3 On I1.productCode = I3.productCode And I1.groupID = I3.groupID *//*보류기준일*/
+                		/* Left Join(
+									 Select groupID,productCode,orderDate
+                						 From ( 
+                        					   Select C4.groupId,C3.productCode , max(C4.orderDateTime) as orderDate 
+                       						     From adOrderDetail C3
+                                                     Left Join adOrder C4 On C3.orderCode=C4.orderCode
+                        							 Group By  groupID,productCode 
+                        					  ) As A3
+									 ) As I4 On I1.productCode = I4.productCode And I1.groupID = I4.groupID *//*주문기준일*/
+                           Left Join(
+									 Select groupID,productCode,buyDate
+                					 	From ( 
+                        					  Select C6.groupId,C5.productCode , max(C6.buyDateTime) as buyDate 
+                       						  	From adOrderDetail C5
+                                       				Left Join adOrder C6 On C5.orderCode=C6.orderCode
+                        							Group By  groupID,productCode 
+                        					 ) As A4
+									 ) As I5 On I1.productCode = I5.productCode And I1.groupID = I5.groupID /*구매기준일*/   
+                           Left Join(
+									  Select groupID,productCode,updateDate,
+                           					(Select orderCode From adOrderDetail Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime)  as orderCode,
+                           					(Select C10.orderState 
+                               					From adOrderDetail C9
+                                    				Left Join adOrder C10 On C9.orderCode = C10.orderCode
+                               					Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime) as orderState
+                					  	From ( 
+                        					  Select C8.groupId,C7.productCode,C8.orderCode,C8.orderState, max(C7.updateDateTime) as updateDate 
+                       						  	From adOrderDetail C7
+                                       				Left Join adOrder C8 On C7.orderCode=C8.orderCode
+                        							Group By  groupID,productCode 
+                        					 ) A5
+									) As I6 On I1.productCode = I6.productCode And I1.groupID = I6.groupID /*업데이트상태 및 주문번호*/  
+
 					     Where 1=1 
 					     	AND I1.groupId = #{con_groupId}
 					   ) As TEMP
 					     Left Join adProductMaster T1 On TEMP.ProductCode = T1.ProductCode 
 		      Where TEMP.stockCnt  <![CDATA[<]]> TEMP.holdStock
 					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk    
-                    AND TEMP.orderState = #{con_orderState}
+                    AND TEMP.orderState in ('01','07','08','09')
 			  ) T1
               Left Join adProductMaster T2 On T1.ProductCode = T2.ProductCode
               Left Join adCompany T3 On T2.companyCode = T3.companyCode 
@@ -401,6 +520,8 @@
             	,memo
             	,createUserId
             	,createDateTime
+            	,updateUserId
+            	,updateDateTime
             	,deletedYn
             	,deferCheck
 		)values(
@@ -415,6 +536,8 @@
 	  			, #{lossCnt}
 	  			, #{addCnt}
 	  			, #{memo}
+	  			, #{createUserId}
+	  			, now()
 	  			, #{createUserId}
 	  			, now()
 	  			, 'N'
@@ -569,6 +692,8 @@
             	,memo
             	,createUserId
             	,createDateTime
+            	,updateUserId
+            	,updateDateTime
             	,deletedYn
             	,deferCheck
 		)values(
@@ -588,6 +713,8 @@
 	  			, #{lossCnt}
 	  			, #{addCnt}
 	  			, #{memo}
+	  			, #{createUserId}
+	  			, now()
 	  			, #{createUserId}
 	  			, now()
 	  			, 'N'

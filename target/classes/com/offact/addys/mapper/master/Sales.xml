@@ -22,7 +22,7 @@
         SELECT T1.salesDate
 			  ,T1.groupId
 			  ,T2.groupName
-			  ,T1.updateDateTime
+			  ,DATE_FORMAT(T1.updateDateTime,'%Y-%m-%d %T') as updateDateTime
 			  ,T1.updateUserId
 			  ,T3.userName as updateUserName 
 			  ,SUM(T4.salesCnt) as salesCnt

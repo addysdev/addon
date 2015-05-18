@@ -12,6 +12,10 @@ function resultMsg(result){
 	 result=result.replace('order0011','발주취소 처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
 	 result=result.replace('order0012','발주취소 처리에 실패했습니다.\n시스템 관리자에게 문의하세요.');
 	 
+	 result=result.replace('order0020','검수등록 처리를 성공했습니다.');
+	 result=result.replace('order0021','검수등록 처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
+	 result=result.replace('order0022','검수등록 처리에 실패했습니다.\n시스템 관리자에게 문의하세요.');
+	 
 	 //보류처리
 	 result=result.replace('defer0000','보류 처리를 성공했습니다.');
 	 result=result.replace('defer0001','보류 처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');

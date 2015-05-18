@@ -20,7 +20,7 @@
         SELECT T1.stockDate
 			  ,T1.groupId
 			  ,T2.groupName
-			  ,T1.stockDateTime
+			  ,DATE_FORMAT(T1.stockDateTime,'%Y-%m-%d %T') as stockDateTime
 			  ,T1.lastUserId
 			  ,T3.userName as lastUserName
 			  ,SUM(T4.stockCnt) as stockCnt

@@ -44,7 +44,7 @@
          T4.recoveryState,
          T4.recoveryCode,
          T4.recoveryClosingDate,
-         T4.regDateTime,
+         DATE_FORMAT(T4.regDateTime, '%Y-%m-%d') as regDateTime,
          T4.groupId,
          T5.groupName,
          Sum(T4.stockCnt) as recoveryResultCnt,
@@ -159,7 +159,7 @@
          T1.groupId,
          T2.groupName,
          T1.recoveryState,
-         T1.regDateTime,
+         DATE_FORMAT(T1.regDateTime,'%Y-%m-%d') as regDateTime,  
          T1.regUserId,
          T3.userName as regUserName,
          T1.recoveryClosingDate,
@@ -185,7 +185,7 @@
          T4.productPrice,
          T4.recoveryYn,
          T4.recoveryMemo,
-         count(T6.idx) as recoveryMemoCnt,
+         (select count(idx) from adComment T6 Where T4.recoveryCode = T6.orderCode  And T4.productCode=T6.productCode And T6.commentCategory='06') as recoveryMemoCnt,
          T4.recoveryState
     From (
           Select  T1.recoveryCode,
@@ -217,8 +217,7 @@
             Where T1.recoveryCode = #{recoveryCode}
            ) As T4
            Left Join adCompany T5 On T4.companyCode = T5.companyCode
-           Left Join adComment T6 On T4.recoveryCode = T6.orderCode  And T4.productCode=T6.productCode And T6.commentCategory='06'
-     Where T4.deletedYn='N'
+     Where T4.deletedYn='N'  And ifnull(T4.stockCnt,0) > 0
      Order by T4.productCode asc
 </select>
 

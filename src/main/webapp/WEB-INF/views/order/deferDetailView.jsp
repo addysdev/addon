@@ -323,25 +323,25 @@ function fcDefer_modify(){
 	    		
 	    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice[i].value))));
 	    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt[i].value))));
-	    		var vatRate=frm.vatRate[i].value;
+	    		var vatAmt=frm.vatRate[i].value;
+	    		
 	    		var sum_supplyAmt=productPrice*orderCnt;
-	
 	    		supplyamt=supplyamt+sum_supplyAmt;
-	    		var sum_vatAmt=Math.round(sum_supplyAmt*vatRate);
-	
-	    		vatamt=vatamt+sum_vatAmt;
+	    		
+	    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
+	      		vatamt=vatamt+sum_vatAmt;
 	    	}
     	}else{
     		
     		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice.value))));
     		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt.value))));
-    		var vatRate=frm.vatRate.value;
+    		var vatAmt=frm.vatRate.value;
+
     		var sum_supplyAmt=productPrice*orderCnt;
-
     		supplyamt=supplyamt+sum_supplyAmt;
-    		var sum_vatAmt=Math.round(sum_supplyAmt*vatRate);
-
-    		vatamt=vatamt+sum_vatAmt;
+    		
+    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
+      		vatamt=vatamt+sum_vatAmt;
     		
     	}
 
