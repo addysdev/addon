@@ -78,6 +78,7 @@ public class TargetVO extends AbstractVO {
 	private String safeOrderCnt;
 	private String deferReason;
 	private String deferType;
+	private String group1Name;
 	
 	private String con_groupId;
 	private String con_orderState;
@@ -538,6 +539,12 @@ public class TargetVO extends AbstractVO {
 	}
 	public void setDeletedDateTime(String deletedDateTime) {
 		this.deletedDateTime = deletedDateTime;
+	}
+	public String getGroup1Name() {
+		return group1Name;
+	}
+	public void setGroup1Name(String group1Name) {
+		this.group1Name = group1Name;
 	}
     
 }

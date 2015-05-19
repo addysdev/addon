@@ -397,10 +397,30 @@ public class OrderController {
    	 * @throws BizException
    	 */
     @RequestMapping(value = "/order/targetdetailprint")
-   	public ModelAndView targetDetailPrint(HttpServletRequest request) throws BizException 
+   	public ModelAndView targetDetailPrint(@ModelAttribute("targetVO") TargetVO targetVO, HttpServletRequest request) throws BizException 
        {
-   		
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+    	logger.info("["+logid+"] Controller start : targetVO" + targetVO);
+		logger.info("["+logid+"] @@@@@@@@ : targetVO.getDeliveryEmail" + targetVO.getEmail());
+		
+		String[] orders = request.getParameterValues("seqs");
+		String orderDate=targetVO.getOrderDate(); 
+		String deliveryDate=targetVO.getDeliveryDate();
+		String orderDates[]=targetVO.getOrderDate().split("-");
+		String deliveryDates[]=targetVO.getDeliveryDate().split("-"); 
+		
    		ModelAndView mv = new ModelAndView();
+   		
+   	    mv.addObject("targetVO", targetVO);
+        mv.addObject("orders", orders);
+        mv.addObject("orderDates1", orderDates[0]);
+        mv.addObject("orderDates2", orderDates[1]);
+        mv.addObject("orderDates3", orderDates[2]);
+        mv.addObject("deliveryDates1", deliveryDates[0]);
+        mv.addObject("deliveryDates2", deliveryDates[1]);
+        mv.addObject("deliveryDates3", deliveryDates[2]);
    		
    		mv.setViewName("/order/targetDetailPrint");
    		
@@ -493,7 +513,10 @@ public class OrderController {
 	    String uploadFilePath = rb.getString("offact.upload.path") + "html/";
 	    String szFileName = uploadFilePath+orderCode+".html";                    // 파일 이름
         String szContent = "";
-	    
+        
+        String orderDates[]=targetVO.getOrderDate().split("-");
+        String deliveryDates[]=targetVO.getDeliveryDate().split("-"); 
+        
 		try{//메일전송 발주처리
             /* 파일을 생성해서 내용 쓰기 */
 	        
@@ -538,56 +561,56 @@ public class OrderController {
 			szContent += "</tr>";
 			szContent += "<tr bgcolor='#FFFFFF'>";
 			szContent += " <td rowspan='7' align='center' style='background-color:#E4E4E4'>수<br>신</td>";
-			szContent += " <td align='center'>&nbsp;수 신</td>";
-			szContent += " <td colspan='5' align='center'>&nbsp;</td>";
+			szContent += " <td align='center' width='100'>&nbsp;수 신</td>";
+			szContent += " <td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryCharge()+"</td>";
 			szContent += " <td rowspan='7'  align='center' style='background-color:#E4E4E4'>발<br>신</td>";
-			szContent += " <td align='center'>&nbsp;발 신</td>";
-			szContent += " <td colspan='3' align='center'>&nbsp;</td>";
+			szContent += " <td align='center' width='100'>&nbsp;발 신</td>";
+			szContent += " <td colspan='3' align='center'>&nbsp;"+targetVO.getOrderCharge()+"</td>";
 			szContent += "</tr>";
 			szContent += "<tr bgcolor='#FFFFFF'>";
 			szContent += "<td align='center'>&nbsp;참 조</td>";
-			szContent += "<td colspan='5' align='center'>&nbsp;</td>";
+			szContent += "<td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryEtc()+"</td>";
 			szContent += "<td align='center'>&nbsp;참 조</td>";
-			szContent += "<td colspan='3' align='center'>&nbsp;</td>";
+			szContent += "<td colspan='3' align='center'>&nbsp;"+targetVO.getOrderEtc()+"</td>";
 			szContent += "</tr>";
 			szContent += "<tr bgcolor='#FFFFFF'>";
 			szContent += "<td rowspan='2' align='center' >연락처</td>";
-			szContent += "<td colspan='5' align='center'>&nbsp;</td>";
+			szContent += "<td colspan='5' align='left'>&nbsp;핸드폰:"+targetVO.getMobilePhone()+",<br>E-Mail:"+targetVO.getEmail()+"</td>";
 			szContent += "<td rowspan='2' align='center' >연락처</td>";
-			szContent += "<td colspan='3' align='center'>&nbsp;</td>";
+			szContent += "<td colspan='3' align='left'>&nbsp;핸드폰:"+targetVO.getOrderMobilePhone()+",<br>E-Mail:"+targetVO.getOrderEmail()+"</td>";
 			szContent += "</tr>";
 			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='5' align='center'>&nbsp;</td>";
-			szContent += "<td colspan='5' align='center'>&nbsp;</td>";
+			szContent += "<td colspan='5' align='left'>&nbsp;TEL:"+targetVO.getTelNumber()+",FAX:"+targetVO.getFaxNumber()+"</td>";
+			szContent += "<td colspan='5' align='left'>&nbsp;TEL:"+targetVO.getOrderTelNumber()+",FAX:"+targetVO.getOrderFaxNumber()+"</td>";
 			szContent += "</tr>";
 			szContent += "<tr bgcolor='#FFFFFF'>";
 			szContent += "<td align='center' >발주일자</td>";
-			szContent += "<td width='70' align='center'><div align='right'>2015년 </div></td>";
-			szContent += "<td width='50' align='center'>&nbsp;5</td>";
+			szContent += "<td width='70' align='center'><div align='right'>"+orderDates[0]+"년 </div></td>";
+			szContent += "<td width='50' align='center'>&nbsp;"+orderDates[1]+"</td>";
 			szContent += "<td width='50' align='center'>월</td>";
-			szContent += "<td width='50' align='center'>&nbsp;28</td>";
+			szContent += "<td width='50' align='center'>&nbsp;"+orderDates[2]+"</td>";
 			szContent += "<td width='50' align='center'>일</td>";
 			szContent += "<td rowspan='2' align='center' >배송주소</td>";
-			szContent += "<td rowspan='2' colspan='3' align='center'>&nbsp;</td>";
+			szContent += "<td rowspan='2' colspan='3' align='left'>&nbsp;"+targetVO.getOrderAddress()+"</td>";
 			szContent += "</tr>";
             szContent += "<tr bgcolor='#FFFFFF'>";
 			szContent += "<td align='center' >납품일자</td>";
-			szContent += "<td width='70' align='center'><div align='right'>2015년 </div></td>";
-			szContent += "<td width='50' align='center'>&nbsp;5</td>";
+			szContent += "<td width='70' align='center'><div align='right'>"+deliveryDates[0]+"년 </div></td>";
+			szContent += "<td width='50' align='center'>&nbsp;"+deliveryDates[1]+"</td>";
 			szContent += "<td width='50' align='center'>월</td>";
-			szContent += "<td width='50' align='center'>&nbsp;28</td>";
+			szContent += "<td width='50' align='center'>&nbsp;"+deliveryDates[2]+"</td>";
 			szContent += "<td width='50' align='center'>일</td>";
 			szContent += "</tr>";
             szContent += "<tr bgcolor='#FFFFFF'>";
 			szContent += "<td align='center'>&nbsp;납품방법</td>";
-			szContent += "<td colspan='5' align='center'>&nbsp;</td>";
+			szContent += "<td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryMethod()+"</td>";
 			szContent += "<td align='center'>&nbsp;결재방법</td>";
-			szContent += "<td colspan='3' align='center'>&nbsp;</td>";
+			szContent += "<td colspan='3' align='center'>&nbsp;"+targetVO.getPayMethod()+"</td>";
 			szContent += "</tr>";
 
 			szContent += "<tr bgcolor='#FFFFFF'>";
 			szContent += "<td colspan='2' align='center' >메모</td>";
-			szContent += "<td colspan='10' align='center'></td>";
+			szContent += "<td colspan='10' align='left'>"+targetVO.getMemo()+"</td>";
 			szContent += "</tr>";
 			szContent += "<tr bgcolor='#FFFFFF'>";
 			szContent += "<td colspan='12' align='center' height='27'><div align='left'>1.아래와 같이 발주합니다.</div></td>";
@@ -599,167 +622,45 @@ public class OrderController {
 			szContent += "<td width='57' align='center'>수량</td>";
 			szContent += "<td width='172' align='center'>비 고</td>";
 			szContent += "</tr>";
-	        szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>1</td>";
-			szContent += "<td align='center'>제조사</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>10</td>";
-			szContent += "<td width='172' align='center'>블랙</td>";
-			szContent += "</tr>";
+			
+			int num=0;
+			int totalnum=orders.length;
+			int etcnum=0;
+			String[] r_data=null;
+			
+			if(totalnum<23){
+				
+				etcnum=23-totalnum;
+				
+			}
+			
+			for(int i=0;i<totalnum;i++){
+				
+				num=i+1;
+				r_data = StringUtil.getTokens(orders[i], "|");
+			
+		        szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<td colspan='2' align='center' height='27'>"+num+"</td>";
+				szContent += "<td align='left'>"+StringUtil.nvl(r_data[12],"")+"</td>";
+				szContent += "<td colspan='7' align='left'>"+StringUtil.nvl(r_data[1],"")+"</td>";
+				szContent += "<td width='57' align='center'>"+StringUtil.nvl(r_data[3],"")+"</td>";
+				szContent += "<td width='172' align='left'>"+StringUtil.nvl(r_data[11],"")+"</td>";
+				szContent += "</tr>";
+			
+			}
+			
+			for(int y=0;y<etcnum;y++){
+				
+				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<td colspan='2' align='center' height='27'>&nbsp;</td>";
+				szContent += "<td align='center'>&nbsp;</td>";
+				szContent += "<td colspan='7' align='center'>&nbsp;</td>";
+				szContent += "<td width='57' align='center'>&nbsp;</td>";
+				szContent += "<td width='172' align='center'>&nbsp;</td>";
+				szContent += "</tr>";
+			
+			}
+		
 
 			szContent += "</table>";
 			szContent += "</div>";
@@ -782,7 +683,7 @@ public class OrderController {
 			List<File> files = new ArrayList();
 			
 			toEmails.add(targetVO.getEmail());
-			attcheFileName.add(orderCode+".html");
+			attcheFileName.add("order_"+orderDates[0]+orderDates[1]+orderDates[2]+".html");
 			files.add(file);
 			
 			mail.setToEmails(toEmails);
@@ -790,8 +691,9 @@ public class OrderController {
 			mail.setFile(files);
 			
 			mail.setFromEmail("order@addys.co.kr");
-			mail.setMsg("addys 상품 주문서 메일입니다.\n확인하신 후 발송처리 부탁드립니다.");
-			mail.setSubject("[애디스다이렉트] 상품주문서 발송메일");
+			mail.setMsg("애디스("+targetVO.getGroupName()+")지점 상품주문서 메일입니다.<br>"+targetVO.getDeliveryDate()+"까지 납품 부탁드립니다.<br><br><br><br>[연락처  정보]<br><br>(담당자)  "+targetVO.getOrderCharge()+"<br>(Tel)  "+
+			targetVO.getOrderTelNumber()+"<br>(핸드폰)  "+targetVO.getOrderMobilePhone()+"<br>(E-Mail)  "+targetVO.getOrderEmail()+"<br>(FAX)  "+targetVO.getOrderFaxNumber());
+			mail.setSubject("애디스 다이렉트 발주서");
 	
 			try{
 				orderResult=mailSvc.sendMail(mail);
@@ -1761,7 +1663,7 @@ public class OrderController {
 
         mv.addObject("commentList", commentList);
         
-        mv.setViewName("/order/etcAddList");
+        mv.setViewName("/order/etcList");
         
         //log Controller execute time end
        	long t2 = System.currentTimeMillis();
@@ -1897,4 +1799,136 @@ public class OrderController {
 
     return deferResult;
   }
+    
+    /**
+     * 발주서 재송부
+     *
+     * @param 
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/orderremail", method = RequestMethod.POST)
+    public @ResponseBody
+    String orderReMail(@ModelAttribute("orderVO") OrderVO orderVO, 
+    		           HttpServletRequest request, 
+    		           HttpServletResponse response) throws BizException
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		
+		logger.info("["+logid+"] Controller start : orderVO" + orderVO);
+		boolean orderResult=false;
+		
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+		
+		 //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+
+		ResourceBundle rb = ResourceBundle.getBundle("config");
+	    String uploadFilePath = rb.getString("offact.upload.path") + "html/";
+	    String szFileName = uploadFilePath+orderVO.getOrderCode()+".html";                    // 파일 이름
+        
+	    String orderDates[]=orderVO.getOrderDate().split("-");
+	    
+		try{//메일전송 발주처리
+            /* 파일을 생성해서 내용 쓰기 */
+	        
+	        File file = new File(szFileName);                        // 파일 생성
+	       
+	        logger.info("["+logid+"] @@@@@@@@ : szFileName" + szFileName);
+	        logger.info("["+logid+"] @@@@@@@@ : file" + file.isFile());
+	        
+			EmailVO mail = new EmailVO();
+			
+			List<String> toEmails= new ArrayList();
+			List<String> attcheFileName= new ArrayList();
+			List<File> files = new ArrayList();
+			
+			toEmails.add(orderVO.getEmail());
+			attcheFileName.add("[re]order_"+orderDates[0]+orderDates[1]+orderDates[2]+".html");
+			
+			files.add(file);
+			
+			mail.setToEmails(toEmails);
+			mail.setAttcheFileName(attcheFileName);
+			mail.setFile(files);
+			
+			mail.setFromEmail("order@addys.co.kr");
+			mail.setMsg("[재전송]애디스("+orderVO.getGroupName()+")지점 상품주문서 메일입니다.<br>"+orderVO.getDeliveryDate()+"까지 납품 부탁드립니다.<br><br><br><br>[연락처  정보]<br><br>(담당자)  "+orderVO.getOrderCharge()+"<br>(Tel)  "+
+			orderVO.getOrderTelNumber()+"<br>(핸드폰)  "+orderVO.getOrderMobilePhone()+"<br>(E-Mail)  "+orderVO.getOrderEmail()+"<br>(FAX)  "+orderVO.getOrderFaxNumber());
+			mail.setSubject("애디스 다이렉트 발주서");
+	
+			try{
+				orderResult=mailSvc.sendMail(mail);
+				logger.debug("mail result :"+orderResult);
+				
+				if(orderResult==false){
+					
+					//log Controller execute time end
+			       	long t2 = System.currentTimeMillis();
+			       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	
+			        return "order0033";
+					
+				}
+			}catch(BizException e){
+		       	
+		    	e.printStackTrace();
+		        String errMsg = e.getMessage();
+		        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+				
+				//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+		        return "order0033\n[errorMsg] : "+errMsg;
+		    	
+		    }
+		
+		}catch(Exception e){
+			
+			e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+	        return "order0033\n[errorMsg] : "+errMsg;
+		}
+
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+      return "order0030";
+    }
+    /**
+   	 * Simply selects the home view to render by returning its name.
+   	 * @throws BizException
+   	 */
+    @RequestMapping(value = "/order/orderdetailprint")
+   	public ModelAndView orderDetailprint(@ModelAttribute("orderVO") OrderVO orderVO, HttpServletRequest request) throws BizException 
+       {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+    	logger.info("["+logid+"] Controller start : orderVO" + orderVO);
+		logger.info("["+logid+"] @@@@@@@@ : targetVO.getDeliveryEmail" + orderVO.getEmail());
+   		ModelAndView mv = new ModelAndView();
+   		
+   		mv.setViewName("/order/orderDetailPrint");
+   		
+   		return mv;
+   	}
 }

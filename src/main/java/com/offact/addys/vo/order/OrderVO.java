@@ -35,6 +35,7 @@ public class OrderVO extends AbstractVO {
 	private String payMethod;
 	private String sms;
 	private String memo;
+	private String memoCnt;
 	private String deferDateTime;
 	private String deferUserId;
 	private String deferUserName;
@@ -57,7 +58,7 @@ public class OrderVO extends AbstractVO {
 	private String deletedDateTime;
 	
 	private String etc;
-	
+	private String etcCnt;
 	//상세 추가항목
 	private String productCode;
 	private String barCode;
@@ -607,6 +608,18 @@ public class OrderVO extends AbstractVO {
 	}
 	public void setOrderCheck(String orderCheck) {
 		this.orderCheck = orderCheck;
+	}
+	public String getMemoCnt() {
+		return memoCnt;
+	}
+	public void setMemoCnt(String memoCnt) {
+		this.memoCnt = memoCnt;
+	}
+	public String getEtcCnt() {
+		return etcCnt;
+	}
+	public void setEtcCnt(String etcCnt) {
+		this.etcCnt = etcCnt;
 	}
 
 }

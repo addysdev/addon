@@ -54,5 +54,22 @@ public interface RecoveryService {
      */
     public List<RecoveryVO> getRecoveryDetailList(RecoveryVO recovery) throws BizException;
    
-   
+    /**
+     * 회수처리
+     * 
+     * @param RecoveryVO
+     * @return
+     * @throws BizException
+     */
+    public int regiRecoveryProcess(String[] recoverylist , RecoveryVO recovery)
+    	    throws BizException;
+    /**
+     * 검수처리
+     * 
+     * @param RecoveryVO
+     * @return
+     * @throws BizException
+     */
+    public int regiRecoveryComplete(String[] recoverylist , RecoveryVO recovery)
+    	    throws BizException;
 }

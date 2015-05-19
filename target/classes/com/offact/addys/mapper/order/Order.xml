@@ -43,6 +43,9 @@
   <result column="deferUserName"           property="deferUserName"  />
   <result column="sms"           property="sms"  />
   <result column="memo"           property="memo"  />
+  <result column="memoCnt"           property="memoCnt"  />
+  <result column="etc"           property="etc"  />
+  <result column="etcCnt"           property="etcCnt"  />
   <result column="productCode"        property="productCode"  />
   <result column="productName"        property="productName"  />
   <result column="stockDate"        property="stockDate"  />
@@ -192,28 +195,30 @@
 
 <select id="getOrderDetail"  resultMap="orderVO" parameterType="com.offact.addys.vo.order.OrderVO" >
 
-  Select orderCode,
-         deliveryCharge,
-         deliveryEtc,
-         email,
-         telNumber,
-         faxNumber,
-         orderDate,
-         deliveryDate,
-         deliveryMethod,
-         orderCharge,
-         orderEtc,
-         orderMobilePhone,
-         orderEmail,
-         orderTelNumber,
-         orderFaxNumber,
-         orderAddress,
-         payMethod,
-         sms,
-         memo,
-         orderState
-  From adOrder
-  Where orderCode = #{orderCode}
+  Select T1.orderCode,
+         T1.deliveryCharge,
+         T1.deliveryEtc,
+         T1.email,
+         T1.telNumber,
+         T1.faxNumber,
+         T1.orderDate,
+         T1.deliveryDate,
+         T1.deliveryMethod,
+         T1.orderCharge,
+         T1.orderEtc,
+         T1.orderMobilePhone,
+         T1.orderEmail,
+         T1.orderTelNumber,
+         T1.orderFaxNumber,
+         T1.orderAddress,
+         T1.payMethod,
+         T1.sms,
+         T1.memo,
+         count(T2.idx) as memoCnt,
+         T1.orderState 
+  From adOrder as T1
+       Left Join adComment T2 On T1.orderCode = T2.orderCode And T2.commentCategory='03'
+  Where T1.orderCode = #{orderCode}
   
  	
 </select>
@@ -242,6 +247,7 @@
            T1.addCnt,
            T1.lossCnt,
            T1.etc,
+           count(T6.idx) as etcCnt,
            T1.deferCheck,
            T1.orderCheck,
            T2.orderState
@@ -250,6 +256,7 @@
        Left Join ofGroup T3 On T2.groupId =T3.groupId
        Left Join adCompany T4 On T2.companyCode = T4.companyCode
        Left Join adProductMaster T5 On T1.productCode = T5.productCode
+       Left Join adComment T6 On T2.orderCode = T6.orderCode And T1.productCode=T6.productCode And T6.commentCategory='04'
   Where T1.orderCode = #{orderCode}
   Order by T1.productCode ASC
 </select>

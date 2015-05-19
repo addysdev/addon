@@ -40,26 +40,26 @@ window.print();
 				<tr bgcolor='#FFFFFF'>
 				 <td rowspan='7' align='center' style='background-color:#E4E4E4'>수<br>신</td>
 				 <td align='center'>&nbsp;수 신</td>
-				 <td colspan='5' align='center'>&nbsp;${targetVO.deliveryCharge}</td>
+				 <td colspan='5' align='center'>&nbsp;${orderVO.deliveryCharge}</td>
 				 <td rowspan='7'  align='center' style='background-color:#E4E4E4'>발<br>신</td>
 				 <td align='center'>&nbsp;발 신</td>
-				 <td colspan='3' align='center'>&nbsp;${targetVO.orderCharge}</td>
+				 <td colspan='3' align='center'>&nbsp;${orderVO.orderCharge}</td>
 				</tr>
 				<tr bgcolor='#FFFFFF'>
 				<td align='center'>&nbsp;참 조</td>
-				<td colspan='5' align='center'>&nbsp;${targetVO.deliveryEtc}</td>
+				<td colspan='5' align='center'>&nbsp;${orderVO.deliveryEtc}</td>
 				<td align='center'>&nbsp;참 조</td>
-				<td colspan='3' align='center'>&nbsp;${targetVO.orderEtc}</td>
+				<td colspan='3' align='center'>&nbsp;${orderVO.orderEtc}</td>
 				</tr>
 				<tr bgcolor='#FFFFFF'>
 				<td rowspan='2' align='center' >연락처</td>
-				<td colspan='5' align='left'>&nbsp;핸드폰 :${targetVO.mobilePhone},E-Mail :${targetVO.email}</td>
+				<td colspan='5' align='left'>&nbsp;핸드폰 :${orderVO.mobilePhone},E-Mail :${orderVO.email}</td>
 				<td rowspan='2' align='center' >연락처</td>
-				<td colspan='3' align='left'>&nbsp;핸드폰 :${targetVO.orderMobilePhone},E-Mail :${targetVO.orderEmail}</td>
+				<td colspan='3' align='left'>&nbsp;핸드폰 :${orderVO.orderMobilePhone},E-Mail :${orderVO.orderEmail}</td>
 				</tr>
 				<tr bgcolor='#FFFFFF'>
-				<td colspan='5' align='left'>&nbsp;TEL :${targetVO.telNumber},FAX :${targetVO.faxNumber}</td>
-				<td colspan='5' align='left'>&nbsp;TEL :${targetVO.orderTelNumber},FAX :${targetVO.orderFaxNumber}</td>
+				<td colspan='5' align='left'>&nbsp;TEL :${orderVO.telNumber},FAX :${orderVO.faxNumber}</td>
+				<td colspan='5' align='left'>&nbsp;TEL :${orderVO.orderTelNumber},FAX :${orderVO.orderFaxNumber}</td>
 				</tr>
 				<tr bgcolor='#FFFFFF'>
 				<td align='center' >발주일자</td>
@@ -69,7 +69,7 @@ window.print();
 				<td width='58' align='center'>&nbsp;${orderDates3}</td>
 				<td width='52' align='center'>일</td>
 				<td rowspan='2' align='center' >배송주소</td>
-				<td rowspan='2' colspan='3'width='58' align='left'>&nbsp${targetVO.orderAddress};</td>
+				<td rowspan='2' colspan='3'width='58' align='left'>&nbsp${orderVO.orderAddress};</td>
 				</tr>
                 <tr bgcolor='#FFFFFF'>
 				<td align='center' >납품일자</td>
@@ -81,14 +81,14 @@ window.print();
 				</tr>
                 <tr bgcolor='#FFFFFF'>
 				<td align='center'>&nbsp;납품방법</td>
-				<td colspan='5' align='center'>&nbsp;${targetVO.deliveryMethod}</td>
+				<td colspan='5' align='center'>&nbsp;${orderVO.deliveryMethod}</td>
 				<td align='center'>&nbsp;결재방법</td>
-				<td colspan='3' align='center'>&nbsp;${targetVO.payMethod}</td>
+				<td colspan='3' align='center'>&nbsp;${orderVO.payMethod}</td>
 				</tr>
 
 				<tr bgcolor='#FFFFFF'>
 				<td colspan="2" align='center' >메모</td>
-				<td colspan='10' align='center'>${targetVO.memo}</td>
+				<td colspan='10' align='center'>${orderVO.memo}</td>
 				</tr>
 				<tr bgcolor='#FFFFFF'>
 				<td colspan='12' align='center' height='27'><div align='left'>1.아래와 같이 발주합니다.</div></td>

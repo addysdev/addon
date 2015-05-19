@@ -386,4 +386,152 @@ public class RecoveryController {
        	
         return mv;
     }
+    /**
+     * 회수 처리
+     *
+     * @param RecoveryVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping({"/recovery/recoveryprocess"})
+    public @ResponseBody
+    String deferProcess(@ModelAttribute("recoveryVO") RecoveryVO recoveryVO,
+    		            HttpServletRequest request) throws BizException
+    {
+      
+	    //log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : recoveryVO" + recoveryVO);
+			
+		String recoveryResult="recovery0010";
+		
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+       
+	    String[] recoverys = request.getParameterValues("seqs");
+	    
+	    recoveryVO.setRecoveryState("02");
+	    recoveryVO.setUpdateUserId(strUserId);
+	    recoveryVO.setRecoveryUserId(strUserId);
+	  
+  
+        try{//01.보류처리
+    	    
+        	int dbResult=recoverySvc.regiRecoveryProcess(recoverys , recoveryVO);
+             
+	    	if(dbResult<1){//처리내역이 없을경우
+	    		
+	    		//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+		        return "recovery0011";
+		        
+	    	}
+	   
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+	        return "recovery0012\n[errorMsg] : "+errMsg;
+	    	
+	    }
+		
+		//log Controller execute time end
+	 	long t2 = System.currentTimeMillis();
+	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+    return recoveryResult;
+    }
+    /**
+     * 검수완료
+     *
+     * @param RecoveryVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping({"/recovery/recoverycomplete"})
+    public @ResponseBody
+    String recoveryComplete(@ModelAttribute("recoveryVO") RecoveryVO recoveryVO,
+    		            HttpServletRequest request) throws BizException
+    {
+      
+	    //log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : recoveryVO" + recoveryVO);
+			
+		String recoveryResult="recovery0020";
+		
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+       
+	    String[] recoverys = request.getParameterValues("seqs");
+	    
+	    recoveryVO.setRecoveryState("03");
+	    recoveryVO.setUpdateUserId(strUserId);
+	    recoveryVO.setCompleteUserId(strUserId);
+	  
+  
+        try{//01.보류처리
+    	    
+        	int dbResult=recoverySvc.regiRecoveryComplete(recoverys , recoveryVO);
+             
+	    	if(dbResult<1){//처리내역이 없을경우
+	    		
+	    		//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+		        return "recovery0021";
+		        
+	    	}
+	   
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+	        return "recovery0022\n[errorMsg] : "+errMsg;
+	    	
+	    }
+		
+		//log Controller execute time end
+	 	long t2 = System.currentTimeMillis();
+	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+    return recoveryResult;
+    }
 }

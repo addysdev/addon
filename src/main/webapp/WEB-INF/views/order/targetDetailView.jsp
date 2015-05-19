@@ -17,8 +17,31 @@ function fcTargetDetail_print(){
 	
 	var h=800;
 	var s=950;
+	
+	
+	 var frm = document.targetDetailListForm;
+	    
+	   	if(frm.seqs.length>1){
+	   		for(i=0;i<frm.seqs.length;i++){
+				frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
+	   			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
+	   			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
+	   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.group1Name[i].value);
 
-    tmt_winLaunch('<%= request.getContextPath()%>/order/targetdetailprint' , 'orderPrintObj', 'orderPrintObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
+	   		}
+	   	}else{
+	   		
+				frm.seqs.value=fillSpace(frm.productCode.value)+
+				'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
+				'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
+				'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.group1Name.value);
+
+
+	   	}
+	
+	var url="<%= request.getContextPath() %>/order/targetdetailprint"+'?'+$("#targetDetailForm").serialize()+'&'+$("#targetDetailListForm").serialize();
+
+    tmt_winLaunch(url, 'orderPrintObj', 'orderPrintObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
 	
 }
 /*
@@ -84,7 +107,7 @@ function fcOrder_process(){
 			frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
    			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
    			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
-   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value);
+   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.group1Name[i].value);
 
    		}
    	}else{
@@ -92,7 +115,7 @@ function fcOrder_process(){
 			frm.seqs.value=fillSpace(frm.productCode.value)+
 			'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
 			'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
-			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value);
+			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.group1Name.value);
 
 
    	}
@@ -231,6 +254,10 @@ function fcDefer_regist(){
  	var frm=document.targetDetailListForm;
  	var amtCnt = frm.productPrice.length;
  	
+	if(amtCnt==undefined){
+		amtCnt=1;
+	}
+ 	
  	var supplyamt=0;
  	var vatamt=0;
  	var totalamt=0;
@@ -275,6 +302,9 @@ function fcDefer_regist(){
  	var frm=document.targetDetailListForm;
  	var amtCnt = frm.productPrice.length;
  	
+	if(amtCnt==undefined){
+		amtCnt=1;
+	}
  	
  	if(amtCnt > 1){
  		
@@ -331,6 +361,9 @@ function fcDefer_regist(){
     	var frm=document.targetDetailListForm;
     	var amtCnt = frm.productPrice.length;
     	
+    	if(amtCnt==undefined){
+    		amtCnt=1;
+    	}
     	
     	if(amtCnt > 1){
     		
@@ -396,6 +429,7 @@ function fcDefer_regist(){
 	   <input type="hidden" name="deferType"               id="deferType"            value="R" />
 	   <input type="hidden" name="orderCode"               id="orderCode"            value="X" />
 	   <input type="hidden" name="groupId"               id="groupId"            value="${targetVO.groupId}" />
+	   <input type="hidden" name="groupName"               id="groupName"            value="${targetVO.groupName}" />
 	   <input type="hidden" name="con_groupId"               id="con_groupId"            value="${targetVO.con_groupId}" />
 	   <input type="hidden" name="companyCode"               id="companyCode"            value="${targetVO.companyCode}" />
 	      <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-check"></span> 발주방법 : </font></strong>
@@ -542,6 +576,7 @@ function fcDefer_regist(){
 				 <input type="hidden" name="safeStock" value="${targetVO.safeStock}">
 				 <input type="hidden" name="stockCnt" value="${targetVO.stockCnt}">
 				 <input type="hidden" name="stockDate" value="${targetVO.stockDate}">
+				 <input type="hidden" name="group1Name" value="${targetVO.group1Name}">
                  <!-- >td class='text-center'><input type="checkbox" id="deferCheck" name="deferCheck" value="${targetVO.productCode}" title="선택" /></td -->
                  <td class='text-center'><c:out value="${status.count}"></c:out></td>
                  <td class='text-center'><c:out value="${targetVO.productCode}"></c:out></td>

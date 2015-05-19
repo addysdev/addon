@@ -28,6 +28,8 @@
   <result column="lossCnt"           property="lossCnt"  />
   <result column="memo"           property="memo"  />
   <result column="memoCnt"           property="memoCnt"  />
+  <result column="etc"           property="etc"  />
+  <result column="etcCnt"           property="etcCnt"  />
   <result column="recoveryResultCnt"           property="recoveryResultCnt"  />
   <result column="recoveryResultPrice"           property="recoveryResultPrice"  />
   <result column="recoveryMemo"           property="recoveryMemo"  />
@@ -175,17 +177,20 @@
 
 <select id="getRecoveryDetailList"  resultMap="recoveryVO" parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
 
-  Select T5.companyName,
+  Select T4.recoveryCode,
+         T5.companyName,
          T4.productCode,
          T4.productName,
+         T4.stockDate,
          T4.stockCnt,
+         T4.recoveryCnt,
          T4.recoveryResultCnt,
          T4.addCnt,
          T4.lossCnt,
          T4.productPrice,
          T4.recoveryYn,
-         T4.recoveryMemo,
-         (select count(idx) from adComment T6 Where T4.recoveryCode = T6.orderCode  And T4.productCode=T6.productCode And T6.commentCategory='06') as recoveryMemoCnt,
+         T4.etc,
+         (select count(idx) from adComment T6 Where T4.recoveryCode = T6.orderCode  And T4.productCode=T6.productCode And T6.commentCategory='06') as etcCnt,
          T4.recoveryState
     From (
           Select  T1.recoveryCode,
@@ -193,26 +198,27 @@
                T3.companyCode,
                T2.productCode,
                T3.productName,
+               K1.stockDate,
         	   K1.stockCnt,
         	   T2.lossCnt,
                T2.addCnt,
-               Case T1.recoveryState When '01' Then K1.stockCnt Else T2.recoveryResultCnt End recoveryResultCnt,
-        		   T3.productPrice,
-               T2.recoveryMemo,
-        		   (T3.productPrice * K1.stockCnt) As recoveryResultPrice,
-               T2.recoveryYn,
-        		   T2.deletedYn
-        		From adRecovery T1
+               Case T1.recoveryState When '01' Then K1.stockCnt Else T2.recoveryCnt End recoveryCnt,
+               Case T1.recoveryState When '02' Then T2.recoveryCnt Else T2.recoveryResultCnt End recoveryResultCnt,
+        	   T3.productPrice,
+               T2.etc,
+        	   T2.recoveryYn,
+        	   T2.deletedYn
+        	From adRecovery T1
                  Left Join adRecoveryDetail T2 On T1.recoveryCode = T2.recoveryCode
                  Left Join adProductMaster T3 On T2.productCode = T3.productCode
                  Left Join (
-                  Select groupId,productCode,stockDate,
-                     							(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
-                							From ( 
-                        						Select groupId,productCode , max(stockDate) as stockDate 
-                       								 From adStockDetail 
-                        						Group By  groupId,productCode 
-                        						) A1
+                  			Select groupId,productCode,stockDate,
+                     			   (Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
+                				From ( 
+                        			   Select groupId,productCode , max(stockDate) as stockDate 
+                       				   	From adStockDetail 
+                        				Group By  groupId,productCode 
+                        			  ) As A1
                  ) As K1 On T1.groupId = K1.groupId And T2.productCode = K1.productCode
             Where T1.recoveryCode = #{recoveryCode}
            ) As T4
@@ -273,5 +279,52 @@ insert into adRecoveryDetail (recoveryCode
 							 )
 		                        
 </insert>
+
+
+<update id="recoveryProcUpdate"  parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
+		update adRecovery 
+			set recoveryUserId  = #{recoveryUserId}
+        		,recoveryDateTime = now()
+        		,recoveryState = #{recoveryState}
+		where recoveryCode = #{recoveryCode}
+		                        
+</update>
+
+<update id="recoveryDetailProcUpdate"  parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
+	
+		update adRecoveryDetail 
+			set stockDate = #{stockDate}
+        		,stockCnt = #{stockCnt}
+        		,recoveryCnt = #{recoveryCnt}
+        		,addCnt = #{addCnt}
+				,lossCnt = #{lossCnt}
+         		,etc = #{etc}
+			    ,updateUserId = #{updateUserId}
+            	,updateDateTime = now()
+		where recoveryCode = #{recoveryCode}
+		  And productCode =  #{productCode}
+		                        
+</update>
+
+<update id="recoveryCompleteUpdate"  parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
+		update adRecovery 
+			set completeUserId  = #{completeUserId}
+        		,completeDateTime = now()
+        		,recoveryState = #{recoveryState}
+		where recoveryCode = #{recoveryCode}
+		                        
+</update>
+
+<update id="recoveryCompleteDetailProcUpdate"  parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
+	
+		update adRecoveryDetail 
+			set recoveryResultCnt = #{recoveryResultCnt}
+			    ,recoveryYn='Y'
+			    ,updateUserId = #{updateUserId}
+            	,updateDateTime = now()
+		where recoveryCode = #{recoveryCode}
+		  And productCode =  #{productCode}
+		                        
+</update>
 
 </mapper>

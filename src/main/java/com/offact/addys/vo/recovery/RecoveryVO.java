@@ -14,7 +14,7 @@ public class RecoveryVO extends AbstractVO {
 	private String groupName;
 	private String recoveryClosingDate;
 	private String recoveryDateTime;
-	private String recoveryUserID;
+	private String recoveryUserId;
 	private String recoveryUserName;
 	private String recoveryState;
 	private String recoveryStateView;
@@ -35,6 +35,8 @@ public class RecoveryVO extends AbstractVO {
 	private String lossCnt;
 	private String memo;
 	private String memoCnt;
+	private String etc;
+	private String etcCnt;
 	private String recoveryResultCnt;
 	private String recoveryResultPrice;
 	private String recoveryMemo;
@@ -95,11 +97,11 @@ public class RecoveryVO extends AbstractVO {
 	public void setRecoveryDateTime(String recoveryDateTime) {
 		this.recoveryDateTime = recoveryDateTime;
 	}
-	public String getRecoveryUserID() {
-		return recoveryUserID;
+	public String getRecoveryUserId() {
+		return recoveryUserId;
 	}
-	public void setRecoveryUserID(String recoveryUserID) {
-		this.recoveryUserID = recoveryUserID;
+	public void setRecoveryUserId(String recoveryUserId) {
+		this.recoveryUserId = recoveryUserId;
 	}
 	public String getRecoveryUserName() {
 		return recoveryUserName;
@@ -364,6 +366,18 @@ public class RecoveryVO extends AbstractVO {
 	}
 	public void setRecoveryMemoCnt(String recoveryMemoCnt) {
 		this.recoveryMemoCnt = recoveryMemoCnt;
+	}
+	public String getEtc() {
+		return etc;
+	}
+	public void setEtc(String etc) {
+		this.etc = etc;
+	}
+	public String getEtcCnt() {
+		return etcCnt;
+	}
+	public void setEtcCnt(String etcCnt) {
+		this.etcCnt = etcCnt;
 	}
 	
 }

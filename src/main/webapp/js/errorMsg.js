@@ -16,6 +16,9 @@ function resultMsg(result){
 	 result=result.replace('order0021','검수등록 처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
 	 result=result.replace('order0022','검수등록 처리에 실패했습니다.\n시스템 관리자에게 문의하세요.');
 	 
+	 result=result.replace('order0030','재송부 처리를 성공했습니다.');
+	 result=result.replace('order0033','재송부 처리를 실패했습니다.\n시스템 관리자에게 문의하세요.');
+	 
 	 //보류처리
 	 result=result.replace('defer0000','보류 처리를 성공했습니다.');
 	 result=result.replace('defer0001','보류 처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
@@ -31,10 +34,20 @@ function resultMsg(result){
 	 result=result.replace('check0001','처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
 	 result=result.replace('check0002','비고 comment를 정상적으로 등록하지 못 했습니다..\n시스템 관리자에게 문의하세요.');
 	 
-	//회수 등록처리
+	//회수 요청처리
 	 result=result.replace('recovery0000','회수 품목 요청을 완료했습니다.');
 	 result=result.replace('recovery0001','처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
 	 result=result.replace('recovery0002','회수 품목 요청을 정상적으로 처리하지 못 했습니다..\n시스템 관리자에게 문의하세요.');
+	 
+     //회수 등록처리
+	 result=result.replace('recovery0010','회수처리 를 완료했습니다.');
+	 result=result.replace('recovery0011','처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
+	 result=result.replace('recovery0012','회수를 정상적으로 처리하지 못 했습니다..\n시스템 관리자에게 문의하세요.');
+	 
+	//회수 등록처리
+	 result=result.replace('recovery0020','회수품목 검수완료했습니다.');
+	 result=result.replace('recovery0021','처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
+	 result=result.replace('recovery0022','검수를 정상적으로 처리하지 못 했습니다..\n시스템 관리자에게 문의하세요.');
 	 
 	 alert(result);
 

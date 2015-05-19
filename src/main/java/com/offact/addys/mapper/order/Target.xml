@@ -58,6 +58,7 @@
   <result column="deferCheck"        property="deferCheck"  />
   <result column="addCnt"        property="addCnt"  />
   <result column="lossCnt"        property="lossCnt"  />
+  <result column="group1Name"        property="group1Name"  />
 </resultMap>
 
 <select id="getTargetPageList"  resultMap="targetVO" parameterType="com.offact.addys.vo.order.TargetVO" >
@@ -308,6 +309,7 @@ From (
 	   	 T1.safeStock,
 	   	 T1.holdStock,
 	   	 T2.productPrice,
+	   	 T2.group1Name,
          (T1.holdStock-T1.StockCnt) as orderCnt
   From (
 	      Select TEMP.orderState,

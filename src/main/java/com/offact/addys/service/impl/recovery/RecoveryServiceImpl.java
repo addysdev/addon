@@ -123,5 +123,101 @@ public class RecoveryServiceImpl implements RecoveryService {
 
         return recoveryList;
     }
-    
+    @Override
+    public int regiRecoveryProcess(String[] recoveryList , RecoveryVO recoveryVo)
+    	    throws BizException
+	{
+	    int retVal=-1;
+	    
+	    try{//회수처리
+	
+	    	this.commonDao.update("Recovery.recoveryProcUpdate", recoveryVo);
+	
+	    	String[] r_data=null;
+	    	
+		    for(int i=0;i<recoveryList.length;i++){
+	
+		        r_data = StringUtil.getTokens(recoveryList[i], "|");
+		        
+		        RecoveryVO recoveryDetailVo = new RecoveryVO();
+
+		        recoveryDetailVo.setRecoveryCode(recoveryVo.getRecoveryCode());
+		        recoveryDetailVo.setProductCode(StringUtil.nvl(r_data[0],""));
+		        recoveryDetailVo.setStockDate(StringUtil.nvl(r_data[1],""));
+		        recoveryDetailVo.setStockCnt(StringUtil.nvl(r_data[2],""));
+		        recoveryDetailVo.setRecoveryCnt(StringUtil.nvl(r_data[3],""));
+		        recoveryDetailVo.setAddCnt(StringUtil.nvl(r_data[4],""));
+		    	recoveryDetailVo.setLossCnt(StringUtil.nvl(r_data[5],""));
+		    	recoveryDetailVo.setEtc(StringUtil.nvl(r_data[6],""));
+		    	recoveryDetailVo.setUpdateUserId(recoveryVo.getUpdateUserId());
+		    	
+	            retVal=this.commonDao.update("Recovery.recoveryDetailProcUpdate", recoveryDetailVo);
+		      
+		      }
+
+	    /*
+		      arrDeferProductId = arrDeferProductId.substring(0, arrDeferProductId.lastIndexOf("^"));
+		      String[] arrDeferId = arrDeferProductId.split("\\^");
+	      
+		    int deferRetVal=0;
+	
+		    for (int i = 0; i < arrDeferId.length; i++) {
+		    	Map updateMap = new HashMap();
+	
+		    	updateMap.put("orderCode", targetVo.getOrderCode());
+		    	updateMap.put("productCode", arrDeferId[i]);
+	        
+		    	retVal=this.commonDao.update("Target.deferUpdateProc", updateMap);
+	
+		    }
+		  */  
+	    }catch(Exception e){
+	    	
+	    	e.printStackTrace();
+	    	e.printStackTrace();
+	    	throw new BizException(e.getMessage());
+
+	    }
+	
+	    return retVal;
+	    
+   }
+    @Override
+    public int regiRecoveryComplete(String[] recoveryList , RecoveryVO recoveryVo)
+    	    throws BizException
+	{
+	    int retVal=-1;
+	    
+	    try{//회수처리
+	
+	    	this.commonDao.update("Recovery.recoveryCompleteUpdate", recoveryVo);
+	
+	    	String[] r_data=null;
+	    	
+		    for(int i=0;i<recoveryList.length;i++){
+	
+		        r_data = StringUtil.getTokens(recoveryList[i], "|");
+		        
+		        RecoveryVO recoveryDetailVo = new RecoveryVO();
+
+		        recoveryDetailVo.setRecoveryCode(recoveryVo.getRecoveryCode());
+		        recoveryDetailVo.setProductCode(StringUtil.nvl(r_data[0],""));
+		        recoveryDetailVo.setRecoveryResultCnt(StringUtil.nvl(r_data[1],""));
+		    	recoveryDetailVo.setUpdateUserId(recoveryVo.getUpdateUserId());
+		    	
+	            retVal=this.commonDao.update("Recovery.recoveryCompleteDetailProcUpdate", recoveryDetailVo);
+		      
+		      }
+
+	    }catch(Exception e){
+	    	
+	    	e.printStackTrace();
+	    	e.printStackTrace();
+	    	throw new BizException(e.getMessage());
+
+	    }
+	
+	    return retVal;
+	    
+   }
 }

@@ -16,7 +16,7 @@ function fcOrderDetail_print(){
 	var h=800;
 	var s=950;
 
-    tmt_winLaunch('<%= request.getContextPath()%>/order/targetdetailprint' , 'orderPrintObj', 'orderPrintObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
+    tmt_winLaunch('<%= request.getContextPath()%>/order/orderdetailprint' , 'orderPrintObj', 'orderPrintObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
 	
 }
 
@@ -349,6 +349,10 @@ function totalTargetAmt(){
     	var frm=document.orderDetailListForm;
     	var amtCnt = frm.productCode.length;
     	
+    	if(amtCnt==undefined){
+    		amtCnt=1;
+    	}
+    	
     	var supplyamt=0;
     	var vatamt=0;
     	var totalamt=0;
@@ -390,6 +394,10 @@ function totalTargetAmt(){
     	
     	var frm=document.orderDetailListForm;
     	var amtCnt = frm.productCode.length;
+    	
+    	if(amtCnt==undefined){
+    		amtCnt=1;
+    	}
     	
     	var supplyamt=0;
     	var vatamt=0;
@@ -439,6 +447,10 @@ function totalTargetAmt(){
     	
     	var frm=document.orderDetailListForm;
     	var amtCnt = frm.productCode.length;
+    	
+    	if(amtCnt==undefined){
+    		amtCnt=1;
+    	}
     	
     	var chkCnt=0;
     	
@@ -607,6 +619,33 @@ function totalTargetAmt(){
       	
           }
   	}	
+    function fcOrder_reMail(){
+    	
+
+	            if (confirm('발주서를 재송부 하시겠습니까?')){ 
+	            	
+	            var paramString = $("#orderDetailForm").serialize();
+
+			  		$.ajax({
+				       type: "POST",
+				       async:false,
+				          url:  "<%= request.getContextPath() %>/order/orderremail",
+				          data:paramString,
+				          success: function(result) {
+			
+				        	resultMsg(result);
+	
+				          },
+				          error:function(){
+				          
+				          alert('재송부 처리 호출오류!');
+				       
+				          }
+				    });
+          	
+	            }
+
+    }
 
 </SCRIPT>
 	<div class="container-fluid">
@@ -618,9 +657,19 @@ function totalTargetAmt(){
 	   <input type="hidden" name="deferReason"               id="deferReason"            value="" />
 	   <input type="hidden" name="deferType"               id="deferType"            value="" />
 	   <input type="hidden" name="groupId"               id="groupId"            value="${orderVO.groupId}" />
+	    <input type="hidden" name="groupName"               id="groupName"            value="${orderVO.groupName}" />
 	   <input type="hidden" name="companyCode"               id="companyCode"            value="${orderVO.companyCode}" />
 	   <input type="hidden" name="orderCode"               id="orderCode"            value="${orderVO.orderCode}" />
-	      <tr>
+	   <input type="hidden" name="email"               id="email"            value="${orderVO.email}" />
+	   <input type="hidden" name="telNumber"               id="telNumber"            value="${orderVO.telNumber}" />
+	   <input type="hidden" name="mobilePhone"               id="mobilePhone"            value="${orderVO.mobilePhone}" />
+	   <input type="hidden" name="faxNumber"               id="faxNumber"            value="${orderVO.faxNumber}" />
+	   <input type="hidden" name="orderDate"               id="orderDate"            value="${orderVO.orderDate}" />
+	   <input type="hidden" name="orderEmail"               id="orderEmail"            value="${orderVO.orderEmail}" />
+	   <input type="hidden" name="orderTelNumber"               id="orderTelNumber"            value="${orderVO.orderTelNumber}" />
+	   <input type="hidden" name="orderFaxNumber"               id="orderFaxNumber"            value="${orderVO.orderFaxNumber}" />
+	   <input type="hidden" name="orderMobilePhone"               id="orderMobilePhone"            value="${orderVO.orderMobilePhone}" />
+	   <input type="hidden" name="orderCharge"               id="orderCharge"            value="${orderVO.orderCharge}" />
 	      <div style="position:absolute; left:30px" >
 	      <c:if test="${orderVO.orderState=='03'}"><button id="deferbtn" type="button" class="btn btn-primary" >보류</button></c:if>
 	      <!--  >button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button-->
@@ -648,7 +697,7 @@ function totalTargetAmt(){
           </div>
           <div style="position:absolute; right:30px" >
           <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-warning" onClick="fcOrder_cancel()">취소</button></c:if>
-          <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-primary" onClick="alert('개발중입니다.')">재송부</button></c:if>
+          <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-primary" onClick="fcOrder_reMail()">재송부</button></c:if>
           <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-primary" onClick="fcOrder_buy()">등록완료</button></c:if>
           </div>
           </tr>
@@ -660,7 +709,7 @@ function totalTargetAmt(){
           <th class='text-center'><input disabled type="text" class="form-control" id="deliveryCharge" name="deliveryCharge"  value="${orderVO.deliveryCharge}" placeholder="수신" /></th>
           <th rowspan='9' class='text-center'  style="background-color:#E6F3FF">발신</th>
           <th class='text-center' style="background-color:#E6F3FF">발신</th>
-          <th class='text-center'><input  disabled type="text" class="form-control" id="orderCharge" name="orderCharge"  value="${orderVO.orderCharge}" placeholder="발신"/></th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.orderCharge}" placeholder="발신"/></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF" >참조</th>
@@ -670,31 +719,31 @@ function totalTargetAmt(){
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">핸드폰</th>
-          <th class='text-center'><input  disabled type="text" class="form-control" id="mobilePhone" name="mobilePhone"  value="${orderVO.mobilePhone}"  placeholder="핸드폰"/></th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.mobilePhone}"  placeholder="핸드폰"/></th>
           <th class='text-center' style="background-color:#E6F3FF">핸드폰</th>
-          <th class='text-center'><input  disabled type="text" class="form-control" id="orderMobilePhone" name="orderMobilePhone"  value="${orderVO.orderMobilePhone}"  placeholder="핸드폰"/></th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.orderMobilePhone}"  placeholder="핸드폰"/></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">e-mail</th>
-          <th class='text-center'><input  disabled type="text" class="form-control" id="email" name="email"  value="${orderVO.email}" placeholder="e-mail" /></th>
+          <th class='text-center'><input  disabled type="text" class="form-control" value="${orderVO.email}" placeholder="e-mail" /></th>
           <th class='text-center' style="background-color:#E6F3FF">e-mail</th>
-          <th class='text-center'><input  disabled type="text" class="form-control" id="orderEmail" name="orderEmail"  value="${orderVO.orderEmail}" placeholder="e-mail" /></th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.orderEmail}" placeholder="e-mail" /></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">tel</th>
-          <th class='text-center'><input  disabled type="text" class="form-control" id="telNumber" name="telNumber"  value="${orderVO.telNumber}" placeholder="tel" /></th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.telNumber}" placeholder="tel" /></th>
           <th class='text-center' style="background-color:#E6F3FF">tel</th>
-          <th class='text-center'><input  disabled type="text" class="form-control" id="orderTelNumber" name="orderTelNumber"  value="${orderVO.orderTelNumber}" placeholder="tel" /></th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.orderTelNumber}" placeholder="tel" /></th>
       	</tr>
       	<th class='text-center' style="background-color:#E6F3FF">fax</th>
-          <th class='text-center'><input  disabled type="text" class="form-control" id="faxNumber" name="faxNumber"  value="${orderVO.faxNumber}" placeholder="fax" /></th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.faxNumber}" placeholder="fax" /></th>
           <th class='text-center' style="background-color:#E6F3FF">fax</th>
-          <th class='text-center'><input  disabled type="text" class="form-control" id="orderFaxNumber" name="orderFaxNumber"  value="${orderVO.orderFaxNumber}" placeholder="fax" /></th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.orderFaxNumber}" placeholder="fax" /></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">발주일자</th>
           <th class='text-center'>
-          <input  disabled type="text" class="form-control" id="orderDate" name="orderDate"  value="${orderVO.orderDate}" placeholder="SMS" />
+          <input  disabled type="text" class="form-control"   value="${orderVO.orderDate}" placeholder="SMS" />
           </th>
           <th rowspan='2' class='text-center' style="background-color:#E6F3FF">배송주소</th>
           <th rowspan='2' class='text-center'><textarea disabled style='height:82px'  class="form-control" row="2" id="orderAddress" name="orderAddress" >${orderVO.orderAddress}</textarea></th>
@@ -717,7 +766,7 @@ function totalTargetAmt(){
       	</tr>
       	<tr>
           <th colspan='2' class='text-center' style="background-color:#E6F3FF">메모&nbsp;<img id="etcbtn" onClick="fcMemo_detail('${orderVO.orderCode}','${orderVO.memo}')" src="<%= request.getContextPath()%>/images/common/icon_memo.gif" width="16" height="16" align="absmiddle" title="메모">
-          <button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcMemo_detail('${orderVO.orderCode}','${orderVO.memo}')" >관리</button></th>
+          <button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcMemo_detail('${orderVO.orderCode}','${orderVO.memo}')" >관리(${orderVO.memoCnt})</button></th>
           <th colspan='4' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${orderVO.memo}" placeholder="메모" disabled /></th>
       	</tr>
 	  </table>
@@ -791,7 +840,7 @@ function totalTargetAmt(){
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.orderCnt}"/></td>
                  <input type="hidden" name="orderCnt" value="${orderVO.orderCnt}">
                  <td class='text-right'><input style="width:35px" type="text" class="form-control" id="orderResultCnt" name="orderResultCnt" onKeyup="totalOrderAmt()" value="${orderVO.orderResultCnt}"></td>
-                 <td class='text-right'><img id="etcbtn" onClick="fcEtc_detail('${orderVO.orderCode}','${orderVO.productCode}','${orderVO.productName}','${orderVO.etc}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고"></td>
+                 <td class='text-right'><img id="etcbtn" onClick="fcEtc_detail('${orderVO.orderCode}','${orderVO.productCode}','${orderVO.productName}','${orderVO.etc}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(${orderVO.etcCnt})</td>
                   <tr>
 	             	<td colspan='11' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${orderVO.etc}" placeholder="비고" disabled /></td>
 	             </tr>
