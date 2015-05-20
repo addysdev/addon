@@ -46,9 +46,22 @@
             }
         });
     };
+    
+    function stateSearch(state){
+    	
+    	document.orderConForm.con_orderState.value=state;
+    	document.orderConForm.searchGubun.value='';
+    	document.orderConForm.searchValue.value='';
+    	fcOrder_listSearch();
+    }
 </SCRIPT>
      <form:form commandName="orderVO" name="orderPageListForm" method="post" action="" >
-      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
+      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /></span> 
+      <span style="color:blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[검수대기] :</font> <a href="javascript:stateSearch('03')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.waitCnt}" /></a>
+      &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[검수보류] :</font> <a href="javascript:stateSearch('04')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.deferCnt}" /></a>    
+	  &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[검수완료] :</font> <a href="javascript:stateSearch('06')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.completeCnt}" /></a>     
+	  &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[등록완료] :</font> <a href="javascript:stateSearch('07')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.registCnt}" /></a>
+	  </span></p>       
 	  <table class="table table-striped">
 	    <thead>
 	      <tr>
@@ -58,9 +71,9 @@
             <th class='text-center'>발주자</th>
             <th class='text-center'>매장명</th>
             <th class='text-center'>업체명</th>
-            <th class='text-center'>공급가</th>
-            <th class='text-center'>부가세</th>
-            <th class='text-center'>합계</th>
+            <!--  >th class='text-center'>공급가</th>
+            <th class='text-center'>부가세</th-->
+            <th class='text-center'>금액(VAT포함)</th>
 	      </tr>
 	    </thead>
 	    <tbody>
@@ -73,15 +86,15 @@
                  <td class='text-center'><c:out value="${orderVO.orderUserName}"></c:out></td>
                  <td class='text-center'><c:out value="${orderVO.groupName}"></c:out></td>
                  <td class='text-center'><c:out value="${orderVO.companyName}"></c:out></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.supplyPrice}"/></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.vat}"/></td>
+                 <!--td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.supplyPrice}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.vat}"/></td-->
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.totalOrderPrice}"/></td>
               </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty orderList}">
            <tr>
-           	<td colspan='9' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>

@@ -10,6 +10,7 @@ import java.util.Map;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.vo.order.TargetVO;
 import com.offact.addys.vo.recovery.RecoveryVO;
+import com.offact.addys.vo.master.ProductMasterVO;
 
 /**
  * @author
@@ -72,4 +73,13 @@ public interface RecoveryService {
      */
     public int regiRecoveryComplete(String[] recoverylist , RecoveryVO recovery)
     	    throws BizException;
+    
+    /**
+     * 회수품목 attach
+     * 
+     * @return
+     * @throws BizException
+     */
+    public List<ProductMasterVO> getExcelAttach(List<ProductMasterVO> reproductlist) throws BizException;
+   
 }

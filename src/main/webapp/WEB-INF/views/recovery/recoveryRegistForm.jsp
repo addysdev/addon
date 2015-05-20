@@ -159,6 +159,85 @@ function delFile(obj){
     var index = tr.rowIndex; 
     table.deleteRow(index-1); 
 } 
+//품목조회 리스트 Layup
+function fcReProduct_excelForm() {
+	
+	//$('#targetEtcView').attr('title',productName);
+	var url='<%= request.getContextPath() %>/master/productsearch';
+
+	$('#recoveryProductList').dialog({
+        resizable : false, //사이즈 변경 불가능
+        draggable : true, //드래그 불가능
+        closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+        width : 600,
+        height : 600,
+        modal : true, //주위를 어둡게
+
+        open:function(){
+            //팝업 가져올 url
+          //  $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode+'&productNaem='+encodeURIComponent(productName));
+            $(this).load(url);
+           
+            $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+                $("#recoveryProductList").dialog('close');
+
+                });
+        }
+        ,close:function(){
+            $('#recoveryProductList').empty();
+        }
+    });
+};
+//레이어팝업 : 보유재고 Layer 팝업
+function fcReProduct_excelForm(){
+
+	$('#reProductExcelForm').dialog({
+        resizable : false, //사이즈 변경 불가능
+        draggable : true, //드래그 불가능
+        closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+        width : 430,
+        height : 400,
+        modal : true, //주위를 어둡게
+
+        open:function(){
+            //팝업 가져올 url
+            $(this).load('<%= request.getContextPath() %>/recovery/reproductexcelform');
+            //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
+            $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+                $("#reProductExcelForm").dialog('close');
+
+                });
+        }
+        ,close:function(){
+            $('#reProductExcelForm').empty();
+        }
+    });
+};
+// 리스트 조회
+function fcReProduct_registlist(){
+
+     $.ajax({
+         type: "POST",
+            url:  "<%= request.getContextPath() %>/recovery/recoveryregislist",
+                 data:$("#reProductForm").serialize(),
+            success: function(result) {
+                commonDim(false);
+                $("#recoveryRegisList").html(result);
+            },
+            error:function() {
+            	
+            }
+     });
+}
+
+//체크박스 전체선택
+function fcGroup_checkAll(){
+	
+	$("input:checkbox[id='regroupid']").prop("checked", $("#regroupidCheckAll").is(":checked"));
+
+}
 //--> 
 
 </SCRIPT>
@@ -167,6 +246,7 @@ function delFile(obj){
   <div class="container-fluid">
 	<h5><strong><font style="color:#428bca"><span class="glyphicon glyphicon-book"></span>회수관리&nbsp; 
    		<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcProduct_list()" >회수 대상품목 추가</button>
+   		<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcReProduct_excelForm()" >회수 대상품목 엑셀추가</button>
    		<button id="memoinfobtn" type="button" class="btn btn-xs btn-primary" onClick="fcRcovery_regist()" >회수요청</button>
     	</font></strong></h5>
 		  <form:form commandName="recoveryVO" id="reProductForm" name="reProductForm" method="post" action="" >
@@ -187,7 +267,7 @@ function delFile(obj){
 	          </th>
 	      	</tr>
 	      	<tr>
-	          <th class='text-center' style="background-color:#E6F3FF" >회수 대상지점</th>
+	          <th class='text-center' style="background-color:#E6F3FF" >회수 대상지점<br>전체선택:<input type="checkbox"  id="regroupidCheckAll"  name="regroupidCheckAll" checked onchange="fcGroup_checkAll();" title="전체선택" /></th>
 	          <th>
 	 			<c:forEach var="groupVO" items="${group_comboList}" >
 	 				<input type="checkbox" id="regroupid" name="regroupid"  title="선택" checked value="${groupVO.groupId}"/>${groupVO.groupName}&nbsp;
@@ -202,27 +282,18 @@ function delFile(obj){
 	      	</tr>
 		  </table>
 		  </form:form>
-        <!-- 조회결과리스트 -->
-        <form:form commandName="productVO" name="recoveryProductListForm" method="post" action="" >
-        <table class="table table-striped" id="contentId">
-	      	<colgroup>
-		     <col width="25%" />
-	         <col width="*" />
-	        </colgroup>
-		    <thead>
-		      <tr>
-	          <th class="text-center">회수 대상품목</th>
-		      </tr>
-		    </thead>
-		    <tbody>
-		    </tbody>
-	  	</table>
-	  	</form:form>
-  </div>
-  <!-- //조회결과리스트 -->
+
+   <div id="recoveryRegisList"  title="회수대상 품목조회"></div>
+  <!-- //회수대상품목리스트 -->
   
   <div id="recoveryProductList"  title="회수대상 품목조회"></div>
   <!-- //검수 상세처리화면 -->
+  
+    <!-- 보유재고 일괄등록-->
+  <div id="reProductExcelForm"  title="회수품목 일괄등록"></div>
+  
+  
+  </div>  
 </body>
 <script type="text/javascript">
 
@@ -241,5 +312,6 @@ function delFile(obj){
                 });
 
     });
-   
+  
+    fcReProduct_registlist();
 </script>

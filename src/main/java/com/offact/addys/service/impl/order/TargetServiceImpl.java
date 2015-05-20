@@ -206,4 +206,11 @@ public class TargetServiceImpl implements TargetService {
 	    return retVal;
 	    
   }
+   @Override
+   public TargetVO getStateCnt(TargetVO targetCon) throws BizException {
+   	
+	   TargetVO stateVO = commonDao.selectOne("Target.getStateCnt", targetCon);
+
+       return stateVO;
+   }
 }

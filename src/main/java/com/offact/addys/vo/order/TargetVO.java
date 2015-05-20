@@ -79,6 +79,8 @@ public class TargetVO extends AbstractVO {
 	private String deferReason;
 	private String deferType;
 	private String group1Name;
+	private String deferCnt;
+	private String targetCnt;
 	
 	private String con_groupId;
 	private String con_orderState;
@@ -545,6 +547,18 @@ public class TargetVO extends AbstractVO {
 	}
 	public void setGroup1Name(String group1Name) {
 		this.group1Name = group1Name;
+	}
+	public String getDeferCnt() {
+		return deferCnt;
+	}
+	public void setDeferCnt(String deferCnt) {
+		this.deferCnt = deferCnt;
+	}
+	public String getTargetCnt() {
+		return targetCnt;
+	}
+	public void setTargetCnt(String targetCnt) {
+		this.targetCnt = targetCnt;
 	}
     
 }

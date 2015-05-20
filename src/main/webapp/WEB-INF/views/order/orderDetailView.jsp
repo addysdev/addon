@@ -388,7 +388,7 @@ function totalTargetAmt(){
 
     	  totalamt=supplyamt+vatamt;
     	
-    	  document.all('totalTargetAmt').innerText='[합계] : '+addCommaStr(''+totalamt)+' 원  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
+    	  document.all('totalTargetAmt').innerText='[합계] : '+addCommaStr(''+totalamt)+' 원 ';// [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
     }
     function totalOrderAmt(){
     	
@@ -440,7 +440,7 @@ function totalTargetAmt(){
 
     	  totalamt=supplyamt+vatamt;
     	
-    	  document.all('totalOrderAmt').innerText='[합계] : '+addCommaStr(''+totalamt)+' 원  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
+    	  document.all('totalOrderAmt').innerText='[합계] : '+addCommaStr(''+totalamt)+' 원';//  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
     }
     
     function totalCheck(){
@@ -646,7 +646,14 @@ function totalTargetAmt(){
 	            }
 
     }
-
+    function goOrderExcel(){
+    	
+    	var frm = document.orderDetailForm;
+    	frm.action = "<%=request.getContextPath()%>/order/orderexcellist";	
+    	frm.method = "POST";
+    	frm.submit();
+    	
+    }
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -676,7 +683,7 @@ function totalTargetAmt(){
 	      <c:if test="${orderVO.orderState=='04'}"><button id="defercancelbtn"  type="button" class="btn btn-danger" >보류폐기</button></c:if>
 	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" class="btn btn-info" onClick="fcDefer_list('${orderVO.orderCode}')">보류사유</button></c:if>
 	      <c:if test="${orderVO.orderState=='03'}"><button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcOrder_complete()">검수완료</button></c:if>
-	      <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-default">엑셀변환</button></c:if>
+	      <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-default" onClick="goOrderExcel()">엑셀변환</button></c:if>
 	      <c:if test="${orderVO.orderState=='03'}"><button type="button" class="btn btn-success" onClick="fcOrderDetail_print()">인쇄</button></c:if>
           </div>
           <div id="deferregdialog" class="form-group" title="보류사유를 입력하세요">
@@ -794,17 +801,16 @@ function totalTargetAmt(){
           <th rowspan='2' class='text-center'>품목코드</th>
           <th rowspan='2' class='text-center'>바코드</th>
           <th rowspan='2' class='text-center'>상품명</th>
-          <th colspan='4' class='text-center'>단가</th>
           <th colspan='2' class='text-center'>수량</th>
+          <th colspan='3' class='text-center'>금액(VAT포함)</th>
           <th rowspan='2' class='text-center'>비고</th>
       	</tr>
       	<tr style="background-color:#E6F3FF">
-          <th class='text-center'>기준단가</th>
-          <th class='text-center'>부가세</th>
-          <th class='text-center'>구매단가</th>
-          <th class='text-center'>구매합계</th>
-          <th class='text-center'>발주수량</th>
-          <th class='text-center'>구매수량</th>
+          <th style="width:50px" class='text-center'>발주</th>
+          <th class='text-center'>구매</th>
+          <th class='text-center'>기준</th>
+          <th class='text-center'>구매</th>
+          <th class='text-center'>합계</th>
       	</tr>
 	    	<c:if test="${!empty orderDetailList}">
              <c:forEach items="${orderDetailList}" var="orderVO" varStatus="status">
@@ -832,14 +838,16 @@ function totalTargetAmt(){
                  <td class='text-center'><c:out value="${orderVO.productCode}"></c:out></td>
                  <td class='text-center'><c:out value="${orderVO.barCode}"></c:out></td>
                  <td class='text-left'><c:out value="${orderVO.productName}"></c:out></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.orderPrice}" /></td>
-                 <input type="hidden" name="orderPrice" value="${orderVO.orderPrice}">
-                 <td class='text-right'><input style="width:80px" type="text" class="form-control" id="orderVatRate" name="orderVatRate" onKeyup="totalOrderAmt()" value="${orderVO.orderVatRate}"></td>
-                 <td class='text-right'><input style="width:80px" type="text" class="form-control" id="orderResultPrice" name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderResultPrice}"></td>
-                 <td class='text-right' id='orderTotalPriceView' name='orderTotalPriceView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="0"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.orderCnt}"/></td>
                  <input type="hidden" name="orderCnt" value="${orderVO.orderCnt}">
                  <td class='text-right'><input style="width:35px" type="text" class="form-control" id="orderResultCnt" name="orderResultCnt" onKeyup="totalOrderAmt()" value="${orderVO.orderResultCnt}"></td>
+                 
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.orderPrice+orderVO.orderVatRate}" /></td>
+                 <input type="hidden" name="orderPrice" value="${orderVO.orderPrice+orderVO.orderVatRate}">
+                 <input style="width:80px" type="hidden" class="form-control" id="orderVatRate" name="orderVatRate" onKeyup="totalOrderAmt()" value="0">
+                 
+                 <td class='text-right'><input style="width:80px" type="text" class="form-control" id="orderResultPrice" name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderPrice+orderVO.orderVatRate}"></td>
+                 <td class='text-right' id='orderTotalPriceView' name='orderTotalPriceView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="0"/></td>
                  <td class='text-right'><img id="etcbtn" onClick="fcEtc_detail('${orderVO.orderCode}','${orderVO.productCode}','${orderVO.productName}','${orderVO.etc}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(${orderVO.etcCnt})</td>
                   <tr>
 	             	<td colspan='11' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${orderVO.etc}" placeholder="비고" disabled /></td>

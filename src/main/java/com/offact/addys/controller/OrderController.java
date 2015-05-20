@@ -176,6 +176,7 @@ public class OrderController {
 
         ModelAndView mv = new ModelAndView();
         List<TargetVO> targetList = null;
+        TargetVO stateVO = new TargetVO();
 
         // 조직값 null 일때 공백처리
         if (targetConVO.getCon_groupId() == null) {
@@ -201,6 +202,10 @@ public class OrderController {
         // totalCount 조회
         String totalCount = String.valueOf(targetSvc.getTargetCnt(targetConVO));
         mv.addObject("totalCount", totalCount);
+        
+        // 상태통계 조회
+        stateVO= targetSvc.getStateCnt(targetConVO);
+        mv.addObject("stateVO", stateVO);
 
         mv.setViewName("/order/targetPageList");
         
@@ -998,6 +1003,7 @@ public class OrderController {
 
         ModelAndView mv = new ModelAndView();
         List<OrderVO> orderList = null;
+        OrderVO stateVO = new OrderVO();
 
         // 조직값 null 일때 공백처리
         if (orderConVO.getCon_groupId() == null) {
@@ -1023,6 +1029,10 @@ public class OrderController {
         // totalCount 조회
         String totalCount = String.valueOf(orderSvc.getOrderCnt(orderConVO));
         mv.addObject("totalCount", totalCount);
+        
+        // 상태통계 조회
+        stateVO= orderSvc.getStateCnt(orderConVO);
+        mv.addObject("stateVO", stateVO);
 
         mv.setViewName("/order/orderPageList");
         
@@ -1928,6 +1938,24 @@ public class OrderController {
    		ModelAndView mv = new ModelAndView();
    		
    		mv.setViewName("/order/orderDetailPrint");
+   		
+   		return mv;
+   	}
+    /**
+   	 * Simply selects the home view to render by returning its name.
+   	 * @throws BizException
+   	 */
+    @RequestMapping(value = "/order/orderexcellist")
+   	public ModelAndView orderExcelList(@ModelAttribute("orderVO") OrderVO orderVO, HttpServletRequest request) throws BizException 
+       {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+    	logger.info("["+logid+"] Controller start : orderVO" + orderVO);
+		logger.info("["+logid+"] @@@@@@@@ : targetVO.getDeliveryEmail" + orderVO.getEmail());
+   		ModelAndView mv = new ModelAndView();
+   		
+   		mv.setViewName("/order/orderExcelList");
    		
    		return mv;
    	}

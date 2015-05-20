@@ -62,10 +62,18 @@
         });
     };
 
+    function stateSearch(state){
+    	
+    	document.targetConForm.con_orderState.value=state;
+    	//alert(document.targetConForm.con_orderState.value);
+    	fcTarget_listSearch();
+    }
 
 </SCRIPT>
      <form:form commandName="targetVO" name="targetPageListForm" method="post" action="" >
-      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
+      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span> 
+      <span style="color:blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[발주대기] :</font> <a href="javascript:stateSearch('01')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.targetCnt}" /></a><font style="color:#FF9900">
+      &nbsp;&nbsp;&nbsp;&nbsp;[발주보류] :</font> <a href="javascript:stateSearch('02')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.deferCnt}" /></a></span></p>       
 	  <table class="table table-striped">
 	    <thead>
 	      <tr>

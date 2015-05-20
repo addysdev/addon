@@ -226,4 +226,12 @@ public class OrderServiceImpl implements OrderService {
 	    return retVal;
 	    
    }
+    
+    @Override
+    public OrderVO getStateCnt(OrderVO orderCon) throws BizException {
+    	
+    	OrderVO stateVO = commonDao.selectOne("Order.getStateCnt", orderCon);
+
+        return stateVO;
+    }
 }

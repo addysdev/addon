@@ -16,6 +16,8 @@ import com.offact.framework.util.StringUtil;
 import com.offact.framework.db.SqlSessionCommonDao;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.service.recovery.RecoveryService;
+import com.offact.addys.vo.master.ProductMasterVO;
+import com.offact.addys.vo.master.StockVO;
 import com.offact.addys.vo.order.TargetVO;
 import com.offact.addys.vo.recovery.RecoveryVO;
 
@@ -220,4 +222,35 @@ public class RecoveryServiceImpl implements RecoveryService {
 	    return retVal;
 	    
    }
+    
+    public List<ProductMasterVO> getExcelAttach(List<ProductMasterVO> excelUploadList)
+    	    throws BizException
+    	  {
+
+    	    List reProductAttachList = new ArrayList();
+    	    int idx = 0;
+
+    	    for (int i = 0; i < excelUploadList.size(); i++) {
+    	      
+    	      try 
+    	      {
+    	        
+    	    	idx = i + 2;
+    	    	ProductMasterVO reProductVO = (ProductMasterVO)excelUploadList.get(i);
+
+    	    	reProductVO=this.commonDao.selectOne("ProductMaster.getProductDetail", reProductVO);
+    	    	reProductAttachList.add(reProductVO);
+    	      
+    	      } catch (Exception e) {
+    	        
+    	    	e.printStackTrace();
+    	        String errMsg = e.getMessage();
+    	        errMsg = errMsg.substring(errMsg.lastIndexOf("Exception"));
+    	       
+    	      }
+    	    
+    	    }
+
+    	    return reProductAttachList;
+    	  }
 }

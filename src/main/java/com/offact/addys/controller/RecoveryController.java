@@ -50,6 +50,9 @@ import com.offact.addys.service.common.CommonService;
 import com.offact.addys.service.recovery.RecoveryService;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CodeVO;
+import com.offact.addys.vo.master.SalesVO;
+import com.offact.addys.vo.master.StockMasterVO;
+import com.offact.addys.vo.master.ProductMasterVO;
 import com.offact.addys.vo.order.TargetVO;
 import com.offact.addys.vo.recovery.RecoveryVO;
 import com.offact.addys.vo.MultipartFileVO;
@@ -534,4 +537,208 @@ public class RecoveryController {
 
     return recoveryResult;
     }
+    
+    /**
+   	 * Simply selects the home view to render by returning its name.
+   	 * @throws BizException
+   	 */
+    @RequestMapping(value = "/recovery/reproductexcelform")
+   	public ModelAndView reProductExcelForm(HttpServletRequest request) throws BizException 
+       {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : reproductexcelform");
+    			
+   		ModelAndView mv = new ModelAndView();
+   		
+   		mv.setViewName("/recovery/reProductExcelForm");
+   		
+   	    //log Controller execute time end
+	 	long t2 = System.currentTimeMillis();
+	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+   		
+   		return mv;
+   	}
+    /**
+	   * 회수품목 일괄등록
+	   *
+	   * @param MultipartFileVO
+	   * @param request
+	   * @param response
+	   * @param model
+	   * @param locale
+	   * @return
+	   * @throws BizException
+	   */
+	  @RequestMapping({"/recovery/reproductexcelattach"})
+	  public ModelAndView stockMasterExcelImport(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO, 
+	  		                            HttpServletRequest request, 
+	  		                            HttpServletResponse response, 
+	  		                            String fileName, 
+	  		                            String extension) throws IOException, BizException
+	  {
+	    
+		  //log Controller execute time start
+		    String logid=logid();
+		    long t1 = System.currentTimeMillis();
+		    logger.info("["+logid+"] Controller start : fileVO" + fileVO);
+		  			
+		    ModelAndView mv = new ModelAndView();
+
+		    HttpSession session = request.getSession();
+		    String strUserId = (String)session.getAttribute("strUserId");
+
+		    ResourceBundle rb = ResourceBundle.getBundle("config");
+		    String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
+		    
+		    this.logger.debug("파일정보:" + fileName + extension);
+		    this.logger.debug("file:" + fileVO);
+
+		    List excelUploadList = new ArrayList();//업로드 대상 데이타
+
+		    String excelInfo = "";//excel 추출데이타
+		    
+		    List reProductList = new ArrayList(); //DB 성공 대상데이타
+
+		    if (fileName != null) {
+		  	  
+		      List<MultipartFile> files = fileVO.getFiles();
+		      List fileNames = new ArrayList();
+		      String orgFileName = null;
+
+		      if ((files != null) && (files.size() > 0))
+		      {
+		        for (MultipartFile multipartFile : files)
+		        {
+		          orgFileName = multipartFile.getOriginalFilename();
+		          String filePath = uploadFilePath;
+
+		          File file = new File(filePath + orgFileName);
+		          multipartFile.transferTo(file);
+		          fileNames.add(orgFileName);
+		        }
+		   
+		      }
+
+		      String fname = uploadFilePath + orgFileName;
+
+		      FileInputStream fileInput = null;
+
+		      fileInput = new FileInputStream(fname);
+
+		      XSSFWorkbook workbook = new XSSFWorkbook(fileInput);
+		      XSSFSheet sheet = workbook.getSheetAt(0);//첫번째 sheet
+		 
+		      int TITLE_POINT =1;//타이틀 항목위치
+		      int ROW_START = 2;//data row 시작지점
+		      
+		      int TOTAL_ROWS=sheet.getPhysicalNumberOfRows(); //전체 ROW 수를 가져온다.
+		      int TOTAL_CELLS=sheet.getRow(TITLE_POINT).getPhysicalNumberOfCells(); //전체 셀의 항목 수를 가져온다.
+		      
+		      XSSFCell myCell = null;
+		    
+		      this.logger.debug("TOTAL_ROWS :" + TOTAL_ROWS);
+		      this.logger.debug("TOTAL_CELLS :" + TOTAL_CELLS);
+		          
+		          try {
+
+		           for (int rowcnt = ROW_START; rowcnt < TOTAL_ROWS-3; rowcnt++) {
+		             
+		   		     ProductMasterVO productMasterVO = new ProductMasterVO();
+		   			
+		             XSSFRow row = sheet.getRow(rowcnt);
+
+		             //cell type 구분하여 담기  
+		             String[] cellItemTmp = new String[TOTAL_CELLS]; 
+		             for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
+			            myCell = row.getCell(cellcnt); 
+			            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
+
+			            	String rawCell = String.valueOf(myCell.getNumericCellValue()); 
+			            	int endChoice = rawCell.lastIndexOf("E");
+			            	if(endChoice>0){
+			            		rawCell= rawCell.substring(0, endChoice);
+			            		rawCell= rawCell.replace(".", "");
+			            	}
+			            	cellItemTmp[cellcnt]=rawCell;
+		    	
+			            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
+			            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
+			            }else{//그외 cell type
+			            	cellItemTmp[cellcnt] = ""; 
+			            }
+			            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
+			            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
+			         }
+		         
+			         if(cellItemTmp[0] != ""){
+			        	 
+			        	 productMasterVO.setProductCode(cellItemTmp[0]); 
+				
+				         excelUploadList.add(productMasterVO);
+
+				      }
+				     	
+				    }
+		          }catch (Exception e){
+		 
+		          excelInfo = excelInfo+"[error] : "+e.getMessage();
+		          ProductMasterVO productMasterVO = new ProductMasterVO();
+		          productMasterVO.setErrMsg(excelInfo);
+		   	 
+		          this.logger.info("["+logid+"] Controller getErrMsg : "+productMasterVO.getErrMsg());
+		        
+		          reProductList.add(productMasterVO);
+
+		          mv.addObject("reProductList", reProductList);
+
+		          mv.setViewName("/master/uploadResult");
+		   	 
+		          //log Controller execute time end
+		          long t2 = System.currentTimeMillis();
+		          logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+		 	 	
+		          return mv;
+		   	   
+		      	}
+		    }
+		    
+		    //DB처리
+		    reProductList = this.recoverySvc.getExcelAttach(excelUploadList);
+ 
+		    mv.addObject("reProductList", reProductList);
+		    
+		    mv.setViewName("/recovery/reProductAttach");
+
+		    //log Controller execute time end
+		    long t2 = System.currentTimeMillis();
+		    logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+			
+		    return mv;
+		        
+	  }
+	  
+	  /**
+	   	 * Simply selects the home view to render by returning its name.
+	   	 * @throws BizException
+	   	 */
+	    @RequestMapping(value = "/recovery/recoveryregislist")
+	   	public ModelAndView recoveryRegisList(HttpServletRequest request) throws BizException 
+	       {
+	    	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : reproductList");
+	    			
+	   		ModelAndView mv = new ModelAndView();
+	   		
+	   		mv.setViewName("/recovery/reProductAttach");
+	   		
+	   	    //log Controller execute time end
+		 	long t2 = System.currentTimeMillis();
+		 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	   		
+	   		return mv;
+	   	}
 }

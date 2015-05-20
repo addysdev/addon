@@ -92,4 +92,12 @@ public interface OrderService {
      */
     public int regiOrderComplete(String[] orderlist , OrderVO order, String arrCheckProductId)
     	    throws BizException;
+    
+    /**
+     * 발주상세가져오기
+     * 
+     * @return
+     * @throws BizException
+     */
+    public OrderVO getStateCnt(OrderVO orderCon) throws BizException;
 }

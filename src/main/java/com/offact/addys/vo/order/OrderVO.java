@@ -102,6 +102,10 @@ public class OrderVO extends AbstractVO {
 	private String vat;
 	private String totalOrderPrice;
 	
+	private String waitCnt;
+	private String deferCnt;
+	private String completeCnt;
+	private String registCnt;
 	
 	// /** for paging */
     private String totalCount       = "0";
@@ -620,6 +624,30 @@ public class OrderVO extends AbstractVO {
 	}
 	public void setEtcCnt(String etcCnt) {
 		this.etcCnt = etcCnt;
+	}
+	public String getWaitCnt() {
+		return waitCnt;
+	}
+	public void setWaitCnt(String waitCnt) {
+		this.waitCnt = waitCnt;
+	}
+	public String getDeferCnt() {
+		return deferCnt;
+	}
+	public void setDeferCnt(String deferCnt) {
+		this.deferCnt = deferCnt;
+	}
+	public String getCompleteCnt() {
+		return completeCnt;
+	}
+	public void setCompleteCnt(String completeCnt) {
+		this.completeCnt = completeCnt;
+	}
+	public String getRegistCnt() {
+		return registCnt;
+	}
+	public void setRegistCnt(String registCnt) {
+		this.registCnt = registCnt;
 	}
 
 }

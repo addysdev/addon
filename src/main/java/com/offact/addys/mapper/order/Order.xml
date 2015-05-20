@@ -68,6 +68,10 @@
   <result column="totalOrderPrice"        property="totalOrderPrice"  />
   <result column="barCode"        property="barCode"  />
   <result column="orderCheck"        property="orderCheck"  />
+  <result column="waitCnt"        property="waitCnt"  />
+  <result column="deferCnt"        property="deferCnt"  />
+  <result column="completeCnt"        property="completeCnt"  />
+  <result column="registCnt"        property="registCnt"  />
 </resultMap>
 
 <select id="getOrderPageList"  resultMap="orderVO" parameterType="com.offact.addys.vo.order.OrderVO" >
@@ -94,8 +98,8 @@
 		   T2.companyCode,
            T4.companyName,
 	   	   (ifnull(T1.orderResultCnt,0)*ifnull(T1.orderResultPrice,0)) as supplyPrice,
-           ((ifnull(T1.orderResultCnt,0)*ifnull(T1.orderResultPrice,0))*ifnull(T1.orderVatRate,0.0)) as vat,
-           (ifnull(T1.orderResultCnt,0)*ifnull(T1.orderResultPrice,0))+ ((ifnull(T1.orderResultCnt,0)*ifnull(T1.orderResultPrice,0))*ifnull(T1.orderVatRate,0.0)) as totalOrderPrice
+           (ifnull(T1.orderResultCnt,0)*ifnull(T1.orderVatRate,0)) as vat,
+           (ifnull(T1.orderResultCnt,0)*(ifnull(T1.orderResultPrice,0)+ifnull(T1.orderVatRate,0))) as totalOrderPrice
   	From adOrderDetail T1
       	 Left Join adOrder T2 On T1.orderCode=T2.orderCode
        	 Left Join ofGroup T3 On T2.groupId =T3.groupId
@@ -106,6 +110,9 @@
   	Where T2.orderDateTime between concat(#{start_orderDate},' 00:00:00') and concat(#{end_orderDate},' 23:59:59')
           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T2.groupId = #{con_groupId}
+          </if>
+          <if test="con_orderState != null and con_orderState != '' and con_orderState != '2'" >
+           			AND T2.orderState = #{con_orderState}
           </if>
           <if test="searchValue != null and searchValue != ''" >
              <choose>
@@ -192,6 +199,36 @@
         
 </select>
 
+<select id="getStateCnt"  resultMap="orderVO" >
+
+SELECT sum(TOT.waitCnt) AS waitCnt,
+       sum(TOT.deferCnt) AS deferCnt,
+       sum(TOT.completeCnt) AS completeCnt,
+       sum(TOT.registCnt) AS registCnt
+		From (
+			  Select T2.orderCode,
+                  Case When T2.orderState = '03' Then 1 Else 0 End waitCnt,
+                  Case When T2.orderState = '04' Then 1 Else 0 End deferCnt,
+                  Case When T2.orderState = '06' Then 1 Else 0 End completeCnt,
+                  Case When T2.orderState = '07' Then 1 Else 0 End registCnt,
+                  T2.orderState
+			   	From adOrderDetail T1
+      				 Left Join adOrder T2 On T1.orderCode=T2.orderCode
+       	 			 Left Join ofGroup T3 On T2.groupId =T3.groupId
+       	 			 Left Join adCompany T4 On T2.companyCode = T4.companyCode
+         			 Left Join ofCode T5 On T2.orderState = T5.codeId and T5.codeGroupId = 'OD02'
+         			 Left Join ofUser T6 On T2.orderUserId = T6.userId
+         			 Left Join adProductMaster T7 On T1.productCode = T7.productCode
+  				Where T2.orderDateTime between concat(#{start_orderDate},' 00:00:00') and concat(#{end_orderDate},' 23:59:59')
+          		<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           			AND T2.groupId = #{con_groupId}
+          		</if>
+                And T2.orderState not in ( '01','02')
+                And T2.deletedYn='N'
+                group by T2.orderCode
+		) As TOT
+        
+</select>
 
 <select id="getOrderDetail"  resultMap="orderVO" parameterType="com.offact.addys.vo.order.OrderVO" >
 
@@ -247,7 +284,7 @@
            T1.addCnt,
            T1.lossCnt,
            T1.etc,
-           count(T6.idx) as etcCnt,
+           (select count(T6.idx) from adComment T6 Where T1.orderCode = T6.orderCode  And T1.productCode=T6.productCode And T6.commentCategory='06') as etcCnt,
            T1.deferCheck,
            T1.orderCheck,
            T2.orderState
@@ -256,7 +293,6 @@
        Left Join ofGroup T3 On T2.groupId =T3.groupId
        Left Join adCompany T4 On T2.companyCode = T4.companyCode
        Left Join adProductMaster T5 On T1.productCode = T5.productCode
-       Left Join adComment T6 On T2.orderCode = T6.orderCode And T1.productCode=T6.productCode And T6.commentCategory='04'
   Where T1.orderCode = #{orderCode}
   Order by T1.productCode ASC
 </select>

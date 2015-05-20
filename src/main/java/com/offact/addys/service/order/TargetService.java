@@ -84,4 +84,12 @@ public interface TargetService {
      */
     public int regiDeferCancel(TargetVO target)
     	    throws BizException;
+    
+    /**
+     * 발주상세가져오기
+     * 
+     * @return
+     * @throws BizException
+     */
+    public TargetVO getStateCnt(TargetVO targetCon) throws BizException;
 }
