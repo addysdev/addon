@@ -72,6 +72,8 @@
   <result column="deferCnt"        property="deferCnt"  />
   <result column="completeCnt"        property="completeCnt"  />
   <result column="registCnt"        property="registCnt"  />
+  <result column="deliveryName"        property="deliveryName"  />
+  <result column="orderName"        property="orderName"  />
 </resultMap>
 
 <select id="getOrderPageList"  resultMap="orderVO" parameterType="com.offact.addys.vo.order.OrderVO" >
@@ -252,7 +254,11 @@ SELECT sum(TOT.waitCnt) AS waitCnt,
          T1.sms,
          T1.memo,
          count(T2.idx) as memoCnt,
-         T1.orderState 
+         T1.orderState, 
+         T1.groupId,
+         T1.companyCode,
+         T1.deliveryName,
+         T1.orderName
   From adOrder as T1
        Left Join adComment T2 On T1.orderCode = T2.orderCode And T2.commentCategory='03'
   Where T1.orderCode = #{orderCode}

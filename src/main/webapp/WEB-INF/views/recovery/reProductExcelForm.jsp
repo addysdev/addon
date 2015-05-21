@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <html>
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.form.js"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script> 
 <script language="javascript">
 //초기세팅
 <%-- function init() {
@@ -14,11 +14,6 @@
 
 } --%>
 
-
-var data = new FormData();
-jQuery.each(jQuery('#file')[0].files, function(i, file) {
-    data.append('file-'+i, file);
-});
 
 function fcReProduct_excelimport(){
 

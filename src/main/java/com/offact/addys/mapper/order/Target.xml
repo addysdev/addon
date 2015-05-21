@@ -61,6 +61,8 @@
   <result column="group1Name"        property="group1Name"  />
   <result column="deferCnt"        property="deferCnt"  />
   <result column="targetCnt"        property="targetCnt"  />
+  <result column="deliveryName"        property="deliveryName"  />
+  <result column="orderName"        property="orderName"  />
 </resultMap>
 
 <select id="getTargetPageList"  resultMap="targetVO" parameterType="com.offact.addys.vo.order.TargetVO" >
@@ -561,6 +563,8 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
             	,deferDateTime
             	,deferUserId
             	,orderState
+            	,deliveryName
+            	,orderName
 		)values(
 				 #{orderCode}
 	  			, #{con_groupId}
@@ -590,6 +594,8 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
 	  			, now()
 	  			, #{deferUserId}
 	  			, #{orderState}
+	  			, #{deliveryName}
+	  			, #{orderName}
 	  			
 		)
 		ON DUPLICATE KEY UPDATE faxKey = #{faxKey}
@@ -617,6 +623,8 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
             					,deferDateTime = now()
             					,deferUserId = #{deferUserId}
             					,orderState = #{orderState}
+            					,deliveryName = #{deliveryName}
+            					,orderName = #{orderName}
 		                        
 </insert>
 
@@ -727,6 +735,8 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
             	,orderDateTime
             	,orderUserId
             	,orderState
+            	,deliveryName
+            	,orderName
 		)values(
 				 #{orderCode}
 	  			, #{con_groupId}
@@ -756,6 +766,8 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
 	  			, now()
 	  			, #{orderUserId}
 	  			, #{orderState}
+	  			, #{deliveryName}
+	  			, #{orderName}
 		)	  			
 	  	ON DUPLICATE KEY UPDATE faxKey = #{faxKey}
             	                ,smsKey = #{smsKey}
@@ -782,6 +794,8 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
             					,orderDateTime = now()
             					,orderUserId = #{orderUserId}
             					,orderState = #{orderState}
+            					,deliveryName = #{deliveryName}
+            					,orderName = #{orderName}
 	  			
 
 		                        
@@ -877,7 +891,9 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
          orderAddress,
          payMethod,
          sms,
-         memo
+         memo,
+         deliveryName,
+         orderName
   From adOrder
   Where orderCode = #{orderCode}
   

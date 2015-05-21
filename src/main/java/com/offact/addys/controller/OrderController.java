@@ -408,9 +408,40 @@ public class OrderController {
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
     	logger.info("["+logid+"] Controller start : targetVO" + targetVO);
-		logger.info("["+logid+"] @@@@@@@@ : targetVO.getDeliveryEmail" + targetVO.getEmail());
 		
-		String[] orders = request.getParameterValues("seqs");
+		String[] orderList = request.getParameterValues("seqs"); 		
+   	    String[] r_data=null;
+
+        List<TargetVO> targetExcelList = new ArrayList();
+	   
+	    int idx = 0;
+	    
+		logger.info("["+logid+"] @@@@@@@@ : orderList.length" + orderList.length);
+		
+	    
+	    for(int i=0;i<orderList.length;i++){
+	
+	        r_data = StringUtil.getTokens(orderList[i], "|");
+	    
+	        TargetVO targetDetailVo = new TargetVO();
+			
+	        targetDetailVo.setProductCode(StringUtil.nvl(r_data[0],""));
+			targetDetailVo.setProductName(StringUtil.nvl(r_data[1],""));
+			targetDetailVo.setProductPrice(StringUtil.nvl(r_data[2],""));
+			targetDetailVo.setOrderCnt(StringUtil.nvl(r_data[3],""));
+			targetDetailVo.setAddCnt(StringUtil.nvl(r_data[4],""));
+			targetDetailVo.setLossCnt(StringUtil.nvl(r_data[5],""));
+			targetDetailVo.setSafeStock(StringUtil.nvl(r_data[6],""));
+			targetDetailVo.setHoldStock(StringUtil.nvl(r_data[7],""));
+			targetDetailVo.setStockCnt(StringUtil.nvl(r_data[8],""));
+			targetDetailVo.setStockDate(StringUtil.nvl(r_data[9],""));
+			targetDetailVo.setVatRate(StringUtil.nvl(r_data[10],""));
+	    	targetDetailVo.setEtc(StringUtil.nvl(r_data[11],""));
+			
+	        targetExcelList.add(targetDetailVo);
+		
+		}
+
 		String orderDate=targetVO.getOrderDate(); 
 		String deliveryDate=targetVO.getDeliveryDate();
 		String orderDates[]=targetVO.getOrderDate().split("-");
@@ -419,7 +450,7 @@ public class OrderController {
    		ModelAndView mv = new ModelAndView();
    		
    	    mv.addObject("targetVO", targetVO);
-        mv.addObject("orders", orders);
+        mv.addObject("targetExcelList", targetExcelList);
         mv.addObject("orderDates1", orderDates[0]);
         mv.addObject("orderDates2", orderDates[1]);
         mv.addObject("orderDates3", orderDates[2]);
@@ -565,28 +596,30 @@ public class OrderController {
 			szContent += "<td height='55' colspan='12' align='center'><span class='style1'>상 품 주 문 서</span></td>";
 			szContent += "</tr>";
 			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += " <td rowspan='7' align='center' style='background-color:#E4E4E4'>수<br>신</td>";
-			szContent += " <td align='center' width='100'>&nbsp;수 신</td>";
-			szContent += " <td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryCharge()+"</td>";
-			szContent += " <td rowspan='7'  align='center' style='background-color:#E4E4E4'>발<br>신</td>";
-			szContent += " <td align='center' width='100'>&nbsp;발 신</td>";
-			szContent += " <td colspan='3' align='center'>&nbsp;"+targetVO.getOrderCharge()+"</td>";
+			szContent += " <td rowspan='8' width='50' align='center' style='background-color:#E4E4E4'>수<br>신</td>";
+			szContent += " <td align='center' width='110'>&nbsp;수 신</td>";
+			szContent += " <td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryName()+"</td>";
+			szContent += " <td rowspan='8' width='50' align='center' style='background-color:#E4E4E4'>발<br>신</td>";
+			szContent += " <td align='center' width='110'>&nbsp;발 신</td>";
+			szContent += " <td colspan='3' align='center'>&nbsp;"+targetVO.getOrderName()+"</td>";
 			szContent += "</tr>";
 			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td align='center'>&nbsp;참 조</td>";
-			szContent += "<td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryEtc()+"</td>";
-			szContent += "<td align='center'>&nbsp;참 조</td>";
-			szContent += "<td colspan='3' align='center'>&nbsp;"+targetVO.getOrderEtc()+"</td>";
+			szContent += "<td rowspan='4' align='center' >담당자</td>";
+			szContent += "<td colspan='5' align='left'>&nbsp;이름:"+targetVO.getDeliveryCharge()+"</td>";
+			szContent += "<td rowspan='4' align='center' >담당자</td>";
+			szContent += "<td colspan='3' align='left'>&nbsp;이름:"+targetVO.getOrderCharge()+"</td>";
 			szContent += "</tr>";
 			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td rowspan='2' align='center' >연락처</td>";
-			szContent += "<td colspan='5' align='left'>&nbsp;핸드폰:"+targetVO.getMobilePhone()+",<br>E-Mail:"+targetVO.getEmail()+"</td>";
-			szContent += "<td rowspan='2' align='center' >연락처</td>";
-			szContent += "<td colspan='3' align='left'>&nbsp;핸드폰:"+targetVO.getOrderMobilePhone()+",<br>E-Mail:"+targetVO.getOrderEmail()+"</td>";
+			szContent += "<td colspan='5' align='left'>&nbsp;연락처:"+targetVO.getMobilePhone()+"</td>";
+			szContent += "<td colspan='5' align='left'>&nbsp;연락처:"+targetVO.getOrderMobilePhone()+"</td>";
 			szContent += "</tr>";
 			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='5' align='left'>&nbsp;TEL:"+targetVO.getTelNumber()+",FAX:"+targetVO.getFaxNumber()+"</td>";
-			szContent += "<td colspan='5' align='left'>&nbsp;TEL:"+targetVO.getOrderTelNumber()+",FAX:"+targetVO.getOrderFaxNumber()+"</td>";
+			szContent += "<td colspan='5' align='left'>&nbsp;tel/fax:"+targetVO.getTelNumber()+"/"+targetVO.getFaxNumber()+"</td>";
+			szContent += "<td colspan='5' align='left'>&nbsp;tel/fax:"+targetVO.getOrderTelNumber()+"/"+targetVO.getOrderFaxNumber()+"</td>";
+			szContent += "</tr>";
+			szContent += "<tr bgcolor='#FFFFFF'>";
+			szContent += "<td colspan='5' align='left'>&nbsp;email:"+targetVO.getEmail()+"</td>";
+			szContent += "<td colspan='5' align='left'>&nbsp;email:"+targetVO.getOrderEmail()+"</td>";
 			szContent += "</tr>";
 			szContent += "<tr bgcolor='#FFFFFF'>";
 			szContent += "<td align='center' >발주일자</td>";
@@ -609,23 +642,22 @@ public class OrderController {
             szContent += "<tr bgcolor='#FFFFFF'>";
 			szContent += "<td align='center'>&nbsp;납품방법</td>";
 			szContent += "<td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryMethod()+"</td>";
-			szContent += "<td align='center'>&nbsp;결재방법</td>";
+			szContent += "<td align='center'>&nbsp;결제방법</td>";
 			szContent += "<td colspan='3' align='center'>&nbsp;"+targetVO.getPayMethod()+"</td>";
 			szContent += "</tr>";
 
 			szContent += "<tr bgcolor='#FFFFFF'>";
 			szContent += "<td colspan='2' align='center' >메모</td>";
-			szContent += "<td colspan='10' align='left'>"+targetVO.getMemo()+"</td>";
+			szContent += "<td colspan='8' align='left'>"+targetVO.getMemo()+"</td>";
 			szContent += "</tr>";
 			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='12' align='center' height='27'><div align='left'>1.아래와 같이 발주합니다.</div></td>";
+			szContent += "<td colspan='10' align='center' height='27'><div align='left'>1.아래와 같이 발주합니다.</div></td>";
 			szContent += "</tr>";
 			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' height='27'>번 호</td>";
-			szContent += "<td align='center'>제조사</td>";
+			szContent += "<td width='60' align='center' height='27'>번 호</td>";
 			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='57' align='center'>수량</td>";
-			szContent += "<td width='172' align='center'>비 고</td>";
+			szContent += "<td width='60' align='center'>수량</td>";
+			szContent += "<td align='center'>비 고</td>";
 			szContent += "</tr>";
 			
 			int num=0;
@@ -645,11 +677,10 @@ public class OrderController {
 				r_data = StringUtil.getTokens(orders[i], "|");
 			
 		        szContent += "<tr bgcolor='#FFFFFF'>";
-				szContent += "<td colspan='2' align='center' height='27'>"+num+"</td>";
-				szContent += "<td align='left'>"+StringUtil.nvl(r_data[12],"")+"</td>";
+				szContent += "<td width='60' align='center' height='27'>"+num+"</td>";
 				szContent += "<td colspan='7' align='left'>"+StringUtil.nvl(r_data[1],"")+"</td>";
-				szContent += "<td width='57' align='center'>"+StringUtil.nvl(r_data[3],"")+"</td>";
-				szContent += "<td width='172' align='left'>"+StringUtil.nvl(r_data[11],"")+"</td>";
+				szContent += "<td width='60' align='center'>"+StringUtil.nvl(r_data[3],"")+"</td>";
+				szContent += "<td  align='left'>"+StringUtil.nvl(r_data[11],"")+"</td>";
 				szContent += "</tr>";
 			
 			}
@@ -657,11 +688,10 @@ public class OrderController {
 			for(int y=0;y<etcnum;y++){
 				
 				szContent += "<tr bgcolor='#FFFFFF'>";
-				szContent += "<td colspan='2' align='center' height='27'>&nbsp;</td>";
-				szContent += "<td align='center'>&nbsp;</td>";
+				szContent += "<td width='60' align='center' height='27'>&nbsp;</td>";
 				szContent += "<td colspan='7' align='center'>&nbsp;</td>";
-				szContent += "<td width='57' align='center'>&nbsp;</td>";
-				szContent += "<td width='172' align='center'>&nbsp;</td>";
+				szContent += "<td width='60' align='center'>&nbsp;</td>";
+				szContent += "<td  align='center'>&nbsp;</td>";
 				szContent += "</tr>";
 			
 			}
@@ -1946,15 +1976,42 @@ public class OrderController {
    	 * @throws BizException
    	 */
     @RequestMapping(value = "/order/orderexcellist")
-   	public ModelAndView orderExcelList(@ModelAttribute("orderVO") OrderVO orderVO, HttpServletRequest request) throws BizException 
+   	public ModelAndView orderExcelList(HttpServletRequest request) throws BizException 
        {
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-    	logger.info("["+logid+"] Controller start : orderVO" + orderVO);
-		logger.info("["+logid+"] @@@@@@@@ : targetVO.getDeliveryEmail" + orderVO.getEmail());
+
    		ModelAndView mv = new ModelAndView();
    		
+   		String[] orderList = request.getParameterValues("seqs"); 		
+   	    String[] r_data=null;
+
+        List<OrderVO> orderExcelList = new ArrayList();
+	   
+	    int idx = 0;
+	    
+	    for(int i=0;i<orderList.length;i++){
+	
+	        r_data = StringUtil.getTokens(orderList[i], "|");
+	    
+	        OrderVO orderDetailVo = new OrderVO();
+			
+	        orderDetailVo.setProductCode(StringUtil.nvl(r_data[0],""));
+	        orderDetailVo.setBarCode(StringUtil.nvl(r_data[1],""));
+	        orderDetailVo.setOrderResultPrice(StringUtil.nvl(r_data[2],""));
+	        orderDetailVo.setOrderResultCnt(StringUtil.nvl(r_data[3],""));
+	        orderDetailVo.setOrderVatRate(StringUtil.nvl(r_data[4],""));
+	        orderDetailVo.setEtc(StringUtil.nvl(r_data[5],""));
+	        orderDetailVo.setCompanyCode(StringUtil.nvl(r_data[6],""));
+	        orderDetailVo.setGroupId(StringUtil.nvl(r_data[7],""));
+			
+	        orderExcelList.add(orderDetailVo);
+		
+		}
+ 
+   	    mv.addObject("orderExcelList", orderExcelList);
+   	 
    		mv.setViewName("/order/orderExcelList");
    		
    		return mv;

@@ -88,6 +88,9 @@ public class TargetVO extends AbstractVO {
 	
     private String searchGubun;
     private String searchValue;
+    
+    private String deliveryName;
+    private String orderName;
 	
 	private String errMsg;
 	
@@ -559,6 +562,18 @@ public class TargetVO extends AbstractVO {
 	}
 	public void setTargetCnt(String targetCnt) {
 		this.targetCnt = targetCnt;
+	}
+	public String getDeliveryName() {
+		return deliveryName;
+	}
+	public void setDeliveryName(String deliveryName) {
+		this.deliveryName = deliveryName;
+	}
+	public String getOrderName() {
+		return orderName;
+	}
+	public void setOrderName(String orderName) {
+		this.orderName = orderName;
 	}
     
 }

@@ -38,28 +38,30 @@ window.print();
 				<td height='55' colspan='12' align='center'><span class='style1'>상 품 주 문 서</span></td>
 				</tr>
 				<tr bgcolor='#FFFFFF'>
-				 <td rowspan='7' align='center' style='background-color:#E4E4E4'>수<br>신</td>
+				 <td rowspan='8' align='center' style='background-color:#E4E4E4'>수<br>신</td>
 				 <td align='center'>&nbsp;수 신</td>
-				 <td colspan='5' align='center'>&nbsp;${targetVO.deliveryCharge}</td>
-				 <td rowspan='7'  align='center' style='background-color:#E4E4E4'>발<br>신</td>
+				 <td colspan='5' align='center'>&nbsp;${targetVO.deliveryName}</td>
+				 <td rowspan='8'  align='center' style='background-color:#E4E4E4'>발<br>신</td>
 				 <td align='center'>&nbsp;발 신</td>
-				 <td colspan='3' align='center'>&nbsp;${targetVO.orderCharge}</td>
+				 <td colspan='3' align='center'>&nbsp;${targetVO.orderName}</td>
 				</tr>
 				<tr bgcolor='#FFFFFF'>
-				<td align='center'>&nbsp;참 조</td>
-				<td colspan='5' align='center'>&nbsp;${targetVO.deliveryEtc}</td>
-				<td align='center'>&nbsp;참 조</td>
-				<td colspan='3' align='center'>&nbsp;${targetVO.orderEtc}</td>
+				<td rowspan='4' align='center' >담당자</td>
+				<td colspan='5' align='left'>&nbsp;이름 :${targetVO.deliveryCharge}</td>
+				<td rowspan='4' align='center' >담당자</td>
+				<td colspan='3' align='left'>&nbsp;이름 :${targetVO.orderCharge}</td>
 				</tr>
 				<tr bgcolor='#FFFFFF'>
-				<td rowspan='2' align='center' >연락처</td>
-				<td colspan='5' align='left'>&nbsp;핸드폰 :${targetVO.mobilePhone},E-Mail :${targetVO.email}</td>
-				<td rowspan='2' align='center' >연락처</td>
-				<td colspan='3' align='left'>&nbsp;핸드폰 :${targetVO.orderMobilePhone},E-Mail :${targetVO.orderEmail}</td>
+				<td colspan='5' align='left'>&nbsp;연락처 :${targetVO.mobilePhone}</td>
+				<td colspan='5' align='left'>&nbsp;연락처 :${targetVO.orderMobilePhone}</td>
 				</tr>
 				<tr bgcolor='#FFFFFF'>
-				<td colspan='5' align='left'>&nbsp;TEL :${targetVO.telNumber},FAX :${targetVO.faxNumber}</td>
-				<td colspan='5' align='left'>&nbsp;TEL :${targetVO.orderTelNumber},FAX :${targetVO.orderFaxNumber}</td>
+				<td colspan='5' align='left'>&nbsp;tel/fax :${targetVO.telNumber}/${targetVO.faxNumber}</td>
+				<td colspan='5' align='left'>&nbsp;tel/fax :${targetVO.orderTelNumber}/${targetVO.orderFaxNumber}</td>
+				</tr>
+				<tr bgcolor='#FFFFFF'>
+				<td colspan='5' align='left'>&nbsp;email :${targetVO.email}</td>
+				<td colspan='5' align='left'>&nbsp;email :${targetVO.orderEmail}</td>
 				</tr>
 				<tr bgcolor='#FFFFFF'>
 				<td align='center' >발주일자</td>
@@ -82,155 +84,35 @@ window.print();
                 <tr bgcolor='#FFFFFF'>
 				<td align='center'>&nbsp;납품방법</td>
 				<td colspan='5' align='center'>&nbsp;${targetVO.deliveryMethod}</td>
-				<td align='center'>&nbsp;결재방법</td>
+				<td align='center'>&nbsp;결제방법</td>
 				<td colspan='3' align='center'>&nbsp;${targetVO.payMethod}</td>
 				</tr>
 
 				<tr bgcolor='#FFFFFF'>
 				<td colspan="2" align='center' >메모</td>
-				<td colspan='10' align='center'>${targetVO.memo}</td>
+				<td colspan='8' align='center'>${targetVO.memo}</td>
 				</tr>
 				<tr bgcolor='#FFFFFF'>
-				<td colspan='12' align='center' height='27'><div align='left'>1.아래와 같이 발주합니다.</div></td>
+				<td colspan='10' align='center' height='27'><div align='left'>1.아래와 같이 발주합니다.</div></td>
 				</tr>
-				
-                <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
+				<tr bgcolor='#FFFFFF'>
+					<td width='60' align='center' height='27'>번 호</td>
+					<td colspan='7' align='center'>상 품 명</td>
+					<td width='60' align='center'>수량</td>
+					<td align='center'>비 고</td>
 				</tr>	
+				<c:if test="${!empty targetExcelList}">
+	         		 <c:forEach items="${targetExcelList}" var="tergetVO" varStatus="status">
+	         		 	<tr bgcolor='#FFFFFF'>
+							<td width='60' align='center' height='27'>${status.count}</td>
+							<td colspan='7' align='center'>${tergetVO.productName}</td>
+							<td width='60' align='center'>${tergetVO.orderCnt}</td>
+							<td align='center'>${tergetVO.etc}</td>
+						</tr>	
+            		 </c:forEach>
+            	</c:if>
+
 				
-				           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>
-				
-	
 				
 				
 				</table>

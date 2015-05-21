@@ -741,4 +741,25 @@ public class RecoveryController {
 	   		
 	   		return mv;
 	   	}
+	    /**
+	   	 * Simply selects the home view to render by returning its name.
+	   	 * @throws BizException
+	   	 */
+	    @RequestMapping(value = "/recovery/recoverycodeprint")
+	   	public ModelAndView recoveryCodePrint(HttpServletRequest request,
+                                              String recoveryCode ) throws BizException 
+	       {
+	    	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+
+
+	   		ModelAndView mv = new ModelAndView();
+	   		
+	   	    mv.addObject("recoveryCode", recoveryCode);
+	   		
+	   		mv.setViewName("/recovery/recoveryCodePrint");
+	   		
+	   		return mv;
+	   	}
 }

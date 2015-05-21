@@ -7,7 +7,7 @@
 function tmt_winLaunch(theURL,winName,targetName,features) {
 	
 	var targetRandom=Math.random();
-	eval(winName+"=window.open('"+theURL+"','"+targetRandom+"','"+features+"')");
+	eval(winName+"=window.open('"+theURL+"','"+targetName+"','"+features+"')");
 
 }
 /*
@@ -20,7 +20,7 @@ function fcTargetDetail_print(){
 	
 	
 	 var frm = document.targetDetailListForm;
-	    
+
 	   	if(frm.seqs.length>1){
 	   		for(i=0;i<frm.seqs.length;i++){
 				frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
@@ -38,11 +38,18 @@ function fcTargetDetail_print(){
 
 
 	   	}
+
+		 var url="<%= request.getContextPath() %>/order/targetdetailprint"+'?'+$("#targetDetailForm").serialize()+'&'+$("#targetDetailListForm").serialize();
 	
+		 frm.action =url; 
+		 frm.method="post";
+		 frm.target='orderPrintObj';
+		 frm.submit();
+/*
 	var url="<%= request.getContextPath() %>/order/targetdetailprint"+'?'+$("#targetDetailForm").serialize()+'&'+$("#targetDetailListForm").serialize();
 
-    tmt_winLaunch(url, 'orderPrintObj', 'orderPrintObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
-	
+    tmt_winLaunch('', 'orderPrintObj', 'orderPrintObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
+	*/
 }
 /*
  * 발주처리
@@ -454,16 +461,16 @@ function fcDefer_regist(){
 	 	<tr>
           <th rowspan='9' class='text-center' style="background-color:#E6F3FF">수신</th>
           <th class='text-center'  style="background-color:#E6F3FF" >수신</th>
-          <th class='text-center'><input type="text" class="form-control" id="deliveryCharge" name="deliveryCharge"  value="${targetVO.companyName}(${targetVO.deliveryCharge})" placeholder="수신" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="deliveryName" name="deliveryName"  value="${targetVO.companyName}" placeholder="수신" /></th>
           <th rowspan='9' class='text-center'  style="background-color:#E6F3FF">발신</th>
           <th class='text-center' style="background-color:#E6F3FF">발신</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderCharge" name="orderCharge"  value="ADDYS ${targetVO.groupName}" placeholder="발신"/></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderName" name="orderName"  value="애디스 ${targetVO.groupName}" placeholder="발신"/></th>
       	</tr>
       	<tr>
-          <th class='text-center' style="background-color:#E6F3FF" >참조</th>
-          <th class='text-center'><input type="text" class="form-control" id="deliveryEtc" name="deliveryEtc"  value="물류팀" placeholder="참조" /></th>
-          <th class='text-center' style="background-color:#E6F3FF" >참조</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderEtc" name="orderEtc"  value="${targetVO.orderUserName}" placeholder="참조" /></th>
+          <th class='text-center' style="background-color:#E6F3FF" >담당자</th>
+          <th class='text-center'><input type="text" class="form-control" id="deliveryCharge" name="deliveryCharge"  value="${targetVO.deliveryCharge}" placeholder="참조" /></th>
+          <th class='text-center' style="background-color:#E6F3FF" >담당자</th>
+          <th class='text-center'><input type="text" class="form-control" id="orderCharge" name="orderCharge"  value="${targetVO.orderUserName}" placeholder="참조" /></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">핸드폰</th>
@@ -521,7 +528,7 @@ function fcDefer_regist(){
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">납품방법</th>
           <th class='text-center'><input type="text" class="form-control" id="deliveryMethod" name="deliveryMethod"  value="택배배송" placeholder="납품방버" /></th>
-          <th class='text-center' style="background-color:#E6F3FF">결재방법</th>
+          <th class='text-center' style="background-color:#E6F3FF">결제방법</th>
           <th class='text-center'><input type="text" class="form-control" id="payMethod" name="payMethod"  value="입금지정일.현금" placeholder="결재방법" /></th>
       	</tr>
       	<tr>

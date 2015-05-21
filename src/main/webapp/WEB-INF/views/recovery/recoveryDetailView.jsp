@@ -1,6 +1,30 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <SCRIPT>
+/*
+ * 화면 POPUP
+ */
+function tmt_winLaunch(theURL,winName,targetName,features) {
+	
+	var targetRandom=Math.random();
+	eval(winName+"=window.open('"+theURL+"','"+targetRandom+"','"+features+"')");
 
+}
+/*
+ * print 화면 POPUP
+ */
+function fcRecovery_print(recoveryCode){
+	
+	var h=800;
+	var s=950;
+	var frm = document.recoveryDetailListForm;
+	var url="<%= request.getContextPath() %>/recovery/recoverycodeprint?recoveryCode="+recoveryCode;
+
+   // tmt_winLaunch(url, 'printObj', 'printObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
+	 frm.action =url; 
+	 frm.method="post";
+	 frm.target='printObj';
+	 frm.submit();
+}
 //회수처리
 function fcRecovery_process(){
 
@@ -418,7 +442,7 @@ function  fcEtc_detail(orderCode,productCode,productName,etc) {
 	  <table class="table table-bordered" >
 	 	<tr>
           <th class='text-center'  style="background-color:#E6F3FF" >회수번호</th>
-          <th class='text-center'><c:out value="${recoveryVO.recoveryCode}"></c:out>&nbsp;&nbsp;<button id="downbtn" type="button" class="btn btn-xs btn-success" onClick="fcRecovery_print('${recoveryVO.recoveryCode}')" >출력</button></th>
+          <th class='text-center'><c:out value="${recoveryVO.recoveryCode}"></c:out>&nbsp;&nbsp;<button id="downbtn" type="button" class="btn btn-xs btn-success" onClick="fcRecovery_print('${recoveryVO.recoveryCode}')" >인쇄</button></th>
           <th class='text-center' style="background-color:#E6F3FF">회수요청일</th>
           <th class='text-center'><c:out value="${recoveryVO.regDateTime}"></c:out></th>
       	  <th class='text-center' style="background-color:#E6F3FF">회수마감일</th>

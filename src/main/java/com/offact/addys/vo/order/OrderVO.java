@@ -93,6 +93,9 @@ public class OrderVO extends AbstractVO {
 	
 	private String errMsg;
 	
+    private String deliveryName;
+    private String orderName;
+	
 	private String orderResultCnt;
 	private String orderResultPrice;
 	private String orderVatRate;
@@ -648,6 +651,18 @@ public class OrderVO extends AbstractVO {
 	}
 	public void setRegistCnt(String registCnt) {
 		this.registCnt = registCnt;
+	}
+	public String getDeliveryName() {
+		return deliveryName;
+	}
+	public void setDeliveryName(String deliveryName) {
+		this.deliveryName = deliveryName;
+	}
+	public String getOrderName() {
+		return orderName;
+	}
+	public void setOrderName(String orderName) {
+		this.orderName = orderName;
 	}
 
 }

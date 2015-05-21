@@ -505,16 +505,16 @@ function fcDefer_modify(){
 	 	<tr>
           <th rowspan='9' class='text-center' style="background-color:#E6F3FF">수신</th>
           <th class='text-center'  style="background-color:#E6F3FF" >수신</th>
-          <th class='text-center'><input type="text" class="form-control" id="deliveryCharge" name="deliveryCharge"  value="${targetVO.deliveryCharge}" placeholder="수신" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="deliveryName" name="deliveryName"  value="${targetVO.deliveryName}" placeholder="수신" /></th>
           <th rowspan='9' class='text-center'  style="background-color:#E6F3FF">발신</th>
           <th class='text-center' style="background-color:#E6F3FF">발신</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderCharge" name="orderCharge"  value="${targetVO.orderCharge}" placeholder="발신"/></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderName" name="orderName"  value="${targetVO.orderName}" placeholder="발신"/></th>
       	</tr>
       	<tr>
-          <th class='text-center' style="background-color:#E6F3FF" >참조</th>
-          <th class='text-center'><input type="text" class="form-control" id="deliveryEtc" name="deliveryEtc"  value="${targetVO.deliveryEtc}" placeholder="참조" /></th>
-          <th class='text-center' style="background-color:#E6F3FF" >참조</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderEtc" name="orderEtc"  value="${targetVO.orderEtc}" placeholder="참조" /></th>
+          <th class='text-center' style="background-color:#E6F3FF" >담당자</th>
+          <th class='text-center'><input type="text" class="form-control" id="deliveryCharge" name="deliveryCharge"  value="${targetVO.deliveryCharge}" placeholder="담당자" /></th>
+          <th class='text-center' style="background-color:#E6F3FF" >담당자</th>
+          <th class='text-center'><input type="text" class="form-control" id="orderCharge" name="orderCharge"  value="${targetVO.orderCharge}" placeholder="담당자" /></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">핸드폰</th>
@@ -572,7 +572,7 @@ function fcDefer_modify(){
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">납품방법</th>
           <th class='text-center'><input type="text" class="form-control" id="deliveryMethod" name="deliveryMethod"  value="${targetVO.deliveryMethod}" placeholder="납품방버" /></th>
-          <th class='text-center' style="background-color:#E6F3FF">결재방법</th>
+          <th class='text-center' style="background-color:#E6F3FF">결제방법</th>
           <th class='text-center'><input type="text" class="form-control" id="payMethod" name="payMethod"  value="${targetVO.payMethod}" placeholder="결재방법" /></th>
       	</tr>
       	<tr>

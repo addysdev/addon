@@ -3,6 +3,7 @@
 	String fileName = "orderExcelList.xls";
 	response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 	response.setHeader("Content-Description", "JSP Generated Data");
+
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -12,7 +13,7 @@
 	{mso-style-parent:style0;
 	mso-number-format:"\@";}
 </style>
-<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>구매전표 리스트</title>
 </head>
 
@@ -45,28 +46,32 @@
 			</tr>
 		<!-- :: loop :: -->
 		<!--리스트---------------->
-			<tr bgcolor="#FFFFFF" height="23">
-			    <td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;ecount</td>
-			</tr>
+		<c:if test="${!empty orderExcelList}">
+	          <c:forEach items="${orderExcelList}" var="orderVO" varStatus="status">
+	             <tr bgcolor="#FFFFFF" height="23">
+				    <td align="center">&nbsp;20150521</td>
+					<td align="center">&nbsp;</td>
+					<td align="center">&nbsp;</td>
+					<td align="center">&nbsp;${orderVO.companyCode}</td>
+					<td align="center">&nbsp;</td>
+					<td align="center">&nbsp;</td>
+					<td align="center">&nbsp;${orderVO.groupId}</td>
+					<td align="center">&nbsp;</td>
+					<td align="center">&nbsp;</td>
+					<td align="center">&nbsp;${orderVO.etc}</td>
+					<td align="center">&nbsp;${orderVO.productCode}</td>
+					<td align="center">&nbsp;</td>
+					<td align="center">&nbsp;</td>
+					<td align="center">&nbsp;${orderVO.orderResultCnt}</td>
+					<td align="center">&nbsp;${orderVO.orderResultPrice}</td>
+					<td align="center">&nbsp;</td>
+					<td align="center">&nbsp;</td>
+					<td align="center">&nbsp;</td>
+					<td align="center">&nbsp;</td>
+					<td align="center">&nbsp;ecount</td>
+				</tr>
+             </c:forEach>
+            </c:if>
 		</table>
 		</td>
 	</tr>

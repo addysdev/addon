@@ -647,12 +647,53 @@ function totalTargetAmt(){
 
     }
     function goOrderExcel(){
+
     	
-    	var frm = document.orderDetailForm;
-    	frm.action = "<%=request.getContextPath()%>/order/orderexcellist";	
-    	frm.method = "POST";
-    	frm.submit();
-    	
+    	  var frm = document.orderDetailListForm;
+    	  var ofrm = document.orderDetailForm;
+    	  
+         	if(frm.seqs.length>1){
+         		for(i=0;i<frm.seqs.length;i++){
+ 					frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
+         			'|'+fillSpace(frm.barCode[i].value)+'|'+fillSpace(frm.orderResultPrice[i].value)+'|'+fillSpace(frm.orderResultCnt[i].value)+
+         			'|'+fillSpace(frm.orderVatRate[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(ofrm.companyCode.value)+'|'+fillSpace(ofrm.groupId.value);
+   
+         		}
+         	}else{
+         		
+					frm.seqs.value=fillSpace(frm.productCode.value)+
+     			'|'+fillSpace(frm.barCode.value)+'|'+fillSpace(frm.orderResultPrice.value)+'|'+fillSpace(frm.orderResultCnt.value)+
+     			'|'+fillSpace(frm.orderVatRate.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(ofrm.companyCode.value)+'|'+fillSpace(ofrm.groupId.value);
+
+         	}
+
+        	var frm = document.orderDetailListForm;
+        	frm.action = "<%=request.getContextPath()%>/order/orderexcellist";	
+        	frm.method = "POST";
+        	frm.submit();
+        	
+        	
+        	/*
+          var paramString = $("#orderDetailForm").serialize()+ '&'+$("#orderDetailListForm").serialize();
+
+		  		$.ajax({
+			       type: "POST",
+			       async:false,
+			          url:  "<%= request.getContextPath() %>/order/orderexcellist",
+			          data:paramString,
+			          success: function(result) {
+		
+			        	resultMsg(result);
+						
+							
+			          },
+			          error:function(){
+			          
+			          alert('excel 처리 호출오류!');
+			        
+			          }
+			    });
+      	*/
     }
 </SCRIPT>
 	<div class="container-fluid">
@@ -713,16 +754,16 @@ function totalTargetAmt(){
 	 	<tr>
           <th rowspan='9' class='text-center' style="background-color:#E6F3FF">수신</th>
           <th class='text-center'  style="background-color:#E6F3FF" >수신</th>
-          <th class='text-center'><input disabled type="text" class="form-control" id="deliveryCharge" name="deliveryCharge"  value="${orderVO.deliveryCharge}" placeholder="수신" /></th>
+          <th class='text-center'><input disabled type="text" class="form-control" id="deliveryName" name="deliveryName"  value="${orderVO.deliveryName}" placeholder="수신" /></th>
           <th rowspan='9' class='text-center'  style="background-color:#E6F3FF">발신</th>
           <th class='text-center' style="background-color:#E6F3FF">발신</th>
-          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.orderCharge}" placeholder="발신"/></th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.orderName}" placeholder="발신"/></th>
       	</tr>
       	<tr>
-          <th class='text-center' style="background-color:#E6F3FF" >참조</th>
-          <th class='text-center'><input  disabled type="text" class="form-control" id="deleveryEtc" name="deleveryEtc"  value="${orderVO.deliveryEtc}" placeholder="참조" /></th>
-          <th class='text-center' style="background-color:#E6F3FF" >참조</th>
-          <th class='text-center'><input  disabled type="text" class="form-control" id="orderUserName" name="orderUserName"  value="${orderVO.orderEtc}" placeholder="참조" /></th>
+          <th class='text-center' style="background-color:#E6F3FF" >담당자</th>
+          <th class='text-center'><input  disabled type="text" class="form-control" id="deliveryCharge" name="deliveryCharge"  value="${orderVO.deliveryCharge}" placeholder="참조" /></th>
+          <th class='text-center' style="background-color:#E6F3FF" >담당자</th>
+          <th class='text-center'><input  disabled type="text" class="form-control" id="orderCharge" name="orderCharge"  value="${orderVO.orderCharge}" placeholder="참조" /></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">핸드폰</th>
@@ -764,7 +805,7 @@ function totalTargetAmt(){
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">납품방법</th>
           <th class='text-center'><input  disabled type="text" class="form-control" id="deliveryMethod" name="deliveryMethod"  value="${orderVO.deliveryMethod}" placeholder="납품방버" /></th>
-          <th class='text-center' style="background-color:#E6F3FF">결재방법</th>
+          <th class='text-center' style="background-color:#E6F3FF">결제방법</th>
           <th class='text-center'><input  disabled type="text" class="form-control" id="payMethod" name="payMethod"  value="${orderVO.payMethod}" placeholder="결재방법" /></th>
       	</tr>
       	<tr>

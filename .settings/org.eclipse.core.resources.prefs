@@ -50,6 +50,7 @@ encoding//src/main/webapp/WEB-INF/views/order/targetManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/targetPageList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/recovery/reProductAttach.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/recovery/reProductExcelForm.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/recovery/recoveryCodePrint.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/recovery/recoveryDetailView.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/recovery/recoveryManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/recovery/recoveryPageList.jsp=UTF-8
