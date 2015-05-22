@@ -386,8 +386,12 @@ function totalCheck(){
 
     }
 //품목 상세 페이지 리스트 Layup
-function  fcEtc_detail(orderCode,productCode,productName,etc) {
+function  fcEtc_detail(orderCode,productCode,productName,etc,idx) {
+	
 
+	if(document.recoveryDetailListForm.seqs.length==undefined){
+		idx=0;
+	}
 	//$('#targetEtcView').attr('title',productName);
 	var url='<%= request.getContextPath() %>/order/etcmanage';
 
@@ -403,7 +407,7 @@ function  fcEtc_detail(orderCode,productCode,productName,etc) {
         open:function(){
             //팝업 가져올 url
           //  $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode+'&productNaem='+encodeURIComponent(productName));
-            $(this).load(url+'?orderCode='+orderCode+'&category=06'+'&productCode='+productCode+'&productName='+encodeURIComponent(productName)+'&etc='+encodeURIComponent(etc));
+            $(this).load(url+'?orderCode='+orderCode+'&category=06'+'&idx='+idx+'&productCode='+productCode+'&productName='+encodeURIComponent(productName)+'&etc='+encodeURIComponent(etc));
            
             $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                 $("#etcManage").dialog('close');
@@ -455,7 +459,7 @@ $(window).unload(function() {
           <th class='text-center'><c:out value="${recoveryVO.recoveryClosingDate}"></c:out></th>	
       	</tr>
       	<tr>
-          <th class='text-center' style="background-color:#E6F3FF">메모&nbsp;<span id="memoCnt" style="color:blue">(${recoveryVO.memoCnt})</span>
+          <th class='text-center' style="background-color:#E6F3FF">메모&nbsp;(<span id="memoCnt" style="color:blue">${recoveryVO.memoCnt}</span>)
           <button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcMemo_detail('${recoveryVO.recoveryCode}','${recoveryVO.memo}')" >관리</button></th>
           <th colspan='5' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${recoveryVO.memo}" placeholder="메모" disabled /></th>
       	</tr>
@@ -541,7 +545,7 @@ $(window).unload(function() {
 						<td class='text-right' id='recoveryResultCntView' name='recoveryResultCntView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.recoveryResultCnt}"  /></td>
 					</c:otherwise>
 				</c:choose>
-                 <td class='text-center'><c:if test="${recoveryVO.recoveryState!='01'}"><img id="etcbtn" onClick="fcEtc_detail('${recoveryVO.recoveryCode}','${recoveryVO.productCode}','${recoveryVO.productName}','${recoveryVO.etc}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(${recoveryVO.etcCnt})</c:if></td>
+                 <td class='text-center'><c:if test="${recoveryVO.recoveryState!='01'}"><img id="etcbtn" onClick="fcEtc_detail('${recoveryVO.recoveryCode}','${recoveryVO.productCode}','${recoveryVO.productName}','${recoveryVO.etc}','${status.count}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${recoveryVO.etcCnt}</span>)</c:if></td>
                  <tr>
                  <c:choose>
 		    		<c:when test="${recoveryVO.recoveryState!='01'}"> 

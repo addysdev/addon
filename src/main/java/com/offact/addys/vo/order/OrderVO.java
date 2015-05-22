@@ -69,6 +69,7 @@ public class OrderVO extends AbstractVO {
 	private String holdStock;
 	private String orderCnt;
 	private String orderPrice;
+	private String orderPriceView;
 	private String productPrice;
 	private String vatRate;
 	
@@ -98,6 +99,7 @@ public class OrderVO extends AbstractVO {
 	
 	private String orderResultCnt;
 	private String orderResultPrice;
+	private String orderResultPriceView;
 	private String orderVatRate;
 	
 	//최종 합계가격
@@ -663,6 +665,18 @@ public class OrderVO extends AbstractVO {
 	}
 	public void setOrderName(String orderName) {
 		this.orderName = orderName;
+	}
+	public String getOrderResultPriceView() {
+		return orderResultPriceView;
+	}
+	public void setOrderResultPriceView(String orderResultPriceView) {
+		this.orderResultPriceView = orderResultPriceView;
+	}
+	public String getOrderPriceView() {
+		return orderPriceView;
+	}
+	public void setOrderPriceView(String orderPriceView) {
+		this.orderPriceView = orderPriceView;
 	}
 
 }

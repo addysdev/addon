@@ -426,7 +426,8 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
 	   	 T1.holdStock,
 	   	 T2.productPrice,
 	   	 T2.group1Name,
-         (T1.holdStock-T1.StockCnt) as orderCnt
+         (T1.holdStock-T1.StockCnt) as orderCnt,
+         T1.stockOrder
   From (
 	      Select TEMP.orderState,
 		         TEMP.stockCnt,
@@ -434,7 +435,8 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
                  TEMP.holdStock,
 				 TEMP.groupId,
 				 TEMP.productCode,
-				 TEMP.stockChk As stockDate
+				 TEMP.stockChk As stockDate,
+				 Case When TEMP.safeStock>=TEMP.stockCnt Then 0 Else 1 End stockOrder
 		      From (
 					Select I1.groupID,
 					       I1.productCode,
@@ -511,7 +513,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
               Left Join adCompany T3 On T2.companyCode = T3.companyCode 
               Left Join ofGroup T4 On T1.groupId = T4.groupId 
  	Where T2.companyCode =  #{con_companyCode}
- 	Order by T1.productCode ASC
+ 	Order by T1.stockOrder, T1.productCode ASC
 </select>
 
 <insert id="deferReasonInsert"  parameterType="com.offact.addys.vo.order.TargetVO" >
@@ -918,7 +920,8 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
            T1.addCnt,
            T1.lossCnt,
            T1.etc,
-           T1.deferCheck
+           T1.deferCheck,
+           case When T1.safeStock > T1.stockCnt Then 0 Else 1 End stockOrder
   From adOrderDetail T1
        Left Join adOrder T2 On T1.orderCode=T2.orderCode
        Left Join ofGroup T3 On T2.groupId =T3.groupId
@@ -926,7 +929,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
        Left Join adProductMaster T5 On T1.productCode = T5.productCode
   Where T2.orderState='02'
         And T1.orderCode = #{orderCode}
-  Order by T1.productCode ASC
+  Order by (case When T1.safeStock > T1.stockCnt Then 0 Else 1 End ) , T1.productCode ASC
  	
 </select>
 

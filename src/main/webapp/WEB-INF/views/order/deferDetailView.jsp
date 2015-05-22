@@ -75,7 +75,7 @@ function fcOrder_process(){
 	
     var frm = document.deferDetailListForm;
     
-   	if(frm.seqs.length>1){
+   	if(frm.seqs.length!=undefined){
    		for(i=0;i<frm.seqs.length;i++){
 			frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
    			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
@@ -139,7 +139,7 @@ function fcDefer_modify(reason){
             
             var frm = document.deferDetailListForm;
        
-        	if(frm.seqs.length>1){
+        	if(frm.seqs.length!=undefined){
            		for(i=0;i<frm.seqs.length;i++){
    					frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
            			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
@@ -475,46 +475,46 @@ function fcDefer_modify(reason){
 	 	<tr>
           <th rowspan='9' class='text-center' style="background-color:#E6F3FF">수신</th>
           <th class='text-center'  style="background-color:#E6F3FF" >수신</th>
-          <th class='text-center'><input type="text" class="form-control" id="deliveryName" name="deliveryName"  value="${targetVO.deliveryName}" placeholder="수신" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="deliveryName" name="deliveryName" maxlength="20" value="${targetVO.deliveryName}" placeholder="수신" /></th>
           <th rowspan='9' class='text-center'  style="background-color:#E6F3FF">발신</th>
           <th class='text-center' style="background-color:#E6F3FF">발신</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderName" name="orderName"  value="${targetVO.orderName}" placeholder="발신"/></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderName" name="orderName" maxlength="20" value="${targetVO.orderName}" placeholder="발신"/></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF" >담당자</th>
-          <th class='text-center'><input type="text" class="form-control" id="deliveryCharge" name="deliveryCharge"  value="${targetVO.deliveryCharge}" placeholder="담당자" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="deliveryCharge" name="deliveryCharge" maxlength="10" value="${targetVO.deliveryCharge}" placeholder="담당자" /></th>
           <th class='text-center' style="background-color:#E6F3FF" >담당자</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderCharge" name="orderCharge"  value="${targetVO.orderCharge}" placeholder="담당자" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderCharge" name="orderCharge" maxlength="10" value="${targetVO.orderCharge}" placeholder="담당자" /></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">핸드폰</th>
-          <th class='text-center'><input type="text" class="form-control" id="mobilePhone" name="mobilePhone"  value="${targetVO.mobilePhone}"  placeholder="핸드폰"/></th>
+          <th class='text-center'><input type="text" class="form-control" id="mobilePhone" name="mobilePhone" maxlength="14" value="${targetVO.mobilePhone}"  placeholder="핸드폰"/></th>
           <th class='text-center' style="background-color:#E6F3FF">핸드폰</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderMobilePhone" name="orderMobilePhone"  value="${targetVO.orderMobilePhone}"  placeholder="핸드폰"/></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderMobilePhone" name="orderMobilePhone" maxlength="14" value="${targetVO.orderMobilePhone}"  placeholder="핸드폰"/></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">e-mail</th>
-          <th class='text-center'><input type="text" class="form-control" id="email" name="email"  value="${targetVO.email}" placeholder="e-mail" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="email" name="email" maxlength="30" value="${targetVO.email}" placeholder="e-mail" /></th>
           <th class='text-center' style="background-color:#E6F3FF">e-mail</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderEmail" name="orderEmail"  value="${targetVO.orderEmail}" placeholder="e-mail" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderEmail" name="orderEmail" maxlength="30" value="${targetVO.orderEmail}" placeholder="e-mail" /></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">tel</th>
-          <th class='text-center'><input type="text" class="form-control" id="telNumber" name="telNumber"  value="${targetVO.telNumber}" placeholder="tel" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="telNumber" name="telNumber" maxlength="14" value="${targetVO.telNumber}" placeholder="tel" /></th>
           <th class='text-center' style="background-color:#E6F3FF">tel</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderTelNumber" name="orderTelNumber"  value="${targetVO.orderTelNumber}" placeholder="tel" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderTelNumber" name="orderTelNumber" maxlength="14"  value="${targetVO.orderTelNumber}" placeholder="tel" /></th>
       	</tr>
       	<th class='text-center' style="background-color:#E6F3FF">fax</th>
-          <th class='text-center'><input type="text" class="form-control" id="faxNumber" name="faxNumber"  value="${targetVO.faxNumber}" placeholder="fax" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="faxNumber" name="faxNumber"  maxlength="14" value="${targetVO.faxNumber}" placeholder="fax" /></th>
           <th class='text-center' style="background-color:#E6F3FF">fax</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderFaxNumber" name="orderFaxNumber"  value="${targetVO.orderFaxNumber}" placeholder="fax" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="orderFaxNumber" name="orderFaxNumber" maxlength="14" value="${targetVO.orderFaxNumber}" placeholder="fax" /></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">발주일자</th>
           <th class='text-center'>
           	
           		<div style='width:150px' class='input-group date ' id='datetimepicker1' data-link-field="orderDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" value="${targetVO.orderDate}" />
+	                <input type='text' class="form-control" disabled value="${targetVO.orderDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>
 	                </span>
@@ -530,7 +530,7 @@ function fcDefer_modify(reason){
           <th class='text-center'>
           		
           		<div  style='width:150px' class='input-group date ' id='datetimepicker2' data-link-field="deliveryDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" value="${targetVO.deliveryDate}" />
+	                <input type='text' class="form-control" disabled value="${targetVO.deliveryDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>
 	                </span>
@@ -541,17 +541,17 @@ function fcDefer_modify(reason){
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">납품방법</th>
-          <th class='text-center'><input type="text" class="form-control" id="deliveryMethod" name="deliveryMethod"  value="${targetVO.deliveryMethod}" placeholder="납품방버" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="deliveryMethod" name="deliveryMethod" maxlength="10"  value="${targetVO.deliveryMethod}" placeholder="납품방버" /></th>
           <th class='text-center' style="background-color:#E6F3FF">결제방법</th>
-          <th class='text-center'><input type="text" class="form-control" id="payMethod" name="payMethod"  value="${targetVO.payMethod}" placeholder="결재방법" /></th>
+          <th class='text-center'><input type="text" class="form-control" id="payMethod" name="payMethod"  maxlength="10" value="${targetVO.payMethod}" placeholder="결재방법" /></th>
       	</tr>
       	<tr>
           <th colspan='2' class='text-center' style="background-color:#E6F3FF">SMS내용</th>
-          <th colspan='4' class='text-center'><input type="text" class="form-control" id="sms" name="sms"  value="${targetVO.sms}" placeholder="SMS" /></th>
+          <th colspan='4' class='text-center'><input type="text" class="form-control" id="sms" name="sms" maxlength="50" value="${targetVO.sms}" placeholder="SMS" /></th>
       	</tr>
       	<tr>
           <th colspan='2' class='text-center' style="background-color:#E6F3FF">메모</th>
-          <th colspan='4' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${targetVO.memo}" placeholder="메모" /></th>
+          <th colspan='4' class='text-center'><input type="text" class="form-control" id="memo" name="memo" maxlength="50"  value="${targetVO.memo}" placeholder="메모" /></th>
       	</tr>
 	  </table>
 	  </form:form>
@@ -611,10 +611,10 @@ function fcDefer_modify(reason){
                  <input type="hidden" id="orderCntRaw" name="orderCntRaw" value="${targetVO.orderCnt}" >
                  <input type="hidden" id="vatRate" name="vatRate" value="${targetVO.vatRate}" >
                  <input type="hidden" id="holdStock" name="holdStock" value="${targetVO.holdStock}" >
-                 <td class='text-right'><input style="width:35px" type="text" class="form-control" id="addCnt" name="addCnt" onKeyup="fcAdd_Cnt('${status.count}')" value="${targetVO.addCnt}"></td>
-                 <td class='text-right'><input style="width:35px" type="text" class="form-control" id="lossCnt" name="lossCnt" onKeyup="fcLoss_Cnt('${status.count}')" value="${targetVO.lossCnt}"></td>
+                 <td class='text-right'><input style="width:45px;text-align:right" type="text" class="form-control" id="addCnt" name="addCnt" maxlength="2" numberOnly  onKeyup="fcAdd_Cnt('${status.count}')" value="${targetVO.addCnt}"></td>
+                 <td class='text-right'><input style="width:45px;text-align:right" type="text" class="form-control" id="lossCnt" name="lossCnt" maxlength="2" numberOnly  onKeyup="fcLoss_Cnt('${status.count}')" value="${targetVO.lossCnt}"></td>
                  <tr>
-	             	<td colspan='10' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${targetVO.etc}" placeholder="비고" /></td>
+	             	<td colspan='10' class='text-center'><input type="text" class="form-control" id="etc" name="etc" maxlength="50"  value="${targetVO.etc}" placeholder="비고" /></td>
 	             </tr>
               </tr>
              </c:forEach>

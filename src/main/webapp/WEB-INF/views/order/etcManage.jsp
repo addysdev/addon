@@ -38,6 +38,23 @@ function fcEtc_add(){
 	           success: function(result) {
 	               commonDim(false);
 	               $("#etcManage").html(result);
+
+	               if('${idx}'==0){
+	            	   
+	            	   var ecnt=document.all('etcCnt').innerText;
+		               ecnt++;
+		               document.all('etcCnt').innerText=ecnt;
+	
+	               }else{
+	            	   
+	            	   var cnt='${idx}'-1;
+
+	            	   var ecnt=document.all('etcCnt')[cnt].innerText;
+		               ecnt++;
+		               document.all('etcCnt')[cnt].innerText=ecnt; 
+	            	   
+	               }
+	               
 	           },
 	           error:function() {
 	               commonDim(false);
@@ -45,6 +62,7 @@ function fcEtc_add(){
 	    });
 	}
 }
+
 </SCRIPT>
 <!-- 사용자관리 -->
 <body>
@@ -64,7 +82,7 @@ function fcEtc_add(){
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF" >추가 비고</th>
-          <th><input type="text" class="form-control" id="comment" name="comment"  value="" placeholder="비고"  /></th>
+          <th><input type="text" class="form-control" id="comment"  name="comment" style='ime-mode:active;' maxlength="200" value="" placeholder="비고"  /></th>
       	</tr>
 	  </table>
 	  </form:form>
@@ -111,6 +129,6 @@ function fcEtc_add(){
   <!-- //조회결과리스트 -->
 </div>
 <script>
-//fcEtc_listSearch();
+$('#comment').focus(1); 
 </script>
 </body>

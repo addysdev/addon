@@ -40,7 +40,11 @@ function fcMemo_add(){
 	           success: function(result) {
 	               commonDim(false);
 	               $("#memoManage").html(result);
-	            //   alert(document.all('memoCnt').innerText);
+	               
+	               var mcnt=document.all('memoCnt').innerText;
+	               mcnt++;
+	               document.all('memoCnt').innerText=mcnt;
+	            
 	           },
 	           error:function() {
 	               commonDim(false);
@@ -67,7 +71,7 @@ function fcMemo_add(){
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF" >추가 메모</th>
-          <th><input type="text" class="form-control" id="comment" name="comment"  value="" placeholder="메모"  /></th>
+          <th><input type="text" class="form-control" id="comment" name="comment" style='ime-mode:active;' maxlength="200" value="" placeholder="메모"  /></th>
       	</tr>
 	  </table>
 	  </form:form>
@@ -114,6 +118,6 @@ function fcMemo_add(){
   <!-- //조회결과리스트 -->
 </div>
 <script>
-//fcMemo_listSearch();
+$('#comment').focus(1); 
 </script>
 </body>

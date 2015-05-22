@@ -113,7 +113,7 @@ public class ManageController {
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
      	}
         
@@ -169,7 +169,7 @@ public class ManageController {
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
      	}
         
@@ -238,7 +238,7 @@ public class ManageController {
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
      	}
 		
@@ -321,7 +321,7 @@ public class ManageController {
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
      	}
         userVO = userManageSvc.getUserDetail(userId);
@@ -462,7 +462,7 @@ public class ManageController {
       String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
       
       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-      	mv.setViewName("/addys/logout");
+      	mv.setViewName("/addys/loginForm");
      		return mv;
    	}
 
@@ -626,7 +626,7 @@ public class ManageController {
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
      	}
         
@@ -675,7 +675,7 @@ public class ManageController {
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
      	}
         

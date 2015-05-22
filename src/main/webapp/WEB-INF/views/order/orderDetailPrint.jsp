@@ -2,241 +2,170 @@
 <script>
 window.print();
 </script>
-		        <html>
-		        <head>
-		        <title>상품주문서</title>
-		        <meta http-equiv='Content-Type' content='text/html; charset=euc-kr' />
-		        <style type='text/css'> 
-		        <!--
-		        td {
-		        font-family: '굴림', '돋움', 'Seoul', '한강체';
-		        font-size: 12px;
-		        	line-height: 30px;
-		        }
-				.style1 {
-			    	font-size: 30px;
-					font-weight: bold;
-					font-family: '굴림체', '돋움체', Seoul;
-		        }
-				.style5 {
-					font-size: 24px;
-				font-weight: bold;
-		        }
-				-->
-				</style>
-				</head>
+<html>
+<head>
 
-				<body>
-				<div align='center'></div>
-
-				<div align='left'>
-				<table width='612' border='0' align='center' cellpadding='0' cellspacing='0'>
-				<tr> 
-				<td width='516' valign='top'>
-				<table width='722' height='900' border='0' align='center' cellpadding='1' cellspacing='1' bgcolor='#000000'>
-				<tr bgcolor='#FFFFFF'> 
-				<td height='55' colspan='12' align='center'><span class='style1'>상 품 주 문 서</span></td>
-				</tr>
-				<tr bgcolor='#FFFFFF'>
-				 <td rowspan='7' align='center' style='background-color:#E4E4E4'>수<br>신</td>
-				 <td align='center'>&nbsp;수 신</td>
-				 <td colspan='5' align='center'>&nbsp;${orderVO.deliveryCharge}</td>
-				 <td rowspan='7'  align='center' style='background-color:#E4E4E4'>발<br>신</td>
-				 <td align='center'>&nbsp;발 신</td>
-				 <td colspan='3' align='center'>&nbsp;${orderVO.orderCharge}</td>
-				</tr>
-				<tr bgcolor='#FFFFFF'>
-				<td align='center'>&nbsp;참 조</td>
-				<td colspan='5' align='center'>&nbsp;${orderVO.deliveryEtc}</td>
-				<td align='center'>&nbsp;참 조</td>
-				<td colspan='3' align='center'>&nbsp;${orderVO.orderEtc}</td>
-				</tr>
-				<tr bgcolor='#FFFFFF'>
-				<td rowspan='2' align='center' >연락처</td>
-				<td colspan='5' align='left'>&nbsp;핸드폰 :${orderVO.mobilePhone},E-Mail :${orderVO.email}</td>
-				<td rowspan='2' align='center' >연락처</td>
-				<td colspan='3' align='left'>&nbsp;핸드폰 :${orderVO.orderMobilePhone},E-Mail :${orderVO.orderEmail}</td>
-				</tr>
-				<tr bgcolor='#FFFFFF'>
-				<td colspan='5' align='left'>&nbsp;TEL :${orderVO.telNumber},FAX :${orderVO.faxNumber}</td>
-				<td colspan='5' align='left'>&nbsp;TEL :${orderVO.orderTelNumber},FAX :${orderVO.orderFaxNumber}</td>
-				</tr>
-				<tr bgcolor='#FFFFFF'>
-				<td align='center' >발주일자</td>
-				<td width='77' align='center'><div align='right'>${orderDates1}년 </div></td>
-				<td width='61' align='center'>&nbsp;${orderDates2}</td>
-				<td width='50' align='center'>월</td>
-				<td width='58' align='center'>&nbsp;${orderDates3}</td>
-				<td width='52' align='center'>일</td>
-				<td rowspan='2' align='center' >배송주소</td>
-				<td rowspan='2' colspan='3'width='58' align='left'>&nbsp${orderVO.orderAddress};</td>
-				</tr>
-                <tr bgcolor='#FFFFFF'>
-				<td align='center' >납품일자</td>
-				<td width='77' align='center'><div align='right'>${deliveryDates1}년 </div></td>
-				<td width='61' align='center'>&nbsp;${deliveryDates2}</td>
-				<td width='50' align='center'>월</td>
-				<td width='58' align='center'>&nbsp;${deliveryDates3}</td>
-				<td width='52' align='center'>일</td>
-				</tr>
-                <tr bgcolor='#FFFFFF'>
-				<td align='center'>&nbsp;납품방법</td>
-				<td colspan='5' align='center'>&nbsp;${orderVO.deliveryMethod}</td>
-				<td align='center'>&nbsp;결재방법</td>
-				<td colspan='3' align='center'>&nbsp;${orderVO.payMethod}</td>
-				</tr>
-
-				<tr bgcolor='#FFFFFF'>
-				<td colspan="2" align='center' >메모</td>
-				<td colspan='10' align='center'>${orderVO.memo}</td>
-				</tr>
-				<tr bgcolor='#FFFFFF'>
-				<td colspan='12' align='center' height='27'><div align='left'>1.아래와 같이 발주합니다.</div></td>
-				</tr>
-				
-                <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>	
-				
-				           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>           <tr bgcolor='#FFFFFF'>
-				<td colspan='2' align='center' height='27'></td>
-				<td align='center'></td>
-				<td colspan='7' align='center'></td>
-				<td width='57' align='center'></td>
-				<td width='172' align='center'></td>
-				</tr>
-				
-	
-				
-				
-				</table>
-				</div>
-
-				</body>
-				 </html>
-
-				</html>
+ 	<title>검수확인서</title>
+    <meta http-equiv='Content-Type' content='text/html; charset=euc-kr' />
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.css">
+	<link rel="stylesheet" href="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/css/bootstrap.css">
+	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/bootstrap-datetimepicker.min.css">
+    <script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+	<div class="container" style="width:950">
+	 <div class="form-group" >
+	 <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-check"></span>검수확인서</font></strong> </h4>
+		<table class="table table-bordered" >
+	 	<tr>
+          <th rowspan='9' class='text-center' style="background-color:#E6F3FF">수신</th>
+          <th class='text-center'  style="background-color:#E6F3FF" >수신</th>
+          <th class='text-center'><input disabled type="text" class="form-control" id="deliveryName" name="deliveryName"  value="${orderVO.deliveryName}" placeholder="수신" /></th>
+          <th rowspan='9' class='text-center'  style="background-color:#E6F3FF">발신</th>
+          <th class='text-center' style="background-color:#E6F3FF">발신</th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.orderName}" placeholder="발신"/></th>
+      	</tr>
+      	<tr>
+          <th class='text-center' style="background-color:#E6F3FF" >담당자</th>
+          <th class='text-center'><input  disabled type="text" class="form-control" id="deliveryCharge" name="deliveryCharge"  value="${orderVO.deliveryCharge}" placeholder="참조" /></th>
+          <th class='text-center' style="background-color:#E6F3FF" >담당자</th>
+          <th class='text-center'><input  disabled type="text" class="form-control" id="orderCharge" name="orderCharge"  value="${orderVO.orderCharge}" placeholder="참조" /></th>
+      	</tr>
+      	<tr>
+          <th class='text-center' style="background-color:#E6F3FF">핸드폰</th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.mobilePhone}"  placeholder="핸드폰"/></th>
+          <th class='text-center' style="background-color:#E6F3FF">핸드폰</th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.orderMobilePhone}"  placeholder="핸드폰"/></th>
+      	</tr>
+      	<tr>
+          <th class='text-center' style="background-color:#E6F3FF">e-mail</th>
+          <th class='text-center'><input  disabled type="text" class="form-control" value="${orderVO.email}" placeholder="e-mail" /></th>
+          <th class='text-center' style="background-color:#E6F3FF">e-mail</th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.orderEmail}" placeholder="e-mail" /></th>
+      	</tr>
+      	<tr>
+          <th class='text-center' style="background-color:#E6F3FF">tel</th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.telNumber}" placeholder="tel" /></th>
+          <th class='text-center' style="background-color:#E6F3FF">tel</th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.orderTelNumber}" placeholder="tel" /></th>
+      	</tr>
+      	<th class='text-center' style="background-color:#E6F3FF">fax</th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.faxNumber}" placeholder="fax" /></th>
+          <th class='text-center' style="background-color:#E6F3FF">fax</th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.orderFaxNumber}" placeholder="fax" /></th>
+      	</tr>
+      	<tr>
+          <th class='text-center' style="background-color:#E6F3FF">발주일자</th>
+          <th class='text-center'>
+          <input  disabled type="text" class="form-control"   value="${orderVO.orderDate}" placeholder="SMS" />
+          </th>
+          <th rowspan='2' class='text-center' style="background-color:#E6F3FF">배송주소</th>
+          <th rowspan='2' class='text-center'><textarea disabled style='height:82px'  class="form-control" row="2" id="orderAddress" name="orderAddress" >${orderVO.orderAddress}</textarea></th>
+      	</tr>
+      	<tr>
+          <th class='text-center' style="background-color:#E6F3FF">납품일자</th>
+          <th class='text-center'>
+          <input  disabled type="text" class="form-control" id="deliveryDate" name="deliveryDate"  value="${orderVO.deliveryDate}" placeholder="SMS" />
+          </th>
+      	</tr>
+      	<tr>
+          <th class='text-center' style="background-color:#E6F3FF">납품방법</th>
+          <th class='text-center'><input  disabled type="text" class="form-control" id="deliveryMethod" name="deliveryMethod"  value="${orderVO.deliveryMethod}" placeholder="납품방버" /></th>
+          <th class='text-center' style="background-color:#E6F3FF">결제방법</th>
+          <th class='text-center'><input  disabled type="text" class="form-control" id="payMethod" name="payMethod"  value="${orderVO.payMethod}" placeholder="결재방법" /></th>
+      	</tr>
+      	<tr>
+          <th colspan='2' class='text-center' style="background-color:#E6F3FF">SMS내용</th>
+          <th colspan='4' class='text-center'><input  disabled type="text" class="form-control" id="sms" name="sms"  value="${orderVO.sms}" placeholder="SMS" /></th>
+      	</tr>
+      	<tr>
+          <th colspan='2' class='text-center' style="background-color:#E6F3FF">메모&nbsp;<span id="memoCnt" style="color:blue">(${orderVO.memoCnt})</span></th>
+          <th colspan='4' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${orderVO.memo}" placeholder="메모" disabled /></th>
+      	</tr>
+	  </table>
+	 </div>
+      <p> <span class="glyphicon glyphicon-asterisk"></span> 
+      <span style="color:blue"> [품목건수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderDetailList.size()}" /> 건  [발주 합계금액] :</span>
+          <span id="totalTargetAmt" style="color:gray">
+        </span>
+      </p>  
+      <p><span class="glyphicon glyphicon-asterisk"></span> 
+          <span style="color:blue"> [검수 합계금액] :</span>
+          <span id="totalOrderAmt" style="color:red">
+        </span>
+      </p>     
+	  <table class="table table-bordered" >
+      	<tr style="background-color:#E6F3FF">
+          <th rowspan='2' class='text-center' >검수<br>
+          <c:if test="${orderVO.orderState!='06' && orderVO.orderState!='07'}">
+          </c:if>
+          </th>
+          <th rowspan='2' class='text-center'>품목코드</th>
+          <th rowspan='2' class='text-center'>바코드</th>
+          <th rowspan='2' class='text-center'>상품명</th>
+          <th colspan='2' class='text-center'>수량</th>
+          <th colspan='3' class='text-center'>금액(VAT포함)</th>
+          <th rowspan='2' class='text-center'>비고</th>
+      	</tr>
+      	<tr style="background-color:#E6F3FF">
+          <th style="width:50px" class='text-center'>발주</th>
+          <th class='text-center'>구매</th>
+          <th class='text-center'>기준</th>
+          <th class='text-center'>구매</th>
+          <th class='text-center'>합계</th>
+      	</tr>
+	    	<c:if test="${!empty orderDetailList}">
+             <c:forEach items="${orderDetailList}" var="orderVO" varStatus="status">
+             	 <input type="hidden" id="seqs" name="seqs" >
+	             <tr id="select_tr_${orderVO.productCode}">
+				 <input type="hidden" name="productCode" value="${orderVO.productCode}">
+				 <input type="hidden" name="barCode" value="${orderVO.barCode}">
+				 <input type="hidden" name="productName" value="${orderVO.productName}">
+				 <input type="hidden" name="stockDate" value="${orderVO.stockDate}">
+				 <c:choose>
+		    		<c:when test="${orderVO.orderState!='06' && orderVO.orderState!='07'}">
+	                 <c:choose>
+			    		<c:when test="${orderVO.orderCheck=='Y'}">
+							<td class='text-center'>${status.count}.</td>
+						</c:when>
+						<c:otherwise>
+							<td class='text-center'>${status.count}.</td>
+						</c:otherwise>
+					</c:choose>
+					</c:when>
+					<c:otherwise>
+						<td class='text-center'><input type="checkbox" id="orderCheck" name="orderCheck" value="${orderVO.productCode}" title="선택" checked disabled  /></td>
+					</c:otherwise>
+				</c:choose>
+                 <td class='text-center'><c:out value="${orderVO.productCode}"></c:out></td>
+                 <td class='text-center'><c:out value="${orderVO.barCode}"></c:out></td>
+                 <td class='text-left'><c:out value="${orderVO.productName}"></c:out></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.orderCnt}"/></td>
+                 <input type="hidden" name="orderCnt" value="${orderVO.orderCnt}">
+                 <td class='text-right'><input disabled style="width:35px" type="text" class="form-control" id="orderResultCnt" name="orderResultCnt" onKeyup="totalOrderAmt()" value="${orderVO.orderResultCnt}"></td>
+                 
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.orderPrice+orderVO.orderVatRate}" /></td>
+                 <input type="hidden" name="orderPrice" value="${orderVO.orderPrice+orderVO.orderVatRate}">
+                 <input style="width:80px" type="hidden" class="form-control" id="orderVatRate" name="orderVatRate" onKeyup="totalOrderAmt()" value="0">
+                 
+                 <td class='text-right'><input style="width:80px" disabled type="text" class="form-control" id="orderResultPrice" name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderPrice+orderVO.orderVatRate}"></td>
+                 <td class='text-right' id='orderTotalPriceView' name='orderTotalPriceView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="0"/></td>
+                 <td class='text-right'>(${orderVO.etcCnt})</td>
+                  <tr>
+	             	<td colspan='11' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${orderVO.etc}" placeholder="비고" disabled /></td>
+	             </tr>
+              </tr>
+             </c:forEach>
+            </c:if>
+           <c:if test="${empty orderDetailList}">
+           <tr>
+           	<td colspan='11' class='text-center'>조회된 데이터가 없습니다.</td>
+           </tr>
+          </c:if>
+	  </table>
+	</div>
+	</div>
+	</body>
+</html>

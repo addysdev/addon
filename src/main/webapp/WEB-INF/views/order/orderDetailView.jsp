@@ -1,4 +1,5 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
+
 <SCRIPT>
  
 
@@ -11,13 +12,15 @@ function tmt_winLaunch(theURL,winName,targetName,features) {
 /*
  * print 화면 POPUP
  */
-function fcOrderDetail_print(){
+function fcOrderDetail_print(orderCode){
 	
-	var h=800;
-	var s=950;
+	var frm = document.orderDetailListForm;
+	var url="<%= request.getContextPath() %>/order/orderdetailprint?orderCode="+orderCode;
 
-    tmt_winLaunch('<%= request.getContextPath()%>/order/orderdetailprint' , 'orderPrintObj', 'orderPrintObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
-	
+    frm.action =url; 
+	frm.method="post";
+ 	frm.target='printObj';
+ 	frm.submit();
 }
 
 	   function fcDefer_reason(reason){
@@ -43,14 +46,14 @@ function fcOrderDetail_print(){
 	           	if(frm.seqs.length>1){
 	           		for(i=0;i<frm.seqs.length;i++){
 	   					frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
-	           			'|'+fillSpace(frm.barCode[i].value)+'|'+fillSpace(frm.orderResultPrice[i].value)+'|'+fillSpace(frm.orderResultCnt[i].value)+
+	           			'|'+fillSpace(frm.barCode[i].value)+'|'+fillSpace(deleteCommaStr(frm.orderResultPrice[i].value))+'|'+fillSpace(frm.orderResultCnt[i].value)+
 	           			'|'+fillSpace(frm.orderVatRate[i].value)+'|'+fillSpace(frm.etc[i].value);
 	     
 	           		}
 	           	}else{
 	           		
    					frm.seqs.value=fillSpace(frm.productCode.value)+
-           			'|'+fillSpace(frm.barCode.value)+'|'+fillSpace(frm.orderResultPrice.value)+'|'+fillSpace(frm.orderResultCnt.value)+
+           			'|'+fillSpace(frm.barCode.value)+'|'+fillSpace(deleteCommaStr(frm.orderResultPrice.value))+'|'+fillSpace(frm.orderResultCnt.value)+
            			'|'+fillSpace(frm.orderVatRate.value)+'|'+fillSpace(frm.etc.value);
 
 	           	}
@@ -411,10 +414,14 @@ function totalTargetAmt(){
         });
     };
     // 품목 상세 페이지 리스트 Layup
-    function  fcEtc_detail(orderCode,productCode,productName,etc) {
-    
+    function  fcEtc_detail(orderCode,productCode,productName,etc,idx) {
+
     	//$('#targetEtcView').attr('title',productName);
     	var url='<%= request.getContextPath() %>/order/etcmanage';
+  
+    	if(document.orderDetailListForm.seqs.length==undefined){
+    		idx=0;
+    	}
 
     	$('#etcManage').dialog({
             resizable : false, //사이즈 변경 불가능
@@ -428,7 +435,7 @@ function totalTargetAmt(){
             open:function(){
                 //팝업 가져올 url
               //  $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode+'&productNaem='+encodeURIComponent(productName));
-                $(this).load(url+'?orderCode='+orderCode+'&category=04'+'&productCode='+productCode+'&productName='+encodeURIComponent(productName)+'&etc='+encodeURIComponent(etc));
+                $(this).load(url+'?orderCode='+orderCode+'&category=04'+'&idx='+idx+'&productCode='+productCode+'&productName='+encodeURIComponent(productName)+'&etc='+encodeURIComponent(etc));
                
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#etcManage").dialog('close');
@@ -459,14 +466,14 @@ function totalTargetAmt(){
          	if(frm.seqs.length>1){
          		for(i=0;i<frm.seqs.length;i++){
  					frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
-         			'|'+fillSpace(frm.barCode[i].value)+'|'+fillSpace(frm.orderResultPrice[i].value)+'|'+fillSpace(frm.orderResultCnt[i].value)+
+         			'|'+fillSpace(frm.barCode[i].value)+'|'+fillSpace(deleteCommaStr(frm.orderResultPrice[i].value))+'|'+fillSpace(frm.orderResultCnt[i].value)+
          			'|'+fillSpace(frm.orderVatRate[i].value)+'|'+fillSpace(frm.etc[i].value);
    
          		}
          	}else{
          		
 					frm.seqs.value=fillSpace(frm.productCode.value)+
-     			'|'+fillSpace(frm.barCode.value)+'|'+fillSpace(frm.orderResultPrice.value)+'|'+fillSpace(frm.orderResultCnt.value)+
+     			'|'+fillSpace(frm.barCode.value)+'|'+fillSpace(deleteCommaStr(frm.orderResultPrice.value))+'|'+fillSpace(frm.orderResultCnt.value)+
      			'|'+fillSpace(frm.orderVatRate.value)+'|'+fillSpace(frm.etc.value);
 
          	}
@@ -633,7 +640,7 @@ function totalTargetAmt(){
 	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" class="btn btn-info" onClick="fcDefer_list('${orderVO.orderCode}')">보류사유</button></c:if>
 	      <c:if test="${orderVO.orderState=='03'}"><button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcOrder_complete()">검수완료</button></c:if>
 	      <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-default" onClick="goOrderExcel()">엑셀변환</button></c:if>
-	      <c:if test="${orderVO.orderState=='03'}"><button type="button" class="btn btn-success" onClick="fcOrderDetail_print()">인쇄</button></c:if>
+	      <c:if test="${orderVO.orderState=='03'}"><button type="button" class="btn btn-success" onClick="fcOrderDetail_print('${orderVO.orderCode}')">인쇄</button></c:if>
           </div>
           <div style="position:absolute; right:30px" >
           <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-warning" onClick="fcOrder_cancel()">취소</button></c:if>
@@ -705,7 +712,7 @@ function totalTargetAmt(){
           <th colspan='4' class='text-center'><input  disabled type="text" class="form-control" id="sms" name="sms"  value="${orderVO.sms}" placeholder="SMS" /></th>
       	</tr>
       	<tr>
-          <th colspan='2' class='text-center' style="background-color:#E6F3FF">메모&nbsp;<span id="memoCnt" style="color:blue">(${orderVO.memoCnt})</span>
+          <th colspan='2' class='text-center' style="background-color:#E6F3FF">메모&nbsp;(<span id="memoCnt" style="color:blue">${orderVO.memoCnt}</span>)
           <button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcMemo_detail('${orderVO.orderCode}','${orderVO.memo}')" >관리</button></th>
           <th colspan='4' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${orderVO.memo}" placeholder="메모" disabled /></th>
       	</tr>
@@ -773,15 +780,15 @@ function totalTargetAmt(){
                  <td class='text-left'><c:out value="${orderVO.productName}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.orderCnt}"/></td>
                  <input type="hidden" name="orderCnt" value="${orderVO.orderCnt}">
-                 <td class='text-right'><input style="width:35px" type="text" class="form-control" id="orderResultCnt" name="orderResultCnt" onKeyup="totalOrderAmt()" value="${orderVO.orderResultCnt}"></td>
+                 <td class='text-right'><input style="width:45px;text-align:right" type="text" class="form-control" id="orderResultCnt" name="orderResultCnt" maxlength="2" numberOnly  onKeyup="totalOrderAmt()" value="${orderVO.orderResultCnt}"></td>
                  
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.orderPrice+orderVO.orderVatRate}" /></td>
                  <input type="hidden" name="orderPrice" value="${orderVO.orderPrice+orderVO.orderVatRate}">
                  <input style="width:80px" type="hidden" class="form-control" id="orderVatRate" name="orderVatRate" onKeyup="totalOrderAmt()" value="0">
                  
-                 <td class='text-right'><input style="width:80px" type="text" class="form-control" id="orderResultPrice" name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderPrice+orderVO.orderVatRate}"></td>
+                 <td class='text-right'><input style="width:95px;text-align:right" type="text" class="form-control" id="orderResultPrice" maxlength="9" numberOnly name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderResultPriceView}"></td>
                  <td class='text-right' id='orderTotalPriceView' name='orderTotalPriceView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="0"/></td>
-                 <td class='text-right'><img id="etcbtn" onClick="fcEtc_detail('${orderVO.orderCode}','${orderVO.productCode}','${orderVO.productName}','${orderVO.etc}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(${orderVO.etcCnt})</td>
+                 <td class='text-right'><img id="etcbtn" onClick="fcEtc_detail('${orderVO.orderCode}','${orderVO.productCode}','${orderVO.productName}','${orderVO.etc}','${status.count}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${orderVO.etcCnt}</span>)</td>
                   <tr>
 	             	<td colspan='11' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${orderVO.etc}" placeholder="비고" disabled /></td>
 	             </tr>

@@ -127,7 +127,7 @@ public class OrderController {
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -265,7 +265,7 @@ public class OrderController {
         String strEmail = StringUtil.nvl((String) session.getAttribute("strEmail"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
         
@@ -373,7 +373,7 @@ public class OrderController {
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
 
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -583,7 +583,7 @@ public class OrderController {
 	        szContent += "<html>";
 	        szContent += "<head>";
 	        szContent += "<title>상품주문서</title>";
-	        szContent += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />";
+	        szContent += "<meta http-equiv='Content-Type' content='text/html; charset=euc-kr' />";
 	        szContent += "<style type='text/css'>"; 
 	        szContent += "<!--";
 	        szContent += "td {";
@@ -608,125 +608,146 @@ public class OrderController {
 			szContent += "<div align='center'></div>";
 
 			szContent += "<div align='left'>";
-			szContent += "<table width='612' border='0' align='center' cellpadding='0' cellspacing='0'>";
-			szContent += "<tr>"; 
-			szContent += "<td width='516' valign='top'>";
-			szContent += "<table width='722' height='900' border='0' align='center' cellpadding='1' cellspacing='1' bgcolor='#000000'>";
-			szContent += "<tr bgcolor='#FFFFFF'>"; 
-			szContent += "<td height='55' colspan='12' align='center'><span class='style1'>상 품 주 문 서</span></td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += " <td rowspan='8' width='50' align='center' style='background-color:#E4E4E4'>수<br>신</td>";
-			szContent += " <td align='center' width='110'>&nbsp;수 신</td>";
-			szContent += " <td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryName()+"</td>";
-			szContent += " <td rowspan='8' width='50' align='center' style='background-color:#E4E4E4'>발<br>신</td>";
-			szContent += " <td align='center' width='110'>&nbsp;발 신</td>";
-			szContent += " <td colspan='3' align='center'>&nbsp;"+targetVO.getOrderName()+"</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td rowspan='4' align='center' >담당자</td>";
-			szContent += "<td colspan='5' align='left'>&nbsp;이름:"+targetVO.getDeliveryCharge()+"</td>";
-			szContent += "<td rowspan='4' align='center' >담당자</td>";
-			szContent += "<td colspan='3' align='left'>&nbsp;이름:"+targetVO.getOrderCharge()+"</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='5' align='left'>&nbsp;연락처:"+targetVO.getMobilePhone()+"</td>";
-			szContent += "<td colspan='5' align='left'>&nbsp;연락처:"+targetVO.getOrderMobilePhone()+"</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='5' align='left'>&nbsp;tel/fax:"+targetVO.getTelNumber()+"/"+targetVO.getFaxNumber()+"</td>";
-			szContent += "<td colspan='5' align='left'>&nbsp;tel/fax:"+targetVO.getOrderTelNumber()+"/"+targetVO.getOrderFaxNumber()+"</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='5' align='left'>&nbsp;email:"+targetVO.getEmail()+"</td>";
-			szContent += "<td colspan='5' align='left'>&nbsp;email:"+targetVO.getOrderEmail()+"</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td align='center' >발주일자</td>";
-			szContent += "<td width='70' align='center'><div align='right'>"+orderDates[0]+"년 </div></td>";
-			szContent += "<td width='50' align='center'>&nbsp;"+orderDates[1]+"</td>";
-			szContent += "<td width='50' align='center'>월</td>";
-			szContent += "<td width='50' align='center'>&nbsp;"+orderDates[2]+"</td>";
-			szContent += "<td width='50' align='center'>일</td>";
-			szContent += "<td rowspan='2' align='center' >배송주소</td>";
-			szContent += "<td rowspan='2' colspan='3' align='left'>&nbsp;"+targetVO.getOrderAddress()+"</td>";
-			szContent += "</tr>";
-            szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td align='center' >납품일자</td>";
-			szContent += "<td width='70' align='center'><div align='right'>"+deliveryDates[0]+"년 </div></td>";
-			szContent += "<td width='50' align='center'>&nbsp;"+deliveryDates[1]+"</td>";
-			szContent += "<td width='50' align='center'>월</td>";
-			szContent += "<td width='50' align='center'>&nbsp;"+deliveryDates[2]+"</td>";
-			szContent += "<td width='50' align='center'>일</td>";
-			szContent += "</tr>";
-            szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td align='center'>&nbsp;납품방법</td>";
-			szContent += "<td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryMethod()+"</td>";
-			szContent += "<td align='center'>&nbsp;결제방법</td>";
-			szContent += "<td colspan='3' align='center'>&nbsp;"+targetVO.getPayMethod()+"</td>";
-			szContent += "</tr>";
-
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='2' align='center' >메모</td>";
-			szContent += "<td colspan='8' align='left'>"+targetVO.getMemo()+"</td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td colspan='10' align='center' height='27'><div align='left'>1.아래와 같이 발주합니다.</div></td>";
-			szContent += "</tr>";
-			szContent += "<tr bgcolor='#FFFFFF'>";
-			szContent += "<td width='60' align='center' height='27'>번 호</td>";
-			szContent += "<td colspan='7' align='center'>상 품 명</td>";
-			szContent += "<td width='60' align='center'>수량</td>";
-			szContent += "<td align='center'>비 고</td>";
-			szContent += "</tr>";
 			
 			int num=0;
 			int totalnum=orders.length;
 			int etcnum=0;
+			int maxlist=23;
+			int resultlist=totalnum;
+			
 			String[] r_data=null;
 			
-			if(totalnum<23){
-				
-				etcnum=23-totalnum;
-				
-			}
+			int pagenum = Math.floorDiv(totalnum, maxlist);
 			
-			for(int i=0;i<totalnum;i++){
-				
-				num=i+1;
-				r_data = StringUtil.getTokens(orders[i], "|");
+			for(int x=0; x<=pagenum; x++){
 			
-		        szContent += "<tr bgcolor='#FFFFFF'>";
-				szContent += "<td width='60' align='center' height='27'>"+num+"</td>";
-				szContent += "<td colspan='7' align='left'>"+StringUtil.nvl(r_data[1],"")+"</td>";
-				szContent += "<td width='60' align='center'>"+StringUtil.nvl(r_data[3],"")+"</td>";
-				szContent += "<td  align='left'>"+StringUtil.nvl(r_data[11],"")+"</td>";
+				szContent += "<table width='612' border='0' align='center' cellpadding='0' cellspacing='0'>";
+				szContent += "<tr>"; 
+				szContent += "<td width='516' valign='top'>";
+				szContent += "<table width='722' height='900' border='0' align='center' cellpadding='1' cellspacing='1' bgcolor='#000000'>";
+				szContent += "<tr bgcolor='#FFFFFF'>"; 
+				szContent += "<td height='55' colspan='12' align='center'><span class='style1'>상 품 주 문 서</span></td>";
 				szContent += "</tr>";
-			
-			}
-			
-			for(int y=0;y<etcnum;y++){
-				
 				szContent += "<tr bgcolor='#FFFFFF'>";
-				szContent += "<td width='60' align='center' height='27'>&nbsp;</td>";
-				szContent += "<td colspan='7' align='center'>&nbsp;</td>";
-				szContent += "<td width='60' align='center'>&nbsp;</td>";
-				szContent += "<td  align='center'>&nbsp;</td>";
+				szContent += " <td width='30' rowspan='8' width='50' align='center' style='background-color:#E4E4E4'>수<br>신</td>";
+				szContent += " <td width='60' align='center' width='110'>&nbsp;회사명</td>";
+				szContent += " <td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryName()+"</td>";
+				szContent += " <td width='30' rowspan='8' width='50' align='center' style='background-color:#E4E4E4'>발<br>신</td>";
+				szContent += " <td width='60' align='center' width='110'>&nbsp;회사명</td>";
+				szContent += " <td colspan='3' align='center'>&nbsp;"+targetVO.getOrderName()+"</td>";
 				szContent += "</tr>";
+				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<td rowspan='4' align='center' >담당자</td>";
+				szContent += "<td colspan='5' align='left'>&nbsp;성명:"+targetVO.getDeliveryCharge()+"</td>";
+				szContent += "<td rowspan='4' align='center' >담당자</td>";
+				szContent += "<td colspan='3' align='left'>&nbsp;성명:"+targetVO.getOrderCharge()+"</td>";
+				szContent += "</tr>";
+				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<td colspan='5' align='left'>&nbsp;핸드폰:"+targetVO.getMobilePhone()+"</td>";
+				szContent += "<td colspan='3' align='left'>&nbsp;핸드폰:"+targetVO.getOrderMobilePhone()+"</td>";
+				szContent += "</tr>";
+				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<td colspan='5' align='left'>&nbsp;TEL:"+targetVO.getTelNumber()+"&nbsp;/&nbsp;FAX:"+targetVO.getFaxNumber()+"</td>";
+				szContent += "<td colspan='3' align='left'>&nbsp;TEL:"+targetVO.getOrderTelNumber()+"&nbsp;/&nbsp;FAX:"+targetVO.getOrderFaxNumber()+"</td>";
+				szContent += "</tr>";
+				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<td colspan='5' align='left'>&nbsp;email:"+targetVO.getEmail()+"</td>";
+				szContent += "<td colspan='3' align='left'>&nbsp;email:"+targetVO.getOrderEmail()+"</td>";
+				szContent += "</tr>";
+				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<td align='center' >발주일자</td>";
+				szContent += "<td width='50' align='center'><div align='right'>"+orderDates[0]+"년 </div></td>";
+				szContent += "<td width='30' align='center'>&nbsp;"+orderDates[1]+"</td>";
+				szContent += "<td width='30' align='center'>월</td>";
+				szContent += "<td width='30' align='center'>&nbsp;"+orderDates[2]+"</td>";
+				szContent += "<td width='30' align='center'>일</td>";
+				szContent += "<td rowspan='2' align='center' >배송주소</td>";
+				szContent += "<td rowspan='2' colspan='3' align='left'>&nbsp;"+targetVO.getOrderAddress()+"</td>";
+				szContent += "</tr>";
+	            szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<td align='center' >납품일자</td>";
+				szContent += "<td align='center'><div align='right'>"+deliveryDates[0]+"년 </div></td>";
+				szContent += "<td align='center'>&nbsp;"+deliveryDates[1]+"</td>";
+				szContent += "<td align='center'>월</td>";
+				szContent += "<td align='center'>&nbsp;"+deliveryDates[2]+"</td>";
+				szContent += "<td align='center'>일</td>";
+				szContent += "</tr>";
+	            szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<td align='center'>&nbsp;납품방법</td>";
+				szContent += "<td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryMethod()+"</td>";
+				szContent += "<td align='center'>&nbsp;결제방법</td>";
+				szContent += "<td colspan='3' align='center'>&nbsp;"+targetVO.getPayMethod()+"</td>";
+				szContent += "</tr>";
+	
+				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<td colspan='2' align='center' >메모</td>";
+				szContent += "<td colspan='10' align='left'>&nbsp;"+targetVO.getMemo()+"</td>";
+				szContent += "</tr>";
+				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<td colspan='12' align='center' height='27'><div align='left'>&nbsp;1.아래와 같이 발주합니다.</div></td>";
+				szContent += "</tr>";
+				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<td width='30' align='center' height='27'>번 호</td>";
+				szContent += "<td colspan='9' align='center'>상 품 명</td>";
+				szContent += "<td width='40' align='center'>수량</td>";
+				szContent += "<td width='180' align='center'>비 고</td>";
+				szContent += "</tr>";
+				
+				if(resultlist<=maxlist){
+					
+					etcnum=maxlist-resultlist;
+					
+					for(int i=0;i<resultlist;i++){
+						num++;
+						r_data = StringUtil.getTokens(orders[num-1], "|");
+	
+				        szContent += "<tr bgcolor='#FFFFFF'>";
+						szContent += "<td align='center' height='27'>"+num+"</td>";
+						szContent += "<td colspan='9' align='left'>&nbsp;"+StringUtil.nvl(r_data[1],"")+"</td>";
+						szContent += "<td align='center'>"+StringUtil.nvl(r_data[3],"")+"</td>";
+						szContent += "<td  align='left'>&nbsp;"+StringUtil.nvl(r_data[11],"")+"</td>";
+						szContent += "</tr>";
+				
+					}
+	
+					for(int y=0;y<etcnum;y++){
+						
+						szContent += "<tr bgcolor='#FFFFFF'>";
+						szContent += "<td align='center' height='27'>&nbsp;</td>";
+						szContent += "<td colspan='9' align='center'>&nbsp;</td>";
+						szContent += "<td align='center'>&nbsp;</td>";
+						szContent += "<td  align='center'>&nbsp;</td>";
+						szContent += "</tr>";
+				
+					}
+					
+				}else if(resultlist>maxlist){
+					
+					for(int z=0;z<maxlist;z++){
+						num++;
+						r_data = StringUtil.getTokens(orders[num-1], "|");
+						
+						szContent += "<tr bgcolor='#FFFFFF'>";
+						szContent += "<td align='center' height='27'>"+num+"</td>";
+						szContent += "<td colspan='9' align='left'>&nbsp;"+StringUtil.nvl(r_data[1],"")+"</td>";
+						szContent += "<td align='center'>"+StringUtil.nvl(r_data[3],"")+"</td>";
+						szContent += "<td  align='left'>&nbsp;"+StringUtil.nvl(r_data[11],"")+"</td>";
+						szContent += "</tr>";
+						
+					}
+					
+					resultlist=resultlist-maxlist;
+					
+				}
 			
 			}
-		
 
 			szContent += "</table>";
 			szContent += "</div>";
-
 			szContent += "</body>";
 			szContent += " </html>";
-
 			szContent += "</html>";
-	        
 			szContent += "</html>";
-
 	        
 	        out.write(szContent.getBytes());                        // 파일에 쓰기
 	        out.close();                                            // 파일 쓰기 스트림 닫기
@@ -990,7 +1011,7 @@ public class OrderController {
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
         
@@ -1129,7 +1150,7 @@ public class OrderController {
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -1485,7 +1506,7 @@ public class OrderController {
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
         
@@ -1544,7 +1565,7 @@ public class OrderController {
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -1598,7 +1619,7 @@ public class OrderController {
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
         
@@ -1652,13 +1673,14 @@ public class OrderController {
 		                           String category,
 		                           String productCode,
 		                           String productName,
-		                           String etc) throws BizException 
+		                           String etc,
+		                           String idx) throws BizException 
     {
         
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start [orderCode]:"+orderCode+"[productCode]:"+productCode+"[productName]:"+productName+"[etc]:"+etc);
+		logger.info("["+logid+"] Controller start [orderCode]:"+orderCode+"[productCode]:"+productCode+"[productName]:"+productName+"[etc]:"+etc+"[idx]:"+idx);
 
         ModelAndView mv = new ModelAndView();
         
@@ -1669,7 +1691,7 @@ public class OrderController {
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
         
@@ -1679,6 +1701,7 @@ public class OrderController {
         mv.addObject("productCode", productCode);
         mv.addObject("productName", productName);
         mv.addObject("etc", etc);
+        mv.addObject("idx", idx);
         
         CommentVO commentVO = new CommentVO();
         
@@ -1730,7 +1753,7 @@ public class OrderController {
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -1778,7 +1801,7 @@ public class OrderController {
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
         
@@ -1848,7 +1871,7 @@ public class OrderController {
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -2066,23 +2089,71 @@ public class OrderController {
       return "order0030";
     }
     /**
-   	 * Simply selects the home view to render by returning its name.
-   	 * @throws BizException
-   	 */
+     * 검수대상 상세조회
+     * 
+     * @param orderCode
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
     @RequestMapping(value = "/order/orderdetailprint")
-   	public ModelAndView orderDetailprint(@ModelAttribute("orderVO") OrderVO orderVO, HttpServletRequest request) throws BizException 
-       {
+    public ModelAndView orderDetailPrint( HttpServletRequest request, 
+    		                              HttpServletResponse response,
+    		                              String orderCode) throws BizException 
+    {   	
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-    	logger.info("["+logid+"] Controller start : orderVO" + orderVO);
-		logger.info("["+logid+"] @@@@@@@@ : targetVO.getDeliveryEmail" + orderVO.getEmail());
-   		ModelAndView mv = new ModelAndView();
-   		
-   		mv.setViewName("/order/orderDetailPrint");
-   		
-   		return mv;
-   	}
+		logger.info("["+logid+"] Controller start : orderCode : [" + orderCode+"]");
+
+        ModelAndView mv = new ModelAndView();
+        List<OrderVO> orderDetailList = null;
+        
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/loginForm");
+       		return mv;
+		}
+
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+         
+        String strToday = simpleDateFormat.format(currentTime);
+        
+        OrderVO orderConVO = new OrderVO();
+        OrderVO orderVO = new OrderVO();
+
+        orderConVO.setOrderCode(orderCode);
+
+        // 조회조건저장
+        mv.addObject("orderConVO", orderConVO);
+        
+        //검수대상 정보
+        orderVO=orderSvc.getOrderDetail(orderConVO);
+        
+        //검수대상 상세정보
+        orderDetailList=orderSvc.getOrderDetailList(orderConVO);
+ 
+        mv.addObject("orderVO", orderVO);
+        mv.addObject("orderDetailList", orderDetailList);
+   
+        mv.setViewName("/order/orderDetailPrint");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
     /**
    	 * Simply selects the home view to render by returning its name.
    	 * @throws BizException
@@ -2102,7 +2173,7 @@ public class OrderController {
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));   
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -2169,7 +2240,7 @@ public class OrderController {
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));    
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/logout");
+        	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
         

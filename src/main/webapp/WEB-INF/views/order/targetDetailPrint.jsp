@@ -81,8 +81,8 @@ window.print();
 				<td colspan='3' align='left'>&nbsp;핸드폰:${targetVO.orderMobilePhone}</td>
 				</tr>
 				<tr bgcolor='#FFFFFF'>
-				<td colspan='5' align='left'>&nbsp;전화번호:${targetVO.telNumber}&nbsp;/&nbsp;FAX:${targetVO.faxNumber}</td>
-				<td colspan='3' align='left'>&nbsp;전화번호:${targetVO.orderTelNumber}&nbsp;/&nbsp;FAX:${targetVO.orderFaxNumber}</td>
+				<td colspan='5' align='left'>&nbsp;TEL:${targetVO.telNumber}&nbsp;/&nbsp;FAX:${targetVO.faxNumber}</td>
+				<td colspan='3' align='left'>&nbsp;TEL:${targetVO.orderTelNumber}&nbsp;/&nbsp;FAX:${targetVO.orderFaxNumber}</td>
 				</tr>
 				<tr bgcolor='#FFFFFF'>
 				<td colspan='5' align='left'>&nbsp;email :${targetVO.email}</td>
@@ -189,7 +189,5 @@ window.print();
 			%>
 				</div>
 
-				</body>
-				 </html>
-
-				</html>
+			</body>
+		</html>
