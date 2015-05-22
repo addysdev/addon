@@ -43,6 +43,7 @@
                     });
             }
             ,close:function(){
+         
                 $('#recoveryDetailView').empty();
             }
         });

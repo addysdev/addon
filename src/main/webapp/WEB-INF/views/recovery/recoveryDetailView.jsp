@@ -314,6 +314,7 @@ function fcRecovery_complete(){
                     });
             }
             ,close:function(){
+            	$('#memoList').empty();
                 $('#memoManage').empty();
             }
         });
@@ -410,10 +411,15 @@ function  fcEtc_detail(orderCode,productCode,productName,etc) {
                 });
         }
         ,close:function(){
+        	$('#etcList').empty();
             $('#etcManage').empty();
         }
     });
 };
+
+$(window).unload(function() {
+	 // alert('Handler for .unload() called.');
+	});
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -449,8 +455,8 @@ function  fcEtc_detail(orderCode,productCode,productName,etc) {
           <th class='text-center'><c:out value="${recoveryVO.recoveryClosingDate}"></c:out></th>	
       	</tr>
       	<tr>
-          <th class='text-center' style="background-color:#E6F3FF">메모&nbsp;<img id="etcbtn" onClick="fcMemo_detail('${recoveryVO.recoveryCode}','${recoveryVO.memo}')" src="<%= request.getContextPath()%>/images/common/icon_memo.gif" width="16" height="16" align="absmiddle" title="메모">
-          <button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcMemo_detail('${recoveryVO.recoveryCode}','${recoveryVO.memo}')" >관리(${recoveryVO.memoCnt})</button></th>
+          <th class='text-center' style="background-color:#E6F3FF">메모&nbsp;<span id="memoCnt" style="color:blue">(${recoveryVO.memoCnt})</span>
+          <button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcMemo_detail('${recoveryVO.recoveryCode}','${recoveryVO.memo}')" >관리</button></th>
           <th colspan='5' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${recoveryVO.memo}" placeholder="메모" disabled /></th>
       	</tr>
 	  </table>
@@ -459,12 +465,12 @@ function  fcEtc_detail(orderCode,productCode,productName,etc) {
 	 
      <form:form commandName="recoveryListVO" id="recoveryDetailListForm" name="recoveryDetailListForm" method="post" action="" >
       <p> <span class="glyphicon glyphicon-asterisk"></span> 
-        <span style="color:blue"> [전체갯수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryDetailList.size()}" /> 건  [회수금액 Total] :</span>
+        <span style="color:blue"> [품목건수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryDetailList.size()}" /> 건  [회수합계 금액] :</span>
         <span id="totalRecoveryAmt" style="color:gray">
         </span>
       </p>  
       <p><span class="glyphicon glyphicon-asterisk"></span> 
-          <span style="color:blue"> [검수금액 Total] :</span>
+          <span style="color:blue"> [검수합계 금액] :</span>
           <span id="totalRecoveryResultAmt" style="color:red">
         </span>
       </p>       
@@ -557,10 +563,6 @@ function  fcEtc_detail(orderCode,productCode,productName,etc) {
 	  </table>
 	 </form:form>
 	</div>
-	<div id="memoManage"  title="메모관리"></div>
-    <!-- //메모 상세화면 -->
-    <div id="etcManage"  title="비고"></div>
-    <!-- //비고 상세화면 -->
 	<script type="text/javascript">
 
     totalRecoveryAmt();

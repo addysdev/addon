@@ -124,13 +124,18 @@ public class MasterController {
         
         // 사용자 세션정보
         HttpSession session = request.getSession();
-        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
         
         UserManageVO userConVO = new UserManageVO();
         
-        userConVO.setUserId(userId);
-        userConVO.setGroupId(groupId);
+        userConVO.setUserId(strUserId);
+        userConVO.setGroupId(strGroupId);
 
         // 조회조건저장
         mv.addObject("userConVO", userConVO);
@@ -174,6 +179,17 @@ public class MasterController {
 		logger.info("["+logid+"] Controller start : productConVO" + productConVO);
 
         ModelAndView mv = new ModelAndView();
+        
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
+        
         List<ProductMasterVO> productList = null;
 
         // 조회조건 null 일때 공백처리
@@ -249,8 +265,15 @@ public class MasterController {
    			
      ModelAndView mv = new ModelAndView();
 
+     // 사용자 세션정보
      HttpSession session = request.getSession();
-     String strUserId = (String)session.getAttribute("strUserId");
+     String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+     String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+     
+     if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+     	mv.setViewName("/addys/logout");
+    		return mv;
+		}
 
      ResourceBundle rb = ResourceBundle.getBundle("config");
      String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
@@ -422,6 +445,16 @@ public class MasterController {
 	
 	   ModelAndView mv = new ModelAndView();
 	   
+       // 사용자 세션정보
+       HttpSession session = request.getSession();
+       String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+       String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+       
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+       	mv.setViewName("/addys/logout");
+      		return mv;
+		}
+	   
 	   ProductMasterVO productConVO = new ProductMasterVO();
 	   ProductMasterVO productMasterVO = new ProductMasterVO();
 	   StockMasterVO stockConVO = new StockMasterVO();
@@ -499,9 +532,16 @@ public class MasterController {
 	    logger.info("["+logid+"] Controller start : fileVO" + fileVO);
 	  			
 	    ModelAndView mv = new ModelAndView();
-	
-	    HttpSession session = request.getSession();
-	    String strUserId = (String)session.getAttribute("strUserId");
+	    
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
 	
 	    ResourceBundle rb = ResourceBundle.getBundle("config");
 	    String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
@@ -729,8 +769,15 @@ public class MasterController {
     			
       ModelAndView mv = new ModelAndView();
 
+      // 사용자 세션정보
       HttpSession session = request.getSession();
-      String strUserId = (String)session.getAttribute("strUserId");
+      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+      
+      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+      	mv.setViewName("/addys/logout");
+     		return mv;
+		}
 
       ResourceBundle rb = ResourceBundle.getBundle("config");
       String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
@@ -881,8 +928,14 @@ public class MasterController {
         
         // 사용자 세션정보
         HttpSession session = request.getSession();
-        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
+        
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
         Date currentTime = new Date();
@@ -892,14 +945,14 @@ public class MasterController {
         
         stockConVO.setStart_stockDate(strToday);
         stockConVO.setEnd_stockDate(strToday);
-        stockConVO.setGroupId(groupId);
+        stockConVO.setGroupId(strGroupId);
        
         // 조회조건저장
         mv.addObject("stockConVO", stockConVO);
         
         //조직정보 조회
         GroupVO group = new GroupVO();
-        group.setGroupId(groupId);
+        group.setGroupId(strGroupId);
         List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
         mv.addObject("group_comboList", group_comboList);
        
@@ -934,6 +987,17 @@ public class MasterController {
 		logger.info("["+logid+"] Controller start : stockConVO" + stockConVO);
 
         ModelAndView mv = new ModelAndView();
+        
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
+        
         List<StockVO> stockList = null;
 
         // 조회조건저장
@@ -969,14 +1033,19 @@ public class MasterController {
    		
    		ModelAndView mv = new ModelAndView();
    		
-   	    // 사용자 세션정보
+   	  // 사용자 세션정보
         HttpSession session = request.getSession();
-        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
         
         StockVO stockConVO = new StockVO();
         
-        stockConVO.setGroupId(groupId);
+        stockConVO.setGroupId(strGroupId);
         
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -990,7 +1059,7 @@ public class MasterController {
 
         //조직정보 조회
         GroupVO group = new GroupVO();
-        group.setGroupId(groupId);
+        group.setGroupId(strGroupId);
         List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
         mv.addObject("group_comboList", group_comboList);
    		
@@ -1025,9 +1094,16 @@ public class MasterController {
      logger.info("["+logid+"] Controller start : fileVO" + fileVO);
    			
      ModelAndView mv = new ModelAndView();
-
+     
+     // 사용자 세션정보
      HttpSession session = request.getSession();
-     String strUserId = (String)session.getAttribute("strUserId");
+     String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+     String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+     
+     if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+     	mv.setViewName("/addys/logout");
+    		return mv;
+		}
 
      ResourceBundle rb = ResourceBundle.getBundle("config");
      String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
@@ -1201,6 +1277,16 @@ public class MasterController {
 	
 	   ModelAndView mv = new ModelAndView();
 	   
+	   // 사용자 세션정보
+       HttpSession session = request.getSession();
+       String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+       String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+       
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+       	mv.setViewName("/addys/logout");
+      		return mv;
+		}
+	   
 	   StockVO stockDetailConVO = new StockVO();
 	   
 	   stockDetailConVO.setStockDate(stockDate);
@@ -1240,6 +1326,17 @@ public class MasterController {
 	logger.info("["+logid+"] Controller start : stockDetailConVO" + stockDetailConVO);
 
        ModelAndView mv = new ModelAndView();
+       
+       // 사용자 세션정보
+       HttpSession session = request.getSession();
+       String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+       String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+       
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+       	mv.setViewName("/addys/logout");
+      		return mv;
+		}
+       
        List<StockVO> stockDetailList = null;
 
        // 조회조건저장
@@ -1289,8 +1386,14 @@ public class MasterController {
        
        // 사용자 세션정보
        HttpSession session = request.getSession();
-       String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-       String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+       String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+       String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+       
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+       	mv.setViewName("/addys/logout");
+      		return mv;
+		}
+       
        //오늘 날짜
        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
        Date currentTime = new Date();
@@ -1300,14 +1403,14 @@ public class MasterController {
        
        salesConVO.setStart_salesDate(strToday);
        salesConVO.setEnd_salesDate(strToday);
-       salesConVO.setGroupId(groupId);
+       salesConVO.setGroupId(strGroupId);
 
        // 조회조건저장
        mv.addObject("salesConVO", salesConVO);
        
        //조직정보 조회
        GroupVO group = new GroupVO();
-       group.setGroupId(groupId);
+       group.setGroupId(strGroupId);
        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
        mv.addObject("group_comboList", group_comboList);
       
@@ -1342,6 +1445,17 @@ public class MasterController {
 		logger.info("["+logid+"] Controller start : salesConVO" + salesConVO);
 
        ModelAndView mv = new ModelAndView();
+       
+       // 사용자 세션정보
+       HttpSession session = request.getSession();
+       String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+       String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+       
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+       	mv.setViewName("/addys/logout");
+      		return mv;
+		}
+       
        List<SalesVO> salesList = null;
 
        // 조회조건저장
@@ -1377,14 +1491,19 @@ public class MasterController {
   		
   		ModelAndView mv = new ModelAndView();
   		
-  		// 사용자 세션정보
+  		 // 사용자 세션정보
         HttpSession session = request.getSession();
-        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+ 		}
         
         SalesVO salesConVO = new SalesVO();
         
-        salesConVO.setGroupId(groupId);
+        salesConVO.setGroupId(strGroupId);
         
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -1398,7 +1517,7 @@ public class MasterController {
 
         //조직정보 조회
         GroupVO group = new GroupVO();
-        group.setGroupId(groupId);
+        group.setGroupId(strGroupId);
         List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
         mv.addObject("group_comboList", group_comboList);
   		
@@ -1434,8 +1553,16 @@ public class MasterController {
   			
     ModelAndView mv = new ModelAndView();
 
-    HttpSession session = request.getSession();
-    String strUserId = (String)session.getAttribute("strUserId");
+
+	// 사용자 세션정보
+   HttpSession session = request.getSession();
+   String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+   String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+   
+   if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+   	mv.setViewName("/addys/logout");
+  		return mv;
+	}
 
     ResourceBundle rb = ResourceBundle.getBundle("config");
     String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
@@ -1612,6 +1739,16 @@ public class MasterController {
 	
 	   ModelAndView mv = new ModelAndView();
 	   
+		// 사용자 세션정보
+	   HttpSession session = request.getSession();
+	   String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	   String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	   
+	   if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	   	mv.setViewName("/addys/logout");
+	  		return mv;
+		}
+	   
 	   SalesVO salesDetailConVO = new SalesVO();
 	   
 	   salesDetailConVO.setSalesDate(salesDate);
@@ -1651,6 +1788,17 @@ public class MasterController {
 	logger.info("["+logid+"] Controller start : salesDetailConVO" + salesDetailConVO);
 
       ModelAndView mv = new ModelAndView();
+      
+  	// 사용자 세션정보
+      HttpSession session = request.getSession();
+      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+      
+      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+      	mv.setViewName("/addys/logout");
+     		return mv;
+   	}
+      
       List<SalesVO> salesDetailList = null;
 
       // 조회조건저장
@@ -1699,10 +1847,15 @@ public class MasterController {
 
     ModelAndView mv = new ModelAndView();
       
-    // 사용자 세션정보
+	// 사용자 세션정보
     HttpSession session = request.getSession();
-    String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-    String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+    String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+    String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+    
+    if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+    	mv.setViewName("/addys/logout");
+   		return mv;
+ 	}
 
     mv.setViewName("/common/productSearch");
       
@@ -1735,6 +1888,17 @@ public class MasterController {
 		logger.info("["+logid+"] Controller start : productConVO" + productConVO);
 
       ModelAndView mv = new ModelAndView();
+      
+  	// 사용자 세션정보
+      HttpSession session = request.getSession();
+      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+      
+      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+      	mv.setViewName("/addys/logout");
+     		return mv;
+   	}
+      
       List<ProductMasterVO> productList = null;
 
       // 조회조건 null 일때 공백처리

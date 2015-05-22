@@ -34,6 +34,7 @@ encoding//src/main/webapp/WEB-INF/views/master/stockManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/master/stockPageList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/master/uploadResult.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/deferDetailView.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/order/deferReason.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/deferReasonList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/etcList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/etcManage.jsp=UTF-8

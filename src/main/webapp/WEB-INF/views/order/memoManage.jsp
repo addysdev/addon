@@ -11,6 +11,8 @@ function fcMemo_listSearch(){
                 data:$("#memoForm").serialize(),
            success: function(result) {
                commonDim(false);
+               alert($("#memoList"));
+               alert(result);
                $("#memoList").html(result);
            },
            error:function() {
@@ -37,7 +39,8 @@ function fcMemo_add(){
 	                data:$("#memoForm").serialize(),
 	           success: function(result) {
 	               commonDim(false);
-	               $("#memoList").html(result);
+	               $("#memoManage").html(result);
+	            //   alert(document.all('memoCnt').innerText);
 	           },
 	           error:function() {
 	               commonDim(false);
@@ -45,6 +48,7 @@ function fcMemo_add(){
 	    });
 	}
 }
+
 </SCRIPT>
 <!-- 사용자관리 -->
 <body>
@@ -68,12 +72,48 @@ function fcMemo_add(){
 	  </table>
 	  </form:form>
   <!-- //조회 -->
+	   <form:form commandName="commentVO" name="commentListForm" method="post" action="" >
+		      <table class="table table-striped">
+		      	<colgroup>
+			     <col width="3%" />
+		         <col width="15%" />
+		         <col width="20%" />
+		         <col width="*" />
+		        </colgroup>
+			    <thead>
+			      <tr>
+			        <th class='text-center'>no</th>
+		            <th class='text-center'>작성자</th>
+		            <th class='text-center'>작성일시</th>
+		            <th class='text-center'>메모</th>
+			      </tr>
+			    </thead>
+			    <tbody>
+			    	<c:if test="${!empty commentList}">
+		             <c:forEach items="${commentList}" var="commentVO" varStatus="status">
+		             <tr id="select_tr_${commentVO.idx}">
+		                 <td class='text-left'><c:out value="${status.count}"></c:out></td>
+		                 <td class='text-center'><c:out value="${commentVO.commentUserName}"></c:out></td>
+		                 <td class='text-center'><c:out value="${commentVO.commentDateTime}"></c:out></td>
+		                 <td class='text-left'><c:out value="${commentVO.comment}"></c:out></td>
+		                 </tr>
+		             </c:forEach>
+		            </c:if>
+		           <c:if test="${empty commentList}">
+		              <tr>
+		                  <td colspan='4' class='text-center'>조회된 데이터가 없습니다.</td>
+		              </tr>
+		          </c:if>
+			    </tbody>
+			  </table>
+			</form:form> 
+  
   <!-- 조회결과리스트 -->
   <div id=memoList>
   </div>
   <!-- //조회결과리스트 -->
 </div>
 <script>
-fcMemo_listSearch();
+//fcMemo_listSearch();
 </script>
 </body>

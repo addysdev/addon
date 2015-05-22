@@ -116,70 +116,20 @@ function fcOrder_process(){
     });
 }
 
-$(function() {
-    $( "#defermodifydialog" ).dialog({
-      modal : true, //주위를 어둡게
-      autoOpen: false,
-      show: {
-        effect: "blind",
-        duration: 1000
-      },
-      hide: {
-        effect: "explode",
-        duration: 1000
-      }
-    });
-
-    $( "#defermodifybtn" ).click(function() {
-      $( "#defermodifydialog" ).dialog( "open" );
-    });
-  });
-
-   $(function() {
-      $( "#defermodifypopclosebtn" ).click(function() {
-        $( "#defermodifydialog" ).dialog( "close" );
-      });
-    });
-
-   $(function() {
-	    $( "#defercanceldialog" ).dialog({
-	      modal : true, //주위를 어둡게
-	      autoOpen: false,
-	      show: {
-	        effect: "blind",
-	        duration: 1000
-	      },
-	      hide: {
-	        effect: "explode",
-	        duration: 1000
-	      }
-	    });
-
-	    $( "#defercancelbtn" ).click(function() {
-	      $( "#defercanceldialog" ).dialog( "open" );
-	    });
-	  });
-
-	   $(function() {
-	      $( "#defercancelpopclosebtn" ).click(function() {
-	        $( "#defercanceldialog" ).dialog( "close" );
-	      });
-	    });
-
-function fcDefer_modify(){
+function fcDefer_modify(reason){
 	
-    	if($("#defer_modify_reason_div").val()==''){
+    	if(reason==''){
     		alert('보류사유를 입력하세요!');
     		return;
     	}else{
-    		
+    		/*
     		var checkedCnt = $('input:checkbox[ name="deferCheck"]:checked').length;
 
         	if(checkedCnt <= 0){
             	alert("보류 대상을 선택해 주세요!");
             	return;
             }
-            
+            */
             var arrDeferProductId = "";
             $('input:checkbox[name="deferCheck"]').each(function() {
                 if ($(this).is(":checked")) {
@@ -209,7 +159,7 @@ function fcDefer_modify(){
 
             if (confirm('보류내용을 수정 하시겠습니까?')){ 
             	
-                document.deferDetailForm.deferReason.value=$("#defer_modify_reason_div").val();
+                document.deferDetailForm.deferReason.value=reason;
                 document.deferDetailForm.deferType.value='M';
                 
                 var paramString = $("#deferDetailForm").serialize()+ "&arrDeferProductId="+arrDeferProductId+'&'+$("#deferDetailListForm").serialize();
@@ -223,7 +173,7 @@ function fcDefer_modify(){
 		
 			        	resultMsg(result);
 	
-						$('#defermodifydialog').dialog('close');
+						$('#deferDialog').dialog('close');
 						$('#targetDetailView').dialog('close');
 						fcTarget_listSearch();
 							
@@ -231,6 +181,7 @@ function fcDefer_modify(){
 			          error:function(){
 	
 			          alert('호출오류!');
+			          $('#deferDialog').dialog('close');
 					  $('#targetDetailView').dialog('close');
 				     
 			          }
@@ -238,16 +189,16 @@ function fcDefer_modify(){
             }
     	}	
 	}
-    function fcDefer_cancel(){
+    function fcDefer_reason(reason){
     	
-    	if($("#defer_cancel_reason_div").val()==''){
+    	if(reason==''){
     		alert('보류폐기 사유를 입력하세요!');
     		return;
     	}
    	    
     	if (confirm('보류내용을 폐기 하시겠습니까?')){ 
    		 
-   		 document.deferDetailForm.deferReason.value=$("#defer_cancel_reason_div").val();
+   		 document.deferDetailForm.deferReason.value=reason;
    		 document.deferDetailForm.deferType.value='M';
 		 var paramString = $("#deferDetailForm").serialize();
 
@@ -260,7 +211,7 @@ function fcDefer_modify(){
 	
 	        	resultMsg(result);
 				
-	        	$('#defercanceldialog').dialog('close');
+	        	$('#deferDialog').dialog('close');
 				$('#targetDetailView').dialog('close');
 				fcTarget_listSearch();
 					
@@ -268,7 +219,7 @@ function fcDefer_modify(){
 	          error:function(){
 	          
 	          alert('보류 처리 호출오류!');
-	          $('#defercanceldialog').dialog('close');
+	          $('#deferDialog').dialog('close');
 			  $('#targetDetailView').dialog('close');
 			  fcTarget_listSearch();
 	          }
@@ -463,7 +414,34 @@ function fcDefer_modify(){
 		
     	$("input:checkbox[id='deferCheck']").prop("checked", $("#deferCheckAll").is(":checked"));
     }
+    function fcDefer_reasonpop(){
+    	//$('#targetEtcView').attr('title',productName);
+    	var url='<%= request.getContextPath() %>/order/deferreason';
 
+    	$('#deferDialog').dialog({
+            resizable : false, //사이즈 변경 불가능
+            draggable : true, //드래그 불가능
+            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+            width : 300,
+            height : 200,
+            modal : true, //주위를 어둡게
+
+            open:function(){
+                //팝업 가져올 url
+              //  $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode+'&productNaem='+encodeURIComponent(productName));
+                $(this).load(url);
+               
+                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+                    $("#deferDialog").dialog('close');
+
+                    });
+            }
+            ,close:function(){
+            	$('#deferDialog').empty();
+            }
+        });
+    };
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -484,19 +462,11 @@ function fcDefer_modify(){
 	      <tr>
 	      <div style="position:absolute; left:30px" >
 	      <!-- >button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button -->
-	      <button id="defercancelbtn"  type="button" class="btn btn-danger" >보류폐기</button>
+	      <button id="defercancelbtn"  type="button" class="btn btn-danger" onClick="fcDefer_reasonpop()" >보류폐기</button>
 	      <button id="deferlistbtn"  type="button" class="btn btn-info" onClick="fcDefer_list('${targetVO.orderCode}')">보류사유</button>
 	      <!--button type="button" class="btn btn-success" onClick="fcTargetDetail_print()">인쇄</button-->
           </div >
-          <div id="defermodifydialog" class="form-group" title="보류수정사유를 입력하세요">
-			<p><textarea style='height:82px' row="3" class="form-control" id="defer_modify_reason_div" name="defer_modify_reason_div"  value=""  placeholder="보류수정사유"/></p>
-			<button id="defermodifysavebtn" type="button" class="btn btn-primary" onClick="fcDefer_modify()">저장</button> <button id="defermodifypopclosebtn" type="button" class="btn btn-danger">취소</button>
-          </div>
-          <div id="defercanceldialog" class="form-group" title="보류폐기사유를 입력하세요">
-			<p><textarea style='height:82px' row="3" class="form-control" id="defer_cancel_reason_div" name="defer_cancel_reason_div"  value=""  placeholder="보류폐기사유"/></p>
-			<button id="defercancelsavebtn" type="button" class="btn btn-primary" onClick="fcDefer_cancel()">저장</button> <button id="defercancelpopclosebtn" type="button" class="btn btn-danger">취소</button>
-          </div>
-          <div style="position:absolute; right:30px" >
+           <div style="position:absolute; right:30px" >
           <!--button type="button" class="btn btn-primary" onClick="fcOrder_process()">발주</button -->
           </div>
           </tr>
@@ -657,7 +627,7 @@ function fcDefer_modify(){
 	  </table>
 	 </form:form>
 	</div>
-	<div id="deferReasonList"  title="보류사유"></div>
+
     <!-- //검수 상세처리화면 -->
 	<script type="text/javascript">
 

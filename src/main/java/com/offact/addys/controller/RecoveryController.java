@@ -108,12 +108,18 @@ public class RecoveryController {
         
         // 사용자 세션정보
         HttpSession session = request.getSession();
-        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
+
         
         RecoveryVO recoveryConVO = new RecoveryVO();
         
-        recoveryConVO.setGroupId(groupId);
+        recoveryConVO.setGroupId(strGroupId);
 
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -134,7 +140,7 @@ public class RecoveryController {
 
         //조직정보 조회
         GroupVO group = new GroupVO();
-        group.setGroupId(groupId);
+        group.setGroupId(strGroupId);
         List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
         mv.addObject("group_comboList", group_comboList);
         
@@ -231,6 +237,16 @@ public class RecoveryController {
 		logger.info("["+logid+"] Controller start ");
 
         ModelAndView mv = new ModelAndView();
+        
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
        
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -359,6 +375,11 @@ public class RecoveryController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
 
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -732,6 +753,16 @@ public class RecoveryController {
 			logger.info("["+logid+"] Controller start : reproductList");
 	    			
 	   		ModelAndView mv = new ModelAndView();
+	   		
+	        // 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	        
+	        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	        	mv.setViewName("/addys/logout");
+	       		return mv;
+			}
 	   		
 	   		mv.setViewName("/recovery/reProductAttach");
 	   		

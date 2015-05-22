@@ -290,7 +290,7 @@ SELECT sum(TOT.waitCnt) AS waitCnt,
            T1.addCnt,
            T1.lossCnt,
            T1.etc,
-           (select count(T6.idx) from adComment T6 Where T1.orderCode = T6.orderCode  And T1.productCode=T6.productCode And T6.commentCategory='06') as etcCnt,
+           (select count(T6.idx) from adComment T6 Where T1.orderCode = T6.orderCode  And T1.productCode=T6.productCode And T6.commentCategory='04') as etcCnt,
            T1.deferCheck,
            T1.orderCheck,
            T2.orderState

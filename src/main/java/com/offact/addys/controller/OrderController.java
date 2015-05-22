@@ -120,11 +120,17 @@ public class OrderController {
 
         ModelAndView mv = new ModelAndView();
         
-        // 사용자 세션정보
+      	// 사용자 세션정보
         HttpSession session = request.getSession();
-        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
+
         TargetVO targetConVO = new TargetVO();
         
         targetConVO.setGroupId(groupId);
@@ -258,6 +264,11 @@ public class OrderController {
         String strMobliePhone = StringUtil.nvl((String) session.getAttribute("strMobliePhone"));
         String strEmail = StringUtil.nvl((String) session.getAttribute("strEmail"));
         
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
+        
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
         Date currentTime = new Date();
@@ -361,6 +372,11 @@ public class OrderController {
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
 
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
+
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
         Date currentTime = new Date();
@@ -439,6 +455,10 @@ public class OrderController {
 	    	targetDetailVo.setEtc(StringUtil.nvl(r_data[11],""));
 			
 	        targetExcelList.add(targetDetailVo);
+	        //targetExcelList.add(targetDetailVo);
+	        //targetExcelList.add(targetDetailVo);
+	        //targetExcelList.add(targetDetailVo);
+	        //targetExcelList.add(targetDetailVo);
 		
 		}
 
@@ -963,10 +983,16 @@ public class OrderController {
 
         ModelAndView mv = new ModelAndView();
         
-        // 사용자 세션정보
+      	// 사용자 세션정보
         HttpSession session = request.getSession();
-        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
         
         OrderVO orderConVO = new OrderVO();
         
@@ -1096,10 +1122,16 @@ public class OrderController {
         ModelAndView mv = new ModelAndView();
         List<OrderVO> orderDetailList = null;
         
-        // 사용자 세션정보
+      	// 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
 
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -1446,15 +1478,34 @@ public class OrderController {
 
         ModelAndView mv = new ModelAndView();
         
-        // 사용자 세션정보
+      	// 사용자 세션정보
         HttpSession session = request.getSession();
-        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
         
         // 조회조건저장
         mv.addObject("orderCode", orderCode);
         mv.addObject("category", category);
         mv.addObject("memo", memo);
+        
+        CommentVO commentVO = new CommentVO();
+        
+        commentVO.setOrderCode(orderCode);
+        commentVO.setCommentCategory(category);
+        
+        List<CommentVO> commentList = new ArrayList();
+
+        //품목 비고 정보
+        commentList=commonSvc.getCommentList(commentVO);
+
+        mv.addObject("commentList", commentList);
+        
 
         mv.setViewName("/order/memoManage");
         
@@ -1486,10 +1537,16 @@ public class OrderController {
 
         ModelAndView mv = new ModelAndView();
  
-        // 사용자 세션정보
+      	// 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
 
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -1534,10 +1591,16 @@ public class OrderController {
 
         ModelAndView mv = new ModelAndView();
  
-        // 사용자 세션정보
+      	// 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
         
         commentVO.setCommentUserId(strUserId);
 
@@ -1551,6 +1614,11 @@ public class OrderController {
 	        String errMsg = e.getMessage();
 	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
 	    }
+        
+        // 조회조건저장
+        mv.addObject("orderCode", commentVO.getOrderCode());
+        mv.addObject("category", commentVO.getCommentCategory());
+        mv.addObject("memo", commentVO.getComment());
 
         List<CommentVO> commentList = new ArrayList();
 
@@ -1559,7 +1627,7 @@ public class OrderController {
 
         mv.addObject("commentList", commentList);
         
-        mv.setViewName("/order/memoList");
+        mv.setViewName("/order/memoManage");
         
         //log Controller execute time end
        	long t2 = System.currentTimeMillis();
@@ -1594,10 +1662,16 @@ public class OrderController {
 
         ModelAndView mv = new ModelAndView();
         
-        // 사용자 세션정보
+      	// 사용자 세션정보
         HttpSession session = request.getSession();
-        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
         
         // 조회조건저장
         mv.addObject("orderCode", orderCode);
@@ -1605,7 +1679,20 @@ public class OrderController {
         mv.addObject("productCode", productCode);
         mv.addObject("productName", productName);
         mv.addObject("etc", etc);
+        
+        CommentVO commentVO = new CommentVO();
+        
+        commentVO.setOrderCode(orderCode);
+        commentVO.setCommentCategory(category);
+        commentVO.setProductCode(productCode);
+        
+        List<CommentVO> commentList = new ArrayList();
 
+        //품목 비고 정보
+        commentList=commonSvc.getProductEtcList(commentVO);
+
+        mv.addObject("commentList", commentList);
+        
         mv.setViewName("/order/etcManage");
         
        //log Controller execute time end
@@ -1636,10 +1723,16 @@ public class OrderController {
 
         ModelAndView mv = new ModelAndView();
  
-        // 사용자 세션정보
+      	// 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
 
         List<CommentVO> commentList = new ArrayList();
 
@@ -1678,10 +1771,16 @@ public class OrderController {
 
         ModelAndView mv = new ModelAndView();
  
-        // 사용자 세션정보
+      	// 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
         
         commentVO.setCommentUserId(strUserId);
 
@@ -1695,6 +1794,13 @@ public class OrderController {
 	        String errMsg = e.getMessage();
 	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
 	    }
+        
+        // 조회조건저장
+        mv.addObject("orderCode", commentVO.getOrderCode());
+        mv.addObject("category", commentVO.getCommentCategory());
+        mv.addObject("productCode", commentVO.getProductCode());
+        mv.addObject("productName", commentVO.getProductName());
+        mv.addObject("etc", commentVO.getComment());
 
         List<CommentVO> commentList = new ArrayList();
 
@@ -1703,7 +1809,7 @@ public class OrderController {
 
         mv.addObject("commentList", commentList);
         
-        mv.setViewName("/order/etcList");
+        mv.setViewName("/order/etcManage");
         
         //log Controller execute time end
        	long t2 = System.currentTimeMillis();
@@ -1735,10 +1841,16 @@ public class OrderController {
 
         ModelAndView mv = new ModelAndView();
  
-        // 사용자 세션정보
+      	// 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
 
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -1976,13 +2088,24 @@ public class OrderController {
    	 * @throws BizException
    	 */
     @RequestMapping(value = "/order/orderexcellist")
-   	public ModelAndView orderExcelList(HttpServletRequest request) throws BizException 
+   	public ModelAndView orderExcelList(HttpServletRequest request, HttpServletResponse response) throws BizException 
        {
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
 
    		ModelAndView mv = new ModelAndView();
+   		
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));   
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
+
    		
    		String[] orderList = request.getParameterValues("seqs"); 		
    	    String[] r_data=null;
@@ -2005,6 +2128,7 @@ public class OrderController {
 	        orderDetailVo.setEtc(StringUtil.nvl(r_data[5],""));
 	        orderDetailVo.setCompanyCode(StringUtil.nvl(r_data[6],""));
 	        orderDetailVo.setGroupId(StringUtil.nvl(r_data[7],""));
+	        orderDetailVo.setBuyUserName(strUserName);
 			
 	        orderExcelList.add(orderDetailVo);
 		
@@ -2016,4 +2140,46 @@ public class OrderController {
    		
    		return mv;
    	}
+    /**
+     * 메모관리
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/deferreason")
+    public ModelAndView deferReason(HttpServletRequest request, 
+    		                       HttpServletResponse response,
+    		                       String deferType) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller deferReason start");
+
+        ModelAndView mv = new ModelAndView();
+        
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));    
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+		}
+        
+        mv.addObject("deferType", deferType);
+        mv.setViewName("/order/deferReason");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller deferReason end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
 }

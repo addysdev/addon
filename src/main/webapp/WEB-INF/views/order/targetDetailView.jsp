@@ -20,7 +20,7 @@ function fcTargetDetail_print(){
 	
 	
 	 var frm = document.targetDetailListForm;
-
+//alert(frm.seqs.length);
 	   	if(frm.seqs.length>1){
 	   		for(i=0;i<frm.seqs.length;i++){
 				frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
@@ -150,38 +150,11 @@ function fcOrder_process(){
     });
 }
 /*
- * 보류사유 입력화면
- */
-$(function() {
-    $( "#deferdialog" ).dialog({
-      modal : true, //주위를 어둡게
-      autoOpen: false,
-      show: {
-        effect: "blind",
-        duration: 1000
-      },
-      hide: {
-        effect: "explode",
-        duration: 1000
-      }
-    });
-
-    $( "#deferbtn" ).click(function() {
-      $( "#deferdialog" ).dialog( "open" );
-    });
-  });
-
-   $(function() {
-      $( "#deferpopclosebtn" ).click(function() {
-        $( "#deferdialog" ).dialog( "close" );
-      });
-    });
-/*
  * 보류등록
  */
-function fcDefer_regist(){
+function fcDefer_reason(reason){
 
-    	if($("#defer_reason_div").val()==''){
+    	if(reason==''){
     		alert('보류사유를 입력하세요!');
     		return;
     	}else{
@@ -225,7 +198,7 @@ function fcDefer_regist(){
 
             if (confirm('발주대상건을 보류처리 하시겠습니까?')){    
                 
-            	document.targetDetailForm.deferReason.value=$("#defer_reason_div").val();
+            	document.targetDetailForm.deferReason.value=reason;
                 var paramString = $("#targetDetailForm").serialize()+ "&arrDeferProductId="+arrDeferProductId+'&'+$("#targetDetailListForm").serialize();
      
 		  		$.ajax({
@@ -237,7 +210,7 @@ function fcDefer_regist(){
 		
 			        	resultMsg(result);
 	
-						$('#deferdialog').dialog('close');
+						$('#deferDialog').dialog('close');
 						$('#targetDetailView').dialog('close');
 						fcTarget_listSearch();
 							
@@ -245,7 +218,7 @@ function fcDefer_regist(){
 			          error:function(){
 	
 			          alert('보류 처리 호출오류!');
-			          $('#deferdialog').dialog('close');
+			          $('#deferDialog').dialog('close');
 					  $('#targetDetailView').dialog('close');
 				      fcTarget_listSearch();
 			          }
@@ -299,7 +272,7 @@ function fcDefer_regist(){
 
  	  totalamt=supplyamt+vatamt;
  	
- 	  document.all('totalOrderAmt').innerText='[합계] : '+addCommaStr(''+totalamt)+' 원  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
+ 	  document.all('totalOrderAmt').innerText=' '+addCommaStr(''+totalamt)+' 원';//  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
  }
  /*
   * 재고증가
@@ -424,7 +397,34 @@ function fcDefer_regist(){
 		
     	$("input:checkbox[id='deferCheck']").prop("checked", $("#deferCheckAll").is(":checked"));
     }
+    function fcDefer_reasonpop(){
+    	//$('#targetEtcView').attr('title',productName);
+    	var url='<%= request.getContextPath() %>/order/deferreason';
 
+    	$('#deferDialog').dialog({
+            resizable : false, //사이즈 변경 불가능
+            draggable : true, //드래그 불가능
+            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+            width : 300,
+            height : 200,
+            modal : true, //주위를 어둡게
+
+            open:function(){
+                //팝업 가져올 url
+              //  $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode+'&productNaem='+encodeURIComponent(productName));
+                $(this).load(url);
+               
+                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+                    $("#deferDialog").dialog('close');
+
+                    });
+            }
+            ,close:function(){
+            	$('#deferDialog').empty();
+            }
+        });
+    };
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -445,13 +445,9 @@ function fcDefer_regist(){
 	      </h4>
 	      <tr>
 	      <div style="position:absolute; left:30px" > 
-	      <button id="deferbtn" type="button" class="btn btn-primary" >보류</button>
+	      <button id="deferbtn" type="button" class="btn btn-primary" onClick="fcDefer_reasonpop()" >보류</button>
 	      <button type="button" class="btn btn-success" onClick="fcTargetDetail_print()">인쇄</button>
           </div >
-          <div id="deferdialog" class="form-group" title="보류사유를 입력하세요">
-			<p><textarea style='height:82px' row="3" class="form-control" id="defer_reason_div" name="defer_reason_div"  value=""  placeholder="보류사유"/></p>
-			<button id="defersavebtn" type="button" class="btn btn-primary" onClick="fcDefer_regist()">저장</button> <button id="deferpopclosebtn" type="button" class="btn btn-danger">취소</button>
-          </div>
           <div style="position:absolute; right:30px" > 
           <button type="button" class="btn btn-primary" onClick="fcOrder_process()">발주</button>
           </div>
@@ -545,7 +541,7 @@ function fcDefer_regist(){
 	 
      <form:form commandName="targetListVO" id="targetDetailListForm" name="targetDetailListForm" method="post" action="" >
       <p> <span class="glyphicon glyphicon-asterisk"></span> 
-          <span style="color:blue"> [전체갯수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetDetailList.size()}" /> 건</span>
+          <span style="color:blue"> [품목건수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetDetailList.size()}" /> 건   [발주 합계금액]</span>
           <span id="totalOrderAmt" style="color:red">
           </span>
       </p>       

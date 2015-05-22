@@ -120,6 +120,11 @@
     <!--회수 상세처리화면-->
   <div id="recoveryDetailView"  title="회수 상세처리화면"></div>
   <!-- //회수 상세처리화면 -->
+  
+  	<div id="memoManage"  title="메모관리"></div>
+    <!-- //메모 상세화면 -->
+    <div id="etcManage"  title="비고"></div>
+    <!-- //비고 상세화면 -->
 </div>
 <br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>

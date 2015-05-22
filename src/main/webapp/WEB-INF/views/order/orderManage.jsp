@@ -100,7 +100,13 @@
   <!-- 검수 상세처리화면-->
   <div id="orderDetailView"  title="검수 처리화면"></div>
   <!-- //검수 상세처리화면 -->
+  
+  <div id="memoManage"  title="메모관리"></div>
+    <!-- //보류 상세화면 -->
+    <div id="etcManage"  title="비고"></div>
 </div>
+<div id="deferDialog"  title="보류사유를 입력하세요"></div>
+<div id="deferReasonList"  title="보류사유"></div>
 <br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>
 <script type="text/javascript">

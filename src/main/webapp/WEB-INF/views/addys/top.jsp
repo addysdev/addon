@@ -114,3 +114,9 @@
     </div>
   </body>
 </html>
+<script>
+//alert('${strUserId}');
+if('${strUserId}'==null || '${strUserId}'=='null' ){
+	goLogout();
+}
+</script>

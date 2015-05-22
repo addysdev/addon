@@ -107,22 +107,27 @@ public class ManageController {
 
         ModelAndView mv = new ModelAndView();
         
-        // 사용자 세션정보
+    	// 사용자 세션정보
         HttpSession session = request.getSession();
-        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+     	}
         
         UserManageVO userConVO = new UserManageVO();
         
-        userConVO.setUserId(userId);
-        userConVO.setGroupId(groupId);
+        userConVO.setUserId(strUserId);
+        userConVO.setGroupId(strGroupId);
 
         // 조회조건저장
         mv.addObject("userConVO", userConVO);
 
         //조직정보 조회
         GroupVO group = new GroupVO();
-        group.setGroupId(groupId);
+        group.setGroupId(strGroupId);
         List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
         mv.addObject("group_comboList", group_comboList);
        
@@ -157,6 +162,17 @@ public class ManageController {
 		logger.info("["+logid+"] Controller start : userConVO" + userConVO);
 
         ModelAndView mv = new ModelAndView();
+        
+    	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+     	}
+        
         List<UserManageVO> userList = null;
         UserManageVO userDetail = null;
 
@@ -216,11 +232,17 @@ public class ManageController {
 		
 		UserManageVO userVO = new UserManageVO();
 		
-		// 사용자 세션정보
+    	// 사용자 세션정보
         HttpSession session = request.getSession();
-        String createUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+     	}
 		
-		userVO.setCreateUserId(createUserId);
+		userVO.setCreateUserId(strUserId);
 		mv.addObject("userVO", userVO);
 		
 		//조직정보 조회
@@ -293,13 +315,18 @@ public class ManageController {
 		
 		UserManageVO userVO = new UserManageVO();
 		
-		// 사용자 세션정보
+    	// 사용자 세션정보
         HttpSession session = request.getSession();
-        String updateuserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+     	}
         userVO = userManageSvc.getUserDetail(userId);
 		
-		userVO.setUpdateUserId(updateuserId);
+		userVO.setUpdateUserId(strUserId);
 		mv.addObject("userVO", userVO);
 		
 		 //조직정보 조회
@@ -429,8 +456,15 @@ public class ManageController {
     			
       ModelAndView mv = new ModelAndView();
 
+   // 사용자 세션정보
       HttpSession session = request.getSession();
-      String strUserId = (String)session.getAttribute("strUserId");
+      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+      
+      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+      	mv.setViewName("/addys/logout");
+     		return mv;
+   	}
 
       ResourceBundle rb = ResourceBundle.getBundle("config");
       String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
@@ -586,15 +620,20 @@ public class ManageController {
 
         ModelAndView mv = new ModelAndView();
         
-        // 사용자 세션정보
+     // 사용자 세션정보
         HttpSession session = request.getSession();
-        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+     	}
         
         CompanyManageVO companyConVO = new CompanyManageVO();
         
-        companyConVO.setUserId(userId);
-        companyConVO.setGroupId(groupId);
+        companyConVO.setUserId(strUserId);
+        companyConVO.setGroupId(strGroupId);
 
         // 조회조건저장
         mv.addObject("userConVO", companyConVO);
@@ -630,6 +669,16 @@ public class ManageController {
 		logger.info("["+logid+"] Controller start : companyConVO" + companyConVO);
 
         ModelAndView mv = new ModelAndView();
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/logout");
+       		return mv;
+     	}
+        
         List<CompanyManageVO> companyList = null;
 
         // 조회조건 null 일때 공백처리
