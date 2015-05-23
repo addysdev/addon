@@ -43,7 +43,7 @@ function fcOrderDetail_print(orderCode){
 	    
 	            var frm = document.orderDetailListForm;
 	    
-	           	if(frm.seqs.length>1){
+	           	if(frm.seqs.length!=undefined){
 	           		for(i=0;i<frm.seqs.length;i++){
 	   					frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
 	           			'|'+fillSpace(frm.barCode[i].value)+'|'+fillSpace(deleteCommaStr(frm.orderResultPrice[i].value))+'|'+fillSpace(frm.orderResultCnt[i].value)+
@@ -463,7 +463,7 @@ function totalTargetAmt(){
   
           var frm = document.orderDetailListForm;
   
-         	if(frm.seqs.length>1){
+         	if(frm.seqs.length!=undefined){
          		for(i=0;i<frm.seqs.length;i++){
  					frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
          			'|'+fillSpace(frm.barCode[i].value)+'|'+fillSpace(deleteCommaStr(frm.orderResultPrice[i].value))+'|'+fillSpace(frm.orderResultCnt[i].value)+
@@ -539,7 +539,7 @@ function totalTargetAmt(){
     	  var frm = document.orderDetailListForm;
     	  var ofrm = document.orderDetailForm;
     	  
-         	if(frm.seqs.length>1){
+         	if(frm.seqs.length!=undefined){
          		for(i=0;i<frm.seqs.length;i++){
  					frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
          			'|'+fillSpace(frm.barCode[i].value)+'|'+fillSpace(frm.orderResultPrice[i].value)+'|'+fillSpace(frm.orderResultCnt[i].value)+

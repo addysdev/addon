@@ -9,21 +9,37 @@ import com.offact.addys.vo.AbstractVO;
 public class RecoveryVO extends AbstractVO {
 
 	private String companyName;
+	private String collectCode;
 	private String recoveryCode;
 	private String groupId;
 	private String groupName;
 	private String recoveryClosingDate;
-	private String recoveryDateTime;
-	private String recoveryUserId;
-	private String recoveryUserName;
-	private String recoveryState;
-	private String recoveryStateView;
-	private String regDateTime;
-	private String regUserId;
-	private String regUserName;
+	private String memo;
+	private String memoCnt;
+	
+	
+	private String collectDateTime;
+	private String collectUserId;
+	private String collectUserName;
+	private String returnDateTime;
+	private String returnUserId;
+	private String returnUserName;
 	private String completeDateTime;
 	private String completeUserId;
 	private String completeUserName;
+	private String collectState;
+	
+	private String sendDateTime;
+	private String sendUserId;
+	private String sendUserName;
+	private String receiveDateTime;
+	private String receiveUserId;
+	private String receiveUserName;
+	private String checkDateTime;
+	private String checkUserId;
+	private String checkUserName;
+	private String recoveryState;
+	private String recoveryStateView;
 
 	private String productCode;
 	private String productName;
@@ -33,8 +49,6 @@ public class RecoveryVO extends AbstractVO {
 	private String stockCnt;
 	private String addCnt;
 	private String lossCnt;
-	private String memo;
-	private String memoCnt;
 	private String etc;
 	private String etcCnt;
 	private String recoveryResultCnt;
@@ -67,6 +81,18 @@ public class RecoveryVO extends AbstractVO {
     private String rowCount         = "10";
     private String page_limit_val1;
     private String page_limit_val2;
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	public String getCollectCode() {
+		return collectCode;
+	}
+	public void setCollectCode(String collectCode) {
+		this.collectCode = collectCode;
+	}
 	public String getRecoveryCode() {
 		return recoveryCode;
 	}
@@ -91,47 +117,53 @@ public class RecoveryVO extends AbstractVO {
 	public void setRecoveryClosingDate(String recoveryClosingDate) {
 		this.recoveryClosingDate = recoveryClosingDate;
 	}
-	public String getRecoveryDateTime() {
-		return recoveryDateTime;
+	public String getMemo() {
+		return memo;
 	}
-	public void setRecoveryDateTime(String recoveryDateTime) {
-		this.recoveryDateTime = recoveryDateTime;
+	public void setMemo(String memo) {
+		this.memo = memo;
 	}
-	public String getRecoveryUserId() {
-		return recoveryUserId;
+	public String getMemoCnt() {
+		return memoCnt;
 	}
-	public void setRecoveryUserId(String recoveryUserId) {
-		this.recoveryUserId = recoveryUserId;
+	public void setMemoCnt(String memoCnt) {
+		this.memoCnt = memoCnt;
 	}
-	public String getRecoveryUserName() {
-		return recoveryUserName;
+	public String getCollectDateTime() {
+		return collectDateTime;
 	}
-	public void setRecoveryUserName(String recoveryUserName) {
-		this.recoveryUserName = recoveryUserName;
+	public void setCollectDateTime(String collectDateTime) {
+		this.collectDateTime = collectDateTime;
 	}
-	public String getRecoveryState() {
-		return recoveryState;
+	public String getCollectUserId() {
+		return collectUserId;
 	}
-	public void setRecoveryState(String recoveryState) {
-		this.recoveryState = recoveryState;
+	public void setCollectUserId(String collectUserId) {
+		this.collectUserId = collectUserId;
 	}
-	public String getRegDateTime() {
-		return regDateTime;
+	public String getCollectUserName() {
+		return collectUserName;
 	}
-	public void setRegDateTime(String regDateTime) {
-		this.regDateTime = regDateTime;
+	public void setCollectUserName(String collectUserName) {
+		this.collectUserName = collectUserName;
 	}
-	public String getRegUserId() {
-		return regUserId;
+	public String getReturnDateTime() {
+		return returnDateTime;
 	}
-	public void setRegUserId(String regUserId) {
-		this.regUserId = regUserId;
+	public void setReturnDateTime(String returnDateTime) {
+		this.returnDateTime = returnDateTime;
 	}
-	public String getRegUserName() {
-		return regUserName;
+	public String getReturnUserId() {
+		return returnUserId;
 	}
-	public void setRegUserName(String regUserName) {
-		this.regUserName = regUserName;
+	public void setReturnUserId(String returnUserId) {
+		this.returnUserId = returnUserId;
+	}
+	public String getReturnUserName() {
+		return returnUserName;
+	}
+	public void setReturnUserName(String returnUserName) {
+		this.returnUserName = returnUserName;
 	}
 	public String getCompleteDateTime() {
 		return completeDateTime;
@@ -151,6 +183,72 @@ public class RecoveryVO extends AbstractVO {
 	public void setCompleteUserName(String completeUserName) {
 		this.completeUserName = completeUserName;
 	}
+	public String getCollectState() {
+		return collectState;
+	}
+	public void setCollectState(String collectState) {
+		this.collectState = collectState;
+	}
+	public String getSendDateTime() {
+		return sendDateTime;
+	}
+	public void setSendDateTime(String sendDateTime) {
+		this.sendDateTime = sendDateTime;
+	}
+	public String getSendUserId() {
+		return sendUserId;
+	}
+	public void setSendUserId(String sendUserId) {
+		this.sendUserId = sendUserId;
+	}
+	public String getSendUserName() {
+		return sendUserName;
+	}
+	public void setSendUserName(String sendUserName) {
+		this.sendUserName = sendUserName;
+	}
+	public String getReceiveDateTime() {
+		return receiveDateTime;
+	}
+	public void setReceiveDateTime(String receiveDateTime) {
+		this.receiveDateTime = receiveDateTime;
+	}
+	public String getReceiveUserId() {
+		return receiveUserId;
+	}
+	public void setReceiveUserId(String receiveUserId) {
+		this.receiveUserId = receiveUserId;
+	}
+	public String getReceiveUserName() {
+		return receiveUserName;
+	}
+	public void setReceiveUserName(String receiveUserName) {
+		this.receiveUserName = receiveUserName;
+	}
+	public String getCheckDateTime() {
+		return checkDateTime;
+	}
+	public void setCheckDateTime(String checkDateTime) {
+		this.checkDateTime = checkDateTime;
+	}
+	public String getCheckUserId() {
+		return checkUserId;
+	}
+	public void setCheckUserId(String checkUserId) {
+		this.checkUserId = checkUserId;
+	}
+	public String getCheckUserName() {
+		return checkUserName;
+	}
+	public void setCheckUserName(String checkUserName) {
+		this.checkUserName = checkUserName;
+	}
+	public String getRecoveryState() {
+		return recoveryState;
+	}
+	public void setRecoveryState(String recoveryState) {
+		this.recoveryState = recoveryState;
+	}
 	public String getProductCode() {
 		return productCode;
 	}
@@ -162,6 +260,12 @@ public class RecoveryVO extends AbstractVO {
 	}
 	public void setProductName(String productName) {
 		this.productName = productName;
+	}
+	public String getProductPrice() {
+		return productPrice;
+	}
+	public void setProductPrice(String productPrice) {
+		this.productPrice = productPrice;
 	}
 	public String getStockDate() {
 		return stockDate;
@@ -193,11 +297,17 @@ public class RecoveryVO extends AbstractVO {
 	public void setLossCnt(String lossCnt) {
 		this.lossCnt = lossCnt;
 	}
-	public String getMemo() {
-		return memo;
+	public String getEtc() {
+		return etc;
 	}
-	public void setMemo(String memo) {
-		this.memo = memo;
+	public void setEtc(String etc) {
+		this.etc = etc;
+	}
+	public String getEtcCnt() {
+		return etcCnt;
+	}
+	public void setEtcCnt(String etcCnt) {
+		this.etcCnt = etcCnt;
 	}
 	public String getRecoveryResultCnt() {
 		return recoveryResultCnt;
@@ -205,17 +315,47 @@ public class RecoveryVO extends AbstractVO {
 	public void setRecoveryResultCnt(String recoveryResultCnt) {
 		this.recoveryResultCnt = recoveryResultCnt;
 	}
+	public String getRecoveryResultPrice() {
+		return recoveryResultPrice;
+	}
+	public void setRecoveryResultPrice(String recoveryResultPrice) {
+		this.recoveryResultPrice = recoveryResultPrice;
+	}
 	public String getRecoveryMemo() {
 		return recoveryMemo;
 	}
 	public void setRecoveryMemo(String recoveryMemo) {
 		this.recoveryMemo = recoveryMemo;
 	}
+	public String getRecoveryMemoCnt() {
+		return recoveryMemoCnt;
+	}
+	public void setRecoveryMemoCnt(String recoveryMemoCnt) {
+		this.recoveryMemoCnt = recoveryMemoCnt;
+	}
 	public String getRecoveryYn() {
 		return recoveryYn;
 	}
 	public void setRecoveryYn(String recoveryYn) {
 		this.recoveryYn = recoveryYn;
+	}
+	public String getCreateUserId() {
+		return createUserId;
+	}
+	public void setCreateUserId(String createUserId) {
+		this.createUserId = createUserId;
+	}
+	public String getCreateUserName() {
+		return createUserName;
+	}
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+	public String getCreateDateTime() {
+		return createDateTime;
+	}
+	public void setCreateDateTime(String createDateTime) {
+		this.createDateTime = createDateTime;
 	}
 	public String getUpdateUserId() {
 		return updateUserId;
@@ -246,6 +386,12 @@ public class RecoveryVO extends AbstractVO {
 	}
 	public void setCon_recoveryState(String con_recoveryState) {
 		this.con_recoveryState = con_recoveryState;
+	}
+	public String getRegroupid() {
+		return regroupid;
+	}
+	public void setRegroupid(String regroupid) {
+		this.regroupid = regroupid;
 	}
 	public String getSearchGubun() {
 		return searchGubun;
@@ -307,77 +453,11 @@ public class RecoveryVO extends AbstractVO {
 	public void setPage_limit_val2(String page_limit_val2) {
 		this.page_limit_val2 = page_limit_val2;
 	}
-	public String getRecoveryResultPrice() {
-		return recoveryResultPrice;
-	}
-	public void setRecoveryResultPrice(String recoveryResultPrice) {
-		this.recoveryResultPrice = recoveryResultPrice;
-	}
 	public String getRecoveryStateView() {
 		return recoveryStateView;
 	}
 	public void setRecoveryStateView(String recoveryStateView) {
 		this.recoveryStateView = recoveryStateView;
 	}
-	public String getRegroupid() {
-		return regroupid;
-	}
-	public void setRegroupid(String regroupid) {
-		this.regroupid = regroupid;
-	}
-	public String getCreateUserId() {
-		return createUserId;
-	}
-	public void setCreateUserId(String createUserId) {
-		this.createUserId = createUserId;
-	}
-	public String getCreateUserName() {
-		return createUserName;
-	}
-	public void setCreateUserName(String createUserName) {
-		this.createUserName = createUserName;
-	}
-	public String getCreateDateTime() {
-		return createDateTime;
-	}
-	public void setCreateDateTime(String createDateTime) {
-		this.createDateTime = createDateTime;
-	}
-	public String getCompanyName() {
-		return companyName;
-	}
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-	public String getProductPrice() {
-		return productPrice;
-	}
-	public void setProductPrice(String productPrice) {
-		this.productPrice = productPrice;
-	}
-	public String getMemoCnt() {
-		return memoCnt;
-	}
-	public void setMemoCnt(String memoCnt) {
-		this.memoCnt = memoCnt;
-	}
-	public String getRecoveryMemoCnt() {
-		return recoveryMemoCnt;
-	}
-	public void setRecoveryMemoCnt(String recoveryMemoCnt) {
-		this.recoveryMemoCnt = recoveryMemoCnt;
-	}
-	public String getEtc() {
-		return etc;
-	}
-	public void setEtc(String etc) {
-		this.etc = etc;
-	}
-	public String getEtcCnt() {
-		return etcCnt;
-	}
-	public void setEtcCnt(String etcCnt) {
-		this.etcCnt = etcCnt;
-	}
-	
+    
 }

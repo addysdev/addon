@@ -17,6 +17,7 @@
   <result column="group3"         	property="group3"  />
   <result column="group3Name"   	property="group3Name"  />
   <result column="recoveryYn"       property="recoveryYn"  />
+  <result column="recoveryYnView"       property="recoveryYnView"  />
   <result column="createUserId"     property="createUserId"  />
   <result column="createUserName"   property="createUserName"  />
   <result column="createDateTime"   property="createDateTime"  />
@@ -41,6 +42,7 @@
 		      ,T1.group3
 			  ,T1.group3Name
 			  ,T1.recoveryYn
+			  ,Case T1.recoveryYn When 'Y' Then '회수' Else '진행' End recoveryYnView
 			  ,T1.createUserId
 			  ,T3.userName As createUserName
 			  ,T1.updateUserId
@@ -112,6 +114,7 @@
 		      ,T1.group3
 			  ,T1.group3Name
 			  ,T1.recoveryYn
+			  ,Case T1.recoveryYn When 'Y' Then '회수' Else '진행' End recoveryYnView
 			  ,T1.createUserId
 			  ,T3.userName As createUserName
 			  ,T1.updateUserId
@@ -182,8 +185,7 @@
 		                        group2Name = #{group2Name},
 		                        group3 = #{group3},
 		                        group3Name = #{group3Name},
-		                        recoveryYn = 'N',
-		                        updateUserId = #{updateUserId},
+		                       updateUserId = #{updateUserId},
 		                        updateDateTime =now(),
 		                        deletedYn = #{deletedYn}
 		                        

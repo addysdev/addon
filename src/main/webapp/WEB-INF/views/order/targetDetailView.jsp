@@ -297,7 +297,7 @@ function fcDefer_reason(reason){
 		var orderCnt=(orderCntRaw-addCnt);
 
 		if(orderCntRaw<orderCnt || 0>orderCnt){
-			alert('재고수량 추가는 보유재고범위를 넘을수 없습니다.');
+			alert('발주수량 추가는 보유재고범위를 넘을수 없습니다.');
 			frm.orderCnt[index-1].value=orderCntRaw;
 			document.all('orderCntView')[index-1].innerText=orderCntRaw;
 			frm.addCnt[index-1].value=0;
@@ -319,7 +319,7 @@ function fcDefer_reason(reason){
 		var orderCnt=(orderCntRaw-addCnt);
 
 		if(orderCntRaw<orderCnt || 0>orderCnt){
-			alert('재고수량 추가는 보유재고범위를 넘을수 없습니다.');
+			alert('발주수량 추가는 보유재고범위를 넘을수 없습니다.');
 			frm.orderCnt.value=orderCntRaw;
 			document.all('orderCntView').innerText=orderCntRaw;
 			frm.addCnt.value=0;
@@ -356,7 +356,7 @@ function fcDefer_reason(reason){
 			var orderCnt=(orderCntRaw+lossCnt);
 	
 			if(holdStock<orderCnt){
-				alert('재고수량은 보유재고수량을 넘을수 없습니다.');
+				alert('발주수량은 보유재고수량을 넘을수 없습니다.');
 				frm.orderCnt[index-1].value=orderCntRaw;
 				document.all('orderCntView')[index-1].innerText=orderCntRaw;
 				frm.lossCnt[index-1].value=0;
@@ -377,7 +377,7 @@ function fcDefer_reason(reason){
 			var orderCnt=(orderCntRaw+lossCnt);
 	
 			if(holdStock<orderCnt){
-				alert('재고수량은 보유재고수량을 넘을수 없습니다.');
+				alert('발주수량은 보유재고수량을 넘을수 없습니다.');
 				frm.orderCnt.value=orderCntRaw;
 				document.all('orderCntView').innerText=orderCntRaw;
 				frm.lossCnt.value=0;

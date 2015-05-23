@@ -120,7 +120,7 @@ function fcProduct_Select(productcode,productname,recoveryyn){
 	var frm=document.recoveryProductListForm;
 	
 	if(recoveryyn=='Y'){
-		alert('이미 회수처리된 품목은 선택하실 수 없습니다.');
+		alert('회수중인 품목은 선택하실 수 없습니다.');
 		return;
 	}
 	
@@ -149,6 +149,31 @@ function fcProduct_Select(productcode,productname,recoveryyn){
 	var newCell = newRow.insertCell();
 	newCell.innerHTML ='<tr><input type="hidden" id="selectProduct" name="selectProduct" value='+productcode+'><td class="text-center">['+productcode+']'+productname+'&nbsp;<button type="button" class="btn btn-xs btn-info" onClick="delFile(this)" >삭제</button></td></tr>';
 	
+	totalAttachCnt('add');
+	
+}
+function totalAttachCnt(flag){
+
+	var totalcnt=0;
+	var frm = document.recoveryProductListForm;
+	
+	if(flag=='add'){
+		//alert(frm.selectProduct.length);
+		if(frm.selectProduct.length!=undefined ){
+			totalcnt=frm.selectProduct.length;
+		}else{
+			totalcnt=1;	
+		}
+	}else{
+		if(frm.selectProduct!=undefined ){
+			totalcnt=frm.selectProduct.length;
+		}else{
+			totalcnt=0;
+		}
+	}
+	
+	document.all('totalAttachCnt').innerText='선택품목 건수 :'+addCommaStr(''+totalcnt)+' 건';
+	
 }
 
 function delFile(obj){ 
@@ -158,6 +183,8 @@ function delFile(obj){
     var table = tr.parentNode; 
     var index = tr.rowIndex; 
     table.deleteRow(index-1); 
+    
+    totalAttachCnt('del');
 } 
 //품목조회 리스트 Layup
 function fcReProduct_excelForm() {
@@ -258,7 +285,7 @@ function fcGroup_checkAll(){
 	          <th class='text-center' style="background-color:#E6F3FF;width:120px" >회수 마감일자</th>
 	          <th>
 	          	<div style='width:150px' class='input-group date ' id='datetimepicker3' data-link-field="recoveryClosingDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" value="${recoveryClosingDate}" />
+	                <input type='text' class="form-control" disabled value="${recoveryClosingDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>
 	                </span>
@@ -277,21 +304,16 @@ function fcGroup_checkAll(){
 	      	<tr>
 	          <th class='text-center' style="background-color:#E6F3FF" >메모</th>
 	          <th>
-	 			<input type="text" class="form-control" id="memo" name="memo"  value="" placeholder="메모" />
+	 			<input type="text" class="form-control" id="memo" name="memo"  maxlength="50"  value="" placeholder="메모" />
 	         </th>
 	      	</tr>
 		  </table>
+		  <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span > <span id="totalAttachCnt">선택품목 건수: <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="0" /> 건</span></span></p>       
 		  </form:form>
+
 
    <div id="recoveryRegisList"  title="회수대상 품목조회"></div>
   <!-- //회수대상품목리스트 -->
-  
-  <div id="recoveryProductList"  title="회수대상 품목조회"></div>
-  <!-- //검수 상세처리화면 -->
-  
-    <!-- 보유재고 일괄등록-->
-  <div id="reProductExcelForm"  title="회수품목 일괄등록"></div>
-  
   
   </div>  
 </body>

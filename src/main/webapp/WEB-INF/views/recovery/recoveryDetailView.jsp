@@ -454,7 +454,7 @@ $(window).unload(function() {
           <th class='text-center'  style="background-color:#E6F3FF" >회수번호</th>
           <th class='text-center'><c:out value="${recoveryVO.recoveryCode}"></c:out>&nbsp;&nbsp;<button id="downbtn" type="button" class="btn btn-xs btn-success" onClick="fcRecovery_print('${recoveryVO.recoveryCode}')" >인쇄</button></th>
           <th class='text-center' style="background-color:#E6F3FF">회수요청일</th>
-          <th class='text-center'><c:out value="${recoveryVO.regDateTime}"></c:out></th>
+          <th class='text-center'><c:out value="${recoveryVO.collectDateTime}"></c:out></th>
       	  <th class='text-center' style="background-color:#E6F3FF">회수마감일</th>
           <th class='text-center'><c:out value="${recoveryVO.recoveryClosingDate}"></c:out></th>	
       	</tr>

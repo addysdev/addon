@@ -45,6 +45,10 @@ public class RecoveryServiceImpl implements RecoveryService {
         return commonDao.selectOne("Recovery.getRecoveryCnt", recovery);
     }
     @Override
+    public RecoveryVO getCollectCode(RecoveryVO recovery) throws BizException {
+        return commonDao.selectOne("Recovery.getCollectCode", recovery);
+    }
+    @Override
     public int regiRecoveryRegist(RecoveryVO recovery, String arrCheckGroupId ,String arrSelectProductId)
     	    throws BizException
 	{
@@ -54,20 +58,21 @@ public class RecoveryServiceImpl implements RecoveryService {
 	    	
 	    	arrCheckGroupId = arrCheckGroupId.substring(0, arrCheckGroupId.lastIndexOf("^"));
 		    String[] arrGroupId = arrCheckGroupId.split("\\^");
+		    
+		    retVal=this.commonDao.insert("Recovery.collectInsert", recovery);
 	    	
 		    for (int i = 0; i < arrGroupId.length; i++) {
 		    	
 		    	long t1 = System.currentTimeMillis();
 		    	String groupId=arrGroupId[i];
-		    	String recoveryCode="R"+groupId+t1;
+		    	String recoveryCode=groupId+recovery.getRecoveryCode();
 		    	
 		    	RecoveryVO recoveryVO = new RecoveryVO();
 		    	
 		    	recoveryVO.setGroupId(groupId);
 		    	recoveryVO.setRecoveryCode(recoveryCode);
-		    	recoveryVO.setRecoveryClosingDate(recovery.getRecoveryClosingDate());
-		    	recoveryVO.setRegUserId(recovery.getRegUserId());
-		    	recoveryVO.setMemo(recovery.getMemo());
+		    	recoveryVO.setCollectCode(recovery.getCollectCode());
+		    	recoveryVO.setRecoveryState("01");
 		    	
 		    	retVal=this.commonDao.insert("Recovery.recoveryInsert", recoveryVO);
 		    	
@@ -81,7 +86,7 @@ public class RecoveryServiceImpl implements RecoveryService {
 			    	RecoveryVO recoveryDetailVO = new RecoveryVO();
 			    	
 			    	recoveryDetailVO.setRecoveryCode(recoveryCode);
-			    	recoveryDetailVO.setCreateUserId(recovery.getCreateUserId());
+			    	recoveryDetailVO.setCreateUserId(recovery.getCollectUserId());
 			    	recoveryDetailVO.setProductCode(productCode);
 	
 			    	this.commonDao.insert("Recovery.recoveryDetailInsert", recoveryDetailVO);

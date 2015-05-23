@@ -27,7 +27,7 @@
 	    <thead>
 	      <tr>
 	        <th class='text-center'>품목코드</th>
-            <th class='text-center'>회수여부</th>
+            <th width="50" class='text-center'>상태</th>
             <th class='text-center'>품목명</th>
             <th class='text-center'>구매처</th>
 	      </tr>
@@ -44,7 +44,7 @@
 				</c:otherwise>
 			 </c:choose>
                  <td class='text-center'><a href="javascript:fcProduct_Select('${productMasterVO.productCode}','${productMasterVO.productName}','${productMasterVO.recoveryYn}')"><c:out value="${productMasterVO.productCode}"></c:out></a></td>
-                 <td class='text-center'><c:out value="${productMasterVO.recoveryYn}"></c:out></td>
+                 <td class='text-center'><c:out value="${productMasterVO.recoveryYnView}"></c:out></td>
                  <td><c:out value="${productMasterVO.productName}"></c:out></td>
                  <td class='text-center'><c:out value="${productMasterVO.companyName}"></c:out></td>
               </tr>

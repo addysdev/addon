@@ -60,4 +60,7 @@
 </body>
 <script>
 fcProduct_listSearch();
+
+$('#searchValue').focus(1); 
+</script>
 </script>

@@ -21,6 +21,7 @@ public class ProductMasterVO extends AbstractVO {
 	private String group3;
 	private String group3Name;
 	private String recoveryYn;
+	private String recoveryYnView;
 
 	private String createUserId;
 	private String createUserName;
@@ -222,6 +223,12 @@ public class ProductMasterVO extends AbstractVO {
 	}
 	public void setRecoveryYn(String recoveryYn) {
 		this.recoveryYn = recoveryYn;
+	}
+	public String getRecoveryYnView() {
+		return recoveryYnView;
+	}
+	public void setRecoveryYnView(String recoveryYnView) {
+		this.recoveryYnView = recoveryYnView;
 	}
     
 }

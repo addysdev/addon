@@ -4,20 +4,31 @@
 
 <resultMap id="recoveryVO" type="com.offact.addys.vo.recovery.RecoveryVO" >
   <result column="companyName"      property="companyName"  />
-  <result column="recoveryCode"      property="recoveryCode"  />
-  <result column="groupId"          property="groupId"  />
+  <result column="collectCode"      property="collectCode"  />
+  <result column="recoveryCode"          property="recoveryCode"  />
+  <result column="groupId"      property="groupId"  />
   <result column="groupName"      property="groupName"  />
   <result column="recoveryClosingDate"      property="recoveryClosingDate"  />
-  <result column="recoveryDateTime"      property="recoveryDateTime"  />
-  <result column="recoveryUserID"     property="recoveryUserID"  />
-  <result column="recoveryState"          property="recoveryState"  />
-  <result column="recoveryStateView"          property="recoveryStateView"  />
-  <result column="regDateTime"           property="regDateTime"  />
-  <result column="regUserId"           property="regUserId"  />
-  <result column="regUserName"           property="regUserName"  />
-  <result column="completeDateTime"           property="completeDateTime"  />
+  <result column="memo"     property="memo"  />
+  <result column="memoCnt"          property="memoCnt"  />
+  <result column="collectDateTime"          property="collectDateTime"  />
+  <result column="collectUserId"           property="collectUserId"  />
+  <result column="returnDateTime"           property="returnDateTime"  />
+  <result column="returnUserId"           property="returnUserId"  />
+  <result column="returnUserName"           property="returnUserName"  />
   <result column="completeUserId"           property="completeUserId"  />
   <result column="completeUserName"           property="completeUserName"  />
+  <result column="completeDateTime"           property="completeDateTime"  />
+  <result column="sendDateTime"          property="sendDateTime"  />
+  <result column="sendUserId"           property="sendUserId"  />
+  <result column="sendUserName"           property="sendUserName"  />
+  <result column="receiveDateTime"           property="receiveDateTime"  />
+  <result column="receiveUserId"           property="receiveUserId"  />
+  <result column="receiveUserName"           property="receiveUserName"  />
+  <result column="checkDateTime"           property="checkDateTime"  />
+  <result column="checkUserId"           property="checkUserId"  />
+  <result column="checkUserName"           property="checkUserName"  />
+  <result column="recoveryState"           property="recoveryState"  />
   <result column="productCode"           property="productCode"  />
   <result column="productName"           property="productName"  />
   <result column="productPrice"           property="productPrice"  />
@@ -26,8 +37,6 @@
   <result column="stockCnt"           property="stockCnt"  />
   <result column="addCnt"           property="addCnt"  />  
   <result column="lossCnt"           property="lossCnt"  />
-  <result column="memo"           property="memo"  />
-  <result column="memoCnt"           property="memoCnt"  />
   <result column="etc"           property="etc"  />
   <result column="etcCnt"           property="etcCnt"  />
   <result column="recoveryResultCnt"           property="recoveryResultCnt"  />
@@ -42,57 +51,33 @@
 
 <select id="getRecoveryPageList"  resultMap="recoveryVO" parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
 
-  Select T6.codeName as recoveryStateView ,
-         T4.recoveryState,
-         T4.recoveryCode,
-         T4.recoveryClosingDate,
-         DATE_FORMAT(T4.regDateTime, '%Y-%m-%d') as regDateTime,
-         T4.groupId,
-         T5.groupName,
-         Sum(T4.stockCnt) as recoveryResultCnt,
-         Sum(T4.recoveryResultPrice) as recoveryResultPrice
-    From (
-          Select T1.recoveryState,
-               T1.recoveryCode,
-               T1.recoveryClosingDate,
-               T1.regDateTime,
-        		   T1.groupId,
-        		   T2.recoveryResultCnt,
-        		   K1.stockCnt,
-        		   T2.productCode,
-        		   T3.productPrice,
-        		   (T3.productPrice * K1.stockCnt) As recoveryResultPrice,
-        		   T3.deletedYn
-        		From adRecovery T1
-                 Left Join adRecoveryDetail T2 On T1.recoveryCode = T2.recoveryCode
-                 Left Join adProductMaster T3 On T2.productCode = T3.productCode
-                 Left Join (
-                  Select groupId,productCode,stockDate,
-                     							(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
-                							From ( 
-                        						Select groupId,productCode , max(stockDate) as stockDate 
-                       								 From adStockDetail 
-                        						Group By  groupId,productCode 
-                        						) A1
-                 ) As K1 On T1.groupId = K1.groupId And T2.productCode = K1.productCode
-            Where T1.regDateTime between concat(#{start_recoveryDate},' 00:00:00') and concat(#{end_recoveryDate},' 23:59:59')
-           ) As T4
-           Left Join ofGroup T5 On T4.groupId = T5.groupId
-           Left Join ofCode T6 On T4.recoveryState = T6.codeId and T6.codegroupId = 'RE01'
-     Where T4.deletedYn='N' And ifnull(T4.stockCnt,0) > 0
+  Select T4.codeName as recoveryStateView ,
+         T1.recoveryState,
+         T1.recoveryCode,
+         T2.recoveryClosingDate,
+         DATE_FORMAT(T2.collectDateTime, '%Y-%m-%d') as collectDateTime,
+         T1.groupId,
+         T3.groupName,
+         0 as recoveryResultCnt,
+         0 as recoveryResultPrice
+    From adRecovery T1
+         Left Join adCollect T2 On T1.collectCode=T2.collectCode
+         Left Join ofGroup T3 On T1.groupId = T3.groupId
+         Left Join ofCode T4 On T1.recoveryState = T4.codeId and T4.codegroupId = 'RE02'
+   Where T2.deletedYn='N'
            <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
-           		AND T4.groupId = #{con_groupId}
+           		AND T1.groupId = #{con_groupId}
            </if>
            <if test="recoveryState != null and recoveryState != ''" >
-           		AND T4.recoveryState = #{con_recoveryState}
+           		AND T1.recoveryState = #{con_recoveryState}
            </if>
-      Group by T6.codeName,
-  			            T4.recoveryState,
-         				T4.recoveryCode,
-        				T4.recoveryClosingDate,
-         				T4.regDateTime,
-         				T4.groupId,
-         				T5.groupName
+   Group by T4.codeName,
+  			T1.recoveryState,
+         	T1.recoveryCode,
+        	T2.recoveryClosingDate,
+         	T2.collectDateTime,
+         	T1.groupId,
+         	T3.groupName
 	 LIMIT ${page_limit_val1} , ${page_limit_val2}
 		
 </select>
@@ -100,57 +85,33 @@
 <select id="getRecoveryCnt" resultType="int">
 	SELECT count(*) AS TOT_COUNT
 		From (
-  			     Select T6.codeName as recoveryStateView ,
-  			            T4.recoveryState,
-         				T4.recoveryCode,
-        				T4.recoveryClosingDate,
-         				T4.regDateTime,
-         				T4.groupId,
-         				T5.groupName,
-         				Sum(T4.stockCnt) as recoveryResultCnt,
-         				Sum(T4.recoveryResultPrice) as recoveryResultPrice
-    				From (
-          					Select T1.recoveryState,
-               					T1.recoveryCode,
-               					T1.recoveryClosingDate,
-               					T1.regDateTime,
-        		  				T1.groupId,
-        		   				T2.recoveryResultCnt,
-        		   				K1.stockCnt,
-        		   				T2.productCode,
-        		   				T3.productPrice,
-        		   				(T3.productPrice * K1.stockCnt) As recoveryResultPrice,
-        		   				T3.deletedYn
-        					From adRecovery T1
-                 				Left Join adRecoveryDetail T2 On T1.recoveryCode = T2.recoveryCode
-                 				Left Join adProductMaster T3 On T2.productCode = T3.productCode
-                 				Left Join (
-                 							Select groupId,productCode,stockDate,
-                     							(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
-                							From ( 
-                        						Select groupId,productCode , max(stockDate) as stockDate 
-                       								 From adStockDetail 
-                        						Group By  groupId,productCode 
-                        						) A1
-                 ) As K1 On T1.groupId = K1.groupId And T2.productCode = K1.productCode
-            				Where T1.regDateTime between concat(#{start_recoveryDate},' 00:00:00') and concat(#{end_recoveryDate},' 23:59:59')
-           				) As T4
-          				 Left Join ofGroup T5 On T4.groupId = T5.groupId
-          				 Left Join ofCode T6 On T4.recoveryState = T6.codeId and T6.codegroupId = 'RE01'
-     	Where T4.deletedYn='N'  And ifnull(T4.stockCnt,0) > 0
-     	    <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
-           		AND T4.groupId = #{con_groupId}
-          	</if>
-           <if test="recoveryState != null and recoveryState != ''" >
-           		AND T4.recoveryState = #{con_recoveryState}
-          	</if>
-         Group by T6.codeName,
-  			            T4.recoveryState,
-         				T4.recoveryCode,
-        				T4.recoveryClosingDate,
-         				T4.regDateTime,
-         				T4.groupId,
-         				T5.groupName
+  			  Select T4.codeName as recoveryStateView ,
+         	  		 T1.recoveryState,
+         	  		 T1.recoveryCode,
+         	  		 T2.recoveryClosingDate,
+         	 		 DATE_FORMAT(T2.collectDateTime, '%Y-%m-%d') as collectDateTime,
+         	  		 T1.groupId,
+         	  		 T3.groupName,
+         	  		 0 as recoveryResultCnt,
+         	  		 0 as recoveryResultPrice
+    		 	From adRecovery T1
+         			 Left Join adCollect T2 On T1.collectCode=T2.collectCode
+         			 Left Join ofGroup T3 On T1.groupId = T3.groupId
+         			 Left Join ofCode T4 On T1.recoveryState = T4.codeId and T4.codegroupId = 'RE02'
+   				Where T2.deletedYn='N'
+     	   		<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           				AND T1.groupId = #{con_groupId}
+          		</if>
+           		<if test="recoveryState != null and recoveryState != ''" >
+           				AND T1.recoveryState = #{con_recoveryState}
+          		</if>
+         		Group by T4.codeName,
+  						 T1.recoveryState,
+         				 T1.recoveryCode,
+        				 T2.recoveryClosingDate,
+         				 T2.collectDateTime,
+         				 T1.groupId,
+         				 T3.groupName
 		) As TOT
 			           
 </select>
@@ -159,72 +120,48 @@
 
   Select T1.recoveryCode,
          T1.groupId,
-         T2.groupName,
+         T3.groupName,
          T1.recoveryState,
-         DATE_FORMAT(T1.regDateTime,'%Y-%m-%d') as regDateTime,  
-         T1.regUserId,
-         T3.userName as regUserName,
-         T1.recoveryClosingDate,
-         T1.memo,
-         count(T4.idx) as memoCnt
+         DATE_FORMAT(T2.collectDateTime,'%Y-%m-%d') as collectDateTime,  
+         T2.collectUserId,
+         T4.userName as collectUserName,
+         T2.recoveryClosingDate,
+         T2.memo,
+         count(T5.idx) as memoCnt
     From adRecovery T1
-         Left Join ofGroup T2 On T1.groupId=T2.groupId
-         Left Join ofUser T3 On T1.regUserId=T3.userId
-         Left Join adComment T4 On T1.recoveryCode = T4.orderCode And T4.commentCategory='05'
+         Left Join adCollect T2 On T1.collectCode=T2.collectCode
+         Left Join ofGroup T3 On T1.groupId=T3.groupId
+         Left Join ofUser T4 On T2.collectUserId=T4.userId
+         Left Join adComment T5 On T1.recoveryCode = T5.orderCode And T5.commentCategory='05'
     Where T1.recoveryCode = #{recoveryCode}
     
 </select>
 
 <select id="getRecoveryDetailList"  resultMap="recoveryVO" parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
 
-  Select T4.recoveryCode,
-         T5.companyName,
-         T4.productCode,
-         T4.productName,
-         T4.stockDate,
-         T4.stockCnt,
-         T4.recoveryCnt,
-         T4.recoveryResultCnt,
-         T4.addCnt,
-         T4.lossCnt,
-         T4.productPrice,
-         T4.recoveryYn,
-         T4.etc,
-         (select count(idx) from adComment T6 Where T4.recoveryCode = T6.orderCode  And T4.productCode=T6.productCode And T6.commentCategory='06') as etcCnt,
-         T4.recoveryState
-    From (
-          Select  T1.recoveryCode,
-               T1.recoveryState, 
-               T3.companyCode,
-               T2.productCode,
-               T3.productName,
-               K1.stockDate,
-        	   K1.stockCnt,
-        	   T2.lossCnt,
-               T2.addCnt,
-               Case T1.recoveryState When '01' Then K1.stockCnt Else T2.recoveryCnt End recoveryCnt,
-               Case T1.recoveryState When '02' Then T2.recoveryCnt Else T2.recoveryResultCnt End recoveryResultCnt,
-        	   T3.productPrice,
-               T2.etc,
-        	   T2.recoveryYn,
-        	   T2.deletedYn
-        	From adRecovery T1
-                 Left Join adRecoveryDetail T2 On T1.recoveryCode = T2.recoveryCode
-                 Left Join adProductMaster T3 On T2.productCode = T3.productCode
-                 Left Join (
-                  			Select groupId,productCode,stockDate,
-                     			   (Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
-                				From ( 
-                        			   Select groupId,productCode , max(stockDate) as stockDate 
-                       				   	From adStockDetail 
-                        				Group By  groupId,productCode 
-                        			  ) As A1
-                 ) As K1 On T1.groupId = K1.groupId And T2.productCode = K1.productCode
-            Where T1.recoveryCode = #{recoveryCode}
-           ) As T4
-           Left Join adCompany T5 On T4.companyCode = T5.companyCode
-     Where T4.deletedYn='N'  And ifnull(T4.stockCnt,0) > 0
-     Order by T4.productCode asc
+  Select T1.recoveryCode,
+         T6.companyName,
+         T1.productCode,
+         T5.productName,
+         T1.stockDate,
+         T1.stockCnt,
+         T1.recoveryCnt,
+         T1.recoveryResultCnt,
+         T1.addCnt,
+         T1.lossCnt,
+         T5.productPrice,
+         T1.recoveryYn,
+         T1.etc,
+         (select count(idx) from adComment T7 Where T1.recoveryCode = T7.orderCode  And T1.productCode=T7.productCode And T7.commentCategory='06') as etcCnt,
+         T2.recoveryState
+    From adRecoveryDetail T1
+         Left Join adRecovery T2 On T1.recoveryCode=T2.recoveryCode
+         Left Join adCollect T3 On T2.collectCode=T3.collectCode
+         Left Join ofGroup T4 On T2.groupId = T4.groupId
+         Left Join adProductMaster T5 On T1.productCode = T5.productCode
+         Left Join adCompany T6 On T5.companyCode = T6.companyCode
+    Where T3.deletedYn='N' And T1.recoveryCode = #{recoveryCode}
+    Order by T1.productCode asc
 </select>
 
 <update id="updateRecovery"  parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
@@ -238,26 +175,40 @@
 		                        
 </update>
 
+<insert id="collectInsert"  parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
+
+insert into adCollect (
+		 collectCode
+		,recoveryClosingDate
+        ,collectUserId
+        ,collectDateTime 
+        ,collectState
+        ,deletedYn
+        ,memo
+		)values(
+				 #{collectCode}
+				 , #{recoveryClosingDate}
+	  			, #{collectUserId}
+	  			, now()
+	  			, #{collectState}
+	  			,'N'
+                ,#{memo}
+		)
+		                        
+</insert>
+
 <insert id="recoveryInsert"  parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
 
 insert into adRecovery (
 		recoveryCode
-		,groupId
-        ,recoveryClosingDate
-        ,regUserId 
-        ,regDateTime
+		,collectCode
+        ,groupId
         ,recoveryState
-        ,deletedYn
-        ,memo
 		)values(
 				 #{recoveryCode}
-				 , #{groupId}
-	  			, #{recoveryClosingDate}
-	  			, #{regUserId}
-	  			, now()
-	  			, '01'
-                , 'N'
-                ,#{memo}
+				 , #{collectCode}
+	  			, #{groupId}
+	  			, #{recoveryState}
 		)
 		                        
 </insert>
@@ -326,5 +277,24 @@ insert into adRecoveryDetail (recoveryCode
 		  And productCode =  #{productCode}
 		                        
 </update>
+
+<select id="getCollectCode"  resultMap="recoveryVO" parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
+
+Select concat(right(#{collectCode},6),T3.recoveryCode) As recoveryCode, 
+       concat (#{collectCode},T3.recoveryCode) As collectCode 
+  From (
+  Select Case When T2.collectCodeNo <![CDATA[<]]> 10 Then concat('00',T2.collectCodeNo) 
+              When T2.collectCodeNo <![CDATA[>=]]> 10 And T2.collectCodeNo  <![CDATA[<]]>  99  Then concat('0',T2.collectCodeNo) 
+              Else T2.collectCodeNo End recoveryCode
+    From(
+          Select (cast(right(T1.collectCode,3) As unsigned)+1) As collectCodeNo 
+            From (
+                  Select ifnull(max(collectCode),concat(#{collectCode},'000')) As collectCode 
+                    From adCollect where left(collectCode,7)=#{collectCode} ) As T1 
+    ) As T2
+  ) As T3
+
+    
+</select>
 
 </mapper>

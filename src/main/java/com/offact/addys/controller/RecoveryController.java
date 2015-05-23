@@ -85,6 +85,133 @@ public class RecoveryController {
     private RecoveryService recoverySvc;
     
 	 /**
+     * 회수대상 작업화면
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/recovery/collectmanage")
+    public ModelAndView collectManage(HttpServletRequest request, 
+    		                       HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start ");
+
+        ModelAndView mv = new ModelAndView();
+        
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/loginForm");
+       		return mv;
+		}
+
+        
+        RecoveryVO recoveryConVO = new RecoveryVO();
+        
+        recoveryConVO.setGroupId(strGroupId);
+
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        Date deliveryTime = new Date();
+        int movedate=-7;//(1:내일 ,-1:어제)
+        
+        deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+        
+        String strToday = simpleDateFormat.format(currentTime);
+        String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+        
+        recoveryConVO.setStart_recoveryDate(strDeliveryDay);
+        recoveryConVO.setEnd_recoveryDate(strToday);
+        
+        // 조회조건저장
+        mv.addObject("recoveryConVO", recoveryConVO);
+
+        
+        // 공통코드 조회 (발주상태코드)
+        CodeVO code = new CodeVO();
+        code.setCodeGroupId("RE01");
+        List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
+        mv.addObject("code_comboList", code_comboList);
+       
+        mv.setViewName("/recovery/collectManage");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    /**
+     * 회수대상 작업목록조회
+     * 
+     * @param RecoveryVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/recovery/collectpagelist")
+    public ModelAndView collectPageList(@ModelAttribute("recoveryConVO") RecoveryVO recoveryConVO, 
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : recoveryConVO" + recoveryConVO);
+
+        ModelAndView mv = new ModelAndView();
+        List<RecoveryVO> recoveryList = null;
+
+        // 조직값 null 일때 공백처리
+        if (recoveryConVO.getCon_groupId() == null) {
+        	recoveryConVO.setCon_groupId("");
+        }
+
+        // 상태 값 null 일때 공백처리
+        if (recoveryConVO.getCon_recoveryState() == null) {
+        	recoveryConVO.setCon_recoveryState("");
+        }
+
+        // 조회조건저장
+        mv.addObject("recoveryConVO", recoveryConVO);
+
+        // 페이징코드
+        recoveryConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(recoveryConVO.getCurPage(), recoveryConVO.getRowCount()));
+        recoveryConVO.setPage_limit_val2(StringUtil.nvl(recoveryConVO.getRowCount(), "10"));
+        
+        // 발주대상목록조회
+        recoveryList = recoverySvc.getRecoveryPageList(recoveryConVO);
+        mv.addObject("recoveryList", recoveryList);
+
+        // totalCount 조회
+        String totalCount = String.valueOf(recoverySvc.getRecoveryCnt(recoveryConVO));
+        mv.addObject("totalCount", totalCount);
+
+        mv.setViewName("/recovery/collectPageList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    /**
      * 회수대상 화면
      *
      * @param request
@@ -146,7 +273,7 @@ public class RecoveryController {
         
         // 공통코드 조회 (발주상태코드)
         CodeVO code = new CodeVO();
-        code.setCodeGroupId("RE01");
+        code.setCodeGroupId("RE02");
         List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
         mv.addObject("code_comboList", code_comboList);
        
@@ -309,10 +436,23 @@ public class RecoveryController {
         logger.info("@#@#@# arrCheckGroupId: " + arrCheckGroupId);
         logger.info("@#@#@# arrSelectProductId : " + arrSelectProductId);
 	    
-
-	    recoveryVO.setRecoveryState("01");
-	    recoveryVO.setRegUserId(strUserId);
-	    recoveryVO.setCreateUserId(strUserId);
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+        
+        RecoveryVO recoveryCon = new RecoveryVO();
+        //작업코드 생성
+        String collectCode="R"+strToday;
+        
+        recoveryCon.setCollectCode(collectCode);
+        
+        recoveryCon=recoverySvc.getCollectCode(recoveryCon);
+  
+        recoveryVO.setCollectCode(recoveryCon.getCollectCode());
+        recoveryVO.setRecoveryCode(recoveryCon.getRecoveryCode());
+	    recoveryVO.setCollectState("01");
+	    recoveryVO.setCollectUserId(strUserId);
 	   
         try{//01.회수처리
        
@@ -447,7 +587,7 @@ public class RecoveryController {
 	    
 	    recoveryVO.setRecoveryState("02");
 	    recoveryVO.setUpdateUserId(strUserId);
-	    recoveryVO.setRecoveryUserId(strUserId);
+	    recoveryVO.setSendUserId(strUserId);
 	  
   
         try{//01.보류처리
@@ -651,8 +791,8 @@ public class RecoveryController {
 		      XSSFWorkbook workbook = new XSSFWorkbook(fileInput);
 		      XSSFSheet sheet = workbook.getSheetAt(0);//첫번째 sheet
 		 
-		      int TITLE_POINT =1;//타이틀 항목위치
-		      int ROW_START = 2;//data row 시작지점
+		      int TITLE_POINT =0;//타이틀 항목위치
+		      int ROW_START = 1;//data row 시작지점
 		      
 		      int TOTAL_ROWS=sheet.getPhysicalNumberOfRows(); //전체 ROW 수를 가져온다.
 		      int TOTAL_CELLS=sheet.getRow(TITLE_POINT).getPhysicalNumberOfCells(); //전체 셀의 항목 수를 가져온다.
@@ -664,7 +804,7 @@ public class RecoveryController {
 		          
 		          try {
 
-		           for (int rowcnt = ROW_START; rowcnt < TOTAL_ROWS-3; rowcnt++) {
+		           for (int rowcnt = ROW_START; rowcnt < TOTAL_ROWS; rowcnt++) {
 		             
 		   		     ProductMasterVO productMasterVO = new ProductMasterVO();
 		   			
@@ -728,6 +868,7 @@ public class RecoveryController {
 		    //DB처리
 		    reProductList = this.recoverySvc.getExcelAttach(excelUploadList);
  
+		    mv.addObject("excelTotal", excelUploadList.size());
 		    mv.addObject("reProductList", reProductList);
 		    
 		    mv.setViewName("/recovery/reProductAttach");
@@ -763,6 +904,11 @@ public class RecoveryController {
 	        	mv.setViewName("/addys/loginForm");
 	       		return mv;
 			}
+	        
+	        List reProductList = new ArrayList(); //DB 성공 대상데이타
+	        
+	        mv.addObject("excelTotal", "0");
+		    mv.addObject("reProductList", reProductList);
 	   		
 	   		mv.setViewName("/recovery/reProductAttach");
 	   		
