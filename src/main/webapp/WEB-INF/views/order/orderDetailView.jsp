@@ -772,7 +772,7 @@ function totalTargetAmt(){
 					</c:choose>
 					</c:when>
 					<c:otherwise>
-						<td class='text-center'><input type="checkbox" id="orderCheck" name="orderCheck" value="${orderVO.productCode}" title="선택" checked disabled  /></td>
+						<td class='text-center'>${status.count}.<input type="checkbox" id="orderCheck" name="orderCheck" value="${orderVO.productCode}" title="선택" checked disabled  /></td>
 					</c:otherwise>
 				</c:choose>
                  <td class='text-center'><c:out value="${orderVO.productCode}"></c:out></td>

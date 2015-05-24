@@ -102,14 +102,14 @@ function fcRcovery_regist(){
 		        	resultMsg(result);
 
 					$('#recoveryRegForm').dialog('close');
-					fcRecovery_listSearch();
+					fcCollect_listSearch();
 						
 		          },
 		          error:function(){
 		          
 		          alert('회수 등록 호출오류!');
                   $('#recoveryRegForm').dialog('close');
-				  fcRecovery_listSearch();
+                  fcCollect_listSearch();
 		          }
 		    });
 	}

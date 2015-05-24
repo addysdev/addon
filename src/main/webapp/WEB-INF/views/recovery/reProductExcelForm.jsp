@@ -44,17 +44,22 @@ function fcReProduct_excelimport(){
     
     $("#excel_form").ajaxForm();
     
+    commonDim(true);
+    
     $("#excel_form").ajaxSubmit({
         statusCode: {           
           400: function() {
+        	commonDim(false);
             alert("파일 내용이 잘못되었습니다.");
           },            
           500: function() {
+        	commonDim(false);
             alert("파일을 업로드할 수 없습니다.");
           }
         },                      
         success: function(result) {
           //alert(result);
+          commonDim(false);
           $("#recoveryRegisList").html(result);
           $('#reProductExcelForm').dialog('close');
         }

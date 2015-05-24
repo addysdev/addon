@@ -16,6 +16,27 @@ import com.offact.addys.vo.master.ProductMasterVO;
  * @author
  */
 public interface RecoveryService {
+	 /**
+     * 작업대상 목록 조회
+     * 
+     * @return
+     * @throws BizException
+     */
+    public List<RecoveryVO> getCollectPageList(RecoveryVO recovery) throws BizException;
+    /**
+     * 작업대상 전체 갯수
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int getCollectCnt(RecoveryVO recovery) throws BizException;
+    /**
+     * 회수대상  리스트 조회
+     * 
+     * @return
+     * @throws BizException
+     */
+    public List<RecoveryVO> getRecoveryList(RecoveryVO recovery) throws BizException;
     /**
      * 회수대상 목록 조회
      * 

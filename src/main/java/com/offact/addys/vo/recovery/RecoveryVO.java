@@ -28,7 +28,8 @@ public class RecoveryVO extends AbstractVO {
 	private String completeUserId;
 	private String completeUserName;
 	private String collectState;
-	
+    private String collectStateView;
+    
 	private String sendDateTime;
 	private String sendUserId;
 	private String sendUserName;
@@ -65,6 +66,7 @@ public class RecoveryVO extends AbstractVO {
 	
 	private String con_groupId;
 	private String con_recoveryState;
+	private String con_collectState;
 	private String regroupid;
 	
     private String searchGubun;
@@ -74,6 +76,13 @@ public class RecoveryVO extends AbstractVO {
     private String end_recoveryDate;
 	
 	private String errMsg;
+	
+	private String waitCnt;
+	private String sendCnt;
+	private String reciveCnt;
+	private String checkCnt;
+	
+	private String authId;
 	
 	// /** for paging */
     private String totalCount       = "0";
@@ -458,6 +467,48 @@ public class RecoveryVO extends AbstractVO {
 	}
 	public void setRecoveryStateView(String recoveryStateView) {
 		this.recoveryStateView = recoveryStateView;
+	}
+	public String getCollectStateView() {
+		return collectStateView;
+	}
+	public void setCollectStateView(String collectStateView) {
+		this.collectStateView = collectStateView;
+	}
+	public String getCon_collectState() {
+		return con_collectState;
+	}
+	public void setCon_collectState(String con_collectState) {
+		this.con_collectState = con_collectState;
+	}
+	public String getWaitCnt() {
+		return waitCnt;
+	}
+	public void setWaitCnt(String waitCnt) {
+		this.waitCnt = waitCnt;
+	}
+	public String getSendCnt() {
+		return sendCnt;
+	}
+	public void setSendCnt(String sendCnt) {
+		this.sendCnt = sendCnt;
+	}
+	public String getReciveCnt() {
+		return reciveCnt;
+	}
+	public void setReciveCnt(String reciveCnt) {
+		this.reciveCnt = reciveCnt;
+	}
+	public String getCheckCnt() {
+		return checkCnt;
+	}
+	public void setCheckCnt(String checkCnt) {
+		this.checkCnt = checkCnt;
+	}
+	public String getAuthId() {
+		return authId;
+	}
+	public void setAuthId(String authId) {
+		this.authId = authId;
 	}
     
 }

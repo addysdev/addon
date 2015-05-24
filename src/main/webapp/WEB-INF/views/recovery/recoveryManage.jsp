@@ -1,19 +1,19 @@
-<%@ include file="/WEB-INF/views/addys/top.jsp" %>
+<%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <SCRIPT>
     // 리스트 조회
     function fcRecovery_listSearch(curPage){
 
     	 curPage = (curPage==null) ? 1:curPage;
          recoveryConForm.curPage.value = curPage;
-
+         
          commonDim(true);
          $.ajax({
              type: "POST",
-                url:  "<%= request.getContextPath() %>/recovery/recoverypagelist",
+                url:  "<%= request.getContextPath() %>/recovery/recoverylist",
                      data:$("#recoveryConForm").serialize(),
                 success: function(result) {
                     commonDim(false);
-                    $("#recoveryPageList").html(result);
+                    $("#recoveryList").html(result);
                 },
                 error:function() {
                     commonDim(false);
@@ -58,31 +58,32 @@
         });
     };
 </SCRIPT>
-<div class="container">
+	<div class="container-fluid">
 	<h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 회수 리스트</font></strong></h4>
+	
+	<table class="table table-bordered" >
+	 	<tr>
+          <th class='text-center'  style="background-color:#E6F3FF" >작업코드</th>
+          <th class='text-center'><c:out value="${recoveryConVO.collectCode}"></c:out></th>
+          <th class='text-center' style="background-color:#E6F3FF">회수요청일</th>
+          <th class='text-center'><c:out value="${recoveryConVO.collectDateTime}"></c:out></th>
+      	  <th class='text-center' style="background-color:#E6F3FF">회수마감일</th>
+          <th class='text-center'><c:out value="${recoveryConVO.recoveryClosingDate}"></c:out></th>	
+      	</tr>
+      	<tr>
+          <th class='text-center' style="background-color:#E6F3FF">메모</th>
+          <th colspan='5' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${recoveryVO.memo}" placeholder="메모" disabled /></th>
+      	</tr>
+	  </table>
+	  
 	  <!-- 조회조건 -->
 	  <form:form class="form-inline" role="form" commandName="recoveryConVO" id="recoveryConForm" name="recoveryConForm" method="post" action="" >
         <input type="hidden" name="curPage"             id="curPage"            value="1" />
         <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
+        <input type="hidden" name="collectCode"          id="collectCode"         value="${recoveryConVO.collectCode}"  />
         <fieldset>
         	<div class="form-group">
-        		<label for="start_recoveryDate end_recoveryDate"><h6><strong><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span>  회수일자 : </font></strong></h6></label>
-				<div style='width:150px' class='input-group date ' id='datetimepicker1' data-link-field="start_recoveryDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" value="${recoveryConVO.start_recoveryDate}" />
-	                <span class="input-group-addon">
-	                    <span class="glyphicon glyphicon-calendar"></span>
-	                </span>
-	                <input type="hidden" id="start_recoveryDate" name="start_recoveryDate" value="${recoveryConVO.start_recoveryDate}" />
-	            </div>
-	            <div style='width:150px' class='input-group date' id='datetimepicker2'  data-link-field="end_recoveryDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" value="${recoveryConVO.end_recoveryDate}" />
-	                <span class="input-group-addon">
-	                    <span class="glyphicon glyphicon-calendar"></span>
-	                </span>
-	                <input type="hidden" id="end_recoveryDate" name="end_recoveryDate" value="${recoveryConVO.end_recoveryDate}" />
-	            </div>
-	            <br><br>
 	            <c:choose>
 	    		<c:when test="${strAuth == '03'}">
 					<input type="hidden" id="con_groupId" name="con_groupId" value="${recoveryConVO.groupId}">
@@ -95,73 +96,26 @@
 		                    	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
 		                    </c:forEach>
 		                </select>
+		                <label for="searchGubun"><h6><strong><font style="color:#FF9900"> 회수상태 : </font></strong></h6></label>
+						<select class="form-control" title="회수상태" id="con_recoveryState" name="con_recoveryState" value="">
+		                	<option value="">전체</option>
+		                    <c:forEach var="codeVO" items="${code_comboList}" >
+		                    	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
+		                    </c:forEach>
+		           		</select>
+						<button type="button" class="btn btn-primary" onClick="javascript:fcRecovery_listSearch()">조회</button>
+			            <!-- >button type="button" class="btn" onClick="">excel</button -->
 					</c:otherwise>
 				</c:choose>
-				<label for="searchGubun"><h6><strong><font style="color:#FF9900"> 회수상태 : </font></strong></h6></label>
-				<select class="form-control" title="회수상태" id="con_orderState" name="con_recoveryState" value="">
-                	<option value="">전체</option>
-                    <c:forEach var="codeVO" items="${code_comboList}" >
-                    	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
-                    </c:forEach>
-           		</select>
-				<button type="button" class="btn btn-primary" onClick="javascript:fcRecovery_listSearch()">조회</button>
-	            <!-- >button type="button" class="btn" onClick="">excel</button -->
             </div>
 	    </fieldset>
 	  </form:form>
 	  <!-- //조회 -->
   <br>
   <!-- 조회결과리스트 -->
-  <div id=recoveryPageList></div>
-  <c:if test="${strAuth != '03'}"><button type="button" class="btn btn-primary" onClick="fcRecovery_registForm()">회수등록</button></c:if>
-  
-  <div id="recoveryRegForm"  title="회수대상 등록"></div>
-  <!-- //회수 등록화면 -->
-    <!--회수 상세처리화면-->
-  <div id="recoveryDetailView"  title="회수 상세처리화면"></div>
-  <!-- //회수 상세처리화면 -->
-  
-  	<div id="memoManage"  title="메모관리"></div>
-    <!-- //메모 상세화면 -->
-    <div id="etcManage"  title="비고"></div>
-    <!-- //비고 상세화면 -->
+  <div id=recoveryList></div>
+
 </div>
-
- <div id="recoveryProductList"  title="회수대상 품목조회"></div>
-  <!-- //검수 상세처리화면 -->
-  
-    <!-- 보유재고 일괄등록-->
-  <div id="reProductExcelForm"  title="회수품목 일괄등록"></div>
-  
-<br>
-<%@ include file="/WEB-INF/views/addys/footer.jsp" %>
-<script type="text/javascript">
-
-
-    $(function () {
-        $('#datetimepicker1').datetimepicker(
-        		{
-                	language:  'kr',
-                    format: 'yyyy-mm-dd',
-                    weekStart: 1,
-                    todayBtn:  1,
-            		autoclose: 1,
-            		todayHighlight: 1,
-            		startView: 2,
-            		minView: 2,
-            		forceParse: 0
-                });
-        $('#datetimepicker2').datetimepicker(
-        		{
-                	language:  'kr',
-                    format: 'yyyy-mm-dd',
-                    weekStart: 1,
-                    todayBtn:  1,
-            		autoclose: 1,
-            		todayHighlight: 1,
-            		startView: 2,
-            		minView: 2,
-            		forceParse: 0
-                });
-    });
+<script>
+fcRecovery_listSearch();
 </script>

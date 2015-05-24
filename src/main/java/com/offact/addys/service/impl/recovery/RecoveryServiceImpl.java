@@ -33,13 +33,33 @@ public class RecoveryServiceImpl implements RecoveryService {
     private SqlSessionCommonDao commonDao;
 
     @Override
+    public List<RecoveryVO> getCollectPageList(RecoveryVO recovery) throws BizException {
+    	
+        List<RecoveryVO> recoveryList = commonDao.selectList("Recovery.getCollectPageList", recovery);
+
+        return recoveryList;
+    }
+
+    @Override
+    public int getCollectCnt(RecoveryVO recovery) throws BizException {
+        return commonDao.selectOne("Recovery.getCollectCnt", recovery);
+    }
+    
+    @Override
+    public List<RecoveryVO> getRecoveryList(RecoveryVO recovery) throws BizException {
+    	
+        List<RecoveryVO> recoveryList = commonDao.selectList("Recovery.getRecoveryList", recovery);
+
+        return recoveryList;
+    }
+    
+    @Override
     public List<RecoveryVO> getRecoveryPageList(RecoveryVO recovery) throws BizException {
     	
         List<RecoveryVO> recoveryList = commonDao.selectList("Recovery.getRecoveryPageList", recovery);
 
         return recoveryList;
     }
-
     @Override
     public int getRecoveryCnt(RecoveryVO recovery) throws BizException {
         return commonDao.selectOne("Recovery.getRecoveryCnt", recovery);

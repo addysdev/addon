@@ -96,7 +96,7 @@ function fcMemo_add(){
 			    	<c:if test="${!empty commentList}">
 		             <c:forEach items="${commentList}" var="commentVO" varStatus="status">
 		             <tr id="select_tr_${commentVO.idx}">
-		                 <td class='text-left'><c:out value="${status.count}"></c:out></td>
+		                 <td class='text-left'><c:out value="${commentList.size()-(status.count-1)}"></c:out></td>
 		                 <td class='text-center'><c:out value="${commentVO.commentUserName}"></c:out></td>
 		                 <td class='text-center'><c:out value="${commentVO.commentDateTime}"></c:out></td>
 		                 <td class='text-left'><c:out value="${commentVO.comment}"></c:out></td>

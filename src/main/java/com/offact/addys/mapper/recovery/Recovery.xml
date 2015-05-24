@@ -47,7 +47,137 @@
   <result column="updateUserId"           property="updateUserId"  />
   <result column="updateUserName"           property="updateUserName"  />
   <result column="updateDateTime"           property="updateDateTime"  />
+  <result column="waitCnt"           property="waitCnt"  />  
+  <result column="sendCnt"           property="sendCnt"  />  
+  <result column="reciveCnt"           property="reciveCnt"  />  
+  <result column="checkCnt"           property="checkCnt"  />  
+  <result column="collectState"           property="collectState"  />  
+  <result column="collectStateView"           property="collectStateView"  />  
 </resultMap>
+
+
+<select id="getCollectPageList"  resultMap="recoveryVO" parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
+
+    Select T4.collectStateView,
+         T4.collectState,
+         T4.collectCode,
+         sum(T4.waitCnt) as waitCnt,
+         sum(T4.sendCnt) as sendCnt,
+         sum(T4.reciveCnt) as reciveCnt,
+         sum(T4.checkCnt) as checkCnt,
+         T4.recoveryClosingDate,
+         T4.collectDateTime,
+         T4.memo
+    From (
+          Select T3.codeName as collectStateView ,
+                 T1.collectState,
+                 T1.collectCode,
+                 Case When T2.recoveryState = '01' Then 1 Else 0 End waitCnt,
+                 Case When T2.recoveryState = '02' Then 1 Else 0 End sendCnt,
+                 Case When T2.recoveryState = '03' Then 1 Else 0 End reciveCnt,
+                 Case When T2.recoveryState = '04' Then 1 Else 0 End checkCnt,
+                 T1.recoveryClosingDate,
+                 DATE_FORMAT(T1.collectDateTime, '%Y-%m-%d') as collectDateTime,
+                 T1.memo
+            From adCollect T1
+                 Left Join adRecovery T2 On T1.collectCode=T2.collectCode
+                 Left Join ofCode T3 On T1.collectState = T3.codeId and T3.codegroupId = 'RE01'
+           Where T1.deletedYn='N'
+                 AND T1.collectDateTime between concat(#{start_recoveryDate},' 00:00:00') and concat(#{end_recoveryDate},' 23:59:59')
+             <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000' and authId == '03'" >
+           		AND T2.groupId = #{con_groupId}
+             </if>
+             <if test="con_collectState != null and con_collectState != ''" >
+           		 AND T1.collectState = #{con_collectState}
+             </if>
+           ) As T4
+   Group by T4.collectStateView,
+  			T4.collectState,
+           	T4.collectCode,
+        	T4.recoveryClosingDate,
+          	T4.collectDateTime
+   LIMIT ${page_limit_val1} , ${page_limit_val2}
+		
+</select>
+
+<select id="getCollectCnt" resultType="int">
+	SELECT count(*) AS TOT_COUNT
+		From (
+  			      Select T4.collectStateView,
+         				 T4.collectState,
+         				 T4.collectCode,
+         				 sum(T4.waitCnt),
+         				 sum(T4.sendCnt),
+         				 sum(T4.reciveCnt),
+         				 sum(T4.checkCnt),
+         				 T4.recoveryClosingDate,
+         				 T4.collectDateTime,
+         				 T4.memo
+    			  	From (
+          				  Select T3.codeName as collectStateView ,
+                 				 T1.collectState,
+                				 T1.collectCode,
+               				     Case When T2.recoveryState = '01' Then 1 Else 0 End waitCnt,
+                 				 Case When T2.recoveryState = '02' Then 1 Else 0 End sendCnt,
+                 				 Case When T2.recoveryState = '03' Then 1 Else 0 End reciveCnt,
+                 				 Case When T2.recoveryState = '04' Then 1 Else 0 End checkCnt,
+                 				 T1.recoveryClosingDate,
+                 				 DATE_FORMAT(T1.collectDateTime, '%Y-%m-%d') as collectDateTime,
+                 				 T1.memo
+            				From adCollect T1
+                 				 Left Join adRecovery T2 On T1.collectCode=T2.collectCode
+                 				 Left Join ofCode T3 On T1.collectState = T3.codeId and T3.codegroupId = 'RE01'
+          			 Where T1.deletedYn='N'
+                 		   AND T1.collectDateTime between concat(#{start_recoveryDate},' 00:00:00') and concat(#{end_recoveryDate},' 23:59:59')
+           			    <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000' and authId == '03'" >
+           				   AND T2.groupId = #{con_groupId}
+            		   </if>             	
+             		   <if test="con_collectState != null and con_collectState != ''" >
+           		 		   AND T1.collectState = #{con_collectState}
+             		  </if>
+           		) As T4
+   		Group by T4.collectStateView,
+  			T4.collectState,
+           	T4.collectCode,
+        	T4.recoveryClosingDate,
+          	T4.collectDateTime
+		) As TOT
+			           
+</select>
+
+<select id="getRecoveryList"  resultMap="recoveryVO" parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
+
+  Select T4.codeName as recoveryStateView ,
+         T1.recoveryState,
+         T1.recoveryCode,
+         T2.recoveryClosingDate,
+         DATE_FORMAT(T2.collectDateTime, '%Y-%m-%d') as collectDateTime,
+         T1.groupId,
+         T3.groupName,
+         0 as recoveryResultCnt,
+         0 as recoveryResultPrice
+    From adRecovery T1
+         Left Join adCollect T2 On T1.collectCode=T2.collectCode
+         Left Join ofGroup T3 On T1.groupId = T3.groupId
+         Left Join ofCode T4 On T1.recoveryState = T4.codeId and T4.codegroupId = 'RE02'
+   Where T2.deletedYn='N'
+         AND T1.collectCode = #{collectCode}
+           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           		AND T1.groupId = #{con_groupId}
+           </if>
+           <if test="con_recoveryState != null and con_recoveryState != ''" >
+           		AND T1.recoveryState = #{con_recoveryState}
+           </if>
+   Group by T4.codeName,
+  			T1.recoveryState,
+         	T1.recoveryCode,
+        	T2.recoveryClosingDate,
+         	T2.collectDateTime,
+         	T1.groupId,
+         	T3.groupName
+		
+</select>
+
 
 <select id="getRecoveryPageList"  resultMap="recoveryVO" parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
 
@@ -167,8 +297,7 @@
 <update id="updateRecovery"  parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
 		update adRecovery
 			set
-				recoveryClosingDate = #{recoveryClosingDate}
-               ,recoveryUserId = #{regUserId}
+				sendUserId = #{sendUserId}
                ,recoveryDateTime = now()
                ,recoveryState = '02'
 		where recoveryCode = #{recoveryCode}
@@ -234,8 +363,8 @@ insert into adRecoveryDetail (recoveryCode
 
 <update id="recoveryProcUpdate"  parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
 		update adRecovery 
-			set recoveryUserId  = #{recoveryUserId}
-        		,recoveryDateTime = now()
+			 set sendUserId  = #{sendUserId}
+        		,sendDateTime = now()
         		,recoveryState = #{recoveryState}
 		where recoveryCode = #{recoveryCode}
 		                        
@@ -244,9 +373,7 @@ insert into adRecoveryDetail (recoveryCode
 <update id="recoveryDetailProcUpdate"  parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
 	
 		update adRecoveryDetail 
-			set stockDate = #{stockDate}
-        		,stockCnt = #{stockCnt}
-        		,recoveryCnt = #{recoveryCnt}
+			set  recoveryCnt = #{recoveryCnt}
         		,addCnt = #{addCnt}
 				,lossCnt = #{lossCnt}
          		,etc = #{etc}

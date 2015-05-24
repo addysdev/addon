@@ -117,9 +117,9 @@ public class RecoveryController {
 		}
 
         
-        RecoveryVO recoveryConVO = new RecoveryVO();
+        RecoveryVO collectConVO = new RecoveryVO();
         
-        recoveryConVO.setGroupId(strGroupId);
+        collectConVO.setGroupId(strGroupId);
 
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -132,11 +132,11 @@ public class RecoveryController {
         String strToday = simpleDateFormat.format(currentTime);
         String strDeliveryDay = simpleDateFormat.format(deliveryTime);
         
-        recoveryConVO.setStart_recoveryDate(strDeliveryDay);
-        recoveryConVO.setEnd_recoveryDate(strToday);
+        collectConVO.setStart_recoveryDate(strDeliveryDay);
+        collectConVO.setEnd_recoveryDate(strToday);
         
         // 조회조건저장
-        mv.addObject("recoveryConVO", recoveryConVO);
+        mv.addObject("collectConVO", collectConVO);
 
         
         // 공통코드 조회 (발주상태코드)
@@ -165,7 +165,7 @@ public class RecoveryController {
      * @throws BizException
      */
     @RequestMapping(value = "/recovery/collectpagelist")
-    public ModelAndView collectPageList(@ModelAttribute("recoveryConVO") RecoveryVO recoveryConVO, 
+    public ModelAndView collectPageList(@ModelAttribute("collectConVO") RecoveryVO collectConVO, 
     		                         HttpServletRequest request, 
     		                         HttpServletResponse response) throws BizException 
     {
@@ -173,34 +173,29 @@ public class RecoveryController {
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : recoveryConVO" + recoveryConVO);
+		logger.info("["+logid+"] Controller start : collectConVO" + collectConVO);
 
         ModelAndView mv = new ModelAndView();
-        List<RecoveryVO> recoveryList = null;
-
-        // 조직값 null 일때 공백처리
-        if (recoveryConVO.getCon_groupId() == null) {
-        	recoveryConVO.setCon_groupId("");
-        }
+        List<RecoveryVO> collectList = null;
 
         // 상태 값 null 일때 공백처리
-        if (recoveryConVO.getCon_recoveryState() == null) {
-        	recoveryConVO.setCon_recoveryState("");
+        if (collectConVO.getCon_collectState() == null) {
+        	collectConVO.setCon_collectState("");
         }
 
         // 조회조건저장
-        mv.addObject("recoveryConVO", recoveryConVO);
+        mv.addObject("collectConVO", collectConVO);
 
         // 페이징코드
-        recoveryConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(recoveryConVO.getCurPage(), recoveryConVO.getRowCount()));
-        recoveryConVO.setPage_limit_val2(StringUtil.nvl(recoveryConVO.getRowCount(), "10"));
+        collectConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(collectConVO.getCurPage(), collectConVO.getRowCount()));
+        collectConVO.setPage_limit_val2(StringUtil.nvl(collectConVO.getRowCount(), "10"));
         
-        // 발주대상목록조회
-        recoveryList = recoverySvc.getRecoveryPageList(recoveryConVO);
-        mv.addObject("recoveryList", recoveryList);
+        // 작업대상목록조회
+        collectList = recoverySvc.getCollectPageList(collectConVO);
+        mv.addObject("collectList", collectList);
 
         // totalCount 조회
-        String totalCount = String.valueOf(recoverySvc.getRecoveryCnt(recoveryConVO));
+        String totalCount = String.valueOf(recoverySvc.getCollectCnt(collectConVO));
         mv.addObject("totalCount", totalCount);
 
         mv.setViewName("/recovery/collectPageList");
@@ -223,13 +218,17 @@ public class RecoveryController {
      */
     @RequestMapping(value = "/recovery/recoverymanage")
     public ModelAndView recoveryManage(HttpServletRequest request, 
-    		                       HttpServletResponse response) throws BizException 
+    		                       HttpServletResponse response,
+    		                       String collectCode,
+    		                       String collectDateTime,
+    		                       String recoveryClosingDate,
+    		                       String memo) throws BizException 
     {
         
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start ");
+		logger.info("["+logid+"] Controller start collectCode:"+collectCode);
 
         ModelAndView mv = new ModelAndView();
         
@@ -247,6 +246,10 @@ public class RecoveryController {
         RecoveryVO recoveryConVO = new RecoveryVO();
         
         recoveryConVO.setGroupId(strGroupId);
+        recoveryConVO.setCollectCode(collectCode);
+        recoveryConVO.setCollectDateTime(collectDateTime);
+        recoveryConVO.setRecoveryClosingDate(recoveryClosingDate);
+        recoveryConVO.setMemo(memo);
 
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -283,6 +286,56 @@ public class RecoveryController {
       	long t2 = System.currentTimeMillis();
       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
       	
+        return mv;
+    }
+    /**
+     * 회수대상 리스트조회
+     * 
+     * @param RecoveryVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/recovery/recoverylist")
+    public ModelAndView recoveryList(@ModelAttribute("recoveryConVO") RecoveryVO recoveryConVO, 
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : recoveryConVO" + recoveryConVO);
+
+        ModelAndView mv = new ModelAndView();
+        List<RecoveryVO> recoveryList = null;
+
+        // 조직값 null 일때 공백처리
+        if (recoveryConVO.getCon_groupId() == null) {
+        	recoveryConVO.setCon_groupId("");
+        }
+
+        // 상태 값 null 일때 공백처리
+        if (recoveryConVO.getCon_recoveryState() == null) {
+        	recoveryConVO.setCon_recoveryState("");
+        }
+
+        // 조회조건저장
+        mv.addObject("recoveryConVO", recoveryConVO);
+   
+        // 발주대상목록조회
+        recoveryList = recoverySvc.getRecoveryList(recoveryConVO);
+        mv.addObject("recoveryList", recoveryList);
+
+        mv.setViewName("/recovery/recoveryList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
         return mv;
     }
     /**
