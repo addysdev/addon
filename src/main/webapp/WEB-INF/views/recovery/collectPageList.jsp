@@ -19,7 +19,7 @@
         });
     }
     // 회수 상세 페이지 리스트 Layup
-    function fcCollect_detail(collectCode,collectDateTime,recoveryClosingDate,memo) {
+    function fcCollect_detail(collectCode,collectDateTime,recoveryClosingDate,memo,state) {
    
     	var url='<%= request.getContextPath() %>/recovery/recoverymanage';
 
@@ -34,7 +34,7 @@
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load(url+'?collectCode='+collectCode+'&collectDateTime='+collectDateTime+'&recoveryClosingDate='+recoveryClosingDate+'&memo='+encodeURIComponent(memo));
+                $(this).load(url+'?collectCode='+collectCode+'&state='+state+'&collectDateTime='+collectDateTime+'&recoveryClosingDate='+recoveryClosingDate+'&memo='+encodeURIComponent(memo));
                
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#recoveryManage").dialog('close');
@@ -50,7 +50,7 @@
 
 </SCRIPT>
      <form:form commandName="collectVO" name="collectPageListForm" method="post" action="" >
-      <p><span>총 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
+      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span>전체건수 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table  class="table table-bordered">
 	    <thead>
 	      <tr style="background-color:#E6F3FF">
@@ -72,11 +72,11 @@
              <c:forEach items="${collectList}" var="recoveryVO" varStatus="status">
              <tr id="select_tr_${recoveryVO.recoveryStateView}">
                  <td class='text-center'><c:out value="${recoveryVO.collectStateView}"></c:out></td>
-                 <td class='text-center'><a href="javascript:fcCollect_detail('${recoveryVO.collectCode}','${recoveryVO.collectDateTime}','${recoveryVO.recoveryClosingDate}','${recoveryVO.memo}')"><c:out value="${recoveryVO.collectCode}"></c:out></a></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.waitCnt}"/></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.sendCnt}"/></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.reciveCnt}"/></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.checkCnt}"/></td>
+                 <td class='text-center'><a href="javascript:fcCollect_detail('${recoveryVO.collectCode}','${recoveryVO.collectDateTime}','${recoveryVO.recoveryClosingDate}','${recoveryVO.memo}','')"><c:out value="${recoveryVO.collectCode}"></c:out></a></td>
+                 <td class='text-right'><a href="javascript:fcCollect_detail('${recoveryVO.collectCode}','${recoveryVO.collectDateTime}','${recoveryVO.recoveryClosingDate}','${recoveryVO.memo}','01')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.waitCnt}"/></a></td>
+                 <td class='text-right'><a href="javascript:fcCollect_detail('${recoveryVO.collectCode}','${recoveryVO.collectDateTime}','${recoveryVO.recoveryClosingDate}','${recoveryVO.memo}','02')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.sendCnt}"/></a></td>
+                 <td class='text-right'><a href="javascript:fcCollect_detail('${recoveryVO.collectCode}','${recoveryVO.collectDateTime}','${recoveryVO.recoveryClosingDate}','${recoveryVO.memo}','03')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.reciveCnt}"/></a></td>
+                 <td class='text-right'><a href="javascript:fcCollect_detail('${recoveryVO.collectCode}','${recoveryVO.collectDateTime}','${recoveryVO.recoveryClosingDate}','${recoveryVO.memo}','04')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.checkCnt}"/></a></td>
                  <td class='text-center'><c:out value="${recoveryVO.collectDateTime}"></c:out></td>
                  <td class='text-center'><c:out value="${recoveryVO.recoveryClosingDate}"></c:out></td>
               </tr>

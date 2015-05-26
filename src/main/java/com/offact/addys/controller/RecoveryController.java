@@ -222,7 +222,8 @@ public class RecoveryController {
     		                       String collectCode,
     		                       String collectDateTime,
     		                       String recoveryClosingDate,
-    		                       String memo) throws BizException 
+    		                       String memo,
+    		                       String state) throws BizException 
     {
         
     	//log Controller execute time start
@@ -250,6 +251,7 @@ public class RecoveryController {
         recoveryConVO.setCollectDateTime(collectDateTime);
         recoveryConVO.setRecoveryClosingDate(recoveryClosingDate);
         recoveryConVO.setMemo(memo);
+        recoveryConVO.setCon_recoveryState(state);
 
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -312,6 +314,7 @@ public class RecoveryController {
 
         ModelAndView mv = new ModelAndView();
         List<RecoveryVO> recoveryList = null;
+        RecoveryVO recoveryState = new RecoveryVO();
 
         // 조직값 null 일때 공백처리
         if (recoveryConVO.getCon_groupId() == null) {
@@ -325,6 +328,10 @@ public class RecoveryController {
 
         // 조회조건저장
         mv.addObject("recoveryConVO", recoveryConVO);
+        
+        // 발주상태조회
+        recoveryState = recoverySvc.getRecoveryState(recoveryConVO);
+        mv.addObject("recoveryState", recoveryState);
    
         // 발주대상목록조회
         recoveryList = recoverySvc.getRecoveryList(recoveryConVO);

@@ -82,9 +82,9 @@
 	 </div>
      <br>
 	  <form:form commandName="stockMasterVO" name="stockMasterPageListForm" method="post" action="" >
-	    <table class="table table-striped">
+	    <table class="table table-bordered">
 	    <thead>
-	      <tr>
+	      <tr style="background-color:#E6F3FF">
 	        <th class='text-center'>지점</th>
 	        <th class='text-center'>안전재고</th>
 	        <th class='text-center'>보유재고</th>

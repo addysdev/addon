@@ -44,7 +44,10 @@ public class RecoveryServiceImpl implements RecoveryService {
     public int getCollectCnt(RecoveryVO recovery) throws BizException {
         return commonDao.selectOne("Recovery.getCollectCnt", recovery);
     }
-    
+    @Override
+    public RecoveryVO getRecoveryState(RecoveryVO recovery) throws BizException {
+        return commonDao.selectOne("Recovery.getRecoveryState", recovery);
+    }
     @Override
     public List<RecoveryVO> getRecoveryList(RecoveryVO recovery) throws BizException {
     	

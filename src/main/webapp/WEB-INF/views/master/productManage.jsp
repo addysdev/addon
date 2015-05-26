@@ -186,3 +186,6 @@
 </div>
 <br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>
+<script>
+fcProductMaster_listSearch();
+</script>

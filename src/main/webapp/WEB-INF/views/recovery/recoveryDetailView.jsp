@@ -1,5 +1,7 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <SCRIPT>
+
+var pintYN=false;
 /*
  * 화면 POPUP
  */
@@ -14,6 +16,9 @@ function tmt_winLaunch(theURL,winName,targetName,features) {
  */
 function fcRecovery_print(recoveryCode){
 	
+	
+	pintYN=true;
+	
 	var h=800;
 	var s=950;
 	var frm = document.recoveryDetailListForm;
@@ -25,11 +30,78 @@ function fcRecovery_print(recoveryCode){
 	 frm.target='printObj';
 	 frm.submit();
 }
+
 //회수처리
 function fcRecovery_process(){
+        
+	    var dfrm = document.recoveryDetailForm;
+	    
+		var frm=document.recoveryDetailListForm;
+		var amtCnt = frm.productPrice.length;
 
-        var frm = document.recoveryDetailListForm;
- 
+		if(amtCnt==undefined){
+			amtCnt=1;
+		}
+
+		var totalcnt=0;
+
+		if(amtCnt>1){
+	    	for(i=0;i<amtCnt;i++){	
+	    		var recoveryCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.recoveryCnt[i].value))));
+	    		totalcnt=totalcnt+recoveryCnt;
+	    	}
+		}else{
+
+			var recoveryCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.recoveryCnt.value))));
+    		totalcnt=totalcnt+recoveryCnt;
+			
+		}
+	    
+	    if(totalcnt==0){
+	    	
+	    	if (confirm('회수 대상 수량이 없습니다.\n회수수량을 0으로  상태값만  발신으로 업데이트 하시겠습니까?')){ 
+	    		
+	    	}else{
+	    		return;
+	    	}
+	    	
+	    }else{
+	    	
+	    	if(dfrm.deliveryMethod[0].checked==true){
+				
+				if(dfrm.transportCode.value==''){
+					alert('택배로 운송처리시 운송회사를 입력하셔야 합니다.');
+					return;
+				}
+				
+				if(dfrm.transportNo.value==''){
+					alert('택배로 운송처리시 운송장 번호를 입력하셔야 합니다.');
+					return;
+				}
+				
+			}else{
+				
+				if(dfrm.quickCharge.value==''){
+					alert('퀵 운송처리시 퀵 운송 담당자를 입력하셔야 합니다.');
+					return;
+				}
+				
+				if(dfrm.quickTel.value==''){
+					alert('퀵 운송처리시 퀵 운송 연락처를 입력하셔야 합니다.');
+					return;
+				}
+			}
+		    
+		    if(pintYN==false){
+		    	
+		    	alert('발신 처리시 회수번호를 프린트 하신후\n회수대상 BOX에 첨부하여 보내시기 바랍니다.\n인쇄버튼을 클릭하여 회수번호를 인쇄 하신 후\n다시 시도하시기 바랍니다.');
+		    	return;
+		    	
+		    }
+	    
+	    }
+	    
+
     	if(frm.seqs.length>1){
        		for(i=0;i<frm.seqs.length;i++){
 				frm.seqs[i].value=fillSpace(frm.productCode[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.recoveryCnt[i].value)+
@@ -43,7 +115,7 @@ function fcRecovery_process(){
 
        	}
 
-        if (confirm('회수 요청건을 처리 하시겠습니까?')){ 
+        if (confirm('회수 요청건을 발신처리합니다\n계속 진행 하시겠습니까?')){ 
         	
             var paramString = $("#recoveryDetailForm").serialize()+'&'+$("#recoveryDetailListForm").serialize();
  	
@@ -421,9 +493,71 @@ function  fcEtc_detail(orderCode,productCode,productName,etc,idx) {
     });
 };
 
-$(window).unload(function() {
-	 // alert('Handler for .unload() called.');
-	});
+function fcDelivery_method(){
+	
+	if(document.recoveryDetailForm.deliveryMethod[0].checked==true){
+		document.recoveryDetailForm.transportCode.disabled=false;
+		document.recoveryDetailForm.transportNo.disabled=false;
+		document.recoveryDetailForm.quickCharge.disabled=true;
+		document.recoveryDetailForm.quickTel.disabled=true;
+		document.recoveryDetailForm.quickCharge.value='';
+		document.recoveryDetailForm.quickTel.value='';
+	}else{
+		document.recoveryDetailForm.transportCode.disabled=true;
+		document.recoveryDetailForm.transportNo.disabled=true;
+		document.recoveryDetailForm.transportCode.value='';
+		document.recoveryDetailForm.transportNo.value='';
+		document.recoveryDetailForm.quickCharge.disabled=false;
+		document.recoveryDetailForm.quickTel.disabled=false;	
+	}
+}
+
+function fcResult_cal(){
+
+	var frm=document.recoveryDetailListForm;
+	var amtCnt = frm.productPrice.length;
+
+	if(amtCnt==undefined){
+		amtCnt=1;
+	}
+
+	var totalamt=0;
+	var totalresultamt=0;
+
+	if(amtCnt>1){
+    	for(i=0;i<amtCnt;i++){
+    		
+    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice[i].value))));
+    		var recoveryCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.recoveryCnt[i].value))));
+    		var recoveryResultCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.recoveryResultCnt[i].value))));
+    		var sum_supplyAmt=productPrice*recoveryCnt;
+    		var sum_supplyresultAmt=productPrice*recoveryResultCnt;
+
+    		totalamt=totalamt+sum_supplyAmt;
+    		totalresultamt=totalresultamt+sum_supplyresultAmt;
+
+    	}
+	}else{
+
+		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice.value))));
+		var recoveryCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.recoveryCnt.value))));
+		var recoveryResultCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.recoveryResultCnt.value))));
+
+		var sum_supplyAmt=productPrice*recoveryCnt;
+		var sum_supplyresultAmt=productPrice*recoveryResultCnt;
+
+		totalamt=totalamt+sum_supplyAmt;
+		totalresultamt=totalresultamt+sum_supplyresultAmt;
+		
+	}
+
+	  document.all('totalRecoveryAmt').innerText=addCommaStr(''+totalamt)+' 원  ';
+	  document.all('totalRecoveryResultAmt').innerText=addCommaStr(''+totalresultamt)+' 원  ';
+		
+
+}
+
+
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -443,7 +577,7 @@ $(window).unload(function() {
 				<button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcRecovery_complete()">검수완료</button>
 			</c:when>
 			<c:otherwise>
-				<c:if test="${recoveryVO.recoveryState=='01'}"><button type="button" class="btn btn-primary" onClick="fcRecovery_process()">회수</button></c:if>
+				<c:if test="${recoveryVO.recoveryState=='01'}"><button type="button" class="btn btn-primary" onClick="fcRecovery_process()">발신</button></c:if>
 			</c:otherwise>
 		  </c:choose>
           </div>
@@ -452,16 +586,80 @@ $(window).unload(function() {
 	  <table class="table table-bordered" >
 	 	<tr>
           <th class='text-center'  style="background-color:#E6F3FF" >회수번호</th>
-          <th class='text-center'><c:out value="${recoveryVO.recoveryCode}"></c:out>&nbsp;&nbsp;<button id="downbtn" type="button" class="btn btn-xs btn-success" onClick="fcRecovery_print('${recoveryVO.recoveryCode}')" >인쇄</button></th>
+          <th class='text-center' colspan="2" ><c:out value="${recoveryVO.recoveryCode}"></c:out>&nbsp;&nbsp;
+          <c:if test="${recoveryVO.recoveryState=='01'}"> 
+          <button id="downbtn" type="button" class="btn btn-xs btn-success" onClick="fcRecovery_print('${recoveryVO.recoveryCode}')" >인쇄</button>
+          </c:if>
+          </th>
           <th class='text-center' style="background-color:#E6F3FF">회수요청일</th>
           <th class='text-center'><c:out value="${recoveryVO.collectDateTime}"></c:out></th>
       	  <th class='text-center' style="background-color:#E6F3FF">회수마감일</th>
           <th class='text-center'><c:out value="${recoveryVO.recoveryClosingDate}"></c:out></th>	
       	</tr>
+      	 <c:choose>
+    		<c:when test="${recoveryVO.recoveryState=='01'}">
+				<tr>
+		          <th class='text-center' rowspan="2"  style="background-color:#E6F3FF" >운송방법<br>선택</th>
+		          <th class='text-left' >
+		          <input type="radio" name="deliveryMethod" id="deliveryMethod" value="01" checked onChange="fcDelivery_method()")/>&nbsp;택배
+		          </th>
+		          <th class='text-center' style="background-color:#E6F3FF">운송회사
+		          <!-- >button id="downbtn" type="button" class="btn btn-xs btn-success" onClick="" >직접입력</button --></th>
+		          <th class='text-center' colspan="2" >
+		          <select class="form-control" title="검색조건" id="transportCode" name="transportCode" value="">
+		            <option value="" >선택</option>
+		        	<option value="01" >CJ대한통운</option>
+		            <option value="02" >로젠택배</option>
+		            <option value="03" >우체국택배</option>
+		            <option value="04" >현대택배</option>
+		            <option value="05" >한진택배</option>
+		   		  </select>
+		   		  <input type="hidden" id="transport" name="transport" >
+		          </th>
+		      	  <th class='text-center'  style="background-color:#E6F3FF">운송장번호</th>
+		          <th class='text-center'><input type="text" class="form-control" id="transportNo" name="transportNo"  value="" placeholder="운송장번호"  /></th>	
+		      	</tr>
+		      	<tr>
+		      	  <th class='text-left' >
+		          <input type="radio" name="deliveryMethod" id="deliveryMethod" value="02"  onChange="fcDelivery_method()")/>&nbsp;퀵
+		          </th>
+		      	  <th class='text-center' style="background-color:#E6F3FF">담당자</th>
+		          <th class='text-center' colspan="2" >
+		          <input type="text" class="form-control" id="quickCharge" name="quickcharge" disabled value="" placeholder="담당자"  />
+		          </th>
+		      	  <th class='text-center' style="background-color:#E6F3FF">연락처</th>
+		          <th class='text-center'>
+		          <input type="text" class="form-control" id="quicktel" name="quickTel" disabled value="" placeholder="연락처"  />
+		          </th>
+		      	</tr>
+			</c:when>
+			<c:otherwise>
+				<tr>
+		          <th class='text-center' style="background-color:#E6F3FF" >운송방법</th>
+		          <c:choose>
+    				<c:when test="${recoveryVO.deliveryMethod=='01'}">
+		         	  <th class='text-center' >&nbsp;택배 </th>
+		              <th class='text-center' style="background-color:#E6F3FF">운송회사</th>
+		              <th class='text-center' colspan="2" ></th>
+                      <th class='text-center'  style="background-color:#E6F3FF">운송장번호</th>
+		              <th class='text-center'></th>
+		            </c:when>
+			        <c:otherwise>	
+			       	  <th class='text-center' >&nbsp;퀵 </th>
+		              <th class='text-center' style="background-color:#E6F3FF">담당자</th>
+		              <th class='text-center' colspan="2" ></th>
+                      <th class='text-center'  style="background-color:#E6F3FF">연락처</th>
+		              <th class='text-center'></th>
+		            </c:otherwise>
+		 		   </c:choose>
+		      	</tr>
+			</c:otherwise>
+		  </c:choose>
+      	</sapn>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">메모&nbsp;(<span id="memoCnt" style="color:blue">${recoveryVO.memoCnt}</span>)
           <button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcMemo_detail('${recoveryVO.recoveryCode}','${recoveryVO.memo}')" >관리</button></th>
-          <th colspan='5' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${recoveryVO.memo}" placeholder="메모" disabled /></th>
+          <th colspan='6' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${recoveryVO.memo}" placeholder="메모" disabled /></th>
       	</tr>
 	  </table>
 	  </form:form>
@@ -490,11 +688,8 @@ $(window).unload(function() {
 		  </c:choose>
           <th class='text-center'>상품명</th>
           <th class='text-center'>기준단가</th>
-          <th class='text-center'>재고현황</th>
-          <th class='text-center'>회수수량</th>
-          <th class='text-center'>+</th>
-          <th class='text-center'>-</th>
-          <th class='text-center'>검수수량</th>
+          <th class='text-center'>회수<br>수량</th>
+          <th class='text-center'>검수<br>수량</th>
           <th class='text-center'>비고</th>
       	</tr>
 	    	<c:if test="${!empty recoveryDetailList}">
@@ -522,26 +717,27 @@ $(window).unload(function() {
                  <input type="hidden" id="productPrice" name="productPrice" value="${recoveryVO.productPrice}" >
                  <input type="hidden" id="stockDate" name="stockDate" value="${recoveryVO.stockDate}" >
                  <input type="hidden" id="stockCnt" name="stockCnt" value="${recoveryVO.stockCnt}" >
-                 <input type="hidden" id="recoveryCntRaw" name="recoveryCntRaw" value="${recoveryVO.recoveryCnt}" >
-                 <input type="hidden" id="recoveryCnt" name="recoveryCnt" value="${recoveryVO.recoveryCnt}" >
-                 <input type="hidden" id="recoveryResultCnt" name="recoveryResultCnt" value="${recoveryVO.recoveryResultCnt}" >
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.stockCnt}"/></td>
-                 <td class='text-right' id='recoveryCntView' name='recoveryCntView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.recoveryCnt}"/></td>
+                 <input type="hidden" id="addCnt" name="addCnt" value="${recoveryVO.addCnt}" >
+                 <input type="hidden" id="lossCnt" name="lossCnt" value="${recoveryVO.lossCnt}" >
                  <c:choose>
 		    		<c:when test="${recoveryVO.recoveryState!='01'}"> 
-					   <td class='text-right' id='addCnt' name='addCnt'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.addCnt}"  /></td>
-					   <td class='text-right' id='lossCnt' name='lossCnt'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.lossCnt}"  /></td>
-                    </c:when>
+					   <td class='text-right' id='recoveryCntView' name='recoveryCntView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.recoveryCnt}"  /></td>
+					   <input type="hidden" id="recoveryCnt" name="recoveryCnt" value="${recoveryVO.recoveryCnt}" >
+                       </c:when>
 					<c:otherwise>
-					   <td class='text-right'><input style="width:35px" type="text" class="form-control" id="addCnt" name="addCnt" onKeyup="fcAdd_Cnt('${status.count}')" value="${recoveryVO.addCnt}"></td>
-                 	<td class='text-right'><input style="width:35px" type="text" class="form-control" id="lossCnt" name="lossCnt" onKeyup="fcLoss_Cnt('${status.count}')" value="${recoveryVO.lossCnt}"></td>
-                </c:otherwise>
+					   <td class='text-center'>
+					   <input style="width:55px;text-align:right" type="text" class="form-control" id="recoveryCnt" name="recoveryCnt"  maxlength="3" numberOnly onKeyup="fcResult_cal()" value="${recoveryVO.recoveryCnt}">
+					   </td>
+                    </c:otherwise>
 				</c:choose>
                  <c:choose>
 		    		<c:when test="${recoveryVO.recoveryState=='02' && strAuth!= '03'}"> 
-					    <td class='text-right'><input style="width:35px" type="text" class="form-control" id="recoveryResultCntView" name="recoveryResultCntView" onKeyup="fcResult_Cnt('${status.count}')" value="${recoveryVO.recoveryResultCnt}"></td>
+					    <td class='text-center'>
+					    <input style="width:55px;text-align:right" class="form-control" type="text" id="recoveryResultCnt" name="recoveryResultCnt" maxlength="3" numberOnly onKeyup="fcResult_cal()" value="${recoveryVO.recoveryResultCnt}">
+					    </td>
                     </c:when>
 					<c:otherwise>
+					    <input type="hidden" id="recoveryResultCnt" name="recoveryResultCnt" value="${recoveryVO.recoveryResultCnt}" >
 						<td class='text-right' id='recoveryResultCntView' name='recoveryResultCntView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.recoveryResultCnt}"  /></td>
 					</c:otherwise>
 				</c:choose>
@@ -569,7 +765,8 @@ $(window).unload(function() {
 	</div>
 	<script type="text/javascript">
 
-    totalRecoveryAmt();
-    totalRecoveryResultAmt();
+    //totalRecoveryAmt();
+    //totalRecoveryResultAmt();
+    fcResult_cal();
     totalCheck();
 </script>

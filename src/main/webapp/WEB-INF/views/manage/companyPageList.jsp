@@ -23,9 +23,9 @@
 
      <form:form commandName="companyManageVO" name="companyManagePageListForm" method="post" action="" >
       <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
-	  <table class="table table-striped">
+	  <table class="table table-bordered">
 	    <thead>
-	      <tr>
+	      <tr style="background-color:#E6F3FF">
 	        <th class='text-center'>업체코드</th>
             <th class='text-center'>업체명</th>
             <th class='text-center'>담당자명</th>

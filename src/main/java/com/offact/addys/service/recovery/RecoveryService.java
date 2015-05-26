@@ -31,6 +31,13 @@ public interface RecoveryService {
      */
     public int getCollectCnt(RecoveryVO recovery) throws BizException;
     /**
+     * 회수 상태조회
+     * 
+     * @return
+     * @throws BizException
+     */
+    public RecoveryVO getRecoveryState(RecoveryVO recovery) throws BizException;
+    /**
      * 회수대상  리스트 조회
      * 
      * @return

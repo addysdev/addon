@@ -147,4 +147,6 @@
             		forceParse: 0
                 });
     });
+    
+    fcStock_listSearch();
 </script>

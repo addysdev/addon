@@ -77,12 +77,20 @@ public class RecoveryVO extends AbstractVO {
 	
 	private String errMsg;
 	
+	private String totalCnt;
 	private String waitCnt;
 	private String sendCnt;
 	private String reciveCnt;
 	private String checkCnt;
 	
 	private String authId;
+	
+	private String deliveryMethod;
+	private String transportCode;
+	private String transport;
+	private String transportNo;
+	private String quickCharge;
+	private String quickTel;
 	
 	// /** for paging */
     private String totalCount       = "0";
@@ -509,6 +517,48 @@ public class RecoveryVO extends AbstractVO {
 	}
 	public void setAuthId(String authId) {
 		this.authId = authId;
+	}
+	public String getDeliveryMethod() {
+		return deliveryMethod;
+	}
+	public void setDeliveryMethod(String deliveryMethod) {
+		this.deliveryMethod = deliveryMethod;
+	}
+	public String getTransportCode() {
+		return transportCode;
+	}
+	public void setTransportCode(String transportCode) {
+		this.transportCode = transportCode;
+	}
+	public String getTransport() {
+		return transport;
+	}
+	public void setTransport(String transport) {
+		this.transport = transport;
+	}
+	public String getTransportNo() {
+		return transportNo;
+	}
+	public void setTransportNo(String transportNo) {
+		this.transportNo = transportNo;
+	}
+	public String getQuickCharge() {
+		return quickCharge;
+	}
+	public void setQuickCharge(String quickCharge) {
+		this.quickCharge = quickCharge;
+	}
+	public String getQuickTel() {
+		return quickTel;
+	}
+	public void setQuickTel(String quickTel) {
+		this.quickTel = quickTel;
+	}
+	public String getTotalCnt() {
+		return totalCnt;
+	}
+	public void setTotalCnt(String totalCnt) {
+		this.totalCnt = totalCnt;
 	}
     
 }

@@ -148,4 +148,6 @@
             		forceParse: 0
                 });
     });
+    
+    fcSales_listSearch();
 </script>

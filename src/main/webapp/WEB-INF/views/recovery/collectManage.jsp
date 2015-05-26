@@ -156,4 +156,6 @@
             		forceParse: 0
                 });
     });
+    
+    fcCollect_listSearch();
 </script>

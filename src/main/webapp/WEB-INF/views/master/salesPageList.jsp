@@ -50,7 +50,7 @@
 
      <form:form commandName="salesVO" name="salesPageListForm" method="post" action="" >
       <p><span>총 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
-	  <table class="table table-striped">
+	  <table class="table table-bordered">
 	    <colgroup>
 	     <col width="15%" />
          <col width="15%" />
@@ -60,7 +60,7 @@
          <col width="15%" />
         </colgroup>
 	    <thead>
-	      <tr>
+	      <tr style="background-color:#E6F3FF">
 	        <th class='text-center'>매출현황일자</th>
             <th class='text-center'>매장</th>
             <th class='text-center'>판매수량</th>

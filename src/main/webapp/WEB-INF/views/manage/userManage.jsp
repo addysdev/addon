@@ -219,3 +219,6 @@
 </div>
 <br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>
+<script>
+fcUserManage_listSearch();
+</script>

@@ -14,6 +14,7 @@
                 success: function(result) {
                     commonDim(false);
                     $("#recoveryList").html(result);
+
                 },
                 error:function() {
                     commonDim(false);
@@ -57,6 +58,7 @@
             }
         });
     };
+
 </SCRIPT>
 	<div class="container-fluid">
 	<h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 회수 리스트</font></strong></h4>
@@ -89,6 +91,7 @@
 					<input type="hidden" id="con_groupId" name="con_groupId" value="${recoveryConVO.groupId}">
 					</c:when>
 					<c:otherwise>
+					    <div style="position:absolute; left:30px" >
 						<label for="con_groupId"><font style="color:#FF9900"> 지점선택 : </font></label>
 						<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${recoveryConVO.groupId}">
 		                    <option value="">전체</option>
@@ -97,25 +100,32 @@
 		                    </c:forEach>
 		                </select>
 		                <label for="searchGubun"><h6><strong><font style="color:#FF9900"> 회수상태 : </font></strong></h6></label>
-						<select class="form-control" title="회수상태" id="con_recoveryState" name="con_recoveryState" value="">
+						<select class="form-control" title="회수상태" id="con_recoveryState" name="con_recoveryState" value="${recoveryConVO.con_recoveryState}">
 		                	<option value="">전체</option>
 		                    <c:forEach var="codeVO" items="${code_comboList}" >
 		                    	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
 		                    </c:forEach>
 		           		</select>
 						<button type="button" class="btn btn-primary" onClick="javascript:fcRecovery_listSearch()">조회</button>
-			            <!-- >button type="button" class="btn" onClick="">excel</button -->
+						 <!-- >button type="button" class="btn" onClick="">excel</button -->
+						</div>
+						<div style="position:absolute; right:30px" >
+			        	 	<button id="rcancelbtn" name="rcancelbtn" type="button" class="btn btn-danger" onClick="alert('회수 취소 처리 개발중')">회수취소</button>
+			        	 	<button id="rexportbutton" name="rexportbutton" type="button" class="btn btn-primary" onClick="alert('전표생성 개발중')">전표생성</button>
+			        	</div>
 					</c:otherwise>
 				</c:choose>
             </div>
 	    </fieldset>
 	  </form:form>
 	  <!-- //조회 -->
-  <br>
+  <br> <br>
   <!-- 조회결과리스트 -->
   <div id=recoveryList></div>
 
 </div>
 <script>
+//alert('${recoveryConVO.con_recoveryState}');
+document.recoveryConForm.con_recoveryState.value='${recoveryConVO.con_recoveryState}';
 fcRecovery_listSearch();
 </script>

@@ -50,9 +50,9 @@
 
      <form:form commandName="stockVO" name="stockPageListForm" method="post" action="" >
       <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
-	  <table class="table table-striped">
+	  <table class="table table-bordered">
 	    <thead>
-	      <tr>
+	      <tr style="background-color:#E6F3FF">
 	        <th class='text-center'>재고현황일자</th>
             <th class='text-center'>매장</th>
             <th class='text-center'>재고수량</th>
@@ -78,7 +78,7 @@
             </c:if>
            <c:if test="${empty stockList}">
            <tr>
-           	<td colspan='6' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>

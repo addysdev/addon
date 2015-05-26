@@ -47,6 +47,7 @@
   <result column="updateUserId"           property="updateUserId"  />
   <result column="updateUserName"           property="updateUserName"  />
   <result column="updateDateTime"           property="updateDateTime"  />
+  <result column="totalCnt"           property="totalCnt"  />
   <result column="waitCnt"           property="waitCnt"  />  
   <result column="sendCnt"           property="sendCnt"  />  
   <result column="reciveCnt"           property="reciveCnt"  />  
@@ -143,6 +144,29 @@
           	T4.collectDateTime
 		) As TOT
 			           
+</select>
+
+
+
+<select id="getRecoveryState"  resultMap="recoveryVO" parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
+
+  		Select T1.collectCode,
+               count( T1.collectCode) as totalCnt,
+         	   sum(T1.waitCnt) as waitCnt,
+         	   sum(T1.sendCnt) as sendCnt,
+               sum(T1.reciveCnt) as reciveCnt,
+               sum(T1.checkCnt) as checkCnt
+           From (
+          		  Select collectCode,
+               			 Case When recoveryState = '01' Then 1 Else 0 End waitCnt,
+                 		 Case When recoveryState = '02' Then 1 Else 0 End sendCnt,
+                 		 Case When recoveryState = '03' Then 1 Else 0 End reciveCnt,
+                 		 Case When recoveryState = '04' Then 1 Else 0 End checkCnt
+            	   From adRecovery 
+          		   Where collectCode= #{collectCode}
+           		) As T1
+   		Group by 	T1.collectCode
+		
 </select>
 
 <select id="getRecoveryList"  resultMap="recoveryVO" parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
@@ -257,7 +281,13 @@
          T4.userName as collectUserName,
          T2.recoveryClosingDate,
          T2.memo,
-         count(T5.idx) as memoCnt
+         count(T5.idx) as memoCnt,
+         T1.deliveryMethod,
+         T1.transportCode,
+         T1.transport,
+         T1.transportNo,
+         T1.quickCharge,
+         T1.quickTel
     From adRecovery T1
          Left Join adCollect T2 On T1.collectCode=T2.collectCode
          Left Join ofGroup T3 On T1.groupId=T3.groupId
@@ -274,12 +304,12 @@
          T1.productCode,
          T5.productName,
          T1.stockDate,
-         T1.stockCnt,
-         T1.recoveryCnt,
-         T1.recoveryResultCnt,
-         T1.addCnt,
-         T1.lossCnt,
-         T5.productPrice,
+         ifnull(T1.stockCnt,0) as stockCnt,
+         ifnull(T1.recoveryCnt,0) as recoveryCnt,
+         ifnull(T1.recoveryResultCnt,0) as recoveryResultCnt,
+         ifnull(T1.addCnt,0) as addCnt,
+         ifnull(T1.lossCnt,0) as lossCnt,
+         ifnull(T5.productPrice,0) as productPrice,
          T1.recoveryYn,
          T1.etc,
          (select count(idx) from adComment T7 Where T1.recoveryCode = T7.orderCode  And T1.productCode=T7.productCode And T7.commentCategory='06') as etcCnt,

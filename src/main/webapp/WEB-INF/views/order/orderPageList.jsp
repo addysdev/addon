@@ -56,15 +56,15 @@
     }
 </SCRIPT>
      <form:form commandName="orderVO" name="orderPageListForm" method="post" action="" >
-      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /></span> 
+      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> 전체건수 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /></span> 
       <span style="color:blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[검수대기] :</font> <a href="javascript:stateSearch('03')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.waitCnt}" /></a>
       &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[검수보류] :</font> <a href="javascript:stateSearch('04')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.deferCnt}" /></a>    
 	  &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[검수완료] :</font> <a href="javascript:stateSearch('06')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.completeCnt}" /></a>     
 	  &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[등록완료] :</font> <a href="javascript:stateSearch('07')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.registCnt}" /></a>
 	  </span></p>       
-	  <table class="table table-striped">
+	  <table class="table table-bordered">
 	    <thead>
-	      <tr>
+	      <tr style="background-color:#E6F3FF">
 	        <th class='text-center'>검수상태</th>
             <th class='text-center'>발주번호</th>
             <th class='text-center'>발주일자</th>
