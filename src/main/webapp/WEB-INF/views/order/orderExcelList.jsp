@@ -122,7 +122,7 @@
 		objRow = objSheet.createRow((short)i+1);
 		
 		objCell = objRow.createCell((short)0);
-		objCell.setCellValue("20150522");
+		objCell.setCellValue(orderVO.getOrderDate());
 		objCell = objRow.createCell((short)1);
 		objCell.setCellValue("");
 		objCell = objRow.createCell((short)2);

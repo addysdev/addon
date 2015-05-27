@@ -238,6 +238,8 @@ public class RecoveryServiceImpl implements RecoveryService {
 	            retVal=this.commonDao.update("Recovery.recoveryCompleteDetailProcUpdate", recoveryDetailVo);
 		      
 		      }
+		    
+		    commonDao.update("Recovery.getProductCancel", recoveryVo);
 
 	    }catch(Exception e){
 	    	
@@ -281,4 +283,36 @@ public class RecoveryServiceImpl implements RecoveryService {
 
     	    return reProductAttachList;
     	  }
+    
+    @Override
+    public int receiveProcess(RecoveryVO recovery) throws BizException {
+        return commonDao.update("Recovery.getRecoveryReceive", recovery);
+    }
+    
+    @Override
+    public int cancelProcess(RecoveryVO recovery) throws BizException {
+    	
+    	commonDao.update("Recovery.getCollectCancel", recovery);
+    	
+        return commonDao.update("Recovery.getProductCancel", recovery);
+    }
+    
+    @Override
+    public int transProcess(RecoveryVO recovery) throws BizException {
+
+        return commonDao.update("Recovery.getCollectTrans", recovery);
+    }
+    
+    @Override
+    public int closeProcess(RecoveryVO recovery) throws BizException {
+	
+        return commonDao.update("Recovery.getCollectClose", recovery);
+    }
+    @Override
+    public List<RecoveryVO> getTransProduct(RecoveryVO recovery) throws BizException {
+    	
+        List<RecoveryVO> recoveryList = commonDao.selectList("Recovery.getTransProduct", recovery);
+
+        return recoveryList;
+    }
 }

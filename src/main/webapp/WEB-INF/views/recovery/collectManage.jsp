@@ -57,6 +57,7 @@
             }
         });
     };
+  
 </SCRIPT>
 <div class="container">
 	<h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 회수작업 리스트</font></strong>

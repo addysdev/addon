@@ -56,7 +56,7 @@ function fcRecovery_process(){
     		totalcnt=totalcnt+recoveryCnt;
 			
 		}
-	    
+
 	    if(totalcnt==0){
 	    	
 	    	if (confirm('회수 대상 수량이 없습니다.\n회수수량을 0으로  상태값만  발신으로 업데이트 하시겠습니까?')){ 
@@ -67,7 +67,7 @@ function fcRecovery_process(){
 	    	
 	    }else{
 	    	
-	    	if(dfrm.deliveryMethod[0].checked==true){
+	    	if(dfrm.deliveryRadio[0].checked==true){
 				
 				if(dfrm.transportCode.value==''){
 					alert('택배로 운송처리시 운송회사를 입력하셔야 합니다.');
@@ -101,6 +101,10 @@ function fcRecovery_process(){
 	    
 	    }
 	    
+		//alert($("#transportCode option:selected").val());
+		//alert($("#transportCode option:selected").text());
+
+		dfrm.transport.value=$("#transportCode option:selected").text();
 
     	if(frm.seqs.length>1){
        		for(i=0;i<frm.seqs.length;i++){
@@ -147,8 +151,13 @@ function fcRecovery_process(){
 function fcRecovery_complete(){
 
 	 var frm = document.recoveryDetailListForm;
+	 var seqsCnt=frm.seqs.length;
 	 
- 	if(frm.seqs.length>1){
+	 if(seqsCnt==undefined){
+		 seqsCnt=1;
+ 	}
+	 
+ 	if(seqsCnt>1){
     		for(i=0;i<frm.seqs.length;i++){
 				frm.seqs[i].value=fillSpace(frm.productCode[i].value)+'|'+fillSpace(frm.recoveryResultCnt[i].value);
 
@@ -159,7 +168,7 @@ function fcRecovery_complete(){
 
     	}
 
-     if (confirm('회수뭎품을 검수 완료처리 하시겠습니까?')){ 
+     if (confirm('회수품목을 검수 완료처리 하시겠습니까?')){ 
      	
          var paramString = $("#recoveryDetailForm").serialize()+'&'+$("#recoveryDetailListForm").serialize();
 	
@@ -412,49 +421,48 @@ function fcRecovery_complete(){
         });
     }
 function totalCheck(){
-
-	    if('${recoveryVO.recoveryState}'=='01'){
-	    	return;
-	    }
 	
-    	var frm=document.recoveryDetailListForm;
-    	var amtCnt = frm.productCode.length;
-    	
-    	if(amtCnt==undefined){
-    		amtCnt=1;
-    	}
+	    if('${recoveryVO.receiveCnt==recoveryVO.totalCnt && strAuth!= "03"}'){
 
-    	var chkCnt=0;
-    	
-    	if(amtCnt > 1){
-			for(i=0;i<amtCnt;i++){
-	    		
-	    		if(frm.recoveryCheck[i].checked==true){
-	    			frm.recoveryResultCntView[i].disabled=true;
-	    			chkCnt++;
-	    		}else{
-	    			frm.recoveryResultCntView[i].disabled=false;
-	    		}
+	    	var frm=document.recoveryDetailListForm;
+	    	var amtCnt = frm.productCode.length;
+	    	
+	    	if(amtCnt==undefined){
+	    		amtCnt=1;
 	    	}
-    	}else{
-
-    		if(frm.recoveryCheck.checked==true){
-    			frm.recoveryResultCntView.disabled=true;
-    			chkCnt++;
-	   		}else{
-	   			frm.recoveryResultCntView.disabled=false;
-	   		}
-	  	}
-
-    	if(amtCnt==chkCnt){//검수버튼 활성화
-
-    		frm.recoveryCheckAll.checked=true;
-    		document.all('checkbtn').disabled=false;
-    		
-    	}else{
-    		frm.recoveryCheckAll.checked=false;
-    		document.all('checkbtn').disabled=true;
-    	}
+	
+	    	var chkCnt=0;
+	    	
+	    	if(amtCnt > 1){
+				for(i=0;i<amtCnt;i++){
+		    		
+		    		if(frm.recoveryCheck[i].checked==true){
+		    			frm.recoveryResultCnt[i].disabled=true;
+		    			chkCnt++;
+		    		}else{
+		    			frm.recoveryResultCnt[i].disabled=false;
+		    		}
+		    	}
+	    	}else{
+	
+	    		if(frm.recoveryCheck.checked==true){
+	    			frm.recoveryResultCnt.disabled=true;
+	    			chkCnt++;
+		   		}else{
+		   			frm.recoveryResultCnt.disabled=false;
+		   		}
+		  	}
+	
+	    	if(amtCnt==chkCnt){//검수버튼 활성화
+	
+	    		frm.recoveryCheckAll.checked=true;
+	    		document.all('checkbtn').disabled=false;
+	    		
+	    	}else{
+	    		frm.recoveryCheckAll.checked=false;
+	    		document.all('checkbtn').disabled=true;
+	    	}
+	    }
 
     }
 //품목 상세 페이지 리스트 Layup
@@ -495,20 +503,22 @@ function  fcEtc_detail(orderCode,productCode,productName,etc,idx) {
 
 function fcDelivery_method(){
 	
-	if(document.recoveryDetailForm.deliveryMethod[0].checked==true){
+	if(document.recoveryDetailForm.deliveryRadio[0].checked==true){
 		document.recoveryDetailForm.transportCode.disabled=false;
 		document.recoveryDetailForm.transportNo.disabled=false;
 		document.recoveryDetailForm.quickCharge.disabled=true;
 		document.recoveryDetailForm.quickTel.disabled=true;
 		document.recoveryDetailForm.quickCharge.value='';
 		document.recoveryDetailForm.quickTel.value='';
+		document.recoveryDetailForm.deliveryMethod.value='01';
 	}else{
 		document.recoveryDetailForm.transportCode.disabled=true;
 		document.recoveryDetailForm.transportNo.disabled=true;
 		document.recoveryDetailForm.transportCode.value='';
 		document.recoveryDetailForm.transportNo.value='';
 		document.recoveryDetailForm.quickCharge.disabled=false;
-		document.recoveryDetailForm.quickTel.disabled=false;	
+		document.recoveryDetailForm.quickTel.disabled=false;
+		document.recoveryDetailForm.deliveryMethod.value='02';
 	}
 }
 
@@ -557,27 +567,47 @@ function fcResult_cal(){
 
 }
 
+	function fcRecovery_transpath(url,transno){
+		
+		var theURL=url+transno;
+		
+		var h=700;
+		var s=800;
+
+	    tmt_winLaunch(theURL, 'transObj', 'transObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
+	
+	}
+	
+	function tmt_winLaunch(theURL,winName,targetName,features) {
+		
+		var targetRandom=Math.random();
+		eval(winName+"=window.open('"+theURL+"','"+targetRandom+"','"+features+"')");
+
+	}
 
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
 	 <form:form commandName="recoveryVO" id="recoveryDetailForm"  name="recoveryDetailForm" method="post" action="" >
-	   <input type="hidden" name="recoveryCode"               id="recoveryCode"            value="${recoveryVO.recoveryCode}" />
-	   <input type="hidden" name="groupId"               id="groupId"            value="${recoveryVO.groupId}" />
+	   <input type="hidden" name="recoveryCode"               id="recoveryCode"            value="${recoveryConVO.recoveryCode}" />
+	   <input type="hidden" name="collectCode"               id="collectCode"            value="${recoveryConVO.collectCode}" />
+	   <input type="hidden" name="groupId"               id="groupId"            value="${recoveryConVO.groupId}" />
 	   <input type="hidden" name="orderCode"               id="orderCode"            value="" />
 	   <input type="hidden" name="memo"               id="memo"            value="" />
 	   <input type="hidden" name="category"               id="category"            value="05" />
+	   <input type="hidden" name="deliveryMethod"               id="deliveryMethod"            value="01" />
+	   
 	      <tr>
           <div style="position:absolute; left:30px" > 
-	       <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-check"></span>(${recoveryVO.groupName}) 회수 대상품목  </font></strong></h4>
+	       <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-check"></span>(${recoveryConVO.groupName}) 회수 대상품목  </font></strong></h4>
           </div >
           <div style="position:absolute; right:30px" > 
           <c:choose>
-    		<c:when test="${recoveryVO.recoveryState=='02' && strAuth!= '03'}">
+    		<c:when test="${recoveryConVO.receiveCnt==recoveryConVO.totalCnt && strAuth!= '03'}">
 				<button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcRecovery_complete()">검수완료</button>
 			</c:when>
 			<c:otherwise>
-				<c:if test="${recoveryVO.recoveryState=='01'}"><button type="button" class="btn btn-primary" onClick="fcRecovery_process()">발신</button></c:if>
+				<c:if test="${recoveryConVO.recoveryState=='01'}"><button type="button" class="btn btn-primary" onClick="fcRecovery_process()">발신</button></c:if>
 			</c:otherwise>
 		  </c:choose>
           </div>
@@ -586,50 +616,48 @@ function fcResult_cal(){
 	  <table class="table table-bordered" >
 	 	<tr>
           <th class='text-center'  style="background-color:#E6F3FF" >회수번호</th>
-          <th class='text-center' colspan="2" ><c:out value="${recoveryVO.recoveryCode}"></c:out>&nbsp;&nbsp;
-          <c:if test="${recoveryVO.recoveryState=='01'}"> 
-          <button id="downbtn" type="button" class="btn btn-xs btn-success" onClick="fcRecovery_print('${recoveryVO.recoveryCode}')" >인쇄</button>
+          <th class='text-center' colspan="2" ><c:out value="${recoveryConVO.recoveryCode}"></c:out>&nbsp;&nbsp;
+          <c:if test="${recoveryConVO.recoveryState=='01'}"> 
+          <button id="downbtn" type="button" class="btn btn-xs btn-success" onClick="fcRecovery_print('${recoveryConVO.recoveryCode}')" >인쇄</button>
           </c:if>
           </th>
           <th class='text-center' style="background-color:#E6F3FF">회수요청일</th>
-          <th class='text-center'><c:out value="${recoveryVO.collectDateTime}"></c:out></th>
+          <th class='text-center'><c:out value="${recoveryConVO.collectDateTime}"></c:out></th>
       	  <th class='text-center' style="background-color:#E6F3FF">회수마감일</th>
-          <th class='text-center'><c:out value="${recoveryVO.recoveryClosingDate}"></c:out></th>	
+          <th class='text-center'><c:out value="${recoveryConVO.recoveryClosingDate}"></c:out></th>	
       	</tr>
       	 <c:choose>
-    		<c:when test="${recoveryVO.recoveryState=='01'}">
+    		<c:when test="${recoveryConVO.recoveryState=='01'}">
 				<tr>
 		          <th class='text-center' rowspan="2"  style="background-color:#E6F3FF" >운송방법<br>선택</th>
 		          <th class='text-left' >
-		          <input type="radio" name="deliveryMethod" id="deliveryMethod" value="01" checked onChange="fcDelivery_method()")/>&nbsp;택배
+		          <input type="radio" name="deliveryRadio" id="deliveryRadio" value="01" checked onChange="fcDelivery_method()")/>&nbsp;택배
 		          </th>
 		          <th class='text-center' style="background-color:#E6F3FF">운송회사
 		          <!-- >button id="downbtn" type="button" class="btn btn-xs btn-success" onClick="" >직접입력</button --></th>
 		          <th class='text-center' colspan="2" >
-		          <select class="form-control" title="검색조건" id="transportCode" name="transportCode" value="">
-		            <option value="" >선택</option>
-		        	<option value="01" >CJ대한통운</option>
-		            <option value="02" >로젠택배</option>
-		            <option value="03" >우체국택배</option>
-		            <option value="04" >현대택배</option>
-		            <option value="05" >한진택배</option>
-		   		  </select>
+				  <select class="form-control" title="운송업체" id="transportCode" name="transportCode" value="">
+                	<option value="">선택</option>
+                    <c:forEach var="codeVO" items="${code_comboList}" >
+                    	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
+                    </c:forEach>
+           		 </select>
 		   		  <input type="hidden" id="transport" name="transport" >
 		          </th>
 		      	  <th class='text-center'  style="background-color:#E6F3FF">운송장번호</th>
-		          <th class='text-center'><input type="text" class="form-control" id="transportNo" name="transportNo"  value="" placeholder="운송장번호"  /></th>	
+		          <th class='text-center'><input type="text" class="form-control" id="transportNo" name="transportNo" maxlength="30" numberOnly  value="" placeholder="운송장번호"  /></th>	
 		      	</tr>
 		      	<tr>
 		      	  <th class='text-left' >
-		          <input type="radio" name="deliveryMethod" id="deliveryMethod" value="02"  onChange="fcDelivery_method()")/>&nbsp;퀵
+		          <input type="radio" name="deliveryRadio" id="deliveryRadio" value="02"  onChange="fcDelivery_method()")/>&nbsp;퀵
 		          </th>
 		      	  <th class='text-center' style="background-color:#E6F3FF">담당자</th>
 		          <th class='text-center' colspan="2" >
-		          <input type="text" class="form-control" id="quickCharge" name="quickcharge" disabled value="" placeholder="담당자"  />
+		          <input type="text" class="form-control" id="quickCharge" name="quickcharge" disabled  maxlength="10"  value="" placeholder="담당자"  />
 		          </th>
 		      	  <th class='text-center' style="background-color:#E6F3FF">연락처</th>
 		          <th class='text-center'>
-		          <input type="text" class="form-control" id="quicktel" name="quickTel" disabled value="" placeholder="연락처"  />
+		          <input type="text" class="form-control" id="quicktel" name="quickTel" disabled value=""  maxlength="14" placeholder="연락처"  />
 		          </th>
 		      	</tr>
 			</c:when>
@@ -637,19 +665,26 @@ function fcResult_cal(){
 				<tr>
 		          <th class='text-center' style="background-color:#E6F3FF" >운송방법</th>
 		          <c:choose>
-    				<c:when test="${recoveryVO.deliveryMethod=='01'}">
+    				<c:when test="${recoveryConVO.deliveryMethod=='01'}">
 		         	  <th class='text-center' >&nbsp;택배 </th>
 		              <th class='text-center' style="background-color:#E6F3FF">운송회사</th>
-		              <th class='text-center' colspan="2" ></th>
+		              <th class='text-center' colspan="2" >${recoveryConVO.transport}</th>
                       <th class='text-center'  style="background-color:#E6F3FF">운송장번호</th>
-		              <th class='text-center'></th>
+		               <c:choose>
+    						 <c:when test="${recoveryConVO.transurl!='N'}">
+    						  	<th class='text-center'><a href="javascript:fcRecovery_transpath('${recoveryConVO.transurl}','${recoveryConVO.transportNo}');">${recoveryConVO.transportNo}</a></th>
+		             	 	 </c:when>
+							 <c:otherwise>
+							  	<th class='text-center'>${recoveryConVO.transportNo}</th>
+							 </c:otherwise>
+		 			  </c:choose>
 		            </c:when>
 			        <c:otherwise>	
 			       	  <th class='text-center' >&nbsp;퀵 </th>
 		              <th class='text-center' style="background-color:#E6F3FF">담당자</th>
-		              <th class='text-center' colspan="2" ></th>
+		              <th class='text-center' colspan="2" >${recoveryConVO.quickCharge}</th>
                       <th class='text-center'  style="background-color:#E6F3FF">연락처</th>
-		              <th class='text-center'></th>
+		              <th class='text-center'>${recoveryConVO.quickTel}</th>
 		            </c:otherwise>
 		 		   </c:choose>
 		      	</tr>
@@ -657,9 +692,9 @@ function fcResult_cal(){
 		  </c:choose>
       	</sapn>
       	<tr>
-          <th class='text-center' style="background-color:#E6F3FF">메모&nbsp;(<span id="memoCnt" style="color:blue">${recoveryVO.memoCnt}</span>)
-          <button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcMemo_detail('${recoveryVO.recoveryCode}','${recoveryVO.memo}')" >관리</button></th>
-          <th colspan='6' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${recoveryVO.memo}" placeholder="메모" disabled /></th>
+          <th class='text-center' style="background-color:#E6F3FF">메모&nbsp;(<span id="memoCnt" style="color:blue">${recoveryConVO.memoCnt}</span>)
+          <button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcMemo_detail('${recoveryConVO.recoveryCode}','${recoveryConVO.memo}')" >관리</button></th>
+          <th colspan='6' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${recoveryConVO.memo}" placeholder="메모" disabled /></th>
       	</tr>
 	  </table>
 	  </form:form>
@@ -679,7 +714,7 @@ function fcResult_cal(){
 	  <table class="table table-bordered" >
       	<tr style="background-color:#E6F3FF">
      	  <c:choose>
-    		<c:when test="${recoveryVO.recoveryState=='02' && strAuth!= '03'}">
+    		<c:when test="${recoveryConVO.receiveCnt==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03'  && strAuth!= '03'}">
 				<th class='text-center' >검수<br><input type="checkbox"  id="recoveryCheckAll"  name="recoveryCheckAll" onchange="fcRecovery_checkAll()" title="전체선택" /></th>
 			</c:when>
 			<c:otherwise>
@@ -697,18 +732,11 @@ function fcResult_cal(){
              	 <input type="hidden" id="seqs" name="seqs" >
 	             <tr id="select_tr_${recoveryVO.productCode}">
                  <c:choose>
-		    		<c:when test="${recoveryVO.recoveryState=='01' || recoveryVO.recoveryState=='03' || strAuth== '03'}"> 
-		    		   <c:choose>
-				    		<c:when test="${recoveryVO.recoveryYn=='Y' && recoveryVO.recoveryState=='03'}">
-								<td class='text-center'>${status.count}.<input type="checkbox" id="orderCheck" name="orderCheck" value="${orderVO.productCode}" title="선택" disabled checked onChange="totalCheck()" /></td>
-							</c:when>
-							<c:otherwise>
-								<td class='text-center'>${status.count}.<input type="checkbox" id="orderCheck" name="orderCheck" value="${orderVO.productCode}" title="선택" disabled onChange="totalCheck()" /></td>
-							</c:otherwise>
-						</c:choose>
+		    		<c:when test="${recoveryConVO.receiveCnt==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"> 
+						<td class='text-center'>${status.count}.<input type="checkbox" id="recoveryCheck" name="recoveryCheck" value="${recoveryVO.productCode}" title="선택"  onChange="totalCheck()" /></td>
 		    		</c:when>
 					<c:otherwise>
-						<td class='text-center'>${status.count}.<input type="checkbox" id="recoveryCheck" name="recoveryCheck" value="${recoveryVO.productCode}" title="선택"  onChange="totalCheck()" /></td>
+						<td class='text-center'>${status.count}.<input type="checkbox" id="recoveryCheck" name="recoveryCheck" value="${recoveryVO.productCode}" title="선택" disabled  /></td>
 					</c:otherwise>
 				</c:choose>
                  <td class='text-left'><c:out value="${recoveryVO.productName}"></c:out></td>
@@ -731,7 +759,7 @@ function fcResult_cal(){
                     </c:otherwise>
 				</c:choose>
                  <c:choose>
-		    		<c:when test="${recoveryVO.recoveryState=='02' && strAuth!= '03'}"> 
+		    		<c:when test="${recoveryConVO.receiveCnt==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"> 
 					    <td class='text-center'>
 					    <input style="width:55px;text-align:right" class="form-control" type="text" id="recoveryResultCnt" name="recoveryResultCnt" maxlength="3" numberOnly onKeyup="fcResult_cal()" value="${recoveryVO.recoveryResultCnt}">
 					    </td>
@@ -741,10 +769,10 @@ function fcResult_cal(){
 						<td class='text-right' id='recoveryResultCntView' name='recoveryResultCntView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.recoveryResultCnt}"  /></td>
 					</c:otherwise>
 				</c:choose>
-                 <td class='text-center'><c:if test="${recoveryVO.recoveryState!='01'}"><img id="etcbtn" onClick="fcEtc_detail('${recoveryVO.recoveryCode}','${recoveryVO.productCode}','${recoveryVO.productName}','${recoveryVO.etc}','${status.count}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${recoveryVO.etcCnt}</span>)</c:if></td>
+                 <td class='text-center'><c:if test="${recoveryConVO.recoveryState!='01'}"><img id="etcbtn" onClick="fcEtc_detail('${recoveryVO.recoveryCode}','${recoveryVO.productCode}','${recoveryVO.productName}','${recoveryVO.etc}','${status.count}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${recoveryVO.etcCnt}</span>)</c:if></td>
                  <tr>
                  <c:choose>
-		    		<c:when test="${recoveryVO.recoveryState!='01'}"> 
+		    		<c:when test="${recoveryConVO.recoveryState!='01'}"> 
 						 <td colspan='9' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${recoveryVO.etc}" placeholder="비고" disabled /></td>
 					</c:when>
 					<c:otherwise>
@@ -764,9 +792,12 @@ function fcResult_cal(){
 	 </form:form>
 	</div>
 	<script type="text/javascript">
-
+    //alert('${recoveryConVO.receiveCnt}');
+    //alert('${recoveryConVO.totalCnt}');
     //totalRecoveryAmt();
     //totalRecoveryResultAmt();
     fcResult_cal();
     totalCheck();
+    
+
 </script>

@@ -49,6 +49,16 @@ function resultMsg(result){
 	 result=result.replace('recovery0021','처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
 	 result=result.replace('recovery0022','검수를 정상적으로 처리하지 못 했습니다..\n시스템 관리자에게 문의하세요.');
 	 
+	//회수 수신처리
+	 result=result.replace('recovery0030','수신 확인을 완료했습니다.');
+	 result=result.replace('recovery0031','처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
+	 result=result.replace('recovery0032','수신 확인을 정상적으로 처리하지 못 했습니다..\n시스템 관리자에게 문의하세요.');
+	 
+	//회수 상태처리
+	 result=result.replace('recovery0040','회수 상태 변경을 완료했습니다.');
+	 result=result.replace('recovery0041','처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
+	 result=result.replace('recovery0042','회수 상태 변경을 정상적으로 처리하지 못 했습니다..\n시스템 관리자에게 문의하세요.');
+	 
 	 alert(result);
 
 }

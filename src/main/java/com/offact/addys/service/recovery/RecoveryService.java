@@ -116,5 +116,50 @@ public interface RecoveryService {
      * @throws BizException
      */
     public List<ProductMasterVO> getExcelAttach(List<ProductMasterVO> reproductlist) throws BizException;
-   
+    /**
+     * 회수 수신처리
+     * 
+     * @param TargetVO
+     * @return
+     * @throws BizException
+     */
+    public int receiveProcess(RecoveryVO recovery)
+    	    throws BizException;
+    /**
+     * 회수 취소처리
+     * 
+     * @param TargetVO
+     * @return
+     * @throws BizException
+     */
+    public int cancelProcess(RecoveryVO recovery)
+    	    throws BizException;
+    
+    /**
+     * 회수업체발송처리
+     * 
+     * @param TargetVO
+     * @return
+     * @throws BizException
+     */
+    public int transProcess(RecoveryVO recovery)
+    	    throws BizException;
+    
+    /**
+     * 회수 완료처리
+     * 
+     * @param TargetVO
+     * @return
+     * @throws BizException
+     */
+    public int closeProcess(RecoveryVO recovery)
+    	    throws BizException;
+    
+    /**
+     * 회수 창고이동 전표
+     * 
+     * @return
+     * @throws BizException
+     */
+    public List<RecoveryVO> getTransProduct(RecoveryVO recovery) throws BizException;
 }

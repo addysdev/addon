@@ -2,7 +2,7 @@
 <SCRIPT>
 
     // 회수 상세 페이지 리스트 Layup
-    function fcRecovery_detail(recoveryCode,groupId,groupName,recoveryState,regDateTime,recoveryClosingDate) {
+    function fcRecovery_detail(recoveryCode,groupId,groupName,recoveryState,regDateTime,recoveryClosingDate,totalCnt,receiveCnt) {
    
     	var url='<%= request.getContextPath() %>/recovery/recoverydetailview';
 
@@ -17,9 +17,8 @@
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load(url+'?recoveryCode='+recoveryCode+'&groupId='+groupId+'&groupName='+encodeURIComponent(groupName)+
+                $(this).load(url+'?recoveryCode='+recoveryCode+'&totalCnt='+totalCnt+'&receiveCnt='+receiveCnt+'&groupId='+groupId+'&groupName='+encodeURIComponent(groupName)+
                 		'&recoveryState='+recoveryState);
-               
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#recoveryDetailView").dialog('close');
 
@@ -46,34 +45,70 @@
    
     		if(frm.totalCnt.value==frm.waitCnt.value){
     			document.all('rcancelbtn').disabled=false;
+    			$('#rcancelbtn').attr("style","display:inline");
     		}else{
     			document.all('rcancelbtn').disabled=true;
+    			$('#rcancelbtn').attr("style","display:none");
     		}
     		
     		if(frm.totalCnt.value==frm.checkCnt.value){
     			document.all('rexportbutton').disabled=false;
+    			$('#rexportbutton').attr("style","display:inline");
+    			
+    			document.all('transbutton').disabled=false;
+    			$('#transbutton').attr("style","display:inline");
+    			
     		}else{
     			document.all('rexportbutton').disabled=true;
+    			$('#rexportbutton').attr("style","display:none");
+    			
+    			document.all('transbutton').disabled=true;
+    			$('#transbutton').attr("style","display:none");
     		}
 
     	}
 
     }
 
+    function fcRecovery_receive(recoveryCode){
+    	
+    	 if (confirm('발신된 회수건을 수신확인 상태로 처리하시겠습니까?')){ 
+
+ 	 		$.ajax({
+ 		       type: "POST",
+ 		       async:false,
+ 		          url:  "<%= request.getContextPath() %>/recovery/receiveprocess?recoveryCode="+recoveryCode,
+ 		           success: function(result) {
+ 		
+ 		        	resultMsg(result);
+ 		
+ 		        	fcRecovery_listSearch();
+ 						
+ 		          },
+ 		          error:function(){
+ 		
+ 		          alert('호출오류!');
+ 		          fcRecovery_listSearch();
+ 			     
+ 		          }
+ 		    });
+ 	   }
+    }
 </SCRIPT>
      <form:form commandName="recoveryVO" name="recoveryPageListForm" method="post" action="" >
+      <input type="hidden" name="collectCode" id="collectCode" value="${recoveryConVO.collectCode}">
       <c:if test="${strAuth != '03'}">
       <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> 전체건수 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.totalCnt}" /></span> 
       <span style="color:blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[대기] :</font> <a href="javascript:stateSearch('01')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.waitCnt}" /></a>
       &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[발신] :</font> <a href="javascript:stateSearch('02')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.sendCnt}" /></a>    
-	  &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[수신] :</font> <a href="javascript:stateSearch('03')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.reciveCnt}" /></a>     
+	  &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[수신] :</font> <a href="javascript:stateSearch('03')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.receiveCnt}" /></a>     
 	  &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[완료] :</font> <a href="javascript:stateSearch('04')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.checkCnt}" /></a>
 	  </span></p>   
 	  </c:if> 
 	  <input type="hidden" id="totalCnt" name="totalCnt" value="${recoveryState.totalCnt}">
 	  <input type="hidden" id="waitCnt" name="waitCnt" value="${recoveryState.waitCnt}">
 	  <input type="hidden" id="sendCnt" name="sendCnt" value="${recoveryState.sendCnt}">
-	  <input type="hidden" id="reciveCnt" name="reciveCnt" value="${recoveryState.reciveCnt}">
+	  <input type="hidden" id="receiveCnt" name="receiveCnt" value="${recoveryState.receiveCnt}">
 	  <input type="hidden" id="checkCnt" name="checkCnt" value="${recoveryState.checkCnt}">
 	  <table class="table table-bordered">
 	    <thead>
@@ -92,13 +127,14 @@
              <tr id="select_tr_${recoveryVO.recoveryStateView}">
                  <input type="hidden" id="recoveryState" name="recoveryState" value="${recoveryVO.recoveryState}">
                  <td class='text-center'><c:out value="${recoveryVO.recoveryStateView}"></c:out></td>
-                 <td><a href="javascript:fcRecovery_detail('${recoveryVO.recoveryCode}','${recoveryVO.groupId}','${recoveryVO.groupName}','${recoveryVO.recoveryState}','${recoveryVO.collectDateTime}','${recoveryVO.recoveryClosingDate}')"><c:out value="${recoveryVO.recoveryCode}"></c:out></a></td>
+                 <td><a href="javascript:fcRecovery_detail('${recoveryVO.recoveryCode}','${recoveryVO.groupId}','${recoveryVO.groupName}','${recoveryVO.recoveryState}',
+                 '${recoveryVO.collectDateTime}','${recoveryVO.recoveryClosingDate}','${recoveryState.totalCnt}','${recoveryState.receiveCnt}')"><c:out value="${recoveryVO.recoveryCode}"></c:out></a></td>
                  <td><c:out value="${recoveryVO.groupName}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.recoveryResultCnt}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.recoveryResultPrice}"/></td>
                  <td class='text-center'>
                  <c:if test="${recoveryVO.recoveryState=='02' && strAuth!='03'}">
-                 <button type="button" id="receivebtn" class="btn btn-success" onClick="alert('수신확인 처리 개발중');">수신</button>
+                 <button type="button" id="receivebtn" class="btn btn-success" onClick="fcRecovery_receive('${recoveryVO.recoveryCode}');">수신</button>
                  </c:if>
                  </td>
               </tr>

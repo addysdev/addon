@@ -64,6 +64,10 @@ public class RecoveryVO extends AbstractVO {
 	private String updateUserName;
 	private String updateDateTime;
 	
+	private String deletedUserId;
+	private String deletedUserName;
+	private String deletedDateTime;
+	
 	private String con_groupId;
 	private String con_recoveryState;
 	private String con_collectState;
@@ -80,7 +84,7 @@ public class RecoveryVO extends AbstractVO {
 	private String totalCnt;
 	private String waitCnt;
 	private String sendCnt;
-	private String reciveCnt;
+	private String receiveCnt;
 	private String checkCnt;
 	
 	private String authId;
@@ -91,6 +95,7 @@ public class RecoveryVO extends AbstractVO {
 	private String transportNo;
 	private String quickCharge;
 	private String quickTel;
+	private String transurl;
 	
 	// /** for paging */
     private String totalCount       = "0";
@@ -500,11 +505,12 @@ public class RecoveryVO extends AbstractVO {
 	public void setSendCnt(String sendCnt) {
 		this.sendCnt = sendCnt;
 	}
-	public String getReciveCnt() {
-		return reciveCnt;
+	
+	public String getReceiveCnt() {
+		return receiveCnt;
 	}
-	public void setReciveCnt(String reciveCnt) {
-		this.reciveCnt = reciveCnt;
+	public void setReceiveCnt(String receiveCnt) {
+		this.receiveCnt = receiveCnt;
 	}
 	public String getCheckCnt() {
 		return checkCnt;
@@ -559,6 +565,30 @@ public class RecoveryVO extends AbstractVO {
 	}
 	public void setTotalCnt(String totalCnt) {
 		this.totalCnt = totalCnt;
+	}
+	public String getDeletedUserId() {
+		return deletedUserId;
+	}
+	public void setDeletedUserId(String deletedUserId) {
+		this.deletedUserId = deletedUserId;
+	}
+	public String getDeletedUserName() {
+		return deletedUserName;
+	}
+	public void setDeletedUserName(String deletedUserName) {
+		this.deletedUserName = deletedUserName;
+	}
+	public String getDeletedDateTime() {
+		return deletedDateTime;
+	}
+	public void setDeletedDateTime(String deletedDateTime) {
+		this.deletedDateTime = deletedDateTime;
+	}
+	public String getTransurl() {
+		return transurl;
+	}
+	public void setTransurl(String transurl) {
+		this.transurl = transurl;
 	}
     
 }

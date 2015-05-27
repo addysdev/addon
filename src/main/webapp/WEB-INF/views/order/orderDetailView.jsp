@@ -639,7 +639,7 @@ function totalTargetAmt(){
 	      <c:if test="${orderVO.orderState=='04'}"><button id="defercancelbtn"  type="button" class="btn btn-danger" onClick="fcDefer_reasonpop('D')" >보류폐기</button></c:if>
 	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" class="btn btn-info" onClick="fcDefer_list('${orderVO.orderCode}')">보류사유</button></c:if>
 	      <c:if test="${orderVO.orderState=='03'}"><button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcOrder_complete()">검수완료</button></c:if>
-	      <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-default" onClick="goOrderExcel()">엑셀변환</button></c:if>
+	      <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-default" onClick="goOrderExcel()">엑셀변환(구매입력)</button></c:if>
 	      <c:if test="${orderVO.orderState=='03'}"><button type="button" class="btn btn-success" onClick="fcOrderDetail_print('${orderVO.orderCode}')">인쇄</button></c:if>
           </div>
           <div style="position:absolute; right:30px" >

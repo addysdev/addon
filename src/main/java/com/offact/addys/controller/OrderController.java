@@ -2172,6 +2172,12 @@ public class OrderController {
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));   
         
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+        Date currentTime = new Date();
+         
+        String strToday = simpleDateFormat.format(currentTime);
+        
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	mv.setViewName("/addys/loginForm");
        		return mv;
@@ -2191,6 +2197,7 @@ public class OrderController {
 	    
 	        OrderVO orderDetailVo = new OrderVO();
 			
+	        orderDetailVo.setOrderDate(strToday);
 	        orderDetailVo.setProductCode(StringUtil.nvl(r_data[0],""));
 	        orderDetailVo.setBarCode(StringUtil.nvl(r_data[1],""));
 	        orderDetailVo.setOrderResultPrice(StringUtil.nvl(r_data[2],""));

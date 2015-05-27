@@ -58,7 +58,95 @@
             }
         });
     };
+    
+    function fcRecovery_cancel(collectCode){
+    	
+    	 if (confirm('대시상태인 모든회수건을 취소 처리하시겠습니까?')){ 
 
+  	 		$.ajax({
+  		       type: "POST",
+  		       async:false,
+  		          url:  "<%= request.getContextPath() %>/recovery/cancelprocess?collectCode="+collectCode,
+  		           success: function(result) {
+  		
+  		        	resultMsg(result);
+  		
+  		        	$("#recoveryManage").dialog('close');
+
+  		        	fcCollect_listSearch();
+  						
+  		          },
+  		          error:function(){
+  		
+  		          alert('호출오류!');
+  		          fcRecovery_listSearch();
+  			     
+  		          }
+  		    });
+  	   }
+ 	
+    }
+    function fcRecovery_excel(){
+    	
+    	var frm = document.recoveryPageListForm;
+    	frm.action = "<%=request.getContextPath()%>/recovery/recoveryexcellist";	
+    	frm.method = "POST";
+    	frm.submit();
+    	
+    }
+    function fcRecovery_transstate(collectCode){
+    	
+    	 if (confirm('검수완료된 품목들의 회수상태를 업체발송으로 변경 하시겠습니까?')){ 
+
+   	 		$.ajax({
+   		       type: "POST",
+   		       async:false,
+   		          url:  "<%= request.getContextPath() %>/recovery/transprocess?collectCode="+collectCode,
+   		           success: function(result) {
+   		
+   		        	resultMsg(result);
+   		
+   		        	$("#recoveryManage").dialog('close');
+
+   		        	fcCollect_listSearch();
+   						
+   		          },
+   		          error:function(){
+   		
+   		          alert('호출오류!');
+   		          fcRecovery_listSearch();
+   			     
+   		          }
+   		    });
+   	   }
+    }
+    
+ 	function fcRecovery_recoveryclose(collectCode){
+    	
+ 		 if (confirm('업체발송 중인 회수상태값을 회수완료 상태로 변경 하시겠습니까?')){ 
+
+   	 		$.ajax({
+   		       type: "POST",
+   		       async:false,
+   		          url:  "<%= request.getContextPath() %>/recovery/colseprocess?collectCode="+collectCode,
+   		           success: function(result) {
+   		
+   		        	resultMsg(result);
+   		
+   		        	$("#recoveryManage").dialog('close');
+
+   		        	fcCollect_listSearch();
+   						
+   		          },
+   		          error:function(){
+   		
+   		          alert('호출오류!');
+   		          fcRecovery_listSearch();
+   			     
+   		          }
+   		    });
+   	   }
+    }
 </SCRIPT>
 	<div class="container-fluid">
 	<h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 회수 리스트</font></strong></h4>
@@ -89,6 +177,7 @@
 	            <c:choose>
 	    		<c:when test="${strAuth == '03'}">
 					<input type="hidden" id="con_groupId" name="con_groupId" value="${recoveryConVO.groupId}">
+					<input type="hidden" id="con_recoveryState" name="con_recoveryState" value="${recoveryConVO.con_recoveryState}">
 					</c:when>
 					<c:otherwise>
 					    <div style="position:absolute; left:30px" >
@@ -110,8 +199,10 @@
 						 <!-- >button type="button" class="btn" onClick="">excel</button -->
 						</div>
 						<div style="position:absolute; right:30px" >
-			        	 	<button id="rcancelbtn" name="rcancelbtn" type="button" class="btn btn-danger" onClick="alert('회수 취소 처리 개발중')">회수취소</button>
-			        	 	<button id="rexportbutton" name="rexportbutton" type="button" class="btn btn-primary" onClick="alert('전표생성 개발중')">전표생성</button>
+			        	 	<button id="rcancelbtn" name="rcancelbtn" type="button" class="btn btn-danger" onClick="fcRecovery_cancel('${recoveryConVO.collectCode}')">회수취소</button>
+			        	 	<button id="rexportbutton" name="rexportbutton" type="button" class="btn btn-default" onClick="fcRecovery_excel('${recoveryConVO.collectCode}')">엑셀변환(창고이동)</button>
+			        	 	<c:if test="${recoveryConVO.collectState=='01'}"><button id="transbutton" name="rexportbutton" type="button" class="btn btn-success" onClick="fcRecovery_transstate('${recoveryConVO.collectCode}')">업체발송</button></c:if>
+			        	 	<c:if test="${recoveryConVO.collectState=='02'}"><button id="closebutton" name="rexportbutton" type="button" class="btn btn-success" onClick="fcRecovery_recoveryclose('${recoveryConVO.collectCode}')">회수완료</button></c:if>
 			        	</div>
 					</c:otherwise>
 				</c:choose>
@@ -127,5 +218,6 @@
 <script>
 //alert('${recoveryConVO.con_recoveryState}');
 document.recoveryConForm.con_recoveryState.value='${recoveryConVO.con_recoveryState}';
+//alert(document.recoveryConForm.con_groupId.value);
 fcRecovery_listSearch();
 </script>
