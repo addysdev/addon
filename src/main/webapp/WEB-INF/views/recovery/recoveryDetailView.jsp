@@ -645,7 +645,7 @@ function fcResult_cal(){
 		   		  <input type="hidden" id="transport" name="transport" >
 		          </th>
 		      	  <th class='text-center'  style="background-color:#E6F3FF">운송장번호</th>
-		          <th class='text-center'><input type="text" class="form-control" id="transportNo" name="transportNo" maxlength="30" numberOnly  value="" placeholder="운송장번호"  /></th>	
+		          <th class='text-center'><input type="text" class="form-control" id="transportNo" name="transportNo" maxlength="30"   value="" placeholder="운송장번호"  /></th>	
 		      	</tr>
 		      	<tr>
 		      	  <th class='text-left' >
