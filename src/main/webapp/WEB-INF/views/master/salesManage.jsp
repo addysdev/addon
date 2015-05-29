@@ -40,7 +40,7 @@
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
             width : 430,
-            height : 550,
+            height : 450,
             modal : true, //주위를 어둡게
 
             open:function(){
@@ -59,8 +59,12 @@
     };
     
 </SCRIPT>
-<div class="container">
-	 <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 매출 현황관리</font></strong></h4>
+<div class="container-fluid">
+    <!-- 서브타이틀 영역 : 시작 -->
+	<div class="sub_title">
+   		<p class="titleP">매출 현황관리</p>
+	</div>
+	<!-- 서브타이틀 영역 : 끝 -->
 	  <!-- 조회조건 -->
 	  <form:form class="form-inline" role="form" commandName="salesConVO" id="salesConForm" name="salesConForm" method="post" action="" >
         <input type="hidden" name="curPage"             id="curPage"            value="1" />
@@ -68,15 +72,15 @@
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
         <fieldset>
         	<div class="form-group" >
-				<label for="start_salesDate end_salesDate"><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span> 매출현황일자 : </font></label>
-				<div style='width:150px' class='input-group date ' id='datetimepicker1' data-link-field="start_salesDate" data-link-format="yyyy-mm-dd">
+				<label for="start_salesDate end_salesDate">매출현황일자 :</label>
+				<div style='width:155px' class='input-group date ' id='datetimepicker1' data-link-field="start_salesDate" data-link-format="yyyy-mm-dd">
 	                <input type='text' class="form-control" value="${salesConVO.start_salesDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>
 	                </span>
 	                <input type="hidden" id="start_salesDate" name="start_salesDate" value="${salesConVO.start_salesDate}" />
 	            </div>
-	            <div style='width:150px' class='input-group date' id='datetimepicker2'  data-link-field="end_salesDate" data-link-format="yyyy-mm-dd">
+	            <div style='width:155px' class='input-group date' id='datetimepicker2'  data-link-field="end_salesDate" data-link-format="yyyy-mm-dd">
 	                <input type='text' class="form-control" value="${salesConVO.end_salesDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>
@@ -88,7 +92,7 @@
 					<input type="hidden" id="con_groupId" name="con_groupId" value="${salesConVO.groupId}">
 					</c:when>
 					<c:otherwise>
-						<label for="con_groupId"><font style="color:#FF9900"> 지점선택 : </font></label>
+						<label for="con_groupId">지점선택 :</label>
 						<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${salesConVO.groupId}">
 		                    <option value="">전체</option>
 		                    <c:forEach var="groupVO" items="${group_comboList}" >
@@ -150,4 +154,5 @@
     });
     
     fcSales_listSearch();
+    MM_nbGroup('down','group3','menu_03','<%= request.getContextPath() %>/images/top/addys-menu_03_on.jpg',1);
 </script>

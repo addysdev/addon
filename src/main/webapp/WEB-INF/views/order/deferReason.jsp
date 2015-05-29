@@ -20,6 +20,7 @@ function fcDefer_close(){
 <div class="container-fluid">
 <form:form commandName="commentVO" id="deferForm" name="deferForm" method="post" action="" >
 <p><textarea style='height:82px;ime-mode:active;' row="3" class="form-control" id="defer_reason" maxlength="200" name="defer_reason"  value=""  placeholder="보류사유"/></p>
+<br>
 <button id="defersavebtn" type="button" class="btn btn-primary" onClick="fcDefer_reasonadd()">저장</button> <button id="deferpopclosebtn" type="button" class="btn btn-danger" onClick="fcDefer_close()">취소</button>
 </form:form>
 </div>

@@ -59,10 +59,14 @@
     };
   
 </SCRIPT>
-<div class="container">
-	<h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 회수작업 리스트</font></strong>
-	<c:if test="${strAuth != '03'}"><button type="button" class="btn btn-primary" onClick="fcRecovery_registForm()">회수등록</button></c:if>
-	</h4>
+<div class="container-fluid">
+	
+    <!-- 서브타이틀 영역 : 시작 -->
+	<div class="sub_title">
+   		<p class="titleP">회수 작업리스트 <c:if test="${strAuth != '03'}"><button type="button" class="btn btn-success" onClick="fcRecovery_registForm()">회수등록</button></c:if></p>
+	</div>
+	<!-- 서브타이틀 영역 : 끝 -->	
+
 	  <!-- 조회조건 -->
 	  <form:form class="form-inline" role="form" commandName="collectConVO" id="collectConForm" name="collectConForm" method="post" action="" >
         <input type="hidden" name="curPage"             id="curPage"            value="1" />
@@ -72,22 +76,22 @@
         <input type="hidden" name="authId"          id="authId"         value="${strAuth}"  />
         <fieldset>
         	<div class="form-group">
-        		<label for="start_recoveryDate end_recoveryDate"><h6><strong><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span>  회수요청일자 : </font></strong></h6></label>
-				<div style='width:150px' class='input-group date ' id='datetimepicker1' data-link-field="start_recoveryDate" data-link-format="yyyy-mm-dd">
+        		<label for="start_recoveryDate end_recoveryDate">회수요청일자 :</label>
+				<div style='width:155px' class='input-group date ' id='datetimepicker1' data-link-field="start_recoveryDate" data-link-format="yyyy-mm-dd">
 	                <input type='text' class="form-control" value="${collectConVO.start_recoveryDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>
 	                </span>
 	                <input type="hidden" id="start_recoveryDate" name="start_recoveryDate" value="${collectConVO.start_recoveryDate}" />
 	            </div>
-	            <div style='width:150px' class='input-group date' id='datetimepicker2'  data-link-field="end_recoveryDate" data-link-format="yyyy-mm-dd">
+	            <div style='width:155px' class='input-group date' id='datetimepicker2'  data-link-field="end_recoveryDate" data-link-format="yyyy-mm-dd">
 	                <input type='text' class="form-control" value="${collectConVO.end_recoveryDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>
 	                </span>
 	                <input type="hidden" id="end_recoveryDate" name="end_recoveryDate" value="${collectConVO.end_recoveryDate}" />
 	            </div>
-				<label for="con_collectState"><h6><strong><font style="color:#FF9900"> 작업상태 : </font></strong></h6></label>
+				<label for="con_collectState">작업상태 :</label>
 				<select class="form-control" title="작업상태" id="con_collectState" name="con_collectState" value="">
                 	<option value="">전체</option>
                     <c:forEach var="codeVO" items="${code_comboList}" >
@@ -159,4 +163,5 @@
     });
     
     fcCollect_listSearch();
+    MM_nbGroup('down','group2','menu_02','<%= request.getContextPath() %>/images/top/addys-menu_02_on.jpg',1);
 </script>

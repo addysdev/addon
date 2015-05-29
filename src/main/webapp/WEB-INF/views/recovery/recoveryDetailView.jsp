@@ -1,4 +1,13 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
+<style>
+
+ .thead { height:30px; overflow:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
+ .tbody { height:730px; .height:720px; overflow-y:scroll; overflow-x:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
+ .tbody_evScore {height:530px;}
+ .tbl_type {width:100%;border-bottom:1px solid #dcdcdc;text-align:center; table-layout:fixed;border-collapse:collapse;word-break:break-all;}
+ .tbl_type td { padding:6px 0px; }
+
+</style>
 <SCRIPT>
 
 var pintYN=false;
@@ -38,7 +47,7 @@ function fcRecovery_process(){
 	    
 		var frm=document.recoveryDetailListForm;
 		var amtCnt = frm.productPrice.length;
-
+	    
 		if(amtCnt==undefined){
 			amtCnt=1;
 		}
@@ -100,7 +109,7 @@ function fcRecovery_process(){
 		    }
 	    
 	    }
-	    
+
 		//alert($("#transportCode option:selected").val());
 		//alert($("#transportCode option:selected").text());
 
@@ -603,7 +612,7 @@ function fcResult_cal(){
           </div >
           <div style="position:absolute; right:30px" > 
           <c:choose>
-    		<c:when test="${recoveryConVO.receiveCnt==recoveryConVO.totalCnt && strAuth!= '03'}">
+    		<c:when test="${(recoveryConVO.receiveCnt+recoveryConVO.checkCnt)==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03' && strAuth!= '03'}">
 				<button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcRecovery_complete()">검수완료</button>
 			</c:when>
 			<c:otherwise>
@@ -653,7 +662,7 @@ function fcResult_cal(){
 		          </th>
 		      	  <th class='text-center' style="background-color:#E6F3FF">담당자</th>
 		          <th class='text-center' colspan="2" >
-		          <input type="text" class="form-control" id="quickCharge" name="quickcharge" disabled  maxlength="10"  value="" placeholder="담당자"  />
+		          <input type="text" class="form-control" id="quickCharge" name="quickCharge" disabled  maxlength="10"  value="" placeholder="담당자"  />
 		          </th>
 		      	  <th class='text-center' style="background-color:#E6F3FF">연락처</th>
 		          <th class='text-center'>
@@ -710,29 +719,58 @@ function fcResult_cal(){
           <span style="color:blue"> [검수합계 금액] :</span>
           <span id="totalRecoveryResultAmt" style="color:red">
         </span>
-      </p>       
-	  <table class="table table-bordered" >
-      	<tr style="background-color:#E6F3FF">
+      </p>
+      
+       <div class="thead">
+	   <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed">
+	    <caption>발주대상리스트</caption>
+ 		<colgroup>
+	      <col width="80px" >
+	      <col width="*">
+	      <col width="70px">
+	      <col width="70px">
+	      <col width="70px">
+	      <col width="87px">
+	      </colgroup>
+	    <thead>
+		<tr style="background-color:#E6F3FF">
      	  <c:choose>
-    		<c:when test="${recoveryConVO.receiveCnt==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03'  && strAuth!= '03'}">
-				<th class='text-center' >검수<br><input type="checkbox"  id="recoveryCheckAll"  name="recoveryCheckAll" onchange="fcRecovery_checkAll()" title="전체선택" /></th>
+    		<c:when test="${(recoveryConVO.receiveCnt+recoveryConVO.checkCnt)==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03'  && strAuth!= '03'}">
+				<th class='text-center' >검수<input type="checkbox"  id="recoveryCheckAll"  name="recoveryCheckAll" onchange="fcRecovery_checkAll()" title="전체선택" /></th>
 			</c:when>
 			<c:otherwise>
-				<th class='text-center' >검수<br><input type="checkbox"  id="recoveryCheckAll"  name="recoveryCheckAll" onchange="fcRecovery_checkAll()" title="전체선택" disabled /></th>
+				<th class='text-center' >검수<input type="checkbox"  id="recoveryCheckAll"  name="recoveryCheckAll" onchange="fcRecovery_checkAll()" title="전체선택" disabled /></th>
 			</c:otherwise>
 		  </c:choose>
           <th class='text-center'>상품명</th>
           <th class='text-center'>기준단가</th>
-          <th class='text-center'>회수<br>수량</th>
-          <th class='text-center'>검수<br>수량</th>
+          <th class='text-center'>회수수량</th>
+          <th class='text-center'>검수수량</th>
           <th class='text-center'>비고</th>
       	</tr>
-	    	<c:if test="${!empty recoveryDetailList}">
+	    </thead>
+	  </table>
+	  </div>
+	  <div class="tbody">
+	    <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed"> 
+	      <caption>발주대상리스트</caption>
+	      <colgroup>
+	      <col width="80px" >
+	      <col width="*">
+	      <col width="70px">
+	      <col width="70px">
+	      <col width="70px">
+	      <col width="70px">
+	      </colgroup>
+	       <!-- :: loop :: -->
+	                <!--리스트---------------->
+	      <tbody>
+	        <c:if test="${!empty recoveryDetailList}">
              <c:forEach items="${recoveryDetailList}" var="recoveryVO" varStatus="status">
              	 <input type="hidden" id="seqs" name="seqs" >
 	             <tr id="select_tr_${recoveryVO.productCode}">
                  <c:choose>
-		    		<c:when test="${recoveryConVO.receiveCnt==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"> 
+		    		<c:when test="${(recoveryConVO.receiveCnt+recoveryConVO.checkCnt)==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"> 
 						<td class='text-center'>${status.count}.<input type="checkbox" id="recoveryCheck" name="recoveryCheck" value="${recoveryVO.productCode}" title="선택"  onChange="totalCheck()" /></td>
 		    		</c:when>
 					<c:otherwise>
@@ -759,7 +797,7 @@ function fcResult_cal(){
                     </c:otherwise>
 				</c:choose>
                  <c:choose>
-		    		<c:when test="${recoveryConVO.receiveCnt==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"> 
+		    		<c:when test="${(recoveryConVO.receiveCnt+recoveryConVO.checkCnt)==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"> 
 					    <td class='text-center'>
 					    <input style="width:55px;text-align:right" class="form-control" type="text" id="recoveryResultCnt" name="recoveryResultCnt" maxlength="3" numberOnly onKeyup="fcResult_cal()" value="${recoveryVO.recoveryResultCnt}">
 					    </td>
@@ -773,10 +811,10 @@ function fcResult_cal(){
                  <tr>
                  <c:choose>
 		    		<c:when test="${recoveryConVO.recoveryState!='01'}"> 
-						 <td colspan='9' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${recoveryVO.etc}" placeholder="비고" disabled /></td>
+						 <td colspan='6' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${recoveryVO.etc}" placeholder="비고" disabled /></td>
 					</c:when>
 					<c:otherwise>
-						 <td colspan='9' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${recoveryVO.etc}" placeholder="비고" /></td>
+						 <td colspan='6' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${recoveryVO.etc}" placeholder="비고" /></td>
 					</c:otherwise>
 				</c:choose>
 	             </tr>
@@ -785,10 +823,13 @@ function fcResult_cal(){
             </c:if>
            <c:if test="${empty recoveryDetailList}">
            <tr>
-           	<td colspan='9' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='6' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
-	  </table>
+	    </tbody>
+	   </table>
+	  </div>
+      
 	 </form:form>
 	</div>
 	<script type="text/javascript">

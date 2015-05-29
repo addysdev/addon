@@ -94,14 +94,22 @@
     	frm.submit();
     	
     }
-    function fcRecovery_transstate(collectCode){
+    function fcRecovery_transstate(collectCode,collectState){
     	
-    	 if (confirm('검수완료된 품목들의 회수상태를 업체발송으로 변경 하시겠습니까?')){ 
+    	var msg='회수완료';
+    	
+    	if(collectState=='02'){
+    		msg='업체발송';
+    	}else{
+    		msg='회수완료';
+    	}
+    	
+    	 if (confirm('검수완료된 품목들의 회수상태를 '+msg+' (으)로 변경 하시겠습니까?')){ 
 
    	 		$.ajax({
    		       type: "POST",
    		       async:false,
-   		          url:  "<%= request.getContextPath() %>/recovery/transprocess?collectCode="+collectCode,
+   		          url:  "<%= request.getContextPath() %>/recovery/transprocess?collectCode="+collectCode+"&collectState="+collectState,
    		           success: function(result) {
    		
    		        	resultMsg(result);
@@ -123,7 +131,7 @@
     
  	function fcRecovery_recoveryclose(collectCode){
     	
- 		 if (confirm('업체발송 중인 회수상태값을 회수완료 상태로 변경 하시겠습니까?')){ 
+ 		 if (confirm('업체발송 중인 회수상태값을 반품완료 상태로 변경 하시겠습니까?')){ 
 
    	 		$.ajax({
    		       type: "POST",
@@ -162,7 +170,7 @@
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">메모</th>
-          <th colspan='5' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${recoveryVO.memo}" placeholder="메모" disabled /></th>
+          <th colspan='5' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${recoveryConVO.memo}" placeholder="메모" disabled /></th>
       	</tr>
 	  </table>
 	  
@@ -181,14 +189,14 @@
 					</c:when>
 					<c:otherwise>
 					    <div style="position:absolute; left:30px" >
-						<label for="con_groupId"><font style="color:#FF9900"> 지점선택 : </font></label>
+						<label for="con_groupId">지점선택 :</label>
 						<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${recoveryConVO.groupId}">
 		                    <option value="">전체</option>
 		                    <c:forEach var="groupVO" items="${group_comboList}" >
 		                    	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
 		                    </c:forEach>
 		                </select>
-		                <label for="searchGubun"><h6><strong><font style="color:#FF9900"> 회수상태 : </font></strong></h6></label>
+		                <label for="searchGubun">회수상태 :</label>
 						<select class="form-control" title="회수상태" id="con_recoveryState" name="con_recoveryState" value="${recoveryConVO.con_recoveryState}">
 		                	<option value="">전체</option>
 		                    <c:forEach var="codeVO" items="${code_comboList}" >
@@ -201,8 +209,11 @@
 						<div style="position:absolute; right:30px" >
 			        	 	<button id="rcancelbtn" name="rcancelbtn" type="button" class="btn btn-danger" onClick="fcRecovery_cancel('${recoveryConVO.collectCode}')">회수취소</button>
 			        	 	<button id="rexportbutton" name="rexportbutton" type="button" class="btn btn-default" onClick="fcRecovery_excel('${recoveryConVO.collectCode}')">엑셀변환(창고이동)</button>
-			        	 	<c:if test="${recoveryConVO.collectState=='01'}"><button id="transbutton" name="rexportbutton" type="button" class="btn btn-success" onClick="fcRecovery_transstate('${recoveryConVO.collectCode}')">업체발송</button></c:if>
-			        	 	<c:if test="${recoveryConVO.collectState=='02'}"><button id="closebutton" name="rexportbutton" type="button" class="btn btn-success" onClick="fcRecovery_recoveryclose('${recoveryConVO.collectCode}')">회수완료</button></c:if>
+			        	 	<c:if test="${recoveryConVO.collectState=='01'}">
+			        	 	<button id="transbutton" name="transbutton" type="button" class="btn btn-success" onClick="fcRecovery_transstate('${recoveryConVO.collectCode}','02') ">업체발송</button>		        	 	
+			        	 	<button id="returnbutton" name="returnbutton" type="button" class="btn btn-success" onClick="fcRecovery_transstate('${recoveryConVO.collectCode}','04')">회수완료</button>
+			        	 	</c:if>
+			        	 	<c:if test="${recoveryConVO.collectState=='02'}"><button id="closebutton" name="rexportbutton" type="button" class="btn btn-success" onClick="fcRecovery_recoveryclose('${recoveryConVO.collectCode}')">반품완료</button></c:if>
 			        	</div>
 					</c:otherwise>
 				</c:choose>

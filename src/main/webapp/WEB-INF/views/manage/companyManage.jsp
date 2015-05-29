@@ -39,7 +39,7 @@
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
             width : 430,
-            height : 400,
+            height : 300,
             modal : true, //주위를 어둡게
 
             open:function(){
@@ -58,8 +58,12 @@
     };
    
 </SCRIPT>
-<div class="container">
-	<h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 업체관리</font></strong></h4>
+<div class="container-fluid">
+    <!-- 서브타이틀 영역 : 시작 -->
+	<div class="sub_title">
+   		<p class="titleP">업체관리</p>
+	</div>
+	<!-- 서브타이틀 영역 : 끝 -->
 	  <!-- 조회조건 -->
 	  <form:form class="form-inline" role="form" commandName="companyConVO" id="companyManageConForm" name="companyManageConForm" method="post" action="" >
         <input type="hidden" name="curPage"             id="curPage"            value="1" />
@@ -67,7 +71,7 @@
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
         <fieldset>
         	<div class="form-group">
-				<label for="searchGubun"><h6><strong><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span> 검색조건 :</font></strong></h6></label>
+				<label for="searchGubun">검색조건 :</label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
                 	<option value="01" >업체명</option>
                     <option value="02" >업체코드</option>
@@ -96,4 +100,5 @@
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>
 <script>
 fcCompanyManage_listSearch();
+MM_nbGroup('down','group4','menu_04','<%= request.getContextPath() %>/images/top/addys-menu_04_on.jpg',1);
 </script>

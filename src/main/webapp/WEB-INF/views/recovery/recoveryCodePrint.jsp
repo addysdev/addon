@@ -5,12 +5,12 @@ window.print();
 		        <html>
 		        <head>
 		        <title>회수코드</title>
-		        <meta http-equiv='Content-Type' content='text/html; charset=euc-kr' />
+		        <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 		        <style type='text/css'> 
 		        <!--
 		        td {
-		        font-family: '굴림', '돋움', 'Seoul', '한강체';
-		        font-size: 12px;
+		        font-family: '굴림', '돋움', 'Seoul';
+		        font-size: 11px;
 		        	line-height: 80px;
 		        }
 				.style10 {

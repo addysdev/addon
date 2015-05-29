@@ -1,4 +1,13 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
+<style>
+
+ .thead { height:68px; overflow:hidden; border:0px solid #dcdcdc; border-bottom:none; border-top:none; }
+ .tbody { height:710px; .height:700px; overflow-y:scroll; overflow-x:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
+ .tbody_evScore {height:530px;}
+ .tbl_type {width:100%;border-bottom:1px solid #dcdcdc;text-align:center; table-layout:fixed;border-collapse:collapse;word-break:break-all;}
+ .tbl_type td { padding:6px 0px; }
+
+</style>
 <SCRIPT>
  
 
@@ -455,7 +464,7 @@ function fcDefer_modify(reason){
 	   <input type="hidden" name="groupId"               id="groupId"            value="${targetVO.groupId}" />
 	   <input type="hidden" name="con_groupId"               id="con_groupId"            value="${targetVO.con_groupId}" />
 	   <input type="hidden" name="companyCode"               id="companyCode"            value="${targetVO.companyCode}" />
-	      <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-check"></span> 발주방법 : </font></strong>
+	      <h4><strong><font style="color:#428bca">발주방법 : </font></strong>
 	          <input type="checkbox" id="emailCheck" name="emailCheck" value="" title="선택" checked disabled />e-mail
 	          <input type="checkbox" id="smsCheck" name="smsCheck" value="" title="선택" disabled />sms
 	      </h4>
@@ -562,26 +571,63 @@ function fcDefer_modify(reason){
           <span style="color:blue"> [전체갯수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetDetailList.size()}" /> 건</span>
           <span id="totalOrderAmt" style="color:red">
         </span>
-      </p>       
-	  <table class="table table-bordered" >
-      	<tr style="background-color:#E6F3FF">
-          <!-- >th rowspan='2' class='text-center' >보류<br><input type="checkbox"  id="deferCheckAll"  name="deferCheckAll" onchange="fcDefer_checkAll();" title="전체선택" /></th -->
-          <th rowspan='2' class='text-center' >no</th>
-          <th rowspan='2' class='text-center'>품목코드</th>
-          <th rowspan='2' class='text-center'>상품명</th>
-          <th colspan='3' class='text-center'>재고</th>
-          <th colspan='4' class='text-center'>발주</th>
-      	</tr>
-      	<tr style="background-color:#E6F3FF">
-      	  <th class='text-center'>안전</th>
-          <th class='text-center'>보유</th>
-          <th class='text-center'>전산</th>
-          <th class='text-center'>기준단가</th>
-          <th class='text-center'>수량</th>
-          <th class='text-center'>+</th>
-          <th class='text-center'>-</th>
-      	</tr>
-	    	<c:if test="${!empty targetDetailList}">
+      </p>  
+      
+      <div class="thead">
+	   <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed">
+	    <caption>발주대상리스트</caption>
+ 		<colgroup>
+	      <col width="50px" >
+	      <col width="80px" >
+	      <col width="*">
+	      <col width="50px">
+	      <col width="50px">
+	      <col width="50px">
+	      <col width="70px">
+	      <col width="50px">
+	      <col width="70px">
+	      <col width="88px">
+	      </colgroup>
+	    <thead>
+			 <tr style="background-color:#E6F3FF">
+	          <!-- >th rowspan='2' class='text-center' >보류<br><input type="checkbox"  id="deferCheckAll"  name="deferCheckAll" onchange="fcDefer_checkAll();" title="전체선택" /></th -->
+	          <th rowspan='2' class='text-center' >no</th>
+	          <th rowspan='2' class='text-center'>품목코드</th>
+	          <th rowspan='2' class='text-center'>상품명</th>
+	          <th colspan='3' class='text-center'>재고</th>
+	          <th colspan='4' class='text-center'>발주</th>
+	      	</tr>
+	      	<tr style="background-color:#E6F3FF">
+	      	  <th class='text-center'>안전</th>
+	          <th class='text-center'>보유</th>
+	          <th class='text-center'>전산</th>
+	          <th class='text-center'>기준단가</th>
+	          <th class='text-center'>수량</th>
+	          <th class='text-center' >loss(+)</th>
+	          <th class='text-center' >loss(-)</th>
+	      	</tr>
+	    </thead>
+	  </table>
+	  </div>
+	  <div class="tbody">
+	    <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed"> 
+	      <caption>발주대상리스트</caption>
+	      <colgroup>
+	      <col width="50px" >
+	      <col width="80px" >
+	      <col width="*">
+	      <col width="50px">
+	      <col width="50px">
+	      <col width="50px">
+	      <col width="70px">
+	      <col width="50px">
+	      <col width="70px">
+	      <col width="70px">
+	      </colgroup>
+	       <!-- :: loop :: -->
+	                <!--리스트---------------->
+	      <tbody>
+	        <c:if test="${!empty targetDetailList}">
              <c:forEach items="${targetDetailList}" var="targetVO" varStatus="status">
              	 <input type="hidden" id="seqs" name="seqs" >
 	             <c:choose>
@@ -624,7 +670,10 @@ function fcDefer_modify(reason){
            	<td colspan='10' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
-	  </table>
+	    </tbody>
+	   </table>
+	  </div>
+      
 	 </form:form>
 	</div>
 

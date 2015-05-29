@@ -1,5 +1,13 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
+<style>
 
+ .thead { height:68px; overflow:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
+ .tbody { height:700px; .height:690px; overflow-y:scroll; overflow-x:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
+ .tbody_evScore {height:530px;}
+ .tbl_type {width:100%;border-bottom:1px solid #dcdcdc;text-align:center; table-layout:fixed;border-collapse:collapse;word-break:break-all;}
+ .tbl_type td { padding:6px 0px; }
+
+</style>
 <SCRIPT>
  
 
@@ -730,29 +738,66 @@ function totalTargetAmt(){
           <span style="color:blue"> [검수 합계금액] :</span>
           <span id="totalOrderAmt" style="color:red">
         </span>
-      </p>     
-	  <table class="table table-bordered" >
-      	<tr style="background-color:#E6F3FF">
-          <th rowspan='2' class='text-center' >검수<br>
-          <c:if test="${orderVO.orderState!='06' && orderVO.orderState!='07'}">
-          <input type="checkbox"  id="orderCheckAll"  name="orderCheckAll" onchange="fcOrder_checkAll();" title="전체선택" />
-          </c:if>
-          </th>
-          <th rowspan='2' class='text-center'>품목코드</th>
-          <th rowspan='2' class='text-center'>바코드</th>
-          <th rowspan='2' class='text-center'>상품명</th>
-          <th colspan='2' class='text-center'>수량</th>
-          <th colspan='3' class='text-center'>금액(VAT포함)</th>
-          <th rowspan='2' class='text-center'>비고</th>
-      	</tr>
-      	<tr style="background-color:#E6F3FF">
-          <th style="width:50px" class='text-center'>발주</th>
-          <th class='text-center'>구매</th>
-          <th class='text-center'>기준</th>
-          <th class='text-center'>구매</th>
-          <th class='text-center'>합계</th>
-      	</tr>
-	    	<c:if test="${!empty orderDetailList}">
+      </p> 
+      
+       <div class="thead">
+	   <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed">
+	    <caption>발주대상리스트</caption>
+ 		<colgroup>
+	      <col width="50px" >
+	      <col width="80px" >
+	      <col width="100px" >
+	      <col width="*">
+	      <col width="50px">
+	      <col width="65px">
+	      <col width="70px">
+	      <col width="90px">
+	      <col width="70px">
+	      <col width="67px">
+	      </colgroup>
+	    <thead>
+			<tr style="background-color:#E6F3FF">
+	          <th rowspan='2' class='text-center' >검수<br>
+	          <c:if test="${orderVO.orderState!='06' && orderVO.orderState!='07'}">
+	          <input type="checkbox"  id="orderCheckAll"  name="orderCheckAll" onchange="fcOrder_checkAll();" title="전체선택" />
+	          </c:if>
+	          </th>
+	          <th rowspan='2' class='text-center'>품목코드</th>
+	          <th rowspan='2' class='text-center'>바코드</th>
+	          <th rowspan='2' class='text-center'>상품명</th>
+	          <th colspan='2' class='text-center'>수량</th>
+	          <th colspan='3' class='text-center'>금액(VAT포함)</th>
+	          <th rowspan='2' class='text-center'>비고</th>
+	      	</tr>
+	      	<tr style="background-color:#E6F3FF">
+	          <th style="width:50px" class='text-center'>발주</th>
+	          <th class='text-center'>구매</th>
+	          <th class='text-center'>기준</th>
+	          <th class='text-center'>구매</th>
+	          <th class='text-center'>합계</th>
+	      	</tr>
+	    </thead>
+	  </table>
+	  </div>
+	  <div class="tbody">
+	    <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed"> 
+	      <caption>발주대상리스트</caption>
+	      <colgroup>
+	      <col width="50px" >
+	      <col width="80px" >
+	      <col width="100px" >
+	      <col width="*">
+	      <col width="50px">
+	      <col width="65px">
+	      <col width="70px">
+	      <col width="90px">
+	      <col width="70px">
+	      <col width="50px">
+	      </colgroup>
+	       <!-- :: loop :: -->
+	                <!--리스트---------------->
+	      <tbody>
+	        <c:if test="${!empty orderDetailList}">
              <c:forEach items="${orderDetailList}" var="orderVO" varStatus="status">
              	 <input type="hidden" id="seqs" name="seqs" >
 	             <tr id="select_tr_${orderVO.productCode}">
@@ -786,21 +831,24 @@ function totalTargetAmt(){
                  <input type="hidden" name="orderPrice" value="${orderVO.orderPrice+orderVO.orderVatRate}">
                  <input style="width:80px" type="hidden" class="form-control" id="orderVatRate" name="orderVatRate" onKeyup="totalOrderAmt()" value="0">
                  
-                 <td class='text-right'><input style="width:95px;text-align:right" type="text" class="form-control" id="orderResultPrice" maxlength="9" numberOnly name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderResultPriceView}"></td>
+                 <td class='text-right'><input style="width:75px;text-align:right" type="text" class="form-control" id="orderResultPrice" maxlength="9" numberOnly name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderResultPriceView}"></td>
                  <td class='text-right' id='orderTotalPriceView' name='orderTotalPriceView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="0"/></td>
                  <td class='text-right'><img id="etcbtn" onClick="fcEtc_detail('${orderVO.orderCode}','${orderVO.productCode}','${orderVO.productName}','${orderVO.etc}','${status.count}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${orderVO.etcCnt}</span>)</td>
                   <tr>
-	             	<td colspan='11' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${orderVO.etc}" placeholder="비고" disabled /></td>
+	             	<td colspan='10' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${orderVO.etc}" placeholder="비고" disabled /></td>
 	             </tr>
               </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty orderDetailList}">
            <tr>
-           	<td colspan='11' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='10' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
-	  </table>
+	    </tbody>
+	   </table>
+	  </div>
+      
 	 </form:form>
 	</div>
 

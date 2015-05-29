@@ -2,7 +2,7 @@
 <SCRIPT>
 
     // 회수 상세 페이지 리스트 Layup
-    function fcRecovery_detail(recoveryCode,groupId,groupName,recoveryState,regDateTime,recoveryClosingDate,totalCnt,receiveCnt) {
+    function fcRecovery_detail(recoveryCode,groupId,groupName,recoveryState,regDateTime,recoveryClosingDate,totalCnt,receiveCnt,checkCnt) {
    
     	var url='<%= request.getContextPath() %>/recovery/recoverydetailview';
 
@@ -17,7 +17,7 @@
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load(url+'?recoveryCode='+recoveryCode+'&totalCnt='+totalCnt+'&receiveCnt='+receiveCnt+'&groupId='+groupId+'&groupName='+encodeURIComponent(groupName)+
+                $(this).load(url+'?recoveryCode='+recoveryCode+'&totalCnt='+totalCnt+'&receiveCnt='+receiveCnt+'&checkCnt='+checkCnt+'&groupId='+groupId+'&groupName='+encodeURIComponent(groupName)+
                 		'&recoveryState='+recoveryState);
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#recoveryDetailView").dialog('close');
@@ -58,12 +58,18 @@
     			document.all('transbutton').disabled=false;
     			$('#transbutton').attr("style","display:inline");
     			
+    			document.all('returnbutton').disabled=false;
+    			$('#returnbutton').attr("style","display:inline");
+    			
     		}else{
     			document.all('rexportbutton').disabled=true;
     			$('#rexportbutton').attr("style","display:none");
     			
     			document.all('transbutton').disabled=true;
     			$('#transbutton').attr("style","display:none");
+    			
+    			document.all('returnbutton').disabled=true;
+    			$('#returnbutton').attr("style","display:none");
     		}
 
     	}
@@ -98,7 +104,7 @@
      <form:form commandName="recoveryVO" name="recoveryPageListForm" method="post" action="" >
       <input type="hidden" name="collectCode" id="collectCode" value="${recoveryConVO.collectCode}">
       <c:if test="${strAuth != '03'}">
-      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> 전체건수 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.totalCnt}" /></span> 
+      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> 전체건수 : <a href="javascript:stateSearch('')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.totalCnt}" /></a></span> 
       <span style="color:blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[대기] :</font> <a href="javascript:stateSearch('01')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.waitCnt}" /></a>
       &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[발신] :</font> <a href="javascript:stateSearch('02')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.sendCnt}" /></a>    
 	  &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[수신] :</font> <a href="javascript:stateSearch('03')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.receiveCnt}" /></a>     
@@ -128,13 +134,13 @@
                  <input type="hidden" id="recoveryState" name="recoveryState" value="${recoveryVO.recoveryState}">
                  <td class='text-center'><c:out value="${recoveryVO.recoveryStateView}"></c:out></td>
                  <td><a href="javascript:fcRecovery_detail('${recoveryVO.recoveryCode}','${recoveryVO.groupId}','${recoveryVO.groupName}','${recoveryVO.recoveryState}',
-                 '${recoveryVO.collectDateTime}','${recoveryVO.recoveryClosingDate}','${recoveryState.totalCnt}','${recoveryState.receiveCnt}')"><c:out value="${recoveryVO.recoveryCode}"></c:out></a></td>
+                 '${recoveryVO.collectDateTime}','${recoveryVO.recoveryClosingDate}','${recoveryState.totalCnt}','${recoveryState.receiveCnt}','${recoveryState.checkCnt}')"><c:out value="${recoveryVO.recoveryCode}"></c:out></a></td>
                  <td><c:out value="${recoveryVO.groupName}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.recoveryResultCnt}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.recoveryResultPrice}"/></td>
                  <td class='text-center'>
                  <c:if test="${recoveryVO.recoveryState=='02' && strAuth!='03'}">
-                 <button type="button" id="receivebtn" class="btn btn-success" onClick="fcRecovery_receive('${recoveryVO.recoveryCode}');">수신</button>
+                 <button type="button" id="receivebtn" class="btn btn-xs btn-success" onClick="fcRecovery_receive('${recoveryVO.recoveryCode}');">수신</button>
                  </c:if>
                  </td>
               </tr>

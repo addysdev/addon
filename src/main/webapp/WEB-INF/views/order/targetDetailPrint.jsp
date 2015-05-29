@@ -1,4 +1,3 @@
-<%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <%@ page import="java.util.*,
 				java.io.*,
 				java.util.List,
@@ -15,18 +14,18 @@ window.print();
 		        <html>
 		        <head>
 		        <title>상품주문서</title>
-		        <meta http-equiv='Content-Type' content='text/html; charset=euc-kr' />
+		        <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 		        <style type='text/css'> 
 		        <!--
 		        td {
-		        font-family: '굴림', '돋움', 'Seoul', '한강체';
-		        font-size: 12px;
+		        font-family: '돋움', '굴림', 'Seoul';
+		        font-size: 11px;
 		        	line-height: 30px;
 		        }
 				.style1 {
 			    	font-size: 30px;
 					font-weight: bold;
-					font-family: '굴림체', '돋움체', Seoul;
+					font-family: '돋움체', '굴림체', Seoul;
 		        }
 				.style5 {
 					font-size: 24px;
@@ -55,18 +54,15 @@ window.print();
 				for(int x=0; x<=pagenum; x++){
 				
 				 %>
-				<table width='612' border='0' align='center' cellpadding='0' cellspacing='0'>
-				<tr> 
-				<td width='516' valign='top'>
 				<table width='722' height='900' border='0' align='center' cellpadding='1' cellspacing='1' bgcolor='#000000'>
 				<tr bgcolor='#FFFFFF'> 
 				<td height='55' colspan='12' align='center'><span class='style1'>상 품 주 문 서</span></td>
 				</tr>
 				<tr bgcolor='#FFFFFF'>
 				 <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>수<br>신</td>
-				 <td width='60' align='center'>&nbsp;회사명</td>
+				 <td width='60' align='center' >&nbsp;회사명</td>
 				 <td colspan='5' align='center'>&nbsp;${targetVO.deliveryName}</td>
-				 <td width='30' rowspan='8'  align='center' style='background-color:#E4E4E4'>발<br>신</td>
+				 <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>발<br>신</td>
 				 <td width='60' align='center'>&nbsp;회사명</td>
 				 <td colspan='3' align='center'>&nbsp;${targetVO.orderName}</td>
 				</tr>

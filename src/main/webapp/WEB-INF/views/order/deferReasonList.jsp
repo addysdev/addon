@@ -2,24 +2,34 @@
 <!DOCTYPE html>
 <html>
  <head>
+ <style>
+
+ .thead { height:32px;  overflow:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
+ .tbody { height:300px; .height:290px; overflow-y:scroll; overflow-x:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
+ .tbody_evScore {height:530px;}
+ .tbl_type {width:100%;border-bottom:1px solid #dcdcdc;text-align:center; table-layout:fixed;border-collapse:collapse;word-break:break-all;}
+ .tbl_type td { padding:6px 0px; }
+
+</style>
 	<script>
 
 	</script>
 </head>
 <body>
 <div class="container-fluid">
-	<h4><strong><font style="color:#428bca"><span class="glyphicon glyphicon-book"></span>${commentConVO.productName}</font></strong></h4>
-	   <form:form commandName="commentVO" name="commentListForm" method="post" action="" >
-	      <table class="table table-striped">
-	      	<colgroup>
-		     <col width="3%" />
-	         <col width="15%" />
-	         <col width="20%" />
-	         <col width="12%" />
+ <form:form commandName="commentVO" name="commentListForm" method="post" action="" >
+		<div class="thead">
+		   <table cellspacing="0" border="0" summary="" class="table table-bordered tbl_type" style="table-layout: fixed">
+		    <caption>발주대상리스트</caption>
+	 		<colgroup>
+		     <col width="50px" />
+	         <col width="80px" />
+	         <col width="150px" />
+	         <col width="80px" />
 	         <col width="*" />
 	        </colgroup>
 		    <thead>
-		      <tr>
+		      <tr style="background-color:#E6F3FF">
 		        <th class='text-center'>no</th>
 	            <th class='text-center'>작성자</th>
 	            <th class='text-center'>작성일시</th>
@@ -27,11 +37,25 @@
 	            <th class='text-center'>보류사유</th>
 		      </tr>
 		    </thead>
-		    <tbody>
-		    	<c:if test="${!empty commentList}">
+		  </table>
+		  </div>
+		  <div class="tbody">
+		    <table cellspacing="0" border="0" summary="" class="table table-bordered tbl_type" style="table-layout: fixed"> 
+		      <caption></caption>
+		      <colgroup>
+		      <col width="50px" />
+	          <col width="80px" />
+	          <col width="150px" />
+	          <col width="80px" />
+	          <col width="*" />
+		      </colgroup>
+		       <!-- :: loop :: -->
+		                <!--리스트---------------->
+		      <tbody>
+		       <c:if test="${!empty commentList}">
 	             <c:forEach items="${commentList}" var="commentVO" varStatus="status">
 	             <tr id="select_tr_${commentVO.idx}">
-	                 <td class='text-left'><c:out value="${status.count}"></c:out></td>
+	                 <td class='text-left'><c:out value="${commentList.size()-(status.count-1)}"></c:out></td>
 	                 <td class='text-center'><c:out value="${commentVO.commentUserName}"></c:out></td>
 	                 <td class='text-center'><c:out value="${commentVO.commentDateTime}"></c:out></td>
 	                 <td class='text-left'><c:out value="${commentVO.commentTypeView}"></c:out></td>
@@ -45,8 +69,10 @@
 	              </tr>
 	          </c:if>
 		    </tbody>
-		  </table>
-		</form:form>
+		   </table>
+		  </div>
+	
+</form:form>
 </div>
 </body>
 </html>

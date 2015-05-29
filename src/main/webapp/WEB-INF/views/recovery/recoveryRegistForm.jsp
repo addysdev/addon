@@ -187,6 +187,7 @@ function delFile(obj){
     totalAttachCnt('del');
 } 
 //품목조회 리스트 Layup
+/*
 function fcReProduct_excelForm() {
 	
 	//$('#targetEtcView').attr('title',productName);
@@ -198,7 +199,7 @@ function fcReProduct_excelForm() {
         closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
         width : 600,
-        height : 600,
+        height : 300,
         modal : true, //주위를 어둡게
 
         open:function(){
@@ -216,6 +217,7 @@ function fcReProduct_excelForm() {
         }
     });
 };
+*/
 //레이어팝업 : 보유재고 Layer 팝업
 function fcReProduct_excelForm(){
 
@@ -225,7 +227,7 @@ function fcReProduct_excelForm(){
         closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
         width : 430,
-        height : 400,
+        height : 300,
         modal : true, //주위를 어둡게
 
         open:function(){

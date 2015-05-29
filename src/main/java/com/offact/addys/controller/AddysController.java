@@ -79,16 +79,38 @@ public class AddysController {
 		
 		logger.info("Welcome addys loginForm! ");
 		
-		 // 사용자 세션정보
+		// 사용자 세션정보
         HttpSession session = request.getSession();
-        String userId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
 		ModelAndView mv = new ModelAndView();
 		String strMainUrl = "addys/loginForm";
 		
 		try{
 
-			if(!"".equals(userId)){
+			if(!"".equals(strUserId)){
+
+		        TargetVO targetConVO = new TargetVO();
+		        
+		        targetConVO.setGroupId(groupId);
+
+		        // 조회조건저장
+		        mv.addObject("targetConVO", targetConVO);
+
+		        //조직정보 조회
+		        GroupVO group = new GroupVO();
+		        group.setGroupId(groupId);
+		        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+		        mv.addObject("group_comboList", group_comboList);
+		        
+		        // 공통코드 조회 (발주상태코드)
+		        CodeVO code = new CodeVO();
+		        code.setCodeGroupId("OD01");
+		        List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
+		        mv.addObject("code_comboList", code_comboList);
+				
 				strMainUrl="order/targetManage";
 			}
 			

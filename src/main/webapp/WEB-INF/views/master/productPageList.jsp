@@ -52,6 +52,14 @@
      <form:form commandName="productMasterVO" name="productMasterPageListForm" method="post" action="" >
       <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-bordered">
+	  	<colgroup>
+	     <col width="10%" />
+         <col width="10%" />
+         <col width="*" />
+         <col width="20%" />
+         <col width="10%" />
+         <col width="15%" />
+        </colgroup>
 	    <thead>
 	      <tr style="background-color:#E6F3FF">
 	        <th class='text-center'>품목코드</th>
@@ -87,3 +95,4 @@
 	 <!-- 페이징 -->
      <taglib:paging cbFnc="goPageProductMasterPageList" totalCount="${totalCount}" curPage="${productCon.curPage}" rowCount="${productCon.rowCount}" />
      <!-- //페이징 -->
+

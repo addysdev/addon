@@ -31,22 +31,26 @@
     }
     
 </SCRIPT>
-<div class="container">
-	<h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 발주 리스트</font></strong></h4>
-	  <!-- 조회조건 -->
+<div class="container-fluid">
+
+	<!-- 서브타이틀 영역 : 시작 -->
+	<div class="sub_title">
+   		<p class="titleP">발주 리스트</p>
+	</div>
+	<!-- 서브타이틀 영역 : 끝 -->
+	<!-- 조회조건 -->
 	  <form:form class="form-inline" role="form" commandName="targetConVO" id="targetConForm" name="targetConForm" method="post" action="" >
         <input type="hidden" name="curPage"             id="curPage"            value="1" />
         <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
         <fieldset>
         	<div class="form-group">
-        	    <font style="color:#FF9900"><span class="glyphicon glyphicon-search"></span></font>
         	    <c:choose>
 	    		<c:when test="${strAuth == '03'}">
 					<input type="hidden" id="con_groupId" name="con_groupId" value="${targetConVO.groupId}">
 					</c:when>
 					<c:otherwise>
-						<label for="con_groupId"><font style="color:#FF9900"> 지점선택 : </font></label>
+						<label for="con_groupId">지점선택 :</label>
 						<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${targetConVO.groupId}">
 		                    <option value="">전체</option>
 		                    <c:forEach var="groupVO" items="${group_comboList}" >
@@ -55,7 +59,7 @@
 		                </select>
 					</c:otherwise>
 				</c:choose>
-				<label for="con_orderState"><h6><strong><font style="color:#FF9900"> 발주상태 : </font></strong></h6></label>
+				<label for="con_orderState">발주상태 :</label>
 				<select class="form-control" title="발주상태" id="con_orderState" name="con_orderState" value="">
                 	<option value="">전체</option>
                     <c:forEach var="codeVO" items="${code_comboList}" >
@@ -85,4 +89,5 @@
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>
 <script>
 fcTarget_listSearch();
+MM_nbGroup('down','group1','menu_01','<%= request.getContextPath() %>/images/top/addys-menu_01_on.jpg',1);
 </script>

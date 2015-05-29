@@ -1,9 +1,17 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <!DOCTYPE html>
 <html>
+<style>
+<!--
+.style2 {
+	font-size: 10;
+	color: #FFFFFF;
+}
+-->
+</style>
     <div id="footer">
-      <div class="container">
-        <p class="text-muted credit" style="color:#428bca">Copyright 2015 ⓒ <b>addys</b> Corp. All rights reserved. v1.0.0</p>
+      <div class="container-fluid">
+        <p class="text-muted credit text-center" style="color:#428bca;">Copyright 2015 ⓒ <b>addys</b> Corp. All rights reserved. v1.0.0</p>
       </div>
     </div>
 </html>
@@ -22,6 +30,7 @@
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/addys.js"></script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/utils.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/errorMsg.js"></script>
+	
 	
 	
 

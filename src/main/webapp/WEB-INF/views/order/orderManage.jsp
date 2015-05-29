@@ -31,8 +31,13 @@
     }
     
 </SCRIPT>
-<div class="container">
-	<h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 검수 리스트</font></strong></h4>
+<div class="container-fluid">
+
+    <!-- 서브타이틀 영역 : 시작 -->
+	<div class="sub_title">
+   		<p class="titleP">검수 리스트</p>
+	</div>
+	<!-- 서브타이틀 영역 : 끝 -->
 	  <!-- 조회조건 -->
 	  <form:form class="form-inline" role="form" commandName="orderConVO" id="orderConForm" name="orderConForm" method="post" action="" >
         <input type="hidden" name="curPage"             id="curPage"            value="1" />
@@ -40,15 +45,15 @@
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
         <fieldset>
         	<div class="form-group">
-        		<label for="start_orderDate end_orderDate"><h6><strong><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span>  발주일자 : </font></strong></h6></label>
-				<div style='width:150px' class='input-group date ' id='datetimepicker1' data-link-field="start_orderDate" data-link-format="yyyy-mm-dd">
+        		<label for="start_orderDate end_orderDate">발주일자 :</label>
+				<div style='width:155px' class='input-group date ' id='datetimepicker1' data-link-field="start_orderDate" data-link-format="yyyy-mm-dd">
 	                <input type='text' class="form-control" value="${orderConVO.start_orderDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>
 	                </span>
 	                <input type="hidden" id="start_orderDate" name="start_orderDate" value="${orderConVO.start_orderDate}" />
 	            </div>
-	            <div style='width:150px' class='input-group date' id='datetimepicker2'  data-link-field="end_orderDate" data-link-format="yyyy-mm-dd">
+	            <div style='width:155px' class='input-group date' id='datetimepicker2'  data-link-field="end_orderDate" data-link-format="yyyy-mm-dd">
 	                <input type='text' class="form-control" value="${orderConVO.end_orderDate}" />
 	                <span class="input-group-addon">
 	                    <span class="glyphicon glyphicon-calendar"></span>
@@ -61,7 +66,7 @@
 					<input type="hidden" id="con_groupId" name="con_groupId" value="${orderConVO.groupId}">
 					</c:when>
 					<c:otherwise>
-						<label for="con_groupId"><font style="color:#FF9900"> 지점선택 : </font></label>
+						<label for="con_groupId">지점선택 :</label>
 						<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${orderConVO.groupId}">
 		                    <option value="">전체</option>
 		                    <c:forEach var="groupVO" items="${group_comboList}" >
@@ -70,14 +75,14 @@
 		                </select>
 					</c:otherwise>
 				</c:choose>
-				<label for="searchGubun"><h6><strong><font style="color:#FF9900"> 검수상태 : </font></strong></h6></label>
+				<label for="searchGubun">검수상태 :</label>
 				<select class="form-control" title="발주상태" id="con_orderState" name="con_orderState" value="">
                 	<option value="">전체</option>
                     <c:forEach var="codeVO" items="${code_comboList}" >
                     	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
                     </c:forEach>
            		</select>
-           		<label for="searchGubun"><h6><strong><font style="color:#FF9900"> 검색조건 : </font></strong></h6></label>
+           		<label for="searchGubun">검색조건 :</label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
                 	<option value="01" >발주자ID</option>
                     <option value="02" >발주자명</option>
@@ -86,7 +91,7 @@
                     <option value="05" >품목코드</option>
                     <option value="06" >품목명</option>
            		</select>
-				<label class="sr-only" for="searchValue"> 조회값 </label>
+				<label class="sr-only" for="searchValue"> 조회값 :</label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${orderConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
 				<button type="button" class="btn btn-primary" onClick="javascript:fcOrder_listSearch()">조회</button>
 	            <!-- >button type="button" class="btn" onClick="">excel</button -->
@@ -140,4 +145,5 @@
     });
     
     fcOrder_listSearch();
+    MM_nbGroup('down','group1','menu_01','<%= request.getContextPath() %>/images/top/addys-menu_01_on.jpg',1);
 </script>

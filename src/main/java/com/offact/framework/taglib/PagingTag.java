@@ -73,63 +73,56 @@ public class PagingTag extends TagSupport {
             lPageCount = lTotalCount / lRowCount + 1L;
         }
 
-        html.append("<div class=\"container-fluid\">\n<ul class=\"pagination\">\n");
+        html.append("<div class=\"paging\">\n");
 
-        if (lTotalCount > 0) {
+        if (lTotalCount > 0L)
+        {
+          if (lCurPage != 1L)
+          {
+            html.append("<a href=\"javascript:" + 
+              this.cbFnc + 
+              "('1');\" class=\"btn btn_first\"><span class=\"hidden_obj\"></span></a>");
+            html.append("<a href=\"javascript:" + 
+              this.cbFnc + 
+              "('" + (
+              lCurPage - 1L) + 
+              "');\" class=\"btn btn_prev\"><span class=\"hidden_obj\"></span></a>");
+          }
+          long startPage = lCurPage / 10L * 10L + 1L;
+          if ((0L == lCurPage % 10L) && (lCurPage > 9L)) {
+            startPage -= 10L;
+          }
+          long endPage = startPage + 10L - 1L;
 
-            // 1 페이지이면 비활성화
-            if (lCurPage == 1) {
-
-            } else {
-                html.append("<li><a href=\"javascript:"
-                        + cbFnc
-                        + "('1');\"  aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>");
-                html.append("<li><a href=\"javascript:"
-                        + cbFnc
-                        + "('"
-                        + (lCurPage - 1)
-                        + "');\"  aria-label=\"Previous\"><span aria-hidden=\"true\"><</span></li>");
+          if (endPage > lPageCount) {
+            endPage = lPageCount;
+          }
+          for (long page = startPage; page <= endPage; page += 1L)
+          {
+            if (lCurPage == page)
+              html.append("<strong>" + page + "</strong>");
+            else {
+              html.append("<a href=\"javascript:" + this.cbFnc + "('" + page + 
+                "');\">" + page + "</a>");
             }
-            long startPage = (lCurPage / maxPagingCount) * maxPagingCount + 1;
-            if( 0L == lCurPage % maxPagingCount && lCurPage > 9 ) {
-            	startPage = startPage - maxPagingCount;
-            }
-            long endPage = startPage + maxPagingCount - 1;
+          }
 
-            // logger.info("\n doStartTag \n startPage ==>" + startPage
-            // + "\n endPage ==>" + endPage
-            // );
-
-            if (endPage > lPageCount) {
-                endPage = lPageCount;
-            }
-            for (long page = startPage; page <= endPage; page++) {
-
-                if (lCurPage == page) {
-                	 html.append("<li class=\"active\"><a href=\"#\">" + page + "</a></li>");
-                } else {
-                    html.append("<li><a href=\"javascript:" + cbFnc + "('" + page
-                            + "');\">" + page + "</a></li>");
-                }
-            }
-            // 마지막 페이지면 비활성화
-            if (lCurPage == lPageCount) {
-
-            } else {
-                html.append("<li><a href=\"javascript:"
-                        + cbFnc
-                        + "('"
-                        + (lCurPage + 1)
-                        + "');\"aria-label=\"Next\"><span aria-hidden=\"true\">></span></a></li>");
-                html.append("<li><a href=\"javascript:"
-                        + cbFnc
-                        + "('"
-                        + lPageCount
-                        + "');\"  aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>");
-            }
+          if (lCurPage != lPageCount)
+          {
+            html.append("<a href=\"javascript:" + 
+              this.cbFnc + 
+              "('" + (
+              lCurPage + 1L) + 
+              "');\" class=\"btn btn_next\"><span class=\"hidden_obj\"></span></a>");
+            html.append("<a href=\"javascript:" + 
+              this.cbFnc + 
+              "('" + 
+              lPageCount + 
+              "');\" class=\"btn btn_last\"><span class=\"hidden_obj\"></span></a>");
+          }
         }
 
-        html.append("</ul></div>\n");
+        html.append("</div>\n");
 
         try {
 

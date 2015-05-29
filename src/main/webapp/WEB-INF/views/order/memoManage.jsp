@@ -1,4 +1,13 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
+ <style>
+
+ .thead { height:32px; overflow:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
+ .tbody { height:200px; .height:190px; overflow-y:scroll; overflow-x:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
+ .tbody_evScore {height:530px;}
+ .tbl_type {width:100%;border-bottom:1px solid #dcdcdc;text-align:center; table-layout:fixed;border-collapse:collapse;word-break:break-all;}
+ .tbl_type td { padding:6px 0px; }
+
+</style>
 <SCRIPT>
 // 리스트 조회
 function fcMemo_listSearch(){
@@ -77,23 +86,38 @@ function fcMemo_add(){
 	  </form:form>
   <!-- //조회 -->
 	   <form:form commandName="commentVO" name="commentListForm" method="post" action="" >
-		      <table class="table table-striped">
-		      	<colgroup>
-			     <col width="3%" />
-		         <col width="15%" />
-		         <col width="20%" />
-		         <col width="*" />
-		        </colgroup>
-			    <thead>
-			      <tr>
-			        <th class='text-center'>no</th>
-		            <th class='text-center'>작성자</th>
-		            <th class='text-center'>작성일시</th>
-		            <th class='text-center'>메모</th>
-			      </tr>
-			    </thead>
-			    <tbody>
-			    	<c:if test="${!empty commentList}">
+	      <div class="thead">
+		   <table cellspacing="0" border="0" summary="메모리스트" class="table table-bordered tbl_type" style="table-layout: fixed">
+		    <caption></caption>
+	 		<colgroup>
+		     <col width="50px" />
+	         <col width="80px" />
+	         <col width="150px" />
+	         <col width="*" />
+	        </colgroup>
+		    <thead>
+		      <tr style="background-color:#E6F3FF">
+		        <th class='text-center'>no</th>
+	            <th class='text-center'>작성자</th>
+	            <th class='text-center'>작성일시</th>
+	            <th class='text-center'>메모</th>
+		      </tr>
+		    </thead>
+		  </table>
+		  </div>
+		  <div class="tbody">
+		    <table cellspacing="0" border="0" summary="" class="table table-bordered tbl_type" style="table-layout: fixed"> 
+		      <caption></caption>
+		      <colgroup>
+		      <col width="50px" />
+	          <col width="80px" />
+	          <col width="150px" />
+	          <col width="*" />
+		      </colgroup>
+		       <!-- :: loop :: -->
+		                <!--리스트---------------->
+		      <tbody>
+		        <c:if test="${!empty commentList}">
 		             <c:forEach items="${commentList}" var="commentVO" varStatus="status">
 		             <tr id="select_tr_${commentVO.idx}">
 		                 <td class='text-left'><c:out value="${commentList.size()-(status.count-1)}"></c:out></td>
@@ -108,8 +132,9 @@ function fcMemo_add(){
 		                  <td colspan='4' class='text-center'>조회된 데이터가 없습니다.</td>
 		              </tr>
 		          </c:if>
-			    </tbody>
-			  </table>
+		    </tbody>
+		   </table>
+		  </div>
 			</form:form> 
   
   <!-- 조회결과리스트 -->

@@ -142,7 +142,7 @@
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
             width : 430,
-            height : 400,
+            height : 300,
             modal : true, //주위를 어둡게
 
             open:function(){
@@ -161,8 +161,12 @@
     };
 
 </SCRIPT>
-<div class="container">
-	<h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 계정관리</font></strong></h4>
+<div class="container-fluid">
+    <!-- 서브타이틀 영역 : 시작 -->
+	<div class="sub_title">
+   		<p class="titleP">계정관리</p>
+	</div>
+	<!-- 서브타이틀 영역 : 끝 -->
 	  <!-- 조회조건 -->
 	  <form:form class="form-inline" role="form" commandName="userConVO" id="userManageConForm" name="userManageConForm" method="post" action="" >
         <input type="hidden" name="curPage"             id="curPage"            value="1" />
@@ -172,20 +176,20 @@
         <input type="hidden" name="userId"              id="userId"         value="${userConVO.userId}"  />
         <fieldset>
         	<div class="form-group">
-        	    <label for="con_groupId"><h6><strong><font style="color:#FF9900">  <span class="glyphicon glyphicon-search"></span>  지점선택 : </font></strong></h6></label>
+        	    <label for="con_groupId">지점선택 :</label>
 				<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${userConVO.groupId}">
                     <option value="">전체</option>
                     <c:forEach var="groupVO" items="${group_comboList}" >
                     	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
                     </c:forEach>
                 </select>
-                <label for="con_useYn"><h6><strong><font style="color:#FF9900"> 사용여부 : </font></strong></h6></label>
+                <label for="con_useYn">사용여부 :</label>
 				<select class="form-control" title="사용유무" id="con_useYn" name="con_useYn" >
                     <option value="" >전체</option>
                     <option value="Y" >사용</option>
                     <option value="N" >미사용</option>
                 </select>
-				<label for="searchGubun"><h6><strong><font style="color:#FF9900"> 검색조건 : </font></strong></h6></label>
+				<label for="searchGubun">검색조건 :</label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
                 	<option value="01" >사용자명</option>
                     <option value="02" >사용자ID</option>
@@ -221,4 +225,5 @@
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>
 <script>
 fcUserManage_listSearch();
+MM_nbGroup('down','group4','menu_04','<%= request.getContextPath() %>/images/top/addys-menu_04_on.jpg',1);
 </script>

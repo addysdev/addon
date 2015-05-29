@@ -566,7 +566,8 @@ public class RecoveryController {
     public ModelAndView recoveryDetailView( HttpServletRequest request, 
     		                              String recoveryCode,
     		                              String totalCnt,
-    		                              String receiveCnt) throws BizException 
+    		                              String receiveCnt,
+    		                              String checkCnt) throws BizException 
     {   	
     	//log Controller execute time start
 		String logid=logid();
@@ -600,6 +601,7 @@ public class RecoveryController {
         
         recoveryConVO.setTotalCnt(totalCnt);
         recoveryConVO.setReceiveCnt(receiveCnt);
+        recoveryConVO.setCheckCnt(checkCnt);
 
         mv.addObject("recoveryConVO", recoveryConVO);
 
@@ -643,6 +645,7 @@ public class RecoveryController {
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
 		logger.info("["+logid+"] Controller start : recoveryVO" + recoveryVO);
+		logger.info("["+logid+"] Controller start : recoveryVO.getQuickCharge:" + recoveryVO.getQuickCharge());
 			
 		String recoveryResult="recovery0010";
 		
@@ -1218,6 +1221,7 @@ public class RecoveryController {
 	    @RequestMapping({"/recovery/transprocess"})
 	    public @ResponseBody
 	    String transProcess(String collectCode,
+	    		            String collectState,
 	    		            HttpServletRequest request) throws BizException
 	    {
 	      
@@ -1239,7 +1243,7 @@ public class RecoveryController {
 	       
 		   RecoveryVO recoveryVO = new RecoveryVO();
 		    
-		    recoveryVO.setCollectState("02");
+		    recoveryVO.setCollectState(collectState);
 		    recoveryVO.setReturnUserId(strUserId);
 		    recoveryVO.setCollectCode(collectCode);
 		  
