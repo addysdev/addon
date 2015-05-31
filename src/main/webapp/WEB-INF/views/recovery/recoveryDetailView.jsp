@@ -725,12 +725,13 @@ function fcResult_cal(){
 	   <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed">
 	    <caption>발주대상리스트</caption>
  		<colgroup>
-	      <col width="80px" >
+	      <col width="60px" >
+	      <col width="460px">
+	      <col width="70px">
+	      <col width="70px">
+	      <col width="70px">
+	      <col width="70px">
 	      <col width="*">
-	      <col width="70px">
-	      <col width="70px">
-	      <col width="70px">
-	      <col width="87px">
 	      </colgroup>
 	    <thead>
 		<tr style="background-color:#E6F3FF">
@@ -744,6 +745,7 @@ function fcResult_cal(){
 		  </c:choose>
           <th class='text-center'>상품명</th>
           <th class='text-center'>기준단가</th>
+          <th class='text-center'>재고수량</th>
           <th class='text-center'>회수수량</th>
           <th class='text-center'>검수수량</th>
           <th class='text-center'>비고</th>
@@ -755,12 +757,13 @@ function fcResult_cal(){
 	    <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed"> 
 	      <caption>발주대상리스트</caption>
 	      <colgroup>
-	      <col width="80px" >
+	      <col width="60px" >
+	      <col width="460px">
+	      <col width="70px">
+	      <col width="70px">
+	      <col width="70px">
+	      <col width="70px">
 	      <col width="*">
-	      <col width="70px">
-	      <col width="70px">
-	      <col width="70px">
-	      <col width="70px">
 	      </colgroup>
 	       <!-- :: loop :: -->
 	                <!--리스트---------------->
@@ -779,6 +782,7 @@ function fcResult_cal(){
 				</c:choose>
                  <td class='text-left'><c:out value="${recoveryVO.productName}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.productPrice}" /></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.stockCnt}" /></td>
                  <input type="hidden" id="productCode" name="productCode" value="${recoveryVO.productCode}" >
                  <input type="hidden" id="productPrice" name="productPrice" value="${recoveryVO.productPrice}" >
                  <input type="hidden" id="stockDate" name="stockDate" value="${recoveryVO.stockDate}" >
@@ -811,10 +815,10 @@ function fcResult_cal(){
                  <tr>
                  <c:choose>
 		    		<c:when test="${recoveryConVO.recoveryState!='01'}"> 
-						 <td colspan='6' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${recoveryVO.etc}" placeholder="비고" disabled /></td>
+						 <td colspan='7' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${recoveryVO.etc}" placeholder="비고" disabled /></td>
 					</c:when>
 					<c:otherwise>
-						 <td colspan='6' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${recoveryVO.etc}" placeholder="비고" /></td>
+						 <td colspan='7' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${recoveryVO.etc}" placeholder="비고" /></td>
 					</c:otherwise>
 				</c:choose>
 	             </tr>
@@ -823,7 +827,7 @@ function fcResult_cal(){
             </c:if>
            <c:if test="${empty recoveryDetailList}">
            <tr>
-           	<td colspan='6' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>

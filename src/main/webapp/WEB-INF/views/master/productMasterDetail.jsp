@@ -88,9 +88,9 @@
 		   <table cellspacing="0" border="0" summary="" class="table table-bordered tbl_type" style="table-layout: fixed">
 		    <caption></caption>
 	 		<colgroup>
-	         <col width="*" />
+	         <col width="360px" />
 	         <col width="110px" />
-	         <col width="127px" />
+	         <col width="*" />
 	        </colgroup>
 		    <thead>
 		      <tr style="background-color:#E6F3FF">
@@ -105,9 +105,9 @@
 		    <table cellspacing="0" border="0" summary="" class="table table-bordered tbl_type" style="table-layout: fixed"> 
 		      <caption></caption>
 		      <colgroup>
-		      <col width="*" />
+		      <col width="360px" />
 	          <col width="110px" />
-	          <col width="110px" />
+	          <col width="*" />
 		      </colgroup>
 		       <!-- :: loop :: -->
 		                <!--리스트---------------->

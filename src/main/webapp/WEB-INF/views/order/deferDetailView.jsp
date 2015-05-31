@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <style>
 
- .thead { height:68px; overflow:hidden; border:0px solid #dcdcdc; border-bottom:none; border-top:none; }
+ .thead { height:67px; overflow:hidden; border:0px solid #dcdcdc; border-bottom:none; border-top:none; }
  .tbody { height:710px; .height:700px; overflow-y:scroll; overflow-x:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
  .tbody_evScore {height:530px;}
  .tbl_type {width:100%;border-bottom:1px solid #dcdcdc;text-align:center; table-layout:fixed;border-collapse:collapse;word-break:break-all;}
@@ -579,14 +579,14 @@ function fcDefer_modify(reason){
  		<colgroup>
 	      <col width="50px" >
 	      <col width="80px" >
+	      <col width="320px">
+	      <col width="50px">
+	      <col width="50px">
+	      <col width="50px">
+	      <col width="70px">
+	      <col width="50px">
+	      <col width="70px">
 	      <col width="*">
-	      <col width="50px">
-	      <col width="50px">
-	      <col width="50px">
-	      <col width="70px">
-	      <col width="50px">
-	      <col width="70px">
-	      <col width="88px">
 	      </colgroup>
 	    <thead>
 			 <tr style="background-color:#E6F3FF">
@@ -613,16 +613,16 @@ function fcDefer_modify(reason){
 	    <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed"> 
 	      <caption>발주대상리스트</caption>
 	      <colgroup>
-	      <col width="50px" >
+	      <col width="49px" >
 	      <col width="80px" >
+	      <col width="320px">
+	      <col width="50px">
+	      <col width="50px">
+	      <col width="50px">
+	      <col width="70px">
+	      <col width="50px">
+	      <col width="70px">
 	      <col width="*">
-	      <col width="50px">
-	      <col width="50px">
-	      <col width="50px">
-	      <col width="70px">
-	      <col width="50px">
-	      <col width="70px">
-	      <col width="70px">
 	      </colgroup>
 	       <!-- :: loop :: -->
 	                <!--리스트---------------->

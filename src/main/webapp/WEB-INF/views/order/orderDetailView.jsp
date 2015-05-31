@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <style>
 
- .thead { height:68px; overflow:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
+ .thead { height:67px; overflow:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
  .tbody { height:700px; .height:690px; overflow-y:scroll; overflow-x:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
  .tbody_evScore {height:530px;}
  .tbl_type {width:100%;border-bottom:1px solid #dcdcdc;text-align:center; table-layout:fixed;border-collapse:collapse;word-break:break-all;}
@@ -747,13 +747,13 @@ function totalTargetAmt(){
 	      <col width="50px" >
 	      <col width="80px" >
 	      <col width="100px" >
-	      <col width="*">
+	      <col width="240px">
 	      <col width="50px">
 	      <col width="65px">
 	      <col width="70px">
 	      <col width="90px">
 	      <col width="70px">
-	      <col width="67px">
+	      <col width="*">
 	      </colgroup>
 	    <thead>
 			<tr style="background-color:#E6F3FF">
@@ -786,13 +786,13 @@ function totalTargetAmt(){
 	      <col width="50px" >
 	      <col width="80px" >
 	      <col width="100px" >
-	      <col width="*">
+	      <col width="240px">
 	      <col width="50px">
 	      <col width="65px">
 	      <col width="70px">
 	      <col width="90px">
 	      <col width="70px">
-	      <col width="50px">
+	      <col width="*">
 	      </colgroup>
 	       <!-- :: loop :: -->
 	                <!--리스트---------------->
