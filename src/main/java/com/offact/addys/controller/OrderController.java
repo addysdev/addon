@@ -54,10 +54,12 @@ import com.offact.addys.service.common.CommonService;
 import com.offact.addys.service.order.OrderService;
 import com.offact.addys.service.order.TargetService;
 import com.offact.addys.service.common.MailService;
+import com.offact.addys.service.common.SmsService;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.CompanyVO;
 import com.offact.addys.vo.common.EmailVO;
+import com.offact.addys.vo.common.SmsVO;
 import com.offact.addys.vo.common.CommentVO;
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.master.StockVO;
@@ -97,6 +99,9 @@ public class OrderController {
     
     @Autowired
     private MailService mailSvc;
+    
+    @Autowired
+    private SmsService smsSvc;
     
 	 /**
      * 발주대상 화면
@@ -784,6 +789,26 @@ public class OrderController {
 			        return "order0003";
 					
 				}
+				
+				//SMS발송
+				SmsVO smsVO = new SmsVO();
+				SmsVO resultSmsVO = new SmsVO();
+				
+				smsVO.setSmsTo(targetVO.getMobilePhone());
+				smsVO.setSmsFrom(targetVO.getOrderMobilePhone());
+				smsVO.setSmsMsg(targetVO.getSms());
+				
+				logger.debug("sms targetVO.getMobilePhone() :"+targetVO.getMobilePhone());
+				logger.debug("sms targetVO.getOrderMobilePhone() :"+targetVO.getOrderMobilePhone());
+				logger.debug("sms targetVO.getSms() :"+targetVO.getSms());
+				
+				resultSmsVO=smsSvc.sendSms(smsVO);
+				
+				logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+				logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+				logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+				
+				
 			}catch(BizException e){
 		       	
 		    	e.printStackTrace();
@@ -1382,6 +1407,20 @@ public class OrderController {
 		        return "order0011";
 		        
 	    	}
+	    	
+	    	//SMS발송
+			SmsVO smsVO = new SmsVO();
+			SmsVO resultSmsVO = new SmsVO();
+			
+			smsVO.setSmsTo("010-6747-1995");
+			smsVO.setSmsFrom(orderVO.getOrderMobilePhone());
+			smsVO.setSmsMsg("전종성팀장'님 'ADDYS 여의도점'에서 '"+strToday+"'자로 '"+orderVO.getOrderCode()+"'의 발주건이 취소되었습니다.");
+
+			resultSmsVO=smsSvc.sendSms(smsVO);
+			
+			logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+			logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+			logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
 	   
 	    }catch(BizException e){
 	       	

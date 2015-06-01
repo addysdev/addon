@@ -224,6 +224,14 @@
 			<artifactId>quartz</artifactId>
 			<version>1.8.6</version>
 		</dependency>
+		
+		<!-- xmlrpc -->
+		<dependency>
+			<groupId>xmlrpc</groupId>
+			<artifactId>xmlrpc</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
 		<!-- file upload -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>
@@ -384,5 +392,5 @@
     	<name>offact</name>
     	<url></url>
     </organization>
-    <description>affact</description>
+    <description>offact</description>
 </project>
