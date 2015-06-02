@@ -17,7 +17,7 @@ import org.springframework.stereotype.Controller;
 import com.offact.framework.db.SqlSessionCommonDao;
 
 @Controller
-public class CommonBatch extends QuartzJobBean {
+public class SmsBatch extends QuartzJobBean {
 
 	@Autowired
 	private SqlSessionCommonDao commonDao;
@@ -30,20 +30,19 @@ public class CommonBatch extends QuartzJobBean {
 			throws JobExecutionException {
 		// TODO Auto-generated method stub
 		
-		batchloger.debug("########################  CRON    CommonBatch START.....!");
+		batchloger.debug("########################  CRON    SmsBatch START.....!");
 
         URL url;// URL 주소 객체
         URLConnection connection;// URL접속을 가지는 객체
         try {
-        	
 
-			if(Inet4Address.getLocalHost().getHostName().equals("localhost.localdomain")){
+        	if(Inet4Address.getLocalHost().getHostName().equals("localhost.localdomain")){
 	            ResourceBundle rb = ResourceBundle.getBundle("config");
 	            rb.getString("offact.host.url");
 	            String strHost = rb.getString("offact.host.url");
 
 	            // CATEGORY
-	            url = new URL(strHost + "/addon/batch/holdstockBatch");
+	            url = new URL(strHost + "/addon/batch/closemisssendsms");
 	            connection = url.openConnection();
 	            connection.getInputStream();
 
@@ -57,7 +56,7 @@ public class CommonBatch extends QuartzJobBean {
             e.printStackTrace();
         }
 
-    	batchloger.debug("########################  CRON    CommonBatch END.....!");
+    	batchloger.debug("########################  CRON    SmsBatch END.....!");
 
 	}
 }

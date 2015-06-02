@@ -213,4 +213,9 @@ public class TargetServiceImpl implements TargetService {
 
        return stateVO;
    }
+   
+   @Override
+   public TargetVO getOrderCode(TargetVO target) throws BizException {
+       return commonDao.selectOne("Target.getOrderCode", target);
+   }
 }

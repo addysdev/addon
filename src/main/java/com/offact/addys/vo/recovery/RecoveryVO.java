@@ -88,6 +88,7 @@ public class RecoveryVO extends AbstractVO {
 	private String checkCnt;
 	
 	private String authId;
+	private String smsNo;
 	
 	private String deliveryMethod;
 	private String transportCode;
@@ -589,6 +590,12 @@ public class RecoveryVO extends AbstractVO {
 	}
 	public void setTransurl(String transurl) {
 		this.transurl = transurl;
+	}
+	public String getSmsNo() {
+		return smsNo;
+	}
+	public void setSmsNo(String smsNo) {
+		this.smsNo = smsNo;
 	}
     
 }

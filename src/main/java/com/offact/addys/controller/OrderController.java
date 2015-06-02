@@ -88,6 +88,27 @@ public class OrderController {
 		return logid;
 	}
 	
+    @Value("#{config['offact.mail.orderfromemail']}")
+    private String orderfromemail;
+    
+    @Value("#{config['offact.mail.ordersubject']}")
+    private String ordersubject;
+    
+    @Value("#{config['offact.dev.option']}")
+    private String devOption;
+    
+    @Value("#{config['offact.dev.sms']}")
+    private String devSms;
+    
+    @Value("#{config['offact.sms.smsid']}")
+    private String smsId;
+    
+    @Value("#{config['offact.sms.smspw']}")
+    private String smsPw;
+    
+    @Value("#{config['offact.sms.smstype']}")
+    private String smsType;
+    
     @Autowired
     private CommonService commonSvc;
     
@@ -517,16 +538,22 @@ public class OrderController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
 		
-		 //오늘 날짜
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
         Date currentTime = new Date();
         String strToday = simpleDateFormat.format(currentTime);
 
         //주문코드 생성
 		String orderCode="";
-		
+		TargetVO orderCodeVO= new TargetVO();
+	
 		if(targetVO.getOrderCode().equals("X")){
-			orderCode="O"+targetVO.getCon_groupId()+t1;
+			
+			targetVO.setOrderCode("O"+targetVO.getCon_groupId()+strToday);
+	
+			orderCodeVO=targetSvc.getOrderCode(targetVO);
+			orderCode=orderCodeVO.getOrderCode();
+			
 		}else{
 			orderCode=targetVO.getOrderCode();
 		}
@@ -764,20 +791,22 @@ public class OrderController {
 			List<File> files = new ArrayList();
 			
 			toEmails.add(targetVO.getEmail());
-			attcheFileName.add("order_"+orderDates[0]+orderDates[1]+orderDates[2]+".html");
+			attcheFileName.add(orderCode+".html");
 			files.add(file);
 			
 			mail.setToEmails(toEmails);
 			mail.setAttcheFileName(attcheFileName);
 			mail.setFile(files);
-			
-			mail.setFromEmail("order@addys.co.kr");
+
+			mail.setFromEmail(orderfromemail);
 			mail.setMsg("애디스("+targetVO.getGroupName()+")지점 상품주문서 메일입니다.<br>"+targetVO.getDeliveryDate()+"까지 납품 부탁드립니다.<br><br><br><br>[연락처  정보]<br><br>(담당자)  "+targetVO.getOrderCharge()+"<br>(Tel)  "+
 			targetVO.getOrderTelNumber()+"<br>(핸드폰)  "+targetVO.getOrderMobilePhone()+"<br>(E-Mail)  "+targetVO.getOrderEmail()+"<br>(FAX)  "+targetVO.getOrderFaxNumber());
 			mail.setSubject("애디스 다이렉트 발주서");
 	
 			try{
+				
 				orderResult=mailSvc.sendMail(mail);
+				
 				logger.debug("mail result :"+orderResult);
 				
 				if(orderResult==false){
@@ -790,23 +819,45 @@ public class OrderController {
 					
 				}
 				
-				//SMS발송
-				SmsVO smsVO = new SmsVO();
-				SmsVO resultSmsVO = new SmsVO();
-				
-				smsVO.setSmsTo(targetVO.getMobilePhone());
-				smsVO.setSmsFrom(targetVO.getOrderMobilePhone());
-				smsVO.setSmsMsg(targetVO.getSms());
-				
-				logger.debug("sms targetVO.getMobilePhone() :"+targetVO.getMobilePhone());
-				logger.debug("sms targetVO.getOrderMobilePhone() :"+targetVO.getOrderMobilePhone());
-				logger.debug("sms targetVO.getSms() :"+targetVO.getSms());
-				
-				resultSmsVO=smsSvc.sendSms(smsVO);
-				
-				logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
-				logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
-				logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+				try{
+					//SMS발송
+					SmsVO smsVO = new SmsVO();
+					SmsVO resultSmsVO = new SmsVO();
+					
+					smsVO.setSmsId(smsId);
+					smsVO.setSmsPw(smsPw);
+					smsVO.setSmsType(smsType);
+					smsVO.setSmsTo(targetVO.getMobilePhone());
+					smsVO.setSmsFrom(targetVO.getOrderMobilePhone());
+					smsVO.setSmsMsg(targetVO.getSms());
+					
+					logger.debug("sms targetVO.getMobilePhone() :"+targetVO.getMobilePhone());
+					logger.debug("sms targetVO.getOrderMobilePhone() :"+targetVO.getOrderMobilePhone());
+					logger.debug("sms targetVO.getSms() :"+targetVO.getSms());
+					
+					logger.debug("#########devOption :"+devOption);
+					String[] devSmss= devSms.split("\\^");
+					
+		    		if(devOption.equals("true")){
+						for(int i=0;i<devSmss.length;i++){
+							
+							if(devSmss[i].equals(targetVO.getMobilePhone().trim().replace("-", ""))){
+								resultSmsVO=smsSvc.sendSms(smsVO);
+							}
+						}
+					}else{
+						resultSmsVO=smsSvc.sendSms(smsVO);
+					}
+
+					logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+					logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+					logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+					
+				}catch(BizException e){
+					
+					logger.info("["+logid+"] Controller SMS전송오류");
+					
+				}
 				
 				
 			}catch(BizException e){
@@ -1408,20 +1459,46 @@ public class OrderController {
 		        
 	    	}
 	    	
-	    	//SMS발송
-			SmsVO smsVO = new SmsVO();
-			SmsVO resultSmsVO = new SmsVO();
-			
-			smsVO.setSmsTo("010-6747-1995");
-			smsVO.setSmsFrom(orderVO.getOrderMobilePhone());
-			smsVO.setSmsMsg("전종성팀장'님 'ADDYS 여의도점'에서 '"+strToday+"'자로 '"+orderVO.getOrderCode()+"'의 발주건이 취소되었습니다.");
+	    	try{
 
-			resultSmsVO=smsSvc.sendSms(smsVO);
-			
-			logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
-			logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
-			logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
-	   
+				//SMS발송
+				SmsVO smsVO = new SmsVO();
+				SmsVO resultSmsVO = new SmsVO();
+				
+				smsVO.setSmsId(smsId);
+				smsVO.setSmsPw(smsPw);
+				smsVO.setSmsType(smsType);
+				smsVO.setSmsTo(orderVO.getMobilePhone());
+				smsVO.setSmsFrom(orderVO.getOrderMobilePhone());
+				smsVO.setSmsMsg(orderVO.getDeliveryCharge()+"님 '"+orderVO.getOrderName()+"' 에서 '"+strToday+"'자로 '"+orderVO.getOrderCode()+"'의 발주건이 취소되었습니다.");
+				
+				logger.debug("sms orderVO.getMobilePhone() :"+orderVO.getMobilePhone());
+				logger.debug("sms orderVO.getOrderMobilePhone() :"+orderVO.getOrderMobilePhone());
+
+				logger.debug("#########devOption :"+devOption);
+				String[] devSmss= devSms.split("\\^");
+				
+	    		if(devOption.equals("true")){
+					for(int i=0;i<devSmss.length;i++){
+						
+						if(devSmss[i].equals(orderVO.getMobilePhone().trim().replace("-", ""))){
+							resultSmsVO=smsSvc.sendSms(smsVO);
+						}
+					}
+				}else{
+					resultSmsVO=smsSvc.sendSms(smsVO);
+				}
+				
+				logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+				logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+				logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+				
+			}catch(BizException e){
+				
+				logger.info("["+logid+"] Controller SMS전송오류");
+				
+			}
+	    	
 	    }catch(BizException e){
 	       	
 	    	e.printStackTrace();
@@ -2076,7 +2153,7 @@ public class OrderController {
 			mail.setAttcheFileName(attcheFileName);
 			mail.setFile(files);
 			
-			mail.setFromEmail("order@addys.co.kr");
+			mail.setFromEmail(orderfromemail);
 			mail.setMsg("[재전송]애디스("+orderVO.getGroupName()+")지점 상품주문서 메일입니다.<br>"+orderVO.getDeliveryDate()+"까지 납품 부탁드립니다.<br><br><br><br>[연락처  정보]<br><br>(담당자)  "+orderVO.getOrderCharge()+"<br>(Tel)  "+
 			orderVO.getOrderTelNumber()+"<br>(핸드폰)  "+orderVO.getOrderMobilePhone()+"<br>(E-Mail)  "+orderVO.getOrderEmail()+"<br>(FAX)  "+orderVO.getOrderFaxNumber());
 			mail.setSubject("애디스 다이렉트 발주서");

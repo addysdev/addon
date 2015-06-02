@@ -954,4 +954,23 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
 		where orderCode = #{orderCode}
 		                        
 </update>
+
+<select id="getOrderCode"  resultMap="targetVO" parameterType="com.offact.addys.vo.order.TargetVO" >
+
+  Select concat(#{orderCode} ,T3.orderCode) As orderCode
+  From (
+  Select Case When T2.orderCodeNo <![CDATA[<]]>  10 Then concat('00',T2.orderCodeNo) 
+              When T2.orderCodeNo <![CDATA[>]]>  10 And T2.orderCodeNo  <![CDATA[<]]>   99  Then concat('0',T2.orderCodeNo) 
+              Else T2.orderCodeNo End orderCode
+    From(
+          Select (cast(right(T1.orderCode,3) As unsigned)+1) As orderCodeNo 
+            From (
+                  Select ifnull(max(orderCode),concat(#{orderCode},'000')) As orderCode 
+                    From adOrder where left(orderCode,12)=#{orderCode} ) As T1 
+    ) As T2
+  ) As T3
+
+    
+</select>
+
 </mapper>

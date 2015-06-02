@@ -19,6 +19,11 @@ public class SmsVO extends AbstractVO {
 	 String resultCode;
 	 String resultMessage;
 	 String resultLastPoint;
+	 
+	 String smsId;
+	 String smsPw;
+	 String smsType;
+	 
 	public String getIdx() {
 		return idx;
 	}
@@ -75,6 +80,24 @@ public class SmsVO extends AbstractVO {
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	public String getSmsId() {
+		return smsId;
+	}
+	public void setSmsId(String smsId) {
+		this.smsId = smsId;
+	}
+	public String getSmsPw() {
+		return smsPw;
+	}
+	public void setSmsPw(String smsPw) {
+		this.smsPw = smsPw;
+	}
+	public String getSmsType() {
+		return smsType;
+	}
+	public void setSmsType(String smsType) {
+		this.smsType = smsType;
 	}
 
 }

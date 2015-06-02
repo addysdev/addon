@@ -641,6 +641,8 @@ function totalTargetAmt(){
 	   <input type="hidden" name="orderFaxNumber"               id="orderFaxNumber"            value="${orderVO.orderFaxNumber}" />
 	   <input type="hidden" name="orderMobilePhone"               id="orderMobilePhone"            value="${orderVO.orderMobilePhone}" />
 	   <input type="hidden" name="orderCharge"               id="orderCharge"            value="${orderVO.orderCharge}" />
+	   <input type="hidden" name="deliveryCharge"               id="deliveryCharge"            value="${orderVO.deliveryCharge}" />
+	   <input type="hidden" name="orderName"               id="orderName"            value="${orderVO.orderName}" />
 	      <div style="position:absolute; left:30px" >
 	      <c:if test="${orderVO.orderState=='03'}"><button id="deferbtn" type="button" class="btn btn-primary" onClick="fcDefer_reasonpop('R')" >보류</button></c:if>
 	      <!--  >button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button-->
@@ -661,16 +663,16 @@ function totalTargetAmt(){
 	 	<tr>
           <th rowspan='9' class='text-center' style="background-color:#E6F3FF">수신</th>
           <th class='text-center'  style="background-color:#E6F3FF" >수신</th>
-          <th class='text-center'><input disabled type="text" class="form-control" id="deliveryName" name="deliveryName"  value="${orderVO.deliveryName}" placeholder="수신" /></th>
+          <th class='text-center'><input disabled type="text" class="form-control"  value="${orderVO.deliveryName}" placeholder="수신" /></th>
           <th rowspan='9' class='text-center'  style="background-color:#E6F3FF">발신</th>
           <th class='text-center' style="background-color:#E6F3FF">발신</th>
           <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.orderName}" placeholder="발신"/></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF" >담당자</th>
-          <th class='text-center'><input  disabled type="text" class="form-control" id="deliveryCharge" name="deliveryCharge"  value="${orderVO.deliveryCharge}" placeholder="참조" /></th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.deliveryCharge}" placeholder="참조" /></th>
           <th class='text-center' style="background-color:#E6F3FF" >담당자</th>
-          <th class='text-center'><input  disabled type="text" class="form-control" id="orderCharge" name="orderCharge"  value="${orderVO.orderCharge}" placeholder="참조" /></th>
+          <th class='text-center'><input  disabled type="text" class="form-control"  value="${orderVO.orderCharge}" placeholder="참조" /></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">핸드폰</th>

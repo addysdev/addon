@@ -11,6 +11,7 @@ import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CompanyVO;
 import com.offact.addys.vo.common.CommentVO;
+import com.offact.addys.vo.common.UserVO;
 /**
  * @author 4530
  */
@@ -64,5 +65,20 @@ public interface CommonService {
     public int regiCommentInsert(CommentVO comment)
     	    throws BizException;
     
+    /**
+     * sms대상 목록
+     *
+     * @return
+     * @throws BizException
+     */
+    public List<UserVO> getSmsList(UserVO usercon) throws BizException;
+    
+    /**
+     * sms batch대상 목록
+     *
+     * @return
+     * @throws BizException
+     */
+    public List<UserVO> getSmsBatchList(UserVO usercon) throws BizException;
     
 }

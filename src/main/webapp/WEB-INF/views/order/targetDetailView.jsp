@@ -66,8 +66,8 @@ function fcTargetDetail_print(){
 function fcOrder_process(){
 	
 	var frm=document.targetDetailForm;
-	var emailCheckCnt = $('input:checkbox[ name="emailCheck"]:checked').length;
-	var smsCheckCnt = $('input:checkbox[ name="smsCheck"]:checked').length;
+	var emailCheckCnt = 1;//$('input:checkbox[ name="emailCheck"]:checked').length;
+	var smsCheckCnt = 1;//$('input:checkbox[ name="smsCheck"]:checked').length;
 
 	if(emailCheckCnt > 0){
 		
@@ -78,7 +78,7 @@ function fcOrder_process(){
 			alert('발주 대상 이메일 주소가 없습니다.');
 			return;
 		}
-		
+
 		if(frm.email.value != 'pjh@addys.co.kr'){
 			if(frm.email.value != 'toaduddlf@naver.com'){
 				if(frm.email.value != 'ideal314@naver.com'){
@@ -99,6 +99,14 @@ function fcOrder_process(){
 			if(frm.mobilePhone.value==''){
 				
 				alert('발주 대상 sms 번호가 없습니다.');
+				frm.mobilePhone.focus(1);
+				return;
+			}
+			
+			if(frm.orderMobilePhone.value==''){
+				
+				alert('발주자  전송번호가 없습니다.');
+				frm.orderMobilePhone.focus(1);
 				return;
 			}
 			
@@ -448,10 +456,10 @@ function fcDefer_reason(reason){
 	   <input type="hidden" name="groupName"               id="groupName"            value="${targetVO.groupName}" />
 	   <input type="hidden" name="con_groupId"               id="con_groupId"            value="${targetVO.con_groupId}" />
 	   <input type="hidden" name="companyCode"               id="companyCode"            value="${targetVO.companyCode}" />
-	      <h4><strong><font style="color:#428bca">발주방법 : </font></strong>
+	      <!--  >h4><strong><font style="color:#428bca">발주방법 : </font></strong>
 	          <input type="checkbox" id="emailCheck" name="emailCheck" value="" title="선택" checked disabled />e-mail
 	          <input type="checkbox" id="smsCheck" name="smsCheck" value="" title="선택" disabled />sms
-	      </h4>
+	      </h4-->
 	      <tr>
 	      <div style="position:absolute; left:30px" > 
 	      <button id="deferbtn" type="button" class="btn btn-primary" onClick="fcDefer_reasonpop()" >보류</button>

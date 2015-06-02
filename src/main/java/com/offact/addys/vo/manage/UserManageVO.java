@@ -37,6 +37,7 @@ public class UserManageVO extends AbstractVO {
     private String searchValue;
     
     private String pw_modifyYn;
+    private String smsYn;
 
     // /** for paging */
     private String totalCount       = "0";
@@ -248,6 +249,12 @@ public class UserManageVO extends AbstractVO {
 	}
 	public void setAuth(String auth) {
 		this.auth = auth;
+	}
+	public String getSmsYn() {
+		return smsYn;
+	}
+	public void setSmsYn(String smsYn) {
+		this.smsYn = smsYn;
 	}
    
 }

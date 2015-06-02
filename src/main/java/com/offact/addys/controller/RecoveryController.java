@@ -47,9 +47,12 @@ import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.addys.service.common.CommonService;
+import com.offact.addys.service.common.SmsService;
 import com.offact.addys.service.recovery.RecoveryService;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CodeVO;
+import com.offact.addys.vo.common.SmsVO;
+import com.offact.addys.vo.common.UserVO;
 import com.offact.addys.vo.master.SalesVO;
 import com.offact.addys.vo.master.StockMasterVO;
 import com.offact.addys.vo.master.ProductMasterVO;
@@ -79,11 +82,32 @@ public class RecoveryController {
 		return logid;
 	}
 	
+    @Value("#{config['offact.dev.option']}")
+    private String devOption;
+    
+    @Value("#{config['offact.dev.sms']}")
+    private String devSms;
+    
+    @Value("#{config['offact.sms.smsid']}")
+    private String smsId;
+    
+    @Value("#{config['offact.sms.smspw']}")
+    private String smsPw;
+    
+    @Value("#{config['offact.sms.smstype']}")
+    private String smsType;
+    
+    @Value("#{config['offact.sms.sendno']}")
+    private String sendNo;
+	
     @Autowired
     private CommonService commonSvc;
     
     @Autowired
     private RecoveryService recoverySvc;
+    
+    @Autowired
+    private SmsService smsSvc;
     
 	 /**
      * 회수대상 작업화면
@@ -530,6 +554,65 @@ public class RecoveryController {
 		        return "recovery0001";
 		        
 	    	}
+	    	
+	    	//SMS발송
+	    	
+			SmsVO smsVO = new SmsVO();
+			SmsVO resultSmsVO = new SmsVO();
+			
+			smsVO.setSmsId(smsId);
+			smsVO.setSmsPw(smsPw);
+			smsVO.setSmsType(smsType);
+			smsVO.setSmsFrom(sendNo);
+			
+			String[] arrGroupId = arrCheckGroupId.split("\\^");
+			
+		    for (int i = 0; i < arrGroupId.length; i++) {
+		    	
+		    	List<UserVO> smsNoList = null;
+		    	UserVO userConVO = new UserVO();
+		    	String groupId=arrGroupId[i];
+		    	String smsNo="";
+		    	
+		    	userConVO.setGroupId(groupId);
+		    	
+		    	smsNoList=commonSvc.getSmsList(userConVO);
+		    	
+
+				smsVO.setSmsMsg("회수품목이 등록되었습니다."+recoveryVO.getRecoveryClosingDate()+"까지 해당품목을 발신처리 부탁드립니다.");
+
+				for (int j=0;j<smsNoList.size();j++){
+					
+					UserVO smsNoVO =new UserVO();
+					smsNoVO=smsNoList.get(j);
+					smsNo=smsNoVO.getMobliePhone();
+					logger.debug("sms groupId :"+groupId);
+					logger.debug("sms smsNo:"+smsNo);
+					
+					smsVO.setSmsTo(smsNo);
+					
+					logger.debug("#########devOption :"+devOption);
+					String[] devSmss= devSms.split("\\^");
+					
+		    		if(devOption.equals("true")){
+						for(int z=0;z<devSmss.length;z++){
+							
+							if(devSmss[z].equals(smsNo.trim().replace("-", ""))){
+								resultSmsVO=smsSvc.sendSms(smsVO);
+							}
+						}
+					}else{
+						resultSmsVO=smsSvc.sendSms(smsVO);
+					}
+		    		
+		    		logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+					logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+					logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+
+				}
+
+		    }
+
 	
 	    }catch(BizException e){
 	       	

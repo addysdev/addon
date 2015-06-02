@@ -225,13 +225,6 @@
 			<version>1.8.6</version>
 		</dependency>
 		
-		<!-- xmlrpc -->
-		<dependency>
-			<groupId>xmlrpc</groupId>
-			<artifactId>xmlrpc</artifactId>
-			<version>1.0</version>
-		</dependency>
-		
 		<!-- file upload -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>
@@ -356,6 +349,14 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.2-alpha1</version>
 		</dependency>
+		
+		<!-- xmlrpc -->
+		<dependency>
+			<groupId>xmlrpc</groupId>
+			<artifactId>xmlrpc</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		
 
 	</dependencies>
     <build>

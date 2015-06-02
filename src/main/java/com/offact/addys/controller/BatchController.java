@@ -49,8 +49,12 @@ import com.offact.framework.util.StringUtil;
 import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
+import com.offact.addys.service.common.CommonService;
+import com.offact.addys.service.common.SmsService;
 import com.offact.addys.service.master.ProductMasterService;
 import com.offact.addys.service.master.StockMasterService;
+import com.offact.addys.vo.common.SmsVO;
+import com.offact.addys.vo.common.UserVO;
 import com.offact.addys.vo.master.StockMasterVO;
 import com.offact.addys.vo.MultipartFileVO;
 
@@ -75,8 +79,32 @@ public class BatchController {
 		return logid;
 	}
 	
+	@Value("#{config['offact.dev.option']}")
+    private String devOption;
+    
+    @Value("#{config['offact.dev.sms']}")
+    private String devSms;
+    
+    @Value("#{config['offact.sms.smsid']}")
+    private String smsId;
+    
+    @Value("#{config['offact.sms.smspw']}")
+    private String smsPw;
+    
+    @Value("#{config['offact.sms.smstype']}")
+    private String smsType;
+    
+    @Value("#{config['offact.sms.sendno']}")
+    private String sendNo;
+	
     @Autowired
     private StockMasterService stockMasterSvc;
+    
+    @Autowired
+    private CommonService commonSvc;
+    
+    @Autowired
+    private SmsService smsSvc;
     
    /**
     * 보유재고 마스터 일괄배치
@@ -97,7 +125,7 @@ public class BatchController {
      //log Controller execute time start
 	 String logid=logid();
      long t1 = System.currentTimeMillis();
-     logger.info("["+logid+"] Batch start ");
+     logger.info("["+logid+"] BatchController start ");
    			
      ModelAndView mv = new ModelAndView();
 
@@ -126,7 +154,7 @@ public class BatchController {
      	this.logger.debug("STOCK 조직아이디:" + stockMasterTestVO.getGroupId());
      	this.logger.debug("STOCK 보유재고값:" + stockMasterTestVO.getSafeStock());
      }
-     */
+
 
    
      //DB Update처리
@@ -140,6 +168,116 @@ public class BatchController {
   
      mv.addObject("rtnErrorList", rtnErrorList);
      mv.addObject("rtnSuccessList", rtnSuccessList);
+    
+     mv.setViewName("/master/uploadResult");
+     */
+     //log Controller execute time end
+     long t2 = System.currentTimeMillis();
+     logger.info("["+logid+"] BatchController end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+ 	
+     return mv;
+     
+   }  
+   
+   /**
+    * 마감일자 미발신건 SMS 일괄배치
+    *
+    * @param MultipartFileVO
+    * @param request
+    * @param response
+    * @param model
+    * @param locale
+    * @return
+    * @throws BizException
+    */
+   @RequestMapping({"/batch/closemisssendsms"})
+   public ModelAndView closeMissSendSms(HttpServletRequest request, 
+   		                              HttpServletResponse response) throws IOException, BizException
+   {
+     
+     //log Controller execute time start
+	 String logid=logid();
+     long t1 = System.currentTimeMillis();
+     logger.info("["+logid+"] Batch start ");
+   			
+     ModelAndView mv = new ModelAndView();
+
+     try{
+         
+    	//SMS발송
+    	
+		SmsVO smsVO = new SmsVO();
+		SmsVO resultSmsVO = new SmsVO();
+		
+		smsVO.setSmsId(smsId);
+		smsVO.setSmsPw(smsPw);
+		smsVO.setSmsType(smsType);
+		smsVO.setSmsFrom(sendNo);
+		
+		String arrCheckGroupId="YP101^";
+		
+		String[] arrGroupId = arrCheckGroupId.split("\\^");
+		
+	    for (int i = 0; i < arrGroupId.length; i++) {
+	    	
+	    	List<UserVO> smsNoList = null;
+	    	UserVO userConVO = new UserVO();
+	    	String groupId=arrGroupId[i];
+	    	String smsNo="";
+	    	
+	    	userConVO.setGroupId(groupId);
+	    	
+	    	smsNoList=commonSvc.getSmsList(userConVO);
+	    	
+
+			smsVO.setSmsMsg("[TEST] 회수 마감일이 내일입니다. 발신처리 부탁드립니다.");
+
+			for (int j=0;j<smsNoList.size();j++){
+				
+				UserVO smsNoVO =new UserVO();
+				smsNoVO=smsNoList.get(j);
+				smsNo=smsNoVO.getMobliePhone();
+				logger.debug("sms groupId :"+groupId);
+				logger.debug("sms smsNo:"+smsNo);
+				
+				smsVO.setSmsTo(smsNo);
+				
+				logger.debug("#########devOption :"+devOption);
+				String[] devSmss= devSms.split("\\^");
+				
+	    		if(devOption.equals("true")){
+					for(int z=0;z<devSmss.length;z++){
+						
+						if(devSmss[z].equals(smsNo.trim().replace("-", ""))){
+							resultSmsVO=smsSvc.sendSms(smsVO);
+						}
+					}
+				}else{
+					resultSmsVO=smsSvc.sendSms(smsVO);
+				}
+	    		
+	    		logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+				logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+				logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+
+			}
+
+	    }
+	
+	
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+	        mv.setViewName("/master/uploadResult");
+	
+	        //log Controller execute time end
+	        long t2 = System.currentTimeMillis();
+	        logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	    	
+	    }
     
      mv.setViewName("/master/uploadResult");
 

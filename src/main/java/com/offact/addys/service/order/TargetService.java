@@ -31,6 +31,16 @@ public interface TargetService {
      */
     public int getTargetCnt(TargetVO target) throws BizException;
     
+
+    /**
+     * 발주번호 조회
+     * 
+     * @return
+     * @throws BizException
+     */
+    public TargetVO getOrderCode(TargetVO target) throws BizException;
+    
+    
     /**
      * 발주대상 상세목록 조회
      * 

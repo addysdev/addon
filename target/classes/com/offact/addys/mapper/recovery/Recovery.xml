@@ -320,8 +320,8 @@ From (
          T6.companyName,
          T1.productCode,
          T5.productName,
-         T1.stockDate,
-         ifnull(T1.stockCnt,0) as stockCnt,
+         I2.stockDate,
+         ifnull(I2.stockCnt,0) as stockCnt,
          ifnull(T1.recoveryCnt,0) as recoveryCnt,
          ifnull(T1.recoveryResultCnt,0) as recoveryResultCnt,
          ifnull(T1.addCnt,0) as addCnt,
@@ -337,6 +337,15 @@ From (
          Left Join ofGroup T4 On T2.groupId = T4.groupId
          Left Join adProductMaster T5 On T1.productCode = T5.productCode
          Left Join adCompany T6 On T5.companyCode = T6.companyCode
+         Left Join(
+									 Select groupID,productCode,stockDate,
+                     						(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
+                					 	From ( 
+                        					  Select groupId,productCode , max(stockDate) as stockDate 
+                       						  	From adStockDetail 
+                        						Group By  groupID,productCode 
+                        					 ) As A1
+									  ) As I2 On T1.productCode = I2.productCode And T2.groupID = I2.groupID /*재고기준일*/
     Where T3.deletedYn='N' And T1.recoveryCode = #{recoveryCode}
     Order by T1.productCode asc
 </select>

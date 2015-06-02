@@ -89,7 +89,13 @@
 	    	<input type="text" class="form-control" id="officePhone" name="officePhone" tabindex="8" value=""> 
 	    	<br>  
 	    	<label for="mobliePhone"><h5><strong><font style="color:#FF9900">mobliePhone : </font></strong></h5></label>             
-	    	<input type="text" class="form-control" id="mobliePhone" name="mobliePhone" tabindex="9" value="">                            
+	    	<input type="text" class="form-control" id="mobliePhone" name="mobliePhone" tabindex="9" value="">   
+	    	<br> 
+	    	<label for="smsYn"><h5><strong><font style="color:#FF9900">sms 수신여부 : </font></strong></h5></label>
+			<select class="form-control" title="smsYn" id="smsYn" name="smsYn" value="N">
+                <option value="N">미수신</option>
+                <option value="Y">수신</option>
+       		</select>                                            
           </td>
 			</th>
 			<br>

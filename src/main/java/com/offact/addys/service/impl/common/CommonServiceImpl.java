@@ -17,6 +17,7 @@ import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CompanyVO;
 import com.offact.addys.vo.common.CommentVO;
+import com.offact.addys.vo.common.UserVO;
 
 /**
  * @author 4530
@@ -86,5 +87,19 @@ public class CommonServiceImpl implements CommonService {
        List<CommentVO> commentList = commonDao.selectList("Comment.getProductEtcList", comment);
 
        return commentList;
+   }
+   
+   @Override
+   public List<UserVO> getSmsList(UserVO usercon) throws BizException {
+       List<UserVO> smsnoList = commonDao.selectList("User.getSmsList", usercon);
+
+       return smsnoList;
+   }
+   
+   @Override
+   public List<UserVO> getSmsBatchList(UserVO usercon) throws BizException {
+       List<UserVO> smsnoList = commonDao.selectList("User.getSmsBatchList", usercon);
+
+       return smsnoList;
    }
 }

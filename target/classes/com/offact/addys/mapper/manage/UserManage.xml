@@ -25,6 +25,7 @@
   <result column="useYn"               property="useYn"  />
   <result column="deletedYn"           property="deletedYn"  />
   <result column="userResult"          property="userResult"  />
+  <result column="smsYn"               property="smsYn"  />
 </resultMap>
 
 <select id="getUserPageList"  resultMap="userListVO" parameterType="com.offact.addys.vo.manage.UserManageVO" >
@@ -52,6 +53,7 @@
 			  ,T1.updateDateTime As UpdateDateTime
 			  ,T1.useYn
 			  ,T1.deletedYn
+			  ,T1.smsYn
           FROM ofUser T1
           	   Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join ofGroup T3 On T1.authId=T3.groupId
@@ -113,6 +115,7 @@
             	,auth = #{auth}
             	,updateUserId = #{updateUserId}
             	,updateDateTime = now()
+            	,smsYn = #{smsYn}
  		Where userId = #{userId}
 </update>
 
@@ -132,6 +135,7 @@
             	,auth = #{auth}
             	,updateUserId = #{updateUserId}
             	,updateDateTime = now()
+            	,smsYn = #{smsYn}
  		Where userId = #{userId}
 </update>
 
@@ -150,6 +154,7 @@
             ,ip
             ,createUserId
             ,createDateTime
+            ,smsYn 
             )
         Values (
 	  		  #{userId}
@@ -165,6 +170,7 @@
 	  		, #{ip}
 	  		, #{createUserId}
 	  		, now()
+	  		, #{smsYn}
 	  		)       
 </insert>
 
@@ -193,6 +199,7 @@
 			  ,T1.updateDateTime As UpdateDateTime
 			  ,T1.useYn
 			  ,T1.deletedYn
+			  ,T1.smsYn
 	     From ofUser T1 
 			  Left Join ofGroup T2 On T1.groupId=T2.groupId
 			  Left Join ofGroup T3 On T1.authId=T3.groupId

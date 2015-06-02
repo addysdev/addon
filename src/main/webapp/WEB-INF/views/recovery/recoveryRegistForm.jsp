@@ -40,13 +40,18 @@ function fcRcovery_regist(){
 	 
 	 var now = new Date(); // The current date and time
 	 var month = now.getMonth()+1;
+	 var day=now.getDate();
 	 
 	 if(month<10){
 		 month='0'+month;
 	 }
+	 
+	 if(day<10){
+		 day='0'+day;
+	 }
 
-	 var today=now.getFullYear()+'-'+month+'-'+now.getDate();
-	 //alert(today);
+	 var today=now.getFullYear()+'-'+month+'-'+day;
+	// alert(today);
 	 //alert(rfrm.recoveryClosingDate.value);
 	 
 	if(rfrm.recoveryClosingDate.value<=today) {

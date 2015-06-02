@@ -39,9 +39,9 @@ public class SmsServiceImpl implements SmsService {
 
         try {
 
-        	String sms_id = "netscyber";
-    		String sms_passwd = "doeltm0407";
-    		String sms_type = "L";	// 설정 하지 않는다면 80byte 넘는 메시지는 쪼개져서 sms로 발송, L 로 설정하면 80byte 넘으면 자동으로 lms 변환
+        	String sms_id = sms.getSmsId();
+    		String sms_passwd = sms.getSmsPw();
+    		String sms_type = sms.getSmsType();	// 설정 하지 않는다면 80byte 넘는 메시지는 쪼개져서 sms로 발송, L 로 설정하면 80byte 넘으면 자동으로 lms 변환
     		
     		whoisSMS whois_sms = new whoisSMS();
 
@@ -68,9 +68,9 @@ public class SmsServiceImpl implements SmsService {
 
     		// UTF-8 설정
     		whois_sms.setUtf8();
-
+    	    sms_msg = new String(sms_msg.getBytes(), "ISO-8859-1");
     	    logger.debug("Send SMS Msg : {}"+sms_msg);
-    	    logger.debug("Send SMS Msg UTF-8: {}"+URLEncoder.encode(sms_msg, "UTF-8"));
+    	    //logger.debug("Send SMS Msg UTF-8: {}"+URLEncoder.encode(sms_msg, "UTF-8"));
 
     		// 파라메터 설정
     		whois_sms.setParams (sms_to,sms_from,sms_msg,sms_date, sms_type);
