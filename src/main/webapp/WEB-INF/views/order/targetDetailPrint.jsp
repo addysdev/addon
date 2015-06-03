@@ -15,24 +15,19 @@ window.print();
 		        <head>
 		        <title>상품주문서</title>
 		        <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-		        <style type='text/css'> 
+		        
+		         <style type='text/css'> 
 		        <!--
-		        td {
-		        font-family: '돋움', '굴림', 'Seoul';
-		        font-size: 11px;
-		        	line-height: 30px;
-		        }
+
 				.style1 {
 			    	font-size: 30px;
 					font-weight: bold;
 					font-family: '돋움체', '굴림체', Seoul;
 		        }
-				.style5 {
-					font-size: 24px;
-				font-weight: bold;
-		        }
+				
 				-->
 				</style>
+				
 				</head>
 
 				<body>
@@ -44,7 +39,7 @@ window.print();
 				int num=0;
 				int totalnum=targetLsit.size();
 				int etcnum=0;
-				int maxlist=23;
+				int maxlist=25;
 				int resultlist=totalnum;
 				
 				String[] r_data=null;
@@ -60,10 +55,10 @@ window.print();
 				</tr>
 				<tr bgcolor='#FFFFFF'>
 				 <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>수<br>신</td>
-				 <td width='60' align='center' >&nbsp;회사명</td>
+				 <td width='80' align='center' >&nbsp;회사명</td>
 				 <td colspan='5' align='center'>&nbsp;${targetVO.deliveryName}</td>
 				 <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>발<br>신</td>
-				 <td width='60' align='center'>&nbsp;회사명</td>
+				 <td width='80' align='center'>&nbsp;회사명</td>
 				 <td colspan='3' align='center'>&nbsp;${targetVO.orderName}</td>
 				</tr>
 				<tr bgcolor='#FFFFFF'>
@@ -86,11 +81,11 @@ window.print();
 				</tr>
 				<tr bgcolor='#FFFFFF'>
 				<td align='center' >발주일자</td>
-				<td width='50' align='center'><div align='right'>${orderDates1}년 </div></td>
-				<td width='30' align='center'>&nbsp;${orderDates2}</td>
-				<td width='30' align='center'>월</td>
-				<td width='30' align='center'>&nbsp;${orderDates3}</td>
-				<td width='30' align='center'>일</td>
+				<td width='35' align='center'><div align='right'>${orderDates1}년 </div></td>
+				<td width='25' align='center'>&nbsp;${orderDates2}</td>
+				<td width='25' align='center'>월</td>
+				<td width='25' align='center'>&nbsp;${orderDates3}</td>
+				<td width='25' align='center'>일</td>
 				<td rowspan='2' align='center' >배송주소</td>
 				<td rowspan='2' colspan='3' align='left'>&nbsp${targetVO.orderAddress}</td>
 				</tr>
@@ -179,7 +174,7 @@ window.print();
 				
 				%>
 				</table>
-				<br><br>
+				<br><br><br><br>
 			<%
 			}
 			%>

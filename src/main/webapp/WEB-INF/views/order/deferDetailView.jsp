@@ -32,8 +32,8 @@ function fcTargetDetail_print(){
 function fcOrder_process(){
 	
 	var frm=document.deferDetailForm;
-	var emailCheckCnt = $('input:checkbox[ name="emailCheck"]:checked').length;
-	var smsCheckCnt = $('input:checkbox[ name="smsCheck"]:checked').length;
+	var emailCheckCnt = 1;//$('input:checkbox[ name="emailCheck"]:checked').length;
+	var smsCheckCnt = 1;//$('input:checkbox[ name="smsCheck"]:checked').length;
 
 	if(emailCheckCnt > 0){
 		
@@ -464,10 +464,10 @@ function fcDefer_modify(reason){
 	   <input type="hidden" name="groupId"               id="groupId"            value="${targetVO.groupId}" />
 	   <input type="hidden" name="con_groupId"               id="con_groupId"            value="${targetVO.con_groupId}" />
 	   <input type="hidden" name="companyCode"               id="companyCode"            value="${targetVO.companyCode}" />
-	      <h4><strong><font style="color:#428bca">발주방법 : </font></strong>
+	      <!-- <h4><strong><font style="color:#428bca">발주방법 : </font></strong>
 	          <input type="checkbox" id="emailCheck" name="emailCheck" value="" title="선택" checked disabled />e-mail
 	          <input type="checkbox" id="smsCheck" name="smsCheck" value="" title="선택" disabled />sms
-	      </h4>
+	      </h4-->
 	      <tr>
 	      <div style="position:absolute; left:30px" >
 	      <!-- >button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button -->

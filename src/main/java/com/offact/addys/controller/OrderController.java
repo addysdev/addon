@@ -481,10 +481,15 @@ public class OrderController {
 	    	targetDetailVo.setEtc(StringUtil.nvl(r_data[11],""));
 			
 	        targetExcelList.add(targetDetailVo);
-	        //targetExcelList.add(targetDetailVo);
-	        //targetExcelList.add(targetDetailVo);
-	        //targetExcelList.add(targetDetailVo);
-	        //targetExcelList.add(targetDetailVo);
+	      /* 
+	       * targetExcelList.add(targetDetailVo);
+	        targetExcelList.add(targetDetailVo);
+	        targetExcelList.add(targetDetailVo);
+	        targetExcelList.add(targetDetailVo);
+	        targetExcelList.add(targetDetailVo);
+	        targetExcelList.add(targetDetailVo);
+	        targetExcelList.add(targetDetailVo);
+	        */
 		
 		}
 
@@ -644,7 +649,7 @@ public class OrderController {
 			int num=0;
 			int totalnum=orders.length;
 			int etcnum=0;
-			int maxlist=23;
+			int maxlist=25;
 			int resultlist=totalnum;
 			
 			String[] r_data=null;
@@ -688,11 +693,11 @@ public class OrderController {
 				szContent += "</tr>";
 				szContent += "<tr bgcolor='#FFFFFF'>";
 				szContent += "<td align='center' >발주일자</td>";
-				szContent += "<td width='50' align='center'><div align='right'>"+orderDates[0]+"년 </div></td>";
-				szContent += "<td width='30' align='center'>&nbsp;"+orderDates[1]+"</td>";
-				szContent += "<td width='30' align='center'>월</td>";
-				szContent += "<td width='30' align='center'>&nbsp;"+orderDates[2]+"</td>";
-				szContent += "<td width='30' align='center'>일</td>";
+				szContent += "<td width='35' align='center'><div align='right'>"+orderDates[0]+"년 </div></td>";
+				szContent += "<td width='25' align='center'>&nbsp;"+orderDates[1]+"</td>";
+				szContent += "<td width='25' align='center'>월</td>";
+				szContent += "<td width='25' align='center'>&nbsp;"+orderDates[2]+"</td>";
+				szContent += "<td width='25' align='center'>일</td>";
 				szContent += "<td rowspan='2' align='center' >배송주소</td>";
 				szContent += "<td rowspan='2' colspan='3' align='left'>&nbsp;"+targetVO.getOrderAddress()+"</td>";
 				szContent += "</tr>";
@@ -772,9 +777,10 @@ public class OrderController {
 					
 				}
 			
+				szContent += "</table>";
+				szContent += "<br><br><br><br>";
 			}
 
-			szContent += "</table>";
 			szContent += "</div>";
 			szContent += "</body>";
 			szContent += " </html>";

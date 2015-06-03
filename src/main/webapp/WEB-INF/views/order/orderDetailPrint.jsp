@@ -39,10 +39,114 @@ window.print();
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/addys.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/utils.js"></script>
+	<script>
+function totalTargetAmt(){
+    
+    	var frm=document.orderDetailListForm;
+    	var amtCnt = frm.productCode.length;
+
+    	if(amtCnt==undefined){
+    		amtCnt=1;
+    	}
+    	
+    	var supplyamt=0;
+    	var vatamt=0;
+    	var totalamt=0;
+    	
+    	if(amtCnt > 1){
+    		
+	    	for(i=0;i<amtCnt;i++){
+	    		
+	    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderPrice[i].value))));
+	    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt[i].value))));
+	    		var vatAmt=frm.orderVatRate[i].value;
+	    		
+	    		var sum_supplyAmt=productPrice*orderCnt;
+	    		supplyamt=supplyamt+sum_supplyAmt;
+	    		
+	    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
+	    		vatamt=vatamt+sum_vatAmt;
+	
+	    	}
+	    	
+    	}else{
+    		
+    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderPrice.value))));
+    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt.value))));
+    		var vatAmt=frm.orderVatRate.value;
+    		var sum_supplyAmt=productPrice*orderCnt;
+
+    		var sum_supplyAmt=productPrice*orderCnt;
+    		supplyamt=supplyamt+sum_supplyAmt;
+    		
+    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
+    		vatamt=vatamt+sum_vatAmt;
+    	}
+
+    	  totalamt=supplyamt+vatamt;
+
+    	  document.all('totalTargetAmt').innerText=' '+addCommaStr(''+totalamt)+' 원 ';// [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
+    }
+    function totalOrderAmt(){
+    	
+    	var frm=document.orderDetailListForm;
+    	var amtCnt = frm.productCode.length;
+    	
+    	if(amtCnt==undefined){
+    		amtCnt=1;
+    	}
+    	
+    	var supplyamt=0;
+    	var vatamt=0;
+    	var totalamt=0;
+    	
+    	if(amtCnt > 1){
+    		
+	    	for(i=0;i<amtCnt;i++){
+	    		
+	    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultPrice[i].value))));
+	    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultCnt[i].value))));
+	    		var vatAmt=frm.orderVatRate[i].value;
+	    		var sum_supplyAmt=productPrice*orderCnt;
+	
+	    		var sum_supplyAmt=productPrice*orderCnt;
+	    		supplyamt=supplyamt+sum_supplyAmt;
+	    		
+	    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
+	    		vatamt=vatamt+sum_vatAmt;
+	
+	    		document.all('orderTotalPriceView')[i].innerText=addCommaStr(''+(productPrice*orderCnt));
+	
+	    	}
+	    	
+    	}else{
+    		
+    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultPrice.value))));
+    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultCnt.value))));
+    		var vatAmt=frm.orderVatRate.value;
+    		var sum_supplyAmt=productPrice*orderCnt;
+
+    		var sum_supplyAmt=productPrice*orderCnt;
+    		supplyamt=supplyamt+sum_supplyAmt;
+    		
+    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
+    		vatamt=vatamt+sum_vatAmt;
+
+    		document.all('orderTotalPriceView').innerText=addCommaStr(''+(productPrice*orderCnt));
+    	}
+
+    	  totalamt=supplyamt+vatamt;
+    	
+    	  document.all('totalOrderAmt').innerText=' '+addCommaStr(''+totalamt)+' 원';//  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
+    }
+	</script>
 	</head>
 	<body>
 	<div class="container" style="width:950">
 	 <div class="form-group" >
+	 <form:form commandName="orderVO" id="orderDetailForm"  name="orderDetailForm" method="post" action="" >
 	 <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-check"></span>검수확인서</font></strong> </h4>
 		<table class="table table-bordered" >
 	 	<tr>
@@ -111,7 +215,9 @@ window.print();
           <th colspan='4' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${orderVO.memo}" placeholder="메모" disabled /></th>
       	</tr>
 	  </table>
+	  </form:form>
 	 </div>
+	 <form:form commandName="orderListVO" id="orderDetailListForm" name="orderDetailListForm" method="post" action="" >
       <p> <span class="glyphicon glyphicon-asterisk"></span> 
       <span style="color:blue"> [품목건수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderDetailList.size()}" /> 건  [발주 합계금액] :</span>
           <span id="totalTargetAmt" style="color:gray">
@@ -176,7 +282,7 @@ window.print();
                  <input type="hidden" name="orderPrice" value="${orderVO.orderPrice+orderVO.orderVatRate}">
                  <input style="width:80px" type="hidden" class="form-control" id="orderVatRate" name="orderVatRate" onKeyup="totalOrderAmt()" value="0">
                  
-                 <td class='text-right'><input style="width:80px" disabled type="text" class="form-control" id="orderResultPrice" name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderPrice+orderVO.orderVatRate}"></td>
+                 <td class='text-right'><input style="width:90px;text-align:right" disabled type="text" class="form-control" id="orderResultPrice" name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderResultPriceView}"></td>
                  <td class='text-right' id='orderTotalPriceView' name='orderTotalPriceView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="0"/></td>
                  <td class='text-right'>(${orderVO.etcCnt})</td>
                   <tr>
@@ -192,6 +298,11 @@ window.print();
           </c:if>
 	  </table>
 	</div>
+	</form:form>
 	</div>
 	</body>
 </html>
+<script>
+totalTargetAmt();
+totalOrderAmt();
+</script>
