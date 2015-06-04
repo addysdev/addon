@@ -247,6 +247,7 @@ function totalTargetAmt(){
     	var supplyamt=0;
     	var vatamt=0;
     	var totalamt=0;
+    	var totalcnt=0;
     	
     	if(amtCnt > 1){
     		
@@ -261,6 +262,7 @@ function totalTargetAmt(){
 	    		
 	    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
 	    		vatamt=vatamt+sum_vatAmt;
+	    		totalcnt=totalcnt+orderCnt;
 	    	}
 	    	
     	}else{
@@ -275,10 +277,12 @@ function totalTargetAmt(){
     		
     		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
     		vatamt=vatamt+sum_vatAmt;
+    		totalcnt=totalcnt+orderCnt;
     	}
 
     	  totalamt=supplyamt+vatamt;
-    	
+    	  
+    	  document.all('totalTargetCnt').innerText=' '+addCommaStr(''+totalcnt)+' 건';
     	  document.all('totalTargetAmt').innerText=' '+addCommaStr(''+totalamt)+' 원 ';// [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
     }
     function totalOrderAmt(){
@@ -293,6 +297,7 @@ function totalTargetAmt(){
     	var supplyamt=0;
     	var vatamt=0;
     	var totalamt=0;
+    	var totalcnt=0;
     	
     	if(amtCnt > 1){
     		
@@ -308,6 +313,7 @@ function totalTargetAmt(){
 	    		
 	    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
 	    		vatamt=vatamt+sum_vatAmt;
+	    		totalcnt=totalcnt+orderCnt;
 	
 	    		document.all('orderTotalPriceView')[i].innerText=addCommaStr(''+(productPrice*orderCnt));
 	
@@ -325,12 +331,14 @@ function totalTargetAmt(){
     		
     		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
     		vatamt=vatamt+sum_vatAmt;
+    		totalcnt=totalcnt+orderCnt;
 
     		document.all('orderTotalPriceView').innerText=addCommaStr(''+(productPrice*orderCnt));
     	}
 
     	  totalamt=supplyamt+vatamt;
     	
+    	  document.all('totalOrderCnt').innerText=' '+addCommaStr(''+totalcnt)+' 건';
     	  document.all('totalOrderAmt').innerText=' '+addCommaStr(''+totalamt)+' 원';//  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
     }
     
@@ -732,11 +740,14 @@ function totalTargetAmt(){
 	 
      <form:form commandName="orderListVO" id="orderDetailListForm" name="orderDetailListForm" method="post" action="" >
       <p> <span class="glyphicon glyphicon-asterisk"></span> 
-      <span style="color:blue"> [품목건수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderDetailList.size()}" /> 건  [발주 합계금액] :</span>
+          <span style="color:blue"> [품목건수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderDetailList.size()}" /> 건   [발주 수량] </span>
+          <span id="totalTargetCnt" style="color:gray">
+          </span><span style="color:blue"> [발주 합계금액]</span>
           <span id="totalTargetAmt" style="color:gray">
-        </span>
-      </p>  
-      <p><span class="glyphicon glyphicon-asterisk"></span> 
+          </span>  
+      <p><span class="glyphicon glyphicon-asterisk"></span>
+          <span style="color:blue">[검수 수량] </span>
+          <span id="totalOrderCnt" style="color:red"></span> 
           <span style="color:blue"> [검수 합계금액] :</span>
           <span id="totalOrderAmt" style="color:red">
         </span>
@@ -833,9 +844,24 @@ function totalTargetAmt(){
                  <input type="hidden" name="orderPrice" value="${orderVO.orderPrice+orderVO.orderVatRate}">
                  <input style="width:80px" type="hidden" class="form-control" id="orderVatRate" name="orderVatRate" onKeyup="totalOrderAmt()" value="0">
                  
-                 <td class='text-right'><input style="width:75px;text-align:right" type="text" class="form-control" id="orderResultPrice" maxlength="9" numberOnly name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderResultPriceView}"></td>
+                <c:choose>
+		    		<c:when test="${orderVO.orderCnt=='0'}">
+                		 <td class='text-right'><input style="width:75px;text-align:right" type="text" class="form-control" id="orderResultPrice" maxlength="9" numberOnly name="orderResultPrice" onKeyup="totalOrderAmt()" value="0"></td>
+                	</c:when>
+					<c:otherwise>
+					     <td class='text-right'><input style="width:75px;text-align:right" type="text" class="form-control" id="orderResultPrice" maxlength="9" numberOnly name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderResultPriceView}"></td>
+                   </c:otherwise>
+				</c:choose>
                  <td class='text-right' id='orderTotalPriceView' name='orderTotalPriceView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="0"/></td>
-                 <td class='text-right'><img id="etcbtn" onClick="fcEtc_detail('${orderVO.orderCode}','${orderVO.productCode}','${orderVO.productName}','${orderVO.etc}','${status.count}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${orderVO.etcCnt}</span>)</td>
+                 <c:choose>
+		    		<c:when test="${orderVO.etcCnt>0}">
+						<td class='text-right' id="etcAdd" name="etcAdd" style="background-color:#FEE2B4;color:blue"><img id="etcbtn" onClick="fcEtc_detail('${orderVO.orderCode}','${orderVO.productCode}','${orderVO.productName}','${orderVO.etc}','${status.count}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${orderVO.etcCnt}</span>)</td>
+					</c:when>
+					<c:otherwise>
+						<td class='text-right' id="etcAdd" name="etcAdd"><img id="etcbtn" onClick="fcEtc_detail('${orderVO.orderCode}','${orderVO.productCode}','${orderVO.productName}','${orderVO.etc}','${status.count}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${orderVO.etcCnt}</span>)</td>
+					</c:otherwise>
+				</c:choose>
+                 
                   <tr>
 	             	<td colspan='10' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${orderVO.etc}" placeholder="비고" disabled /></td>
 	             </tr>

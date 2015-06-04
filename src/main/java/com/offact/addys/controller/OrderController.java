@@ -269,13 +269,14 @@ public class OrderController {
     		                              String orderState,
     		                              String productPrice,
     		                              String vat,
-    		                              String orderPrice) throws BizException 
+    		                              String orderPrice,
+    		                              String safeOrderCnt) throws BizException 
     {   	
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
 		logger.info("["+logid+"] Controller start : groupId : [" + groupId+"] groupName : ["+groupName+
-				"] companyCode : ["+companyCode+"] orderState : ["+orderState+"]");
+				"] companyCode : ["+companyCode+"] orderState : ["+orderState+"]"+"] safeOrderCnt : ["+safeOrderCnt+"]");
 
         ModelAndView mv = new ModelAndView();
         List<TargetVO> targetDetailList = null;
@@ -330,6 +331,7 @@ public class OrderController {
         targetVO.setProductPrice(productPrice);
         targetVO.setVat(vat);
         targetVO.setOrderPrice(orderPrice);
+        targetVO.setSafeOrderCnt(safeOrderCnt);
         
         targetVO.setOrderUserName(strUserName);
         targetVO.setOrderDate(strToday);
@@ -651,6 +653,8 @@ public class OrderController {
 			int etcnum=0;
 			int maxlist=25;
 			int resultlist=totalnum;
+			int removecnt=0;
+			int numcnt=0;
 			
 			String[] r_data=null;
 			
@@ -736,14 +740,22 @@ public class OrderController {
 					
 					for(int i=0;i<resultlist;i++){
 						num++;
-						r_data = StringUtil.getTokens(orders[num-1], "|");
 	
-				        szContent += "<tr bgcolor='#FFFFFF'>";
-						szContent += "<td align='center' height='27'>"+num+"</td>";
-						szContent += "<td colspan='9' align='left'>&nbsp;"+StringUtil.nvl(r_data[1],"")+"</td>";
-						szContent += "<td align='center'>"+StringUtil.nvl(r_data[3],"")+"</td>";
-						szContent += "<td  align='left'>&nbsp;"+StringUtil.nvl(r_data[11],"")+"</td>";
-						szContent += "</tr>";
+						r_data = StringUtil.getTokens(orders[num-1], "|");
+						
+						if(StringUtil.nvl(r_data[3],"0").equals("0")){
+							removecnt++;
+						}else{
+							numcnt++;
+	
+					        szContent += "<tr bgcolor='#FFFFFF'>";
+							szContent += "<td align='center' height='27'>"+numcnt+"</td>";
+							szContent += "<td colspan='9' align='left'>&nbsp;"+StringUtil.nvl(r_data[1],"")+"</td>";
+							szContent += "<td align='center'>"+StringUtil.nvl(r_data[3],"")+"</td>";
+							szContent += "<td  align='left'>&nbsp;"+StringUtil.nvl(r_data[11],"")+"</td>";
+							szContent += "</tr>";
+						
+						}
 				
 					}
 	
@@ -758,18 +770,33 @@ public class OrderController {
 				
 					}
 					
+					for(int a=0;a<removecnt;a++){
+						szContent += "<tr bgcolor='#FFFFFF'>";
+						szContent += "<td align='center' height='27'>&nbsp;</td>";
+						szContent += "<td colspan='9' align='center'>&nbsp;</td>";
+						szContent += "<td align='center'>&nbsp;</td>";
+						szContent += "<td  align='center'>&nbsp;</td>";
+						szContent += "</tr>";
+					}
+					
 				}else if(resultlist>maxlist){
 					
 					for(int z=0;z<maxlist;z++){
 						num++;
 						r_data = StringUtil.getTokens(orders[num-1], "|");
 						
-						szContent += "<tr bgcolor='#FFFFFF'>";
-						szContent += "<td align='center' height='27'>"+num+"</td>";
-						szContent += "<td colspan='9' align='left'>&nbsp;"+StringUtil.nvl(r_data[1],"")+"</td>";
-						szContent += "<td align='center'>"+StringUtil.nvl(r_data[3],"")+"</td>";
-						szContent += "<td  align='left'>&nbsp;"+StringUtil.nvl(r_data[11],"")+"</td>";
-						szContent += "</tr>";
+						if(StringUtil.nvl(r_data[3],"0").equals("0")){
+							removecnt++;
+						}else{
+							numcnt++;
+							
+							szContent += "<tr bgcolor='#FFFFFF'>";
+							szContent += "<td align='center' height='27'>"+numcnt+"</td>";
+							szContent += "<td colspan='9' align='left'>&nbsp;"+StringUtil.nvl(r_data[1],"")+"</td>";
+							szContent += "<td align='center'>"+StringUtil.nvl(r_data[3],"")+"</td>";
+							szContent += "<td  align='left'>&nbsp;"+StringUtil.nvl(r_data[11],"")+"</td>";
+							szContent += "</tr>";
+						}
 						
 					}
 					
@@ -937,6 +964,7 @@ public class OrderController {
 
         logger.info("@#@#@# targetVO.getDefer_reason : " + targetVO.getDeferReason());
         logger.info("@#@#@# arrDeferProductId : " + arrDeferProductId);
+        logger.info("@#@#@# safeOrderCnt : " + targetVO.getSafeOrderCnt());
 	    
 	    String orderDate=targetVO.getOrderDate();
 	    String deliveryDate=targetVO.getDeliveryDate();

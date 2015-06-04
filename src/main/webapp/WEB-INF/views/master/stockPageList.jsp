@@ -56,7 +56,7 @@
 	        <th class='text-center'>재고현황일자</th>
             <th class='text-center'>매장</th>
             <th class='text-center'>재고수량</th>
-            <th class='text-center'>입고금액</th>
+           <!-- <th class='text-center'>입고금액</th> --> 
             <th class='text-center'>재고금액</th>
             <th class='text-center'>업데이트 User</th>
             <th class='text-center'>업데이트 일시</th>
@@ -69,7 +69,7 @@
                  <td class='text-center'><a href="javascript:fcStock_detailPageList('${stockVO.stockDate}','${stockVO.groupId}')"><c:out value="${stockVO.stockDate}"></c:out></a></td>
                  <td class='text-center'><c:out value="${stockVO.groupName}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stockVO.stockCnt}"/></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stockVO.productPrice}"/></td>
+                 <!-- <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stockVO.productPrice}"/></td>--> 
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stockVO.stockPrice}"/></td>
                  <td class='text-center'><c:out value="${stockVO.lastUserName}"></c:out></td>
                  <td class='text-center'><c:out value="${stockVO.stockDateTime}"></c:out></td>
@@ -78,7 +78,7 @@
             </c:if>
            <c:if test="${empty stockList}">
            <tr>
-           	<td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='6' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>

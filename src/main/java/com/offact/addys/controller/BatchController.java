@@ -213,57 +213,44 @@ public class BatchController {
 		smsVO.setSmsPw(smsPw);
 		smsVO.setSmsType(smsType);
 		smsVO.setSmsFrom(sendNo);
-		
-		String arrCheckGroupId="YP101^";
-		
-		String[] arrGroupId = arrCheckGroupId.split("\\^");
-		
-	    for (int i = 0; i < arrGroupId.length; i++) {
-	    	
-	    	List<UserVO> smsNoList = null;
-	    	UserVO userConVO = new UserVO();
-	    	String groupId=arrGroupId[i];
-	    	String smsNo="";
-	    	
-	    	userConVO.setGroupId(groupId);
-	    	
-	    	smsNoList=commonSvc.getSmsList(userConVO);
-	    	
 
-			smsVO.setSmsMsg("[TEST] 회수 마감일이 내일입니다. 발신처리 부탁드립니다.");
+    	List<UserVO> smsNoList = null;
+    	UserVO userConVO = new UserVO();
+    	String smsNo="";
+    	
+    	smsNoList=commonSvc.getSmsBatchList(userConVO);
 
-			for (int j=0;j<smsNoList.size();j++){
-				
-				UserVO smsNoVO =new UserVO();
-				smsNoVO=smsNoList.get(j);
-				smsNo=smsNoVO.getMobliePhone();
-				logger.debug("sms groupId :"+groupId);
-				logger.debug("sms smsNo:"+smsNo);
-				
-				smsVO.setSmsTo(smsNo);
-				
-				logger.debug("#########devOption :"+devOption);
-				String[] devSmss= devSms.split("\\^");
-				
-	    		if(devOption.equals("true")){
-					for(int z=0;z<devSmss.length;z++){
-						
-						if(devSmss[z].equals(smsNo.trim().replace("-", ""))){
-							resultSmsVO=smsSvc.sendSms(smsVO);
-						}
+		smsVO.setSmsMsg("[애디스] 회수 마감일이 하루 남았습니다.회수요청건에 대해 발신처리 부탁드립니다.");
+
+		for (int j=0;j<smsNoList.size();j++){
+			
+			UserVO smsNoVO =new UserVO();
+			smsNoVO=smsNoList.get(j);
+			smsNo=smsNoVO.getMobliePhone();
+			logger.debug("sms smsNo:"+smsNo);
+			
+			smsVO.setSmsTo(smsNo);
+			
+			logger.debug("#########devOption :"+devOption);
+			String[] devSmss= devSms.split("\\^");
+			
+    		if(devOption.equals("true")){
+				for(int z=0;z<devSmss.length;z++){
+					
+					if(devSmss[z].equals(smsNo.trim().replace("-", ""))){
+						resultSmsVO=smsSvc.sendSms(smsVO);
 					}
-				}else{
-					resultSmsVO=smsSvc.sendSms(smsVO);
 				}
-	    		
-	    		logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
-				logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
-				logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
-
+			}else{
+				resultSmsVO=smsSvc.sendSms(smsVO);
 			}
+    		
+    		logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+			logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+			logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
 
-	    }
-	
+		}
+
 	
 	    }catch(BizException e){
 	       	

@@ -98,6 +98,8 @@
                     	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
                     </c:forEach>
            		</select>
+           		<label for="searchGubun">회수코드 :</label>
+				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${collectConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
 				<button type="button" class="btn btn-primary" onClick="javascript:fcCollect_listSearch()">조회</button>		
 	            <!-- >button type="button" class="btn" onClick="">excel</button -->
             </div>

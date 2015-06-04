@@ -579,7 +579,7 @@ public class RecoveryController {
 		    	smsNoList=commonSvc.getSmsList(userConVO);
 		    	
 
-				smsVO.setSmsMsg("회수품목이 등록되었습니다."+recoveryVO.getRecoveryClosingDate()+"까지 해당품목을 발신처리 부탁드립니다.");
+				smsVO.setSmsMsg("[애디스] 회수품목이 등록되었습니다."+recoveryVO.getRecoveryClosingDate()+"까지 해당품목을 발신처리 부탁드립니다.");
 
 				for (int j=0;j<smsNoList.size();j++){
 					
@@ -1082,7 +1082,8 @@ public class RecoveryController {
 	   	 */
 	    @RequestMapping(value = "/recovery/recoverycodeprint")
 	   	public ModelAndView recoveryCodePrint(HttpServletRequest request,
-                                              String recoveryCode ) throws BizException 
+                                              String recoveryCode,
+                                              String groupName) throws BizException 
 	       {
 	    	//log Controller execute time start
 			String logid=logid();
@@ -1091,7 +1092,8 @@ public class RecoveryController {
 
 	   		ModelAndView mv = new ModelAndView();
 	   		
-	   	    mv.addObject("recoveryCode", recoveryCode);
+	   	    mv.addObject("groupName", groupName);
+	     	mv.addObject("recoveryCode", recoveryCode);
 	   		
 	   		mv.setViewName("/recovery/recoveryCodePrint");
 	   		

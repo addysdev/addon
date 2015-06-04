@@ -28,7 +28,7 @@
 	        <th class='text-center'>품목코드</th>
             <th class='text-center'>품목명</th>
             <th class='text-center'>수량</th>
-            <th class='text-center'>입고단가</th>
+           <!--  <th class='text-center'>입고단가</th> -->
             <th class='text-center'>금액</th>
          </tr>
 	    </thead>
@@ -39,14 +39,14 @@
 	              <td><c:out value="${stockVO.productCode}"></c:out></td>
 	              <td><c:out value="${stockVO.productName}"></c:out></td>
 	              <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stockVO.stockCnt}"/></td>
-	              <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stockVO.productPrice}"/></td>
+	           <!--    <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stockVO.productPrice}"/></td> -->
 	              <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stockVO.stockPrice}"/></td>
               </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty stockDetailList}">
               <tr>
-                  <td colspan='5' class='text-center'>조회된 데이터가 없습니다.</td>
+                  <td colspan='4' class='text-center'>조회된 데이터가 없습니다.</td>
               </tr>
           </c:if>
 	    </tbody>

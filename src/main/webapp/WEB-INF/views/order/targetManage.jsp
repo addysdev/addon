@@ -66,6 +66,15 @@
                     	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
                     </c:forEach>
            		</select>
+           		<label for="searchGubun">검색조건 :</label>
+				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
+                	<option value="01" >업체명</option>
+                    <option value="02" >업체코드</option>
+                    <option value="03" >품목명</option>
+                    <option value="04" >품목코드</option>
+           		</select>
+				<label class="sr-only" for="searchValue"> 조회값 :</label>
+				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${targetConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
 				<button type="button" class="btn btn-primary" onClick="javascript:fcTarget_listSearch()">조회</button>
 	            <!--  >button type="button" class="btn" onClick="">excel</button-->
             </div>

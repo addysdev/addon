@@ -81,8 +81,11 @@
 	   	 SUM(T1.orderCnt*T2.productPrice) as productPrice,/*안전재고 기준점 TOTAL 해당*/
 	   	 SUM(round((T1.orderCnt*T2.productPrice)*T2.vatRate)) as vat,/*안전재고 기준점 TOTAL 해당*/
          (SUM(T1.orderCnt*T2.productPrice)+SUM(round((T1.orderCnt*T2.productPrice)*T2.vatRate))) as orderPrice,/*안전재고 기준점 TOTAL 해당*/
-         COUNT(T1.productCode) as safeOrderCnt,/*안전재고 기준점 발생품목수량*/
-         date_format(date(T1.stockDate),'%Y-%m-%d') as stockDate  /*재고현황 기준일*/
+         /*COUNT(T1.productCode) as safeOrderCnt,*/
+         Case T1.orderState When '02' Then T6.safeOrderCnt
+  						    Else COUNT(T1.productCode)
+         				    End safeOrderCnt,/*안전재고 기준점 발생품목수량*/
+         date_format(date(max(T1.stockDate)),'%Y-%m-%d') as stockDate  /*재고현황 기준일*/
   From (
 	      Select TEMP.orderState ,
 		         TEMP.stockCnt,
@@ -162,7 +165,8 @@
            				 </if>
 					   ) As TEMP
 		      Where TEMP.stockCnt  <![CDATA[<=]]> TEMP.safeStock
-					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk 
+					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk
+					And TEMP.stockCnt  <![CDATA[<]]> TEMP.holdStock 
 					<choose>
 						<when test=" con_orderState == '01' " >
 							AND TEMP.orderState in ('01','07','08','09')
@@ -170,13 +174,33 @@
 						<when  test="con_orderState != null and con_orderState != ''">
 							AND TEMP.orderState = #{con_orderState}
 						</when>
+						<when  test="con_orderState == null || con_orderState == ''">
+							AND TEMP.orderState in ('01','02','07','08','09')
+						</when>
 				   </choose>
-           			AND TEMP.orderState in ('01','02','07','08','09')
 			  ) T1
               Left Join adProductMaster T2 On T1.ProductCode = T2.ProductCode
               Left Join adCompany T3 On T2.companyCode = T3.companyCode 
               Left Join ofGroup T4 On T1.groupID = T4.groupID 
                /*  Left Join ofCode T5 On T1.orderState = T5.codeId and T5.codeGroupId = 'OD01'*/
+              Left Join adOrder T6 On T1.orderCode = T6.orderCode 
+              Where 1=1
+                    <if test="searchValue != null and searchValue != ''" >
+             		<choose>
+               			<when test="searchGubun.equals('01')">
+           					AND T3.companyName  LIKE CONCAT('%', #{searchValue}, '%')
+               			</when>
+               			<when test="searchGubun.equals('02')">
+           					AND T2.companyCode  LIKE CONCAT('%', #{searchValue}, '%')
+               			</when>
+               			<when test="searchGubun.equals('03')">
+           					AND T2.productName  LIKE CONCAT('%', #{searchValue}, '%')
+               			</when>
+               			<when test="searchGubun.equals('04')">
+           					AND T1.productCode  LIKE CONCAT('%', #{searchValue}, '%')
+               			</when>
+             		</choose>
+           			</if> 
 			  Group By T1.groupID,
 			           T2.companyCode
 			  LIMIT ${page_limit_val1} , ${page_limit_val2}
@@ -282,7 +306,8 @@ From (
            				 </if>
 					   ) As TEMP
 		      Where TEMP.stockCnt  <![CDATA[<=]]> TEMP.safeStock
-					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk    
+					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk 
+					And TEMP.stockCnt  <![CDATA[<]]> TEMP.holdStock    
 					<choose>
 						<when test=" con_orderState == '01' " >
 							AND TEMP.orderState in ('01','07','08','09')
@@ -290,13 +315,32 @@ From (
 						<when  test="con_orderState != null and con_orderState != ''">
 							AND TEMP.orderState = #{con_orderState}
 						</when>
+						<when  test="con_orderState == null || con_orderState == ''">
+							AND TEMP.orderState in ('01','02','07','08','09')
+						</when>
 				   </choose>
-           			AND TEMP.orderState in ('01','02','07','08','09')
 			  ) T1
               Left Join adProductMaster T2 On T1.ProductCode = T2.ProductCode
               Left Join adCompany T3 On T2.companyCode = T3.companyCode 
               Left Join ofGroup T4 On T1.groupID = T4.groupID 
                /*  Left Join ofCode T5 On T1.orderState = T5.codeId and T5.codeGroupId = 'OD01'*/
+               Where 1=1
+                    <if test="searchValue != null and searchValue != ''" >
+             		<choose>
+               			<when test="searchGubun.equals('01')">
+           					AND T3.companyName  LIKE CONCAT('%', #{searchValue}, '%')
+               			</when>
+               			<when test="searchGubun.equals('02')">
+           					AND T2.companyCode  LIKE CONCAT('%', #{searchValue}, '%')
+               			</when>
+               			<when test="searchGubun.equals('03')">
+           					AND T2.productName LIKE CONCAT('%', #{searchValue}, '%')
+               			</when>
+               			<when test="searchGubun.equals('04')">
+           					AND T1.productCode   LIKE CONCAT('%', #{searchValue}, '%')
+               			</when>
+             		</choose>
+           			</if> 
 			  Group By T1.groupID,
 			           T2.companyCode
 	) As TOT
@@ -395,13 +439,14 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
            				 </if>
 					   ) As TEMP
 		      Where TEMP.stockCnt  <![CDATA[<=]]> TEMP.safeStock
-					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk    
+					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk  
+					And TEMP.stockCnt  <![CDATA[<]]> TEMP.holdStock   
            			AND TEMP.orderState in ('01','02','07','08','09')
 			  ) T1
               Left Join adProductMaster T2 On T1.ProductCode = T2.ProductCode
               Left Join adCompany T3 On T2.companyCode = T3.companyCode 
               			  Group By T1.groupID,
-			          T3.companyCode
+			                       T2.companyCode
      )X
 			  Group By X.groupID,
 			           X.companyCode
@@ -567,6 +612,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
             	,orderState
             	,deliveryName
             	,orderName
+            	,safeOrderCnt
 		)values(
 				 #{orderCode}
 	  			, #{con_groupId}
@@ -598,6 +644,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
 	  			, #{orderState}
 	  			, #{deliveryName}
 	  			, #{orderName}
+	  			, #{safeOrderCnt}
 	  			
 		)
 		ON DUPLICATE KEY UPDATE faxKey = #{faxKey}

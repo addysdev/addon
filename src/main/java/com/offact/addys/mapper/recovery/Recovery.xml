@@ -92,6 +92,9 @@
              <if test="con_collectState != null and con_collectState != ''" >
            		 AND T1.collectState = #{con_collectState}
              </if>
+             <if test="searchValue != null and searchValue != ''" >
+           		 AND T2.recoveryCode   LIKE CONCAT('%', #{searchValue}, '%')
+             </if>
            ) As T4
    Group by T4.collectStateView,
   			T4.collectState,
@@ -137,6 +140,9 @@
             		   </if>             	
              		   <if test="con_collectState != null and con_collectState != ''" >
            		 		   AND T1.collectState = #{con_collectState}
+             		  </if>
+             		  <if test="searchValue != null and searchValue != ''" >
+           		 			AND T2.recoveryCode   LIKE CONCAT('%', #{searchValue}, '%')
              		  </if>
            		) As T4
    		Group by T4.collectStateView,
@@ -323,7 +329,7 @@ From (
          I2.stockDate,
          ifnull(I2.stockCnt,0) as stockCnt,
          ifnull(T1.recoveryCnt,0) as recoveryCnt,
-         ifnull(T1.recoveryResultCnt,0) as recoveryResultCnt,
+         Case When T2.recoveryState = '03' Then ifnull(T1.recoveryCnt,0)  Else ifnull(T1.recoveryResultCnt,0) End recoveryResultCnt,
          ifnull(T1.addCnt,0) as addCnt,
          ifnull(T1.lossCnt,0) as lossCnt,
          ifnull(T5.productPrice,0) as productPrice,

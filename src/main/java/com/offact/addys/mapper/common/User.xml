@@ -65,9 +65,14 @@
 </select>
 
 <select id="getSmsBatchList" resultMap="UserVO" parameterType="com.offact.addys.vo.common.UserVO" >
-			select mobliePhone
-				from ofUser 
-				Where groupId=#{groupId}  and smsYn='Y'
+			
+                            Select T3.mobliePhone 
+                            from adRecovery T1
+                                 Left Join adCollect T2 On T1.collectCode = T2.collectCode
+                                 Left Join ofUser T3 On T1.groupID = T3.groupId
+                            Where T2.recoveryClosingDate = DATE_FORMAT(date_add(now(), interval +1 day) , '%Y-%m-%d')
+                                  And T3.smsYn = 'Y'
+                                  And T1.recoveryState ='01'
 </select>
  
 </mapper>

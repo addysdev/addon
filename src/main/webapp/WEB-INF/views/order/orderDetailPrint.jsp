@@ -54,6 +54,7 @@ function totalTargetAmt(){
     	var supplyamt=0;
     	var vatamt=0;
     	var totalamt=0;
+    	var totalcnt=0;
     	
     	if(amtCnt > 1){
     		
@@ -68,6 +69,7 @@ function totalTargetAmt(){
 	    		
 	    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
 	    		vatamt=vatamt+sum_vatAmt;
+	    		totalcnt=totalcnt+orderCnt;
 	
 	    	}
 	    	
@@ -83,10 +85,12 @@ function totalTargetAmt(){
     		
     		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
     		vatamt=vatamt+sum_vatAmt;
+    		totalcnt=totalcnt+orderCnt;
     	}
 
     	  totalamt=supplyamt+vatamt;
 
+    	  document.all('totalTargetCnt').innerText=' '+addCommaStr(''+totalcnt)+' 건';
     	  document.all('totalTargetAmt').innerText=' '+addCommaStr(''+totalamt)+' 원 ';// [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
     }
     function totalOrderAmt(){
@@ -101,6 +105,7 @@ function totalTargetAmt(){
     	var supplyamt=0;
     	var vatamt=0;
     	var totalamt=0;
+    	var totalcnt=0;
     	
     	if(amtCnt > 1){
     		
@@ -116,6 +121,7 @@ function totalTargetAmt(){
 	    		
 	    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
 	    		vatamt=vatamt+sum_vatAmt;
+	    		totalcnt=totalcnt+orderCnt;
 	
 	    		document.all('orderTotalPriceView')[i].innerText=addCommaStr(''+(productPrice*orderCnt));
 	
@@ -133,12 +139,14 @@ function totalTargetAmt(){
     		
     		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
     		vatamt=vatamt+sum_vatAmt;
+    		totalcnt=totalcnt+orderCnt;
 
     		document.all('orderTotalPriceView').innerText=addCommaStr(''+(productPrice*orderCnt));
     	}
 
     	  totalamt=supplyamt+vatamt;
     	
+    	  document.all('totalOrderCnt').innerText=' '+addCommaStr(''+totalcnt)+' 건';
     	  document.all('totalOrderAmt').innerText=' '+addCommaStr(''+totalamt)+' 원';//  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
     }
 	</script>
@@ -219,15 +227,18 @@ function totalTargetAmt(){
 	 </div>
 	 <form:form commandName="orderListVO" id="orderDetailListForm" name="orderDetailListForm" method="post" action="" >
       <p> <span class="glyphicon glyphicon-asterisk"></span> 
-      <span style="color:blue"> [품목건수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderDetailList.size()}" /> 건  [발주 합계금액] :</span>
+          <span style="color:blue"> [품목건수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderDetailList.size()}" /> 건   [발주 수량] </span>
+          <span id="totalTargetCnt" style="color:gray">
+          </span><span style="color:blue"> [발주 합계금액]</span>
           <span id="totalTargetAmt" style="color:gray">
-        </span>
-      </p>  
-      <p><span class="glyphicon glyphicon-asterisk"></span> 
+          </span>  
+      <p><span class="glyphicon glyphicon-asterisk"></span>
+          <span style="color:blue">[검수 수량] </span>
+          <span id="totalOrderCnt" style="color:red"></span> 
           <span style="color:blue"> [검수 합계금액] :</span>
           <span id="totalOrderAmt" style="color:red">
         </span>
-      </p>     
+      </p> 
 	  <table class="table table-bordered" >
       	<tr style="background-color:#E6F3FF">
           <th rowspan='2' class='text-center' >검수<br>

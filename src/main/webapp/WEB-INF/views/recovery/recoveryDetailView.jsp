@@ -31,7 +31,8 @@ function fcRecovery_print(recoveryCode){
 	var h=800;
 	var s=950;
 	var frm = document.recoveryDetailListForm;
-	var url="<%= request.getContextPath() %>/recovery/recoverycodeprint?recoveryCode="+recoveryCode;
+	var groupname=encodeURIComponent('${recoveryConVO.groupName}');
+	var url="<%= request.getContextPath() %>/recovery/recoverycodeprint?recoveryCode="+recoveryCode+"&groupName="+groupname;
 
    // tmt_winLaunch(url, 'printObj', 'printObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
 	 frm.action =url; 
@@ -811,8 +812,18 @@ function fcResult_cal(){
 						<td class='text-right' id='recoveryResultCntView' name='recoveryResultCntView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.recoveryResultCnt}"  /></td>
 					</c:otherwise>
 				</c:choose>
-                 <td class='text-center'><c:if test="${recoveryConVO.recoveryState!='01'}"><img id="etcbtn" onClick="fcEtc_detail('${recoveryVO.recoveryCode}','${recoveryVO.productCode}','${recoveryVO.productName}','${recoveryVO.etc}','${status.count}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${recoveryVO.etcCnt}</span>)</c:if></td>
-                 <tr>
+				
+				
+				<c:choose>
+		    		<c:when test="${recoveryVO.etcCnt>0}">
+						<td class='text-center' id="etcAdd" name="etcAdd" style="background-color:#FEE2B4;color:blue"><c:if test="${recoveryConVO.recoveryState!='01'}"><img id="etcbtn" onClick="fcEtc_detail('${recoveryVO.recoveryCode}','${recoveryVO.productCode}','${recoveryVO.productName}','${recoveryVO.etc}','${status.count}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${recoveryVO.etcCnt}</span>)</c:if></td>
+                    </c:when>
+					<c:otherwise>
+						<td class='text-center' id="etcAdd" name="etcAdd" ><c:if test="${recoveryConVO.recoveryState!='01'}"><img id="etcbtn" onClick="fcEtc_detail('${recoveryVO.recoveryCode}','${recoveryVO.productCode}','${recoveryVO.productName}','${recoveryVO.etc}','${status.count}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${recoveryVO.etcCnt}</span>)</c:if></td>
+                	</c:otherwise>
+				</c:choose>
+				
+                  <tr>
                  <c:choose>
 		    		<c:when test="${recoveryConVO.recoveryState!='01'}"> 
 						 <td colspan='7' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  value="${recoveryVO.etc}" placeholder="비고" disabled /></td>

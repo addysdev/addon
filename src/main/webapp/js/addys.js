@@ -3213,4 +3213,87 @@ function fnMenuApply(){
 		  	    if (obj.style) { obj=obj.style; v=(v=='show')?'block':(v=='hide')?'none':v; }
 		  	    obj.display=v; }
 		  	}
+		  function addDateFormat(obj) {
+		        var value = obj.value;
 
+		        if (trim(value) == "") {
+		            return;
+		        }
+
+		        value = deleteDateFormatStr(value);
+
+		        if (!isDate(value)) {
+		            dispName = obj.getAttribute("dispName");
+
+		            if (dispName == null) {
+		                dispName = "";
+		            }
+
+		            alert(dispName + " ������ �ùٸ��� �ʽ��ϴ�.");
+		            obj.value='';
+		            obj.focus();
+
+		            return;
+		        }
+
+		        obj.value = addDateFormatStr(value);
+		    }
+		    function addDateFormatStr(str) {
+		        return  str.substring(0, 4) + "-" + str.substring(4, 6) + "-" + str.substring(6, 8);
+		    }
+		    function deleteDateFormatStr(str) {
+		        var temp = '';
+
+		        for (var i = 0; i < str.length; i++) {
+		            if (str.charAt(i) == '-') {
+		                continue;
+		            } else {
+		                temp += str.charAt(i);
+		            }
+		        }
+
+		        return  temp;
+		    }
+		    
+		  function onlyNum(val)
+		  {
+		   var num = val;
+		   var tmp = "";
+
+		   for (var i = 0; i < num.length; i ++)
+		   {
+		    if (num.charAt(i) >= 0 && num.charAt(i) <= 9)
+		     tmp = tmp + num.charAt(i);
+		    else
+		     continue;
+		   }
+		   return tmp;
+		  }
+		  
+		  function onlyNumber(obj){
+		    	/*
+		    	if (
+		    	    (event.keyCode >= 48 && event.keyCode <= 57)
+		            || (event.keyCode > 96 && event.keyCode <= 105)
+		            || (event.keyCode == 8)
+		            || (event.keyCode == 46)
+		        ){
+		        
+		        }else{
+		            event.returnValue = false;
+		        }
+		        */
+		    	var num = obj.value;
+
+		    	var pattern = /\D/gi;
+
+		    	if( pattern.test(num)==true){
+
+		    	//alert("���ڸ� �Է� �����մϴ�.");
+
+		    	obj.value = num.replace(/\D/gi, "");
+
+		    	obj.focus();
+
+		    	}
+		  }

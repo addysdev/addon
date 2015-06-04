@@ -64,7 +64,7 @@
 	        <th class='text-center'>매출현황일자</th>
             <th class='text-center'>매장</th>
             <th class='text-center'>판매수량</th>
-            <th class='text-center'>입고금액</th>
+       <!-- <th class='text-center'>입고금액</th>-->
             <th class='text-center'>판매금액</th>
             <th class='text-center'>업데이트User</th>
             <th class='text-center'>업데이트일시</th>
@@ -77,7 +77,7 @@
                  <td class='text-center'><a href="javascript:fcSales_detailPageList('${salesVO.salesDate}','${salesVO.groupId}')"><c:out value="${salesVO.salesDate}"></c:out></a></td>
                  <td class='text-center'><c:out value="${salesVO.groupName}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${salesVO.salesCnt}"/></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${salesVO.productPrice}"/></td>
+               <!--   <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${salesVO.productPrice}"/></td> -->
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${salesVO.salesPrice}"/></td>
                  <td class='text-center'><c:out value="${salesVO.updateUserName}"></c:out></td>
                  <td class='text-center'><c:out value="${salesVO.updateDateTime}"></c:out></td>
@@ -86,7 +86,7 @@
             </c:if>
            <c:if test="${empty salesList}">
               <tr>
-                  <td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
+                  <td colspan='6' class='text-center'>조회된 데이터가 없습니다.</td>
               </tr>
           </c:if>
 	    </tbody>

@@ -28,7 +28,7 @@
 	        <th class='text-center'>품목코드</th>
             <th class='text-center'>품목명</th>
             <th class='text-center'>수량</th>
-            <th class='text-center'>입고단가</th>
+          <!-- <th class='text-center'>입고단가</th>-->
             <th class='text-center'>판매금액</th>
          </tr>
 	    </thead>
@@ -39,14 +39,14 @@
 	              <td><c:out value="${salesVO.productCode}"></c:out></td>
 	              <td><c:out value="${salesVO.productName}"></c:out></td>
 	              <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${salesVO.salesCnt}"/></td>
-	              <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${salesVO.productPrice}"/></td>
+	             <!--  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${salesVO.productPrice}"/></td> --> 
 	              <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${salesVO.salesPrice}"/></td>
               </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty salesDetailList}">
               <tr>
-                  <td colspan='5' class='text-center'>조회된 데이터가 없습니다.</td>
+                  <td colspan='4' class='text-center'>조회된 데이터가 없습니다.</td>
               </tr>
           </c:if>
 	    </tbody>

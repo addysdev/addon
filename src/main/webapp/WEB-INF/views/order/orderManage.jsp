@@ -84,13 +84,13 @@
            		</select>
            		<label for="searchGubun">검색조건 :</label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
-                	<option value="01" >발주자ID</option>
-                    <option value="02" >발주자명</option>
-                    <option value="03" >업체코드</option>
+                	<option value="02" >발주자명</option>
+                    <option value="01" >발주자ID</option>
                     <option value="04" >업체명</option>
-                    <option value="05" >품목코드</option>
+                    <option value="03" >업체코드</option>
                     <option value="06" >품목명</option>
-           		</select>
+           			<option value="05" >품목코드</option>
+                </select>
 				<label class="sr-only" for="searchValue"> 조회값 :</label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${orderConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
 				<button type="button" class="btn btn-primary" onClick="javascript:fcOrder_listSearch()">조회</button>

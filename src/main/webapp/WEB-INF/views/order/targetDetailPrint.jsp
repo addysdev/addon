@@ -41,6 +41,8 @@ window.print();
 				int etcnum=0;
 				int maxlist=25;
 				int resultlist=totalnum;
+				int removecnt=0;
+				int numcnt=0;
 				
 				String[] r_data=null;
 				
@@ -129,15 +131,21 @@ window.print();
 						num++;
 						TargetVO targetDetaiList = new TargetVO();
 						targetDetaiList=targetLsit.get(num-1);
+						
+						if(targetDetaiList.getOrderCnt().equals("0")){
+							removecnt++;
+						}else{
+							numcnt++;
 		
 					%>
 						<tr bgcolor='#FFFFFF'>
-						<td align='center' height='27'><%=num %></td>
+						<td align='center' height='27'><%=numcnt %></td>
 						<td colspan='9' align='left'>&nbsp;<%=targetDetaiList.getProductName() %></td>
 						<td align='center'><%=targetDetaiList.getOrderCnt() %></td>
 						<td align='left'><%=targetDetaiList.getEtc() %></td>
 						</tr>	
 					<%
+						}
 					}
 					
 					for(int y=0;y<etcnum;y++){
@@ -151,21 +159,37 @@ window.print();
 					<% 	
 					}
 					
+					for(int a=0;a<removecnt;a++){
+						%>		
+							<tr bgcolor='#FFFFFF'>
+							<td align='center' height='27'></td>
+							<td colspan='9' align='center'></td>
+							<td align='center'></td>
+							<td align='center'></td>
+							</tr>	
+						<% 	
+					}
+					
 				}else if(resultlist>maxlist){
 					
 					for(int z=0;z<maxlist;z++){
 						num++;
 						TargetVO targetDetaiList = new TargetVO();
 						targetDetaiList=targetLsit.get(num-1);
-		
+						
+						if(targetDetaiList.getOrderCnt().equals("0")){
+							removecnt++;
+						}else{
+							numcnt++;
 					%>
 						<tr bgcolor='#FFFFFF'>
-						<td align='center' height='27'><%=num %></td>
+						<td align='center' height='27'><%=numcnt %></td>
 						<td colspan='9' align='left'>&nbsp;<%=targetDetaiList.getProductName() %></td>
 						<td align='center'><%=targetDetaiList.getOrderCnt() %></td>
 						<td align='left'><%=targetDetaiList.getEtc() %></td>
 						</tr>	
 				    <%
+						}
 					}
 					
 					resultlist=resultlist-maxlist;

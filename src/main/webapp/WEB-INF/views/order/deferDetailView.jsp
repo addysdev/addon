@@ -277,6 +277,7 @@ function fcDefer_modify(reason){
     	var supplyamt=0;
     	var vatamt=0;
     	var totalamt=0;
+    	var totalcnt=0;
     	
     	if(amtCnt>1){
 	    	for(i=0;i<amtCnt;i++){
@@ -290,6 +291,7 @@ function fcDefer_modify(reason){
 	    		
 	    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
 	      		vatamt=vatamt+sum_vatAmt;
+	      		totalcnt=totalcnt+orderCnt;
 	    	}
     	}else{
     		
@@ -302,12 +304,14 @@ function fcDefer_modify(reason){
     		
     		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
       		vatamt=vatamt+sum_vatAmt;
+      		totalcnt=totalcnt+orderCnt;
     		
     	}
 
     	  totalamt=supplyamt+vatamt;
     	
-    	  document.all('totalOrderAmt').innerText='[합계] : '+addCommaStr(''+totalamt)+' 원  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
+    	  document.all('totalOrderCnt').innerText=' '+addCommaStr(''+totalcnt)+' 건';
+     	  document.all('totalOrderAmt').innerText=' '+addCommaStr(''+totalamt)+' 원';//  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
     }
     
     function fcAdd_Cnt(index){
@@ -568,8 +572,11 @@ function fcDefer_modify(reason){
 	 
      <form:form commandName="deferListVO" id="deferDetailListForm" name="deferDetailListForm" method="post" action="" >
       <p> <span class="glyphicon glyphicon-asterisk"></span> 
-          <span style="color:blue"> [전체갯수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetDetailList.size()}" /> 건</span>
+          <span style="color:blue"> [품목건수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetDetailList.size()}" /> 건   [발주 수량] </span>
+          <span id="totalOrderCnt" style="color:red">
+          </span><span style="color:blue"> [발주 합계금액]</span>
           <span id="totalOrderAmt" style="color:red">
+          </span>
         </span>
       </p>  
       
@@ -631,7 +638,7 @@ function fcDefer_modify(reason){
              <c:forEach items="${targetDetailList}" var="targetVO" varStatus="status">
              	 <input type="hidden" id="seqs" name="seqs" >
 	             <c:choose>
-		    		<c:when test="${targetVO.stockCnt<targetVO.safeStock}">
+		    		<c:when test="${targetVO.stockCnt<=targetVO.safeStock}">
 						<tr id="select_tr_${targetVO.productCode}" style="background-color:#FEE2B4;color:red">
 					</c:when>
 					<c:otherwise>

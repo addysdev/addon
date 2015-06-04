@@ -10,6 +10,8 @@
 </style>
 <SCRIPT>
  
+var NONSTOCK=0;
+
 /*
  * 화면 POPUP
  */
@@ -64,6 +66,13 @@ function fcTargetDetail_print(){
  * 발주처리
  */
 function fcOrder_process(){
+	
+	if(NONSTOCK>0){
+		
+		alert('발주 수량이 보유수량을 초과한 품목이 '+NONSTOCK+'건 있습니다.\n해당 발주 수량을 보유수량에 맞추신 후 발주 부탁드립니다.');
+		return;
+		
+	}
 	
 	var frm=document.targetDetailForm;
 	var emailCheckCnt = 1;//$('input:checkbox[ name="emailCheck"]:checked').length;
@@ -243,11 +252,15 @@ function fcDefer_reason(reason){
          }
     }	
 }
+
+
 /*
  * 총금액합계
  */    
  function totalOrderAmt(){
  	
+	NONSTOCK=0;
+	
  	var frm=document.targetDetailListForm;
  	var amtCnt = frm.productPrice.length;
  	
@@ -258,6 +271,7 @@ function fcDefer_reason(reason){
  	var supplyamt=0;
  	var vatamt=0;
  	var totalamt=0;
+ 	var totalcnt=0;
  	
  	if(amtCnt>1){
   	for(i=0;i<amtCnt;i++){
@@ -271,6 +285,13 @@ function fcDefer_reason(reason){
   		
   		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
   		vatamt=vatamt+sum_vatAmt;
+  		totalcnt=totalcnt+orderCnt;
+  		
+  		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[i].value))));
+  		
+  		if(holdStock<orderCnt){
+  			NONSTOCK++;
+  		}
   	}
   	
  	}else{
@@ -284,12 +305,30 @@ function fcDefer_reason(reason){
  		
  		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
   		vatamt=vatamt+sum_vatAmt;
+  		totalcnt=totalcnt+orderCnt;
+  		
+  		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
+  		
+  		if(holdStock<orderCnt){
+  			NONSTOCK++;
+  		}
  		
  	}
 
  	  totalamt=supplyamt+vatamt;
- 	
+ 	 
+ 	  document.all('totalOrderCnt').innerText=' '+addCommaStr(''+totalcnt)+' 건';
  	  document.all('totalOrderAmt').innerText=' '+addCommaStr(''+totalamt)+' 원';//  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
+ 	  
+ 	 
+ }
+ 
+ function initNotify(){
+	 
+	 if(NONSTOCK>0){
+		  
+		  alert('재고수량중 (-)재고가 '+NONSTOCK+'건 있습니다.(붉은색 표기됨)\n발주 수량은 보유수량을 초과 할 수 없습니다.\n해당 발주 수량을 보유수량에 맞추신 후 발주 부탁드립니다.');
+	  }
  }
  /*
   * 재고증가
@@ -456,6 +495,7 @@ function fcDefer_reason(reason){
 	   <input type="hidden" name="groupName"               id="groupName"            value="${targetVO.groupName}" />
 	   <input type="hidden" name="con_groupId"               id="con_groupId"            value="${targetVO.con_groupId}" />
 	   <input type="hidden" name="companyCode"               id="companyCode"            value="${targetVO.companyCode}" />
+	   <input type="hidden" name="safeOrderCnt"               id="safeOrderCnt"            value="${targetVO.safeOrderCnt}" />
 	      <!--  >h4><strong><font style="color:#428bca">발주방법 : </font></strong>
 	          <input type="checkbox" id="emailCheck" name="emailCheck" value="" title="선택" checked disabled />e-mail
 	          <input type="checkbox" id="smsCheck" name="smsCheck" value="" title="선택" disabled />sms
@@ -558,7 +598,9 @@ function fcDefer_reason(reason){
 	 
      <form:form commandName="targetListVO" id="targetDetailListForm" name="targetDetailListForm" method="post" action="" >
       <p> <span class="glyphicon glyphicon-asterisk"></span> 
-          <span style="color:blue"> [품목건수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetDetailList.size()}" /> 건   [발주 합계금액]</span>
+          <span style="color:blue"> [품목건수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetDetailList.size()}" /> 건   [발주 수량] </span>
+          <span id="totalOrderCnt" style="color:red">
+          </span><span style="color:blue"> [발주 합계금액]</span>
           <span id="totalOrderAmt" style="color:red">
           </span>
       </p>
@@ -621,6 +663,9 @@ function fcDefer_reason(reason){
              <c:forEach items="${targetDetailList}" var="targetVO" varStatus="status">
              	 <input type="hidden" id="seqs" name="seqs" >
 	             <c:choose>
+	                <c:when test="${targetVO.stockCnt<0}">
+						<tr id="select_tr_${targetVO.productCode}" style="background-color:#F0B3AC">
+					</c:when>
 		    		<c:when test="${targetVO.stockCnt<=targetVO.safeStock}">
 						<tr id="select_tr_${targetVO.productCode}" style="background-color:#FEE2B4;color:red">
 					</c:when>
@@ -631,6 +676,7 @@ function fcDefer_reason(reason){
 				 <input type="hidden" name="productCode" value="${targetVO.productCode}">
 				 <input type="hidden" name="productName" value="${targetVO.productName}">
 				 <input type="hidden" name="safeStock" value="${targetVO.safeStock}">
+				 <input type="hidden" name="holdStock" value="${targetVO.holdStock}">
 				 <input type="hidden" name="stockCnt" value="${targetVO.stockCnt}">
 				 <input type="hidden" name="stockDate" value="${targetVO.stockDate}">
 				 <input type="hidden" name="group1Name" value="${targetVO.group1Name}">
@@ -696,5 +742,5 @@ function fcDefer_reason(reason){
     });
     
     totalOrderAmt();
-   
+    initNotify();
 </script>

@@ -19,7 +19,7 @@
         });
     }
     // 재고 상세 페이지 리스트 Layup
-    function fcTarget_detail(orderCode,groupId,groupName,companyCode,companyName,orderState,productPrice,vat,orderPrice) {
+    function fcTarget_detail(orderCode,groupId,groupName,companyCode,companyName,orderState,productPrice,vat,orderPrice,safeOrderCnt) {
 
     	if(companyName==''){
     		
@@ -47,7 +47,7 @@
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load(url+'?orderCode='+orderCode+'&groupId='+groupId+
+                $(this).load(url+'?orderCode='+orderCode+'&groupId='+groupId+'&safeOrderCnt='+safeOrderCnt+
                 		'&groupName='+encodeURIComponent(groupName)+'&companyCode='+companyCode+
                 		'&orderState='+orderState+'&productPrice='+productPrice+'&vat='+vat+'&orderPrice='+orderPrice);
                
@@ -91,7 +91,7 @@
 	    	<c:if test="${!empty targetList}">
              <c:forEach items="${targetList}" var="targetVO" varStatus="status">
              <tr id="select_tr_${targetVO.groupId}_${targetVO.companyCode}">
-                 <td class='text-center'><a href="javascript:fcTarget_detail('${targetVO.orderCode}','${targetVO.groupId}','${targetVO.groupName}','${targetVO.companyCode}','${targetVO.companyName}','${targetVO.orderState}','${targetVO.productPrice}','${targetVO.vat}','${targetVO.orderPrice}')">
+                 <td class='text-center'><a href="javascript:fcTarget_detail('${targetVO.orderCode}','${targetVO.groupId}','${targetVO.groupName}','${targetVO.companyCode}','${targetVO.companyName}','${targetVO.orderState}','${targetVO.productPrice}','${targetVO.vat}','${targetVO.orderPrice}','${targetVO.safeOrderCnt}')">
                  <c:out value="${targetVO.orderStateView}"></c:out></a></td>
                  <td class='text-center'><c:out value="${targetVO.groupName}"></c:out></td>
                  <td><c:out value="${targetVO.companyName}"></c:out></td>

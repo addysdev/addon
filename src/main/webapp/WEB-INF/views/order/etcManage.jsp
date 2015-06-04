@@ -53,6 +53,8 @@ function fcEtc_add(){
 	            	   var ecnt=document.all('etcCnt').innerText;
 		               ecnt++;
 		               document.all('etcCnt').innerText=ecnt;
+		               //alert(document.all('etcAdd').style.backgroundColor);
+		               document.all('etcAdd').style.backgroundColor='#FEE2B4';
 	
 	               }else{
 	            	   
@@ -61,6 +63,13 @@ function fcEtc_add(){
 	            	   var ecnt=document.all('etcCnt')[cnt].innerText;
 		               ecnt++;
 		               document.all('etcCnt')[cnt].innerText=ecnt; 
+
+		              // alert(document.all('etcAdd')[cnt]);
+		       		  // alert(document.all('etcAdd')[cnt].style);
+		       		   
+		               document.all('etcAdd')[cnt].style.backgroundColor='#FEE2B4';
+		              // alert(document.all('etcAdd')[cnt].style.backgroundColor);
+			             
 	            	   
 	               }
 	               
