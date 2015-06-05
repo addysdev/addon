@@ -1,5 +1,84 @@
 <%@ include file="/WEB-INF/views/addys/top.jsp" %>
 <SCRIPT>
+$(function() {
+    // 기간 설정 타입 1 
+    // start Date 설정시 end Date의 min Date 지정
+    $( "#start_salesDate" ).datepicker({
+        dateFormat: "yy-mm-dd",
+        dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+        monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+        monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+        defaultDate: "+1w",
+        numberOfMonths: 1,
+        changeMonth: true,
+        showMonthAfterYear: true ,
+        changeYear: true,
+        maxDate : "+0D",
+        onClose: function( selectedDate ) {
+            $( "#end_salesDate" ).datepicker( "option", "minDate", selectedDate );
+        }
+    }); 
+     // end Date 설정시 start Date max Date 지정
+    $( "#end_salesDate" ).datepicker({
+        dateFormat: "yy-mm-dd",
+        dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+        monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+        monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+        defaultDate: "+1w",
+        numberOfMonths: 1,
+        changeMonth: true,
+        showMonthAfterYear: true ,
+        changeYear: true,
+        maxDate : "+0D",
+        onClose: function( selectedDate ) {
+            $( "#start_salesDate" ).datepicker( "option", "maxDate", selectedDate );
+        }
+    });
+
+    // 기간 설정 타입 2 
+    // start Date 설정시 end Date 가 start Date보다 작을 경우 end Date를 start Date와 같게 설정
+    $("#start_salesDate").datepicker({
+        dateFormat: "yy-mm-dd",
+        defaultDate: "+1w",
+        numberOfMonths: 1,
+        changeMonth: true,
+        showMonthAfterYear: true ,
+        changeYear: true,
+        onClose: function( selectedDate ) {
+            if ($( "#start_salesDate" ).val() < selectedDate)
+            {
+                $( "#end_salesDate" ).val(selectedDate);
+            }
+        }
+    }); 
+    // end Date 설정시 end Date 가 start Date 보다 작을 경우 start Date를  end Date와 같게 설정
+    $( "#end_salesDate" ).datepicker({
+        dateFormat: "yy-mm-dd",
+        defaultDate: "+1w",
+        numberOfMonths: 1,
+        changeMonth: true,
+        showMonthAfterYear: true ,
+        changeYear: true,
+        onClose: function( selectedDate ) {
+            if ($("#start_salesDate" ).val() > selectedDate)
+            {
+                $("#start_salesDate" ).val(selectedDate);
+            }
+        }
+    });
+
+	
+	});
+	function showCalendar(div){
+	
+	   if(div == "1"){
+	   	   $('#start_salesDate').datepicker("show");
+	   } else if(div == "2"){
+		   $('#end_salesDate').datepicker("show");
+	   } else if(div == "3"){
+		   $('#upload_salesDate').datepicker("show");
+	   }  
+	}
     // 리스트 조회
     function fcSales_listSearch(curPage){
 
@@ -73,20 +152,19 @@
         <fieldset>
         	<div class="form-group" >
 				<label for="start_salesDate end_salesDate">매출현황일자 :</label>
-				<div style='width:155px' class='input-group date ' id='datetimepicker1' data-link-field="start_salesDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" value="${salesConVO.start_salesDate}" />
-	                <span class="input-group-addon">
-	                    <span class="glyphicon glyphicon-calendar"></span>
-	                </span>
-	                <input type="hidden" id="start_salesDate" name="start_salesDate" value="${salesConVO.start_salesDate}" />
-	            </div>
-	            <div style='width:155px' class='input-group date' id='datetimepicker2'  data-link-field="end_salesDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" value="${salesConVO.end_salesDate}" />
-	                <span class="input-group-addon">
-	                    <span class="glyphicon glyphicon-calendar"></span>
-	                </span>
-	                <input type="hidden" id="end_salesDate" name="end_salesDate" value="${salesConVO.end_salesDate}" />
-	            </div>
+				
+				<!-- 조회시작일자-->
+			    <input  class="form-control" style='width:135px' name="start_salesDate" id="start_salesDate" value="${salesConVO.start_salesDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+			    <!-- 달력이미지 시작 -->
+			    <span class="icon_calendar"><img border="0" onclick="showCalendar('1')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
+			    <!-- 달력이미지 끝 -->
+	            &nbsp;~&nbsp;
+                <!-- 조회죵료일자-->
+			    <input  class="form-control" style='width:135px' name="end_salesDate" id="end_salesDate" value="${salesConVO.end_salesDate}" type="text" maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+			    <!-- 달력이미지 시작 -->
+			    <span class="icon_calendar"><img border="0" onclick="showCalendar('2')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
+			    <!-- 달력이미지 끝 -->
+			    
 				<c:choose>
 	    		<c:when test="${strAuth == '03'}">
 					<input type="hidden" id="con_groupId" name="con_groupId" value="${salesConVO.groupId}">
@@ -124,34 +202,6 @@
 <br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>
 <script type="text/javascript">
-
-
-    $(function () {
-        $('#datetimepicker1').datetimepicker(
-        		{
-                	language:  'kr',
-                    format: 'yyyy-mm-dd',
-                    weekStart: 1,
-                    todayBtn:  1,
-            		autoclose: 1,
-            		todayHighlight: 1,
-            		startView: 2,
-            		minView: 2,
-            		forceParse: 0
-                });
-        $('#datetimepicker2').datetimepicker(
-        		{
-                	language:  'kr',
-                    format: 'yyyy-mm-dd',
-                    weekStart: 1,
-                    todayBtn:  1,
-            		autoclose: 1,
-            		todayHighlight: 1,
-            		startView: 2,
-            		minView: 2,
-            		forceParse: 0
-                });
-    });
     
     fcSales_listSearch();
     MM_nbGroup('down','group3','menu_03','<%= request.getContextPath() %>/images/top/addys-menu_03_on.jpg',1);

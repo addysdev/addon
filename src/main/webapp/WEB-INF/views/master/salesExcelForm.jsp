@@ -3,7 +3,23 @@
 <head>
 <script language="javascript">
 //초기세팅
+$(function() {
+	    
+	    $( "#upload_salesDate" ).datepicker({
+	        dateFormat: "yy-mm-dd",
+	        dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+	        monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+	        monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+	        defaultDate: "+1w",
+	        numberOfMonths: 1,
+	        changeMonth: true,
+	        showMonthAfterYear: true ,
+	        changeYear: true,
+	        maxDate : "+0D",
+	        onSelect: true
+	    });
 
+	});
 function fcSales_excelimport(){
 
     if($("#files").val() == ''){
@@ -65,26 +81,27 @@ function uploadClose(msg){
  <form:form class="form-inline" role="form" commandName="fileVO"  id="excel_form" method="post" target="excel_import_result"  name="excel_form"  enctype="multipart/form-data" >
   <fieldset>
   <div class="form-group" >
-  <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 업로드 파일 선택</font></strong></h4>
-  <h5><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-bookmark"></span> 업로드 할 <em class="bold"> excel파일</em></font></strong></h5>
+  <h4><strong><font style="color:#428bca">업로드 파일 선택</font></strong></h4>
+  <h5><strong><font style="color:#FF9900">업로드 할 <em class="bold"> excel파일</em></font></strong></h5>
   <input type="file"  id="files" name="files" />
   <br><br> 
-   <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 매출 기준 선택</font></strong></h4>
+   <h4><strong><font style="color:#428bca">매출 기준 선택</font></strong></h4>
 	<label for="start_salesDate"><h6><strong><font style="color:#FF9900"> 매출일자 : </font></strong></h6></label>
-	<div style='width:150px' class='input-group date ' id='datetimepicker3' data-link-field="upload_salesDate" data-link-format="yyyy-mm-dd">
-        <input type='text' class="form-control" value="${salesConVO.start_salesDate}" />
-        <span class="input-group-addon">
-            <span class="glyphicon glyphicon-calendar"></span>
-        </span>
-        <input type="hidden" id="upload_salesDate" name="upload_salesDate" value="${salesConVO.start_salesDate}" />
-    </div>
-    <br><br>
+		<div class="form-inline">
+	<label for="start_stockDate"><h6><strong><font style="color:#FF9900"> 재고일자 : </font></strong></h6></label>
+    <!-- 재고일자-->
+      <input class="form-control" style='width:135px' name="upload_salesDate" id="upload_salesDate" value="${salesConVO.start_salesDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+      <!-- 달력이미지 시작 -->
+      <span class="icon_calendar"><img border="0" onclick="showCalendar('3')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
+      <!-- 달력이미지 끝 -->
+   </div>
+    <br>
 	<c:choose>
   		<c:when test="${strAuth == '03'}">
 		<input type="hidden" id="upload_groupId" name="upload_groupId" value="${salesConVO.groupId}">
 		</c:when>
 		<c:otherwise>
-			<label for="con_groupId"><font style="color:#FF9900"> 지점선택 : </font></label>
+			<label for="con_groupId"><font style="color:#FF9900">지점선택 : </font></label>
 			<select class="form-control" title="지점정보" id="upload_groupId" name="upload_groupId" value="${salesConVO.groupId}">
                    <option value="">전체</option>
                    <c:forEach var="groupVO" items="${group_comboList}" >
@@ -94,12 +111,12 @@ function uploadClose(msg){
 		</c:otherwise>
 	</c:choose>
   <br><br> 
-  <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 업로드 시 주의사항</font></strong></h4>
-  <h6><strong><font id="avgStockAmt" style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 업로드 대상의 매출현황 일자와 지점을 꼭 선택해야 합니다.</font></strong></h6>
-  <h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 엑셀파일 양식에 맞지 않으면 업로드가 불가능 합니다.</font></strong></h6>
+  <h4><strong><font style="color:#428bca">업로드 시 주의사항</font></strong></h4>
+  <h6><strong><font id="avgStockAmt" style="color:#FF9900">업로드 대상의 매출현황 일자와 지점을 꼭 선택해야 합니다.</font></strong></h6>
+  <h6><strong><font style="color:#FF9900">엑셀파일 양식에 맞지 않으면 업로드가 불가능 합니다.</font></strong></h6>
   <!-- >h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 엑셀파일 업로드 양식을 다운로드 합니다. 
   <a href="#"><strong><font style="color:#428bca">[양식다운로드]</font></strong></a></font></strong></h6-->
-  <h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 파일 업로드 결과는 서버의 log 경로에서 확인이 가능합니다.</font></strong></h6>
+  <h6><strong><font style="color:#FF9900">파일 업로드 결과는 서버의 log 경로에서 확인이 가능합니다.</font></strong></h6>
   </div>
   </fieldset>
 </form:form>

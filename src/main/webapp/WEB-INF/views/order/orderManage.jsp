@@ -5,6 +5,8 @@
 
         curPage = (curPage==null) ? 1:curPage;
         orderConForm.curPage.value = curPage;
+ 
+        if(!dateCheck(document.orderConForm.start_orderDate,document.orderConForm.end_orderDate,'')){return;}
 
         commonDim(true);
         $.ajax({
@@ -29,7 +31,96 @@
             return true;
         }
     }
-    
+    $(function() {
+        // 기간 설정 타입 1 
+        // start Date 설정시 end Date의 min Date 지정
+        $( "#start_orderDate" ).datepicker({
+            dateFormat: "yy-mm-dd",
+            dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+            monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+            monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+            defaultDate: "+1w",
+            numberOfMonths: 1,
+            changeMonth: true,
+            showMonthAfterYear: true ,
+            changeYear: true,
+            maxDate : "+0D",
+            onClose: function( selectedDate ) {
+                $( "#end_orderDate" ).datepicker( "option", "minDate", selectedDate );
+            }
+        }); 
+         // end Date 설정시 start Date max Date 지정
+        $( "#end_orderDate" ).datepicker({
+            dateFormat: "yy-mm-dd",
+            dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+            monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+            monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+            defaultDate: "+1w",
+            numberOfMonths: 1,
+            changeMonth: true,
+            showMonthAfterYear: true ,
+            changeYear: true,
+            maxDate : "+0D",
+            onClose: function( selectedDate ) {
+                $( "#start_orderDate" ).datepicker( "option", "maxDate", selectedDate );
+            }
+        });
+ 
+        // 기간 설정 타입 2 
+        // start Date 설정시 end Date 가 start Date보다 작을 경우 end Date를 start Date와 같게 설정
+        $("#start_orderDate").datepicker({
+            dateFormat: "yy-mm-dd",
+            defaultDate: "+1w",
+            numberOfMonths: 1,
+            changeMonth: true,
+            showMonthAfterYear: true ,
+            changeYear: true,
+            onClose: function( selectedDate ) {
+                if ($( "#start_orderDate" ).val() < selectedDate)
+                {
+                    $( "#end_orderDate" ).val(selectedDate);
+                }
+            }
+        }); 
+        // end Date 설정시 end Date 가 start Date 보다 작을 경우 start Date를  end Date와 같게 설정
+        $( "#end_orderDate" ).datepicker({
+            dateFormat: "yy-mm-dd",
+            defaultDate: "+1w",
+            numberOfMonths: 1,
+            changeMonth: true,
+            showMonthAfterYear: true ,
+            changeYear: true,
+            onClose: function( selectedDate ) {
+                if ($("#start_orderDate" ).val() > selectedDate)
+                {
+                    $("#start_orderDate" ).val(selectedDate);
+                }
+            }
+        });
+        
+        //날짜
+        $( "#date" ).datepicker({
+            changeMonth: true ,
+            changeYear: true ,
+            showMonthAfterYear: true ,
+            dateFormat: "yy-mm-dd",
+            dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+            monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+            monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+            defaultDate: "+1w",
+            numberOfMonths: 1
+        }); 
+
+
+    });
+    function showCalendar(div){
+
+ 	   if(div == "1"){
+ 	   	   $('#start_orderDate').datepicker("show");
+ 	   } else if(div == "2"){
+ 		   $('#end_orderDate').datepicker("show");
+ 	   }  
+ 	}
 </SCRIPT>
 <div class="container-fluid">
 
@@ -46,20 +137,17 @@
         <fieldset>
         	<div class="form-group">
         		<label for="start_orderDate end_orderDate">발주일자 :</label>
-				<div style='width:155px' class='input-group date ' id='datetimepicker1' data-link-field="start_orderDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" value="${orderConVO.start_orderDate}" />
-	                <span class="input-group-addon">
-	                    <span class="glyphicon glyphicon-calendar"></span>
-	                </span>
-	                <input type="hidden" id="start_orderDate" name="start_orderDate" value="${orderConVO.start_orderDate}" />
-	            </div>
-	            <div style='width:155px' class='input-group date' id='datetimepicker2'  data-link-field="end_orderDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" value="${orderConVO.end_orderDate}" />
-	                <span class="input-group-addon">
-	                    <span class="glyphicon glyphicon-calendar"></span>
-	                </span>
-	                <input type="hidden" id="end_orderDate" name="end_orderDate" value="${orderConVO.end_orderDate}" />
-	            </div>
+				<!-- 조회시작일자-->
+			    <input  class="form-control" style='width:135px' name="start_orderDate" id="start_orderDate" value="${orderConVO.start_orderDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+			    <!-- 달력이미지 시작 -->
+			    <span class="icon_calendar"><img border="0" onclick="showCalendar('1')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
+			    <!-- 달력이미지 끝 -->
+	            &nbsp;~&nbsp;
+                <!-- 조회죵료일자-->
+			    <input  class="form-control" style='width:135px' name="end_orderDate" id="end_orderDate" value="${orderConVO.end_orderDate}" type="text" maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+			    <!-- 달력이미지 시작 -->
+			    <span class="icon_calendar"><img border="0" onclick="showCalendar('2')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
+			    <!-- 달력이미지 끝 -->
 	            <br><br>
 	            <c:choose>
 	    		<c:when test="${strAuth == '03'}">
@@ -116,34 +204,7 @@
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>
 <script type="text/javascript">
 
-
-    $(function () {
-        $('#datetimepicker1').datetimepicker(
-        		{
-                	language:  'kr',
-                    format: 'yyyy-mm-dd',
-                    weekStart: 1,
-                    todayBtn:  1,
-            		autoclose: 1,
-            		todayHighlight: 1,
-            		startView: 2,
-            		minView: 2,
-            		forceParse: 0
-                });
-        $('#datetimepicker2').datetimepicker(
-        		{
-                	language:  'kr',
-                    format: 'yyyy-mm-dd',
-                    weekStart: 1,
-                    todayBtn:  1,
-            		autoclose: 1,
-            		todayHighlight: 1,
-            		startView: 2,
-            		minView: 2,
-            		forceParse: 0
-                });
-    });
-    
     fcOrder_listSearch();
+   
     MM_nbGroup('down','group1','menu_01','<%= request.getContextPath() %>/images/top/addys-menu_01_on.jpg',1);
 </script>

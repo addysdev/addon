@@ -12,6 +12,81 @@
  
 var NONSTOCK=0;
 
+$(function() {
+    // 기간 설정 타입 1 
+    // start Date 설정시 end Date의 min Date 지정
+    $( "#orderDate" ).datepicker({
+        dateFormat: "yy-mm-dd",
+        dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+        monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+        monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+        defaultDate: "+1w",
+        numberOfMonths: 1,
+        changeMonth: true,
+        showMonthAfterYear: true ,
+        changeYear: true,
+        onClose: function( selectedDate ) {
+            $( "#deliveryDate" ).datepicker( "option", "minDate", selectedDate );
+        }
+    }); 
+     // end Date 설정시 start Date max Date 지정
+    $( "#deliveryDate" ).datepicker({
+        dateFormat: "yy-mm-dd",
+        dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+        monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+        monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+        defaultDate: "+1w",
+        numberOfMonths: 1,
+        changeMonth: true,
+        showMonthAfterYear: true ,
+        changeYear: true,
+        onClose: function( selectedDate ) {
+            $( "#orderDate" ).datepicker( "option", "maxDate", selectedDate );
+        }
+    });
+
+    // 기간 설정 타입 2 
+    // start Date 설정시 end Date 가 start Date보다 작을 경우 end Date를 start Date와 같게 설정
+    $("#orderDate").datepicker({
+        dateFormat: "yy-mm-dd",
+        defaultDate: "+1w",
+        numberOfMonths: 1,
+        changeMonth: true,
+        showMonthAfterYear: true ,
+        changeYear: true,
+        onClose: function( selectedDate ) {
+            if ($( "#orderDate" ).val() < selectedDate)
+            {
+                $( "#deliveryDate" ).val(selectedDate);
+            }
+        }
+    }); 
+    // end Date 설정시 end Date 가 start Date 보다 작을 경우 start Date를  end Date와 같게 설정
+    $( "#deliveryDate" ).datepicker({
+        dateFormat: "yy-mm-dd",
+        defaultDate: "+1w",
+        numberOfMonths: 1,
+        changeMonth: true,
+        showMonthAfterYear: true ,
+        changeYear: true,
+        onClose: function( selectedDate ) {
+            if ($("#orderDate" ).val() > selectedDate)
+            {
+                $("#orderDate" ).val(selectedDate);
+            }
+        }
+    });
+   
+});
+function showCalendar(div){
+
+	   if(div == "1"){
+	   	   $('#orderDate').datepicker("show");
+	   } else if(div == "2"){
+		   $('#deliveryDate').datepicker("show");
+	   }  
+	}
+
 /*
  * 화면 POPUP
  */
@@ -550,32 +625,28 @@ function fcDefer_reason(reason){
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">발주일자</th>
-          <th class='text-center'>
-          	
-          		<div style='width:150px' class='input-group date ' id='datetimepicker1' data-link-field="orderDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" disabled value="${targetVO.orderDate}" />
-	                <span class="input-group-addon">
-	                    <span class="glyphicon glyphicon-calendar"></span>
-	                </span>
-	                <input type="hidden" id="orderDate" name="orderDate" value="${targetVO.orderDate}" />
-	            </div>
-	         
+          <th class='text-left'>
+          <div class="form-inline">
+              <!-- 발주일자-->
+		      <input class="form-control" style='width:135px' name="orderDate" id="orderDate" value="${targetVO.orderDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+		      <!-- 달력이미지 시작 -->
+		      <span class="icon_calendar"><img border="0" onclick="showCalendar('1')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
+		      <!-- 달력이미지 끝 -->
+		  </div>
           </th>
           <th rowspan='2' class='text-center' style="background-color:#E6F3FF">배송주소</th>
           <th rowspan='2' class='text-center'><textarea style='height:82px'  class="form-control" row="2" id="orderAddress"  maxlength="50"  name="orderAddress" >서울특별시 영등포구 여의도동 54-6 영창빌딩 6층 물류팀</textarea></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">납품일자</th>
-          <th class='text-center'>
-          		
-          		<div  style='width:150px' class='input-group date ' id='datetimepicker2' data-link-field="deliveryDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" disabled value="${targetVO.deliveryDate}" />
-	                <span class="input-group-addon">
-	                    <span class="glyphicon glyphicon-calendar"></span>
-	                </span>
-	                <input type="hidden" id="deliveryDate" name="deliveryDate" value="${targetVO.deliveryDate}" />
-	            </div>
-             
+          <th class='text-left'>
+          <div class="form-inline">
+          	  <!-- 납품일자-->
+		      <input  class="form-control" style='width:135px' name="deliveryDate" id="deliveryDate" value="${targetVO.deliveryDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+		      <!-- 달력이미지 시작 -->
+		      <span class="icon_calendar"><img border="0" onclick="showCalendar('2')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
+		      <!-- 달력이미지 끝 -->
+		  </div>
           </th>
       	</tr>
       	<tr>
@@ -714,33 +785,6 @@ function fcDefer_reason(reason){
 	</div>
 	<script type="text/javascript">
 
-    $(function () {
-        $('#datetimepicker1').datetimepicker(
-        		{
-                	language:  'kr',
-                    format: 'yyyy-mm-dd',
-                    weekStart: 1,
-                    todayBtn:  1,
-            		autoclose: 1,
-            		todayHighlight: 1,
-            		startView: 2,
-            		minView: 2,
-            		forceParse: 0
-                });
-        $('#datetimepicker2').datetimepicker(
-        		{
-                	language:  'kr',
-                    format: 'yyyy-mm-dd',
-                    weekStart: 1,
-                    todayBtn:  1,
-            		autoclose: 1,
-            		todayHighlight: 1,
-            		startView: 2,
-            		minView: 2,
-            		forceParse: 0
-                });
-    });
-    
     totalOrderAmt();
     initNotify();
 </script>

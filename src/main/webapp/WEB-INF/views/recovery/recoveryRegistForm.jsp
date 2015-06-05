@@ -1,5 +1,23 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <SCRIPT>
+	$(function() {
+	    
+	    $( "#recoveryClosingDate" ).datepicker({
+	        dateFormat: "yy-mm-dd",
+	        dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+	        monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+	        monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+	        defaultDate: "+1w",
+	        numberOfMonths: 1,
+	        changeMonth: true,
+	        showMonthAfterYear: true ,
+	        changeYear: true,
+	        minDate : "+0D",
+	        onSelect: true
+	    });
+
+	});
+
 // 품목조회 리스트 Layup
 function fcProduct_list() {
 	
@@ -290,14 +308,14 @@ function fcGroup_checkAll(){
 		  <table class="table table-bordered" >
 		 	<tr>
 	          <th class='text-center' style="background-color:#E6F3FF;width:120px" >회수 마감일자</th>
-	          <th>
-	          	<div style='width:150px' class='input-group date ' id='datetimepicker3' data-link-field="recoveryClosingDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" disabled value="${recoveryClosingDate}" />
-	                <span class="input-group-addon">
-	                    <span class="glyphicon glyphicon-calendar"></span>
-	                </span>
-	                <input type="hidden" id="recoveryClosingDate" name="recoveryClosingDate" value="${recoveryClosingDate}" />
-	            </div>
+		      <th class='text-left'>
+	          <div class="form-inline">
+	              <!-- 발주일자-->
+			      <input class="form-control" style='width:135px' name="recoveryClosingDate" id="recoveryClosingDate" value="${recoveryClosingDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+			      <!-- 달력이미지 시작 -->
+			      <span class="icon_calendar"><img border="0" onclick="showCalendar('3')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
+			      <!-- 달력이미지 끝 -->
+			  </div>
 	          </th>
 	      	</tr>
 	      	<tr>
@@ -325,22 +343,6 @@ function fcGroup_checkAll(){
   </div>  
 </body>
 <script type="text/javascript">
-
-    $(function () {
-        $('#datetimepicker3').datetimepicker(
-        		{
-                	language:  'kr',
-                    format: 'yyyy-mm-dd',
-                    weekStart: 1,
-                    todayBtn:  1,
-            		autoclose: 1,
-            		todayHighlight: 1,
-            		startView: 2,
-            		minView: 2,
-            		forceParse: 0
-                });
-
-    });
   
     fcReProduct_registlist();
 </script>

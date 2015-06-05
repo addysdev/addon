@@ -3148,7 +3148,7 @@ function fnMenuApply(){
 		    
 		    
 		    
-///////////////////////////////////////////////////////////////////////////////
+          ///////////////////////////////////////////////////////////////////////////////
 		  //�Լ��� :MM_swapImgRestore(),MM_preloadImages,MM_findObj,MM_swapImage
 		  //��  �� : �̹��� ȿ���Լ�.
 		  ///////////////////////////////////////////////////////////////////////////////
@@ -3213,15 +3213,17 @@ function fnMenuApply(){
 		  	    if (obj.style) { obj=obj.style; v=(v=='show')?'block':(v=='hide')?'none':v; }
 		  	    obj.display=v; }
 		  	}
+		  
 		  function addDateFormat(obj) {
+	
 		        var value = obj.value;
-
+		       
 		        if (trim(value) == "") {
 		            return;
 		        }
 
 		        value = deleteDateFormatStr(value);
-
+	
 		        if (!isDate(value)) {
 		            dispName = obj.getAttribute("dispName");
 
@@ -3229,7 +3231,7 @@ function fnMenuApply(){
 		                dispName = "";
 		            }
 
-		            alert(dispName + " ������ �ùٸ��� �ʽ��ϴ�.");
+		            alert(dispName + " 형식이 올바르지 않습니다.");
 		            obj.value='';
 		            obj.focus();
 
@@ -3237,63 +3239,261 @@ function fnMenuApply(){
 		        }
 
 		        obj.value = addDateFormatStr(value);
-		    }
-		    function addDateFormatStr(str) {
-		        return  str.substring(0, 4) + "-" + str.substring(4, 6) + "-" + str.substring(6, 8);
-		    }
-		    function deleteDateFormatStr(str) {
-		        var temp = '';
+	    }
+	    function addDateFormatStr(str) {
+	
+	        return  str.substring(0, 4) + "-" + str.substring(4, 6) + "-" + str.substring(6, 8);
+	    }
+	    function deleteDateFormatStr(str) {
+	 
+	        var temp = '';
 
-		        for (var i = 0; i < str.length; i++) {
-		            if (str.charAt(i) == '-') {
-		                continue;
-		            } else {
-		                temp += str.charAt(i);
-		            }
-		        }
+	        for (var i = 0; i < str.length; i++) {
+	            if (str.charAt(i) == '-') {
+	                continue;
+	            } else {
+	                temp += str.charAt(i);
+	            }
+	        }
 
-		        return  temp;
-		    }
+	        return  temp;
+	    }
 		    
-		  function onlyNum(val)
-		  {
-		   var num = val;
-		   var tmp = "";
+	  function onlyNum(val)
+	  {
+	
+	   var num = val;
+	   var tmp = "";
 
-		   for (var i = 0; i < num.length; i ++)
-		   {
-		    if (num.charAt(i) >= 0 && num.charAt(i) <= 9)
-		     tmp = tmp + num.charAt(i);
-		    else
-		     continue;
-		   }
-		   return tmp;
-		  }
-		  
-		  function onlyNumber(obj){
-		    	/*
-		    	if (
-		    	    (event.keyCode >= 48 && event.keyCode <= 57)
-		            || (event.keyCode > 96 && event.keyCode <= 105)
-		            || (event.keyCode == 8)
-		            || (event.keyCode == 46)
-		        ){
-		        
-		        }else{
-		            event.returnValue = false;
-		        }
-		        */
-		    	var num = obj.value;
+	   for (var i = 0; i < num.length; i ++)
+	   {
+	    if (num.charAt(i) >= 0 && num.charAt(i) <= 9)
+	     tmp = tmp + num.charAt(i);
+	    else
+	     continue;
+	   }
+	   return tmp;
+	  }
+	  
+	  function onlyNumber(obj){
 
-		    	var pattern = /\D/gi;
+	    	var num = obj.value;
 
-		    	if( pattern.test(num)==true){
+	    	var pattern = /\D/gi;
 
-		    	//alert("���ڸ� �Է� �����մϴ�.");
+	    	if( pattern.test(num)==true){
 
-		    	obj.value = num.replace(/\D/gi, "");
+	    	obj.value = num.replace(/\D/gi, "");
 
-		    	obj.focus();
+	    	obj.focus();
 
-		    	}
-		  }
+	    	}
+	  }
+	  /**
+	     * trim
+	     *
+	     * @param   text
+	     * @return  string
+	     */
+	    function trim(text) {
+	    	if (text == "") {
+	            return  text;
+	        }
+
+	        var len = text.length;
+	        var st = 0;
+
+	        while ((st < len) && (text.charAt(st) <= ' ')) {
+	            st++;
+	        }
+
+	        while ((st < len) && (text.charAt(len - 1) <= ' ')) {
+	            len--;
+	        }
+
+	        return  ((st > 0) || (len < text.length)) ? text.substring(st, len) : text;
+	    }
+      ///////////////////////////////////////////////////////////////////////////////
+	  //함수명 :dateCheck()
+	  //내  용 : 날짜체크함수
+	  ///////////////////////////////////////////////////////////////////////////////
+	  function dateCheck(sObj,eObj,due){
+	  	
+	  	var sdate=deleteDateFormatStr(sObj.value);
+	  	var edate=deleteDateFormatStr(eObj.value);
+	  	
+	  	if(!isDate(sdate)){
+	  		alert('검색 시작일자의 날짜형식이 올바르지 않습니다.');
+	  		return false;
+	  	}
+	  	if(!isDate(edate)){
+	  		alert('검색 종료일자의 날짜형식이 올바르지 않습니다.');
+	  		return false;
+	  	}
+	  	
+	  	if(sdate>edate){
+	  		alert('시작일이 종료일보다 큽니다.');
+	  		return false;
+	  	}
+	   
+	  	var rdue=daysBetween(sdate,edate);
+	  	
+//	  	if(due!= '' && 365<rdue){
+//	  		alert('검색일수는 12개월로 제한합니다.');
+//	  		return false;
+//	  	} else if(due!='' && rdue>due){
+	  	if(due!='' && rdue>due){
+	  		if( due == '1' )
+	  			alert( '검색일수는 당일로 제한됩니다.' );
+	  		else
+	  			alert('검색일수는 '+(due-1)+'일로 제한합니다.');
+	      	return false;
+	  	}	
+	  	return true;
+	  }
+	  /**
+	     * 날짜 체크
+	     *
+	     * @param   date
+	     * @return  boolean
+	     */
+	    function isDate(date) {
+	        if (date == null || date.length != 8) {
+	            return  false;
+	        }
+
+	        if (!isNumber(date)) {
+	            return  false;
+	        }
+
+	        var year = eval(date.substring(0, 4));
+	        var month = eval(date.substring(4, 6));
+	        var day = eval(date.substring(6, 8));
+
+			if(year == "0000") {
+				return false;
+			}
+
+	        if (month > 12 || month == "00") {
+	            return  false;
+	        }
+
+	        var totalDays;
+
+	        switch (eval(month)){
+
+	            case 1 :
+	                totalDays = 31;
+	                break;
+	            case 2 :
+	                if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0))
+	                    totalDays = 29;
+	                else
+	                    totalDays = 28;
+	                break;
+	            case 3 :
+	                totalDays = 31;
+	                break;
+	            case 4 :
+	                totalDays = 30;
+	                break;
+	            case 5 :
+	                totalDays = 31;
+	                break;
+	            case 6 :
+	                totalDays = 30;
+	                break;
+	            case 7 :
+	                totalDays = 31;
+	                break;
+	            case 8 :
+	                totalDays = 31;
+	                break;
+	            case 9 :
+	                totalDays = 30;
+	                break;
+	            case 10 :
+	                totalDays = 31;
+	                break;
+	            case 11 :
+	                totalDays = 30;
+	                break;
+	            case 12 :
+	                totalDays = 31;
+	                break;
+	        }
+
+	        if (day > totalDays) {
+	            return  false;
+	        }
+
+	        if (day == "00") {
+	            return  false;
+	        }
+
+	        return  true;
+	    }
+	    /**
+	     * 오직 숫자로만 이루어져 있는지 체크 한다.
+	     *
+	     * @param   num
+	     * @return  boolean
+	     */
+	    function isNumber(num) {
+	        re = /[0-9]*[0-9]$/;
+
+	        if (re.test(num)) {
+	            return  true;
+	        }
+
+	        return  false;
+	    }
+	    /**
+	     * 두 날짜간의 일자를 리턴
+	     *
+	     * parameter date: JavaScript Date Object
+	     */
+	    function daysBetween(fromDt, toDt) {
+	    
+	        var date1 = toTimeObject(fromDt);
+	        var date2 = toTimeObject(toDt);
+
+	        var DSTAdjust = 0;
+	        // constants used for our calculations below
+	        oneMinute = 1000 * 60;
+	        var oneDay = oneMinute * 60 * 24;
+	        // equalize times in case date objects have them
+	        date1.setHours(0);
+	        date1.setMinutes(0);
+	        date1.setSeconds(0);
+	        date2.setHours(0);
+	        date2.setMinutes(0);
+	        date2.setSeconds(0);
+	        // take care of spans across Daylight Saving Time changes
+	        if (date2 > date1) {
+	            DSTAdjust = 
+	                (date2.getTimezoneOffset( ) - date1.getTimezoneOffset( )) * oneMinute;
+	        } else {
+	            DSTAdjust = 
+	                (date1.getTimezoneOffset( ) - date2.getTimezoneOffset( )) * oneMinute;    
+	        }
+	        var diff = Math.abs(date2.getTime( ) - date1.getTime( )) - DSTAdjust;
+	        //alert(Math.floor(diff/oneDay)+1);
+	        return Math.floor(diff/oneDay)+1;
+	    }
+	    /**
+	     * Time 스트링을 자바스크립트 Date 객체로 변환
+	     *
+	     * parameter time: Time 형식의 String
+	     */
+	    function toTimeObject(time)
+	    { //parseTime(time)
+	        var year  = time.substr(0,4);
+	        var month = time.substr(4,2) - 1; // 1월=0,12월=11
+	        var day   = time.substr(6,2);
+	        var hour  = time.substr(8,2);
+	        var min   = time.substr(10,2);
+
+	        return new Date(year,month,day,hour,min);
+	    }
+

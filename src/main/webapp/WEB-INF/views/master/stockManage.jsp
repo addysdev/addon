@@ -1,6 +1,84 @@
 <%@ include file="/WEB-INF/views/addys/top.jsp" %>
 <SCRIPT>
+$(function() {
+    // 기간 설정 타입 1 
+    // start Date 설정시 end Date의 min Date 지정
+    $( "#start_stockDate" ).datepicker({
+        dateFormat: "yy-mm-dd",
+        dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+        monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+        monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+        defaultDate: "+1w",
+        numberOfMonths: 1,
+        changeMonth: true,
+        showMonthAfterYear: true ,
+        changeYear: true,
+        maxDate : "+0D",
+        onClose: function( selectedDate ) {
+            $( "#end_stockDate" ).datepicker( "option", "minDate", selectedDate );
+        }
+    }); 
+     // end Date 설정시 start Date max Date 지정
+    $( "#end_stockDate" ).datepicker({
+        dateFormat: "yy-mm-dd",
+        dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+        monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+        monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+        defaultDate: "+1w",
+        numberOfMonths: 1,
+        changeMonth: true,
+        showMonthAfterYear: true ,
+        changeYear: true,
+        maxDate : "+0D",
+        onClose: function( selectedDate ) {
+            $( "#start_stockDate" ).datepicker( "option", "maxDate", selectedDate );
+        }
+    });
 
+    // 기간 설정 타입 2 
+    // start Date 설정시 end Date 가 start Date보다 작을 경우 end Date를 start Date와 같게 설정
+    $("#start_stockDate").datepicker({
+        dateFormat: "yy-mm-dd",
+        defaultDate: "+1w",
+        numberOfMonths: 1,
+        changeMonth: true,
+        showMonthAfterYear: true ,
+        changeYear: true,
+        onClose: function( selectedDate ) {
+            if ($( "#start_stockDate" ).val() < selectedDate)
+            {
+                $( "#end_stockDate" ).val(selectedDate);
+            }
+        }
+    }); 
+    // end Date 설정시 end Date 가 start Date 보다 작을 경우 start Date를  end Date와 같게 설정
+    $( "#end_stockDate" ).datepicker({
+        dateFormat: "yy-mm-dd",
+        defaultDate: "+1w",
+        numberOfMonths: 1,
+        changeMonth: true,
+        showMonthAfterYear: true ,
+        changeYear: true,
+        onClose: function( selectedDate ) {
+            if ($("#start_stockDate" ).val() > selectedDate)
+            {
+                $("#start_stockDate" ).val(selectedDate);
+            }
+        }
+    });
+
+	
+	});
+	function showCalendar(div){
+	
+	   if(div == "1"){
+	   	   $('#start_stockDate').datepicker("show");
+	   } else if(div == "2"){
+		   $('#end_stockDate').datepicker("show");
+	   } else if(div == "3"){
+		   $('#upload_stockDate').datepicker("show");
+	   }  
+	}
     // 리스트 조회
     function fcStock_listSearch(curPage){
 
@@ -72,20 +150,18 @@
         <fieldset>
         	<div class="form-group" >
 				<label for="start_stockDate end_stockDate">재고현황일자 :</label>
-				<div style='width:155px' class='input-group date ' id='datetimepicker1' data-link-field="start_stockDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" value="${stockConVO.start_stockDate}" />
-	                <span class="input-group-addon">
-	                    <span class="glyphicon glyphicon-calendar"></span>
-	                </span>
-	                <input type="hidden" id="start_stockDate" name="start_stockDate" value="${stockConVO.start_stockDate}" />
-	            </div>
-	            <div style='width:155px' class='input-group date' id='datetimepicker2'  data-link-field="end_stockDate" data-link-format="yyyy-mm-dd">
-	                <input type='text' class="form-control" value="${stockConVO.end_stockDate}" />
-	                <span class="input-group-addon">
-	                    <span class="glyphicon glyphicon-calendar"></span>
-	                </span>
-	                <input type="hidden" id="end_stockDate" name="end_stockDate" value="${stockConVO.end_stockDate}" />
-	            </div>
+				<!-- 조회시작일자-->
+			    <input  class="form-control" style='width:135px' name="start_stockDate" id="start_stockDate" value="${stockConVO.start_stockDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+			    <!-- 달력이미지 시작 -->
+			    <span class="icon_calendar"><img border="0" onclick="showCalendar('1')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
+			    <!-- 달력이미지 끝 -->
+	            &nbsp;~&nbsp;
+                <!-- 조회죵료일자-->
+			    <input  class="form-control" style='width:135px' name="end_stockDate" id="end_stockDate" value="${stockConVO.end_stockDate}" type="text" maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+			    <!-- 달력이미지 시작 -->
+			    <span class="icon_calendar"><img border="0" onclick="showCalendar('2')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
+			    <!-- 달력이미지 끝 -->
+
 				<c:choose>
 	    		<c:when test="${strAuth == '03'}">
 					<input type="hidden" id="con_groupId" name="con_groupId" value="${stockConVO.groupId}">
@@ -124,33 +200,6 @@
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>
 <script type="text/javascript">
 
-
-    $(function () {
-        $('#datetimepicker1').datetimepicker(
-        		{
-                	language:  'kr',
-                    format: 'yyyy-mm-dd',
-                    weekStart: 1,
-                    todayBtn:  1,
-            		autoclose: 1,
-            		todayHighlight: 1,
-            		startView: 2,
-            		minView: 2,
-            		forceParse: 0
-                });
-        $('#datetimepicker2').datetimepicker(
-        		{
-                	language:  'kr',
-                    format: 'yyyy-mm-dd',
-                    weekStart: 1,
-                    todayBtn:  1,
-            		autoclose: 1,
-            		todayHighlight: 1,
-            		startView: 2,
-            		minView: 2,
-            		forceParse: 0
-                });
-    });
     
     fcStock_listSearch();
     MM_nbGroup('down','group3','menu_03','<%= request.getContextPath() %>/images/top/addys-menu_03_on.jpg',1);
