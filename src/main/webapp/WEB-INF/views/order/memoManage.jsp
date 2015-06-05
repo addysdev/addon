@@ -67,8 +67,7 @@ function fcMemo_add(){
 <body>
 <div class="container-fluid">
 	<h5><strong><font style="color:#428bca"><span class="glyphicon glyphicon-book"></span>메모추가 &nbsp; 
-   				<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcMemo_add()" >추가</button>
-    			</font></strong></h5>
+   				</font></strong></h5>
 	  <form:form commandName="commentVO" id="memoForm" name="memoForm" method="post" action="" >
 	  <input type="hidden" name="orderCode"          id="orderCode"         value="${orderCode}"  />
 	  <input type="hidden" name="commentCategory"          id="commentCategory"         value="${category}"  />
@@ -80,7 +79,12 @@ function fcMemo_add(){
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF" >추가 메모</th>
-          <th><input type="text" class="form-control" id="comment" name="comment" style='ime-mode:active;' maxlength="200" value="" placeholder="메모"  /></th>
+          <th>
+          <div class="form-inline">
+          <input type="text" class="form-control" id="comment" style="width:547px"  name="comment" style='ime-mode:active;' maxlength="200" value="" placeholder="메모"  />
+          <button id="memoinfobtn" type="button" class="btn btn-info" onClick="fcMemo_add()" >추가</button>
+    	  </div>
+          </th>
       	</tr>
 	  </table>
 	  </form:form>

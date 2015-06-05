@@ -39,9 +39,11 @@ import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.service.common.CommonService;
 import com.offact.addys.service.common.UserService;
+import com.offact.addys.service.manage.UserManageService;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.UserVO;
+import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.order.TargetVO;
 
 /**
@@ -70,6 +72,9 @@ public class AddysController {
     
 	@Autowired
 	private UserService userSvc;
+	
+    @Autowired
+    private UserManageService userManageSvc;
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -338,6 +343,54 @@ public class AddysController {
 		logger.info("[addys1]"+addys1);
 
 		return "addys/addysMain";
+	}
+	
+	 /**
+     * 사용자정 수정화면
+     *
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/addys/usermodifyform")
+	public ModelAndView userModifyForm(@RequestParam(value = "userId") String userId, 
+									   HttpServletRequest request) throws BizException 
+    {
+		
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : userId" + userId);
+    			
+		ModelAndView mv = new ModelAndView();
+		
+		UserManageVO userVO = new UserManageVO();
+		
+    	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/loginForm");
+       		return mv;
+     	}
+        userVO = userManageSvc.getUserDetail(userId);
+		
+		userVO.setUpdateUserId(strUserId);
+		mv.addObject("userVO", userVO);
+		
+		mv.setViewName("/addys/userModifyForm");
+		
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+		return mv;
 	}
 	
 	/**

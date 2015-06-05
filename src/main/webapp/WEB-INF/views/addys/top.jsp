@@ -25,7 +25,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>GNB</title>
+<title>addys</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Latest compiled and minified CSS-->
     <link rel="stylesheet" href="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.css">
@@ -134,6 +134,35 @@
 				logoutForm.submit();
 			} catch(e) {}
 		};
+		
+		//레이어팝업 : 사용자수정 Layer 팝업
+	    function goMyInfo(userId){
+
+	    	$('#passwordModify').dialog({
+	            resizable : false, //사이즈 변경 불가능
+	            draggable : true, //드래그 불가능
+	            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+	            width : 400,
+	            height : 230,
+	            modal : true, //주위를 어둡게
+
+	            open:function(){
+	                //팝업 가져올 url
+	                $(this).load('<%= request.getContextPath() %>/addys/usermodifyform',{
+	    				'userId' : userId
+	    			});
+	                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+	                    $("#passwordModify").dialog('close');
+
+	                    });
+	            }
+	            ,close:function(){
+	                $('#passwordModify').empty();
+	            }
+	        });
+
+	    };
 	
 	</script>
     <c:set var="strUserId" value="<%=strUserId %>" />
@@ -161,8 +190,8 @@
 		<ul>
 			<li>사용자 : <span class="bar"><strong> <%=strUserName %>(<%=strUserId %>)</strong></span></li>
 			<li>지점 : <span class="bar"><strong> <%=strGroupName %>(<%=strGroupId %>)</strong></span></li>
-			<li><span class="bar"><a href="javascript:goLogout();">Logout</a></span></li>
-			<!-- >li><span class="whiteTxt bar"><a href="javascript:goMyInfo();">My info</a></span></li -->
+			<li><span class="bar"><a href="javascript:goMyInfo('<%=strUserId %>');">비밀번호 변경</a></span></li>
+			<li><span class="whiteTxt bar"><a href="javascript:goLogout();">Logout</a></span></li>
 		</ul>
 	</div>
 	<!-- 최상단 메뉴 끝 -->
@@ -225,7 +254,8 @@
 </div><!-- 왼쪽 배경 -->
 </div>
 <!-- 레이아웃 끝 -->
-
+  <!-- 사용자 수정-->
+  <div id="passwordModify"  title="비밀번호 수정"></div>
 </body>
 </html>
 <script>

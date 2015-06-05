@@ -13,9 +13,10 @@
 	        showMonthAfterYear: true ,
 	        changeYear: true,
 	        minDate : "+0D",
-	        onSelect: true
+	        onSelect : true
 	    });
-
+	
+	
 	});
 
 // 품목조회 리스트 Layup

@@ -85,8 +85,7 @@ function fcEtc_add(){
 <!-- 사용자관리 -->
 <body>
 <div class="container-fluid">
-	<h5><strong><font style="color:#428bca"><span class="glyphicon glyphicon-book"></span>${productName} &nbsp; 
-   				<button id="etcaddbtn" type="button" class="btn btn-xs btn-info" onClick="fcEtc_add()" >추가</button>
+	<h5><strong><font style="color:#428bca"><span class="glyphicon glyphicon-book"></span>${productName}
     			</font></strong></h5>
 	  <form:form commandName="commentVO" id="etcForm" name="etcForm" method="post" action="" >
 	  <input type="hidden" name="orderCode"          id="orderCode"         value="${orderCode}"  />
@@ -98,9 +97,14 @@ function fcEtc_add(){
           <th class='text-center' style="background-color:#E6F3FF;width:120px" >비고</th>
           <th><input type="text" class="form-control" value="${etc}" placeholder="비고" disabled /></th>
       	</tr>
-      	<tr>
+      	<tr>       
           <th class='text-center' style="background-color:#E6F3FF" >추가 비고</th>
-          <th><input type="text" class="form-control" id="comment"  name="comment" style='ime-mode:active;' maxlength="200" value="" placeholder="비고"  /></th>
+          <th>
+          <div class="form-inline">
+          <input type="text" class="form-control" id="comment" style="width:547px"  name="comment" style='ime-mode:active;' maxlength="200" value="" placeholder="비고"  />
+          <button id="etcaddbtn" type="button" class="btn btn-info" onClick="fcEtc_add()" >추가</button>
+    	  </div> 
+          </th>     
       	</tr>
 	  </table>
 	  </form:form>
