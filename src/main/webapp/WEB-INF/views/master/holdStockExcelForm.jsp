@@ -62,15 +62,15 @@ function uploadClose(msg){
  <form:form class="form-inline" role="form" commandName="fileVO"  id="excel_form" method="post" target="excel_import_result"  name="excel_form"  enctype="multipart/form-data" >
   <fieldset>
   <div class="form-group" >
-  <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 업로드 파일 선택</font></strong></h4>
-  <h5><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-bookmark"></span> 업로드 할 <em class="bold"> excel파일</em></font></strong></h5>
+  <h4><strong><font style="color:#428bca">업로드 파일 선택</font></strong></h4>
+  <h5><strong><font style="color:#FF9900">업로드 할 <em class="bold"> excel파일</em></font></strong></h5>
   <input type="file"  id="files" name="files" />
   <br><br> 
-  <h4><strong><font style="color:#428bca"> <span class="glyphicon glyphicon-book"></span> 업로드 시 주의사항</font></strong></h4>
-  <h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 엑셀파일 양식에 맞지 않으면 업로드가 불가능 합니다.</font></strong></h6>
+  <h4><strong><font style="color:#428bca">업로드 시 주의사항</font></strong></h4>
+  <h6><strong><font style="color:#FF9900">엑셀파일 양식에 맞지 않으면 업로드가 불가능 합니다.</font></strong></h6>
   <!-- >h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 엑셀파일 업로드 양식을 다운로드 합니다. 
   <a href="#"><strong><font style="color:#428bca">[양식다운로드]</font></strong></a></font></strong></h6 -->
-  <h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 파일 업로드 결과는 서버의 log 경로에서 확인이 가능합니다.</font></strong></h6>
+  <h6><strong><font style="color:#FF9900">파일 업로드 결과는 서버의 log 경로에서 확인이 가능합니다.</font></strong></h6>
   </div>
   </fieldset>
 </form:form>
