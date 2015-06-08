@@ -68,11 +68,17 @@
     	//alert(document.targetConForm.con_orderState.value);
     	fcTarget_listSearch();
     }
+    function failureAlert(limitStartDate,limitEndDate){
+    	
+    	alert('선택하신 발주대상건은\n'+limitStartDate+' 부터 '+limitEndDate+' 까지\n발주제한이 걸린 상태입니다.\n관리자에게 확인 부탁드립니다.');
+    	
+    }
 
 </SCRIPT>
      <form:form commandName="targetVO" name="targetPageListForm" method="post" action="" >
       <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> 전체건수 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span> 
-      <span style="color:blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[발주대기] :</font> <a href="javascript:stateSearch('01')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.targetCnt}" /></a><font style="color:#FF9900">
+      <span style="color:blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[발주제한] :</font> <a href="javascript:stateSearch('00')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.failureCnt}" /></a><font style="color:#FF9900">
+      &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[발주대기] :</font> <a href="javascript:stateSearch('01')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.targetCnt}" /></a><font style="color:#FF9900">
       &nbsp;&nbsp;&nbsp;&nbsp;[발주보류] :</font> <a href="javascript:stateSearch('02')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.deferCnt}" /></a></span></p>       
 	  <table class="table table-bordered">
 	    <thead>
@@ -90,8 +96,16 @@
 	    <tbody>
 	    	<c:if test="${!empty targetList}">
              <c:forEach items="${targetList}" var="targetVO" varStatus="status">
-             <tr id="select_tr_${targetVO.groupId}_${targetVO.companyCode}">
-                 <td class='text-center'><a href="javascript:fcTarget_detail('${targetVO.orderCode}','${targetVO.groupId}','${targetVO.groupName}','${targetVO.companyCode}','${targetVO.companyName}','${targetVO.orderState}','${targetVO.productPrice}','${targetVO.vat}','${targetVO.orderPrice}','${targetVO.safeOrderCnt}')">
+	             <c:choose>
+		    		<c:when test="${targetVO.orderState=='00'}">
+	                 	<tr id="select_tr_${targetVO.groupId}_${targetVO.companyCode}" style="background-color:#F0B3AC">
+	                 	 <td class='text-center' ><a style="color:red" href="javascript:failureAlert('${targetVO.limitStartDate}','${targetVO.limitEndDate}');">        
+					</c:when>
+					<c:otherwise>
+						<tr id="select_tr_${targetVO.groupId}_${targetVO.companyCode}">
+						 <td class='text-center'><a href="javascript:fcTarget_detail('${targetVO.orderCode}','${targetVO.groupId}','${targetVO.groupName}','${targetVO.companyCode}','${targetVO.companyName}','${targetVO.orderState}','${targetVO.productPrice}','${targetVO.vat}','${targetVO.orderPrice}','${targetVO.safeOrderCnt}')">       
+					</c:otherwise>
+				</c:choose>
                  <c:out value="${targetVO.orderStateView}"></c:out></a></td>
                  <td class='text-center'><c:out value="${targetVO.groupName}"></c:out></td>
                  <td><c:out value="${targetVO.companyName}"></c:out></td>

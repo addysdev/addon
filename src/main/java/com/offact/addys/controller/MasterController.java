@@ -63,6 +63,7 @@ import com.offact.addys.vo.master.ProductMasterVO;
 import com.offact.addys.vo.master.StockVO;
 import com.offact.addys.vo.master.SalesVO;
 import com.offact.addys.vo.order.OrderVO;
+import com.offact.addys.vo.recovery.RecoveryVO;
 import com.offact.addys.vo.MultipartFileVO;
 
 /**
@@ -1927,6 +1928,129 @@ public class MasterController {
       mv.addObject("totalCount", totalCount);
 
       mv.setViewName("/common/productSearchList");
+      
+      //log Controller execute time end
+     	long t2 = System.currentTimeMillis();
+     	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+     	
+      return mv;
+  }
+  
+  /**
+   * 발주제한 관리화면
+   *
+   * @param request
+   * @param response
+   * @param model
+   * @param locale
+   * @return
+   * @throws BizException
+   */
+  @RequestMapping(value = "/master/orderlimitmanage")
+  public ModelAndView orderLimitManage(HttpServletRequest request, 
+  		                       HttpServletResponse response) throws BizException 
+  {
+      
+  	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start ");
+
+      ModelAndView mv = new ModelAndView();
+      
+      // 사용자 세션정보
+      HttpSession session = request.getSession();
+      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+      
+      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+      	mv.setViewName("/addys/loginForm");
+     		return mv;
+		}
+
+      
+      RecoveryVO collectConVO = new RecoveryVO();
+      
+      collectConVO.setGroupId(strGroupId);
+
+      //오늘 날짜
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+      Date currentTime = new Date();
+      Date deliveryTime = new Date();
+      int movedate=-7;//(1:내일 ,-1:어제)
+      
+      deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+      
+      String strToday = simpleDateFormat.format(currentTime);
+      String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+      
+      collectConVO.setStart_recoveryDate(strDeliveryDay);
+      collectConVO.setEnd_recoveryDate(strToday);
+      
+      // 조회조건저장
+      mv.addObject("collectConVO", collectConVO);
+
+      
+      // 공통코드 조회 (발주상태코드)
+      CodeVO code = new CodeVO();
+      code.setCodeGroupId("RE01");
+      List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
+      mv.addObject("code_comboList", code_comboList);
+     
+      mv.setViewName("/master/orderLimitManage");
+      
+     //log Controller execute time end
+    	long t2 = System.currentTimeMillis();
+    	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+    	
+      return mv;
+  }
+  /**
+   * 발주제한 목록조회
+   * 
+   * @param RecoveryVO
+   * @param request
+   * @param response
+   * @param model
+   * @param locale
+   * @return
+   * @throws BizException
+   */
+  @RequestMapping(value = "/master/orderlimitpagelist")
+  public ModelAndView orderLimitPageList(@ModelAttribute("collectConVO") RecoveryVO collectConVO, 
+  		                         HttpServletRequest request, 
+  		                         HttpServletResponse response) throws BizException 
+  {
+      
+  	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : collectConVO" + collectConVO);
+
+      ModelAndView mv = new ModelAndView();
+      List<RecoveryVO> collectList = null;
+
+      // 상태 값 null 일때 공백처리
+      if (collectConVO.getCon_collectState() == null) {
+      	collectConVO.setCon_collectState("");
+      }
+
+      // 조회조건저장
+      mv.addObject("collectConVO", collectConVO);
+
+      // 페이징코드
+      collectConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(collectConVO.getCurPage(), collectConVO.getRowCount()));
+      collectConVO.setPage_limit_val2(StringUtil.nvl(collectConVO.getRowCount(), "10"));
+      
+      // 작업대상목록조회
+     // collectList = recoverySvc.getCollectPageList(collectConVO);
+     // mv.addObject("collectList", collectList);
+
+      // totalCount 조회
+     // String totalCount = String.valueOf(recoverySvc.getCollectCnt(collectConVO));
+     // mv.addObject("totalCount", totalCount);
+
+      mv.setViewName("/master/orderLimitPageList");
       
       //log Controller execute time end
      	long t2 = System.currentTimeMillis();

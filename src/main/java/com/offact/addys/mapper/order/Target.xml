@@ -67,20 +67,19 @@
 
 <select id="getTargetPageList"  resultMap="targetVO" parameterType="com.offact.addys.vo.order.TargetVO" >
 
-  Select Case T1.orderState When '07' Then 'X' Else ifnull(T1.orderCode,'X') End orderCode,
-         Case T1.orderState When '02' Then '발주보류'
-  						    Else '발주대기'
-         				    End orderStateView,
-         /* T5.codeName As orderStateView,*/
-         Case T1.orderState When '07' Then '01' Else T1.orderState End orderState,
+  Select T1.orderCode,
+         T5.codeName As orderStateView,
+         T1.orderState,
+         T1.limitStartDate,
+         T1.limitEndDate,
          T1.groupID,
          T4.groupName,
-		 T2.companyCode,
-         T3.companyName,
+		 T1.companyCode,
+         T1.companyName,
          SUM(T1.orderCnt) as orderCnt,/*안전재고 기준점 TOTAL  해당*/
-	   	 SUM(T1.orderCnt*T2.productPrice) as productPrice,/*안전재고 기준점 TOTAL 해당*/
-	   	 SUM(round((T1.orderCnt*T2.productPrice)*T2.vatRate)) as vat,/*안전재고 기준점 TOTAL 해당*/
-         (SUM(T1.orderCnt*T2.productPrice)+SUM(round((T1.orderCnt*T2.productPrice)*T2.vatRate))) as orderPrice,/*안전재고 기준점 TOTAL 해당*/
+	   	 SUM(T1.orderCnt*T1.productPrice) as productPrice,/*안전재고 기준점 TOTAL 해당*/
+	   	 SUM(round((T1.orderCnt*T1.productPrice)*T1.vatRate)) as vat,/*안전재고 기준점 TOTAL 해당*/
+         (SUM(T1.orderCnt*T1.productPrice)+SUM(round((T1.orderCnt*T1.productPrice)*T1.vatRate))) as orderPrice,/*안전재고 기준점 TOTAL 해당*/
          /*COUNT(T1.productCode) as safeOrderCnt,*/
          Case T1.orderState When '02' Then T6.safeOrderCnt
   						    Else COUNT(T1.productCode)
@@ -95,7 +94,13 @@
 				 TEMP.productCode,
 				 TEMP.orderCode,
 				 (TEMP.holdStock-TEMP.stockCnt) as orderCnt,
-				 TEMP.stockChk as stockDate
+				 TEMP.stockChk as stockDate,
+				 TEMP.productPrice,
+                 TEMP.vatRate,
+                 TEMP.companyCode,
+                 TEMP.companyName,
+                 TEMP.limitStartDate,
+                 TEMP.limitEndDate
 		    From (
 					Select I1.groupID,
 					       I1.productCode,
@@ -106,8 +111,19 @@
                		       /*ifnull(I3.deferDate,'1999-01-01') as deferChk,*//*보류기준일*/
 						   /*ifnull(I4.orderDate,'1999-01-01') as orderChk,*//*발주기준일*/
                			   ifnull(I5.buyDate,'1999-01-01') as buyChk,/*구매기준일*/
-                           ifnull(I6.orderState,'01') as orderState,/*최신발주상태*/
-					       I6.orderCode/*최신발주코드*/
+               			   
+               			   T2.productPrice,
+               			   T2.vatRate,
+               			   T2.companyCode,
+               			   T3.companyName,
+               			   T7.limitStartDate,
+               			   T7.limitEndDate,
+               			   
+                           Case When I6.orderState in ('01','07','08','09') Then 'X' Else ifnull(I6.orderCode,'X') End orderCode,/*최신발주코드*/
+                           Case When I6.orderState in ('01','07','08','09') And (T7.limitStartDate <![CDATA[<=]]> now() And now() <![CDATA[<=]]> T7.limitEndDate) Then '00' /*제한상태*/
+                                Else (Case When I6.orderState in ('07','08','09') Then '01' Else ifnull(I6.orderState,'01') End ) /*최신발주상태 (07:등록완료 08:발주보류취소 09:검수취소)->대기상태*/
+                                End orderState /*최신발주상태*/
+                                
 					  From adStockMaster I1
 						   Left Join(
 									 Select groupID,productCode,stockDate,
@@ -158,7 +174,10 @@
                                        				Left Join adOrder C8 On C7.orderCode=C8.orderCode
                         							Group By  groupID,productCode 
                         					 ) A5
-									) As I6 On I1.productCode = I6.productCode And I1.groupID = I6.groupID /*업데이트상태 및 주문번호*/  
+									) As I6 On I1.productCode = I6.productCode And I1.groupID = I6.groupID /*업데이트상태 및 주문번호*/ 
+									Left Join adProductMaster T2 On I1.ProductCode = T2.ProductCode
+                   					Left Join adCompany T3 On T2.companyCode = T3.companyCode 
+                   					Left Join adOrderLimit T7 On I1.groupID=T7.groupId And  T2.companyCode=T7.companyCode 
 					     Where 1=1 
 					     <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            					AND I1.groupId = #{con_groupId}
@@ -168,33 +187,28 @@
 					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk
 					And TEMP.stockCnt  <![CDATA[<]]> TEMP.holdStock 
 					<choose>
-						<when test=" con_orderState == '01' " >
-							AND TEMP.orderState in ('01','07','08','09')
-						</when>
 						<when  test="con_orderState != null and con_orderState != ''">
 							AND TEMP.orderState = #{con_orderState}
 						</when>
 						<when  test="con_orderState == null || con_orderState == ''">
-							AND TEMP.orderState in ('01','02','07','08','09')
+							AND TEMP.orderState in ('00','01','02')
 						</when>
 				   </choose>
 			  ) T1
-              Left Join adProductMaster T2 On T1.ProductCode = T2.ProductCode
-              Left Join adCompany T3 On T2.companyCode = T3.companyCode 
               Left Join ofGroup T4 On T1.groupID = T4.groupID 
-               /*  Left Join ofCode T5 On T1.orderState = T5.codeId and T5.codeGroupId = 'OD01'*/
-              Left Join adOrder T6 On T1.orderCode = T6.orderCode 
+       		  Left Join ofCode T5 On T1.orderState = T5.codeId and T5.codeGroupId = 'OD01'
+        	  Left Join adOrder T6 On T1.orderCode = T6.orderCode 
               Where 1=1
                     <if test="searchValue != null and searchValue != ''" >
              		<choose>
                			<when test="searchGubun.equals('01')">
-           					AND T3.companyName  LIKE CONCAT('%', #{searchValue}, '%')
+           					AND T1.companyName  LIKE CONCAT('%', #{searchValue}, '%')
                			</when>
                			<when test="searchGubun.equals('02')">
-           					AND T2.companyCode  LIKE CONCAT('%', #{searchValue}, '%')
+           					AND T1.companyCode  LIKE CONCAT('%', #{searchValue}, '%')
                			</when>
                			<when test="searchGubun.equals('03')">
-           					AND T2.productName  LIKE CONCAT('%', #{searchValue}, '%')
+           					AND T1.productName  LIKE CONCAT('%', #{searchValue}, '%')
                			</when>
                			<when test="searchGubun.equals('04')">
            					AND T1.productCode  LIKE CONCAT('%', #{searchValue}, '%')
@@ -202,7 +216,7 @@
              		</choose>
            			</if> 
 			  Group By T1.groupID,
-			           T2.companyCode
+			           T1.companyCode
 			  LIMIT ${page_limit_val1} , ${page_limit_val2}
 		
 </select>
@@ -211,22 +225,24 @@
 
 SELECT count(*) AS TOT_COUNT
 From (
-  Select Case T1.orderState When '07' Then 'X' Else ifnull(T1.orderCode,'X') End orderCode,
-         Case T1.orderState When '02' Then '발주보류'
-  						    Else '발주대기'
-         				    End orderStateView,
-         /* T5.codeName As orderStateView,*/
-         Case T1.orderState When '07' Then '01' Else T1.orderState End orderState,
+    Select T1.orderCode,
+         T5.codeName As orderStateView,
+         T1.orderState,
+         T1.limitStartDate,
+         T1.limitEndDate,
          T1.groupID,
          T4.groupName,
-		 T2.companyCode,
-         T3.companyName,
+		 T1.companyCode,
+         T1.companyName,
          SUM(T1.orderCnt) as orderCnt,/*안전재고 기준점 TOTAL  해당*/
-	   	 SUM(T1.orderCnt*T2.productPrice) as productPrice,/*안전재고 기준점 TOTAL 해당*/
-	   	 SUM(round((T1.orderCnt*T2.productPrice)*T2.vatRate)) as vat,/*안전재고 기준점 TOTAL 해당*/
-         (SUM(T1.orderCnt*T2.productPrice)+SUM(round((T1.orderCnt*T2.productPrice)*T2.vatRate))) as orderPrice,/*안전재고 기준점 TOTAL 해당*/
-         COUNT(T1.productCode) as safeOrderCnt,/*안전재고 기준점 발생품목수량*/
-         date_format(date(T1.stockDate),'%Y-%m-%d') as stockDate  /*재고현황 기준일*/
+	   	 SUM(T1.orderCnt*T1.productPrice) as productPrice,/*안전재고 기준점 TOTAL 해당*/
+	   	 SUM(round((T1.orderCnt*T1.productPrice)*T1.vatRate)) as vat,/*안전재고 기준점 TOTAL 해당*/
+         (SUM(T1.orderCnt*T1.productPrice)+SUM(round((T1.orderCnt*T1.productPrice)*T1.vatRate))) as orderPrice,/*안전재고 기준점 TOTAL 해당*/
+         /*COUNT(T1.productCode) as safeOrderCnt,*/
+         Case T1.orderState When '02' Then T6.safeOrderCnt
+  						    Else COUNT(T1.productCode)
+         				    End safeOrderCnt,/*안전재고 기준점 발생품목수량*/
+         date_format(date(max(T1.stockDate)),'%Y-%m-%d') as stockDate  /*재고현황 기준일*/
   From (
 	      Select TEMP.orderState ,
 		         TEMP.stockCnt,
@@ -236,7 +252,13 @@ From (
 				 TEMP.productCode,
 				 TEMP.orderCode,
 				 (TEMP.holdStock-TEMP.stockCnt) as orderCnt,
-				 TEMP.stockChk as stockDate
+				 TEMP.stockChk as stockDate,
+				 TEMP.productPrice,
+                 TEMP.vatRate,
+                 TEMP.companyCode,
+                 TEMP.companyName,
+                 TEMP.limitStartDate,
+                 TEMP.limitEndDate
 		    From (
 					Select I1.groupID,
 					       I1.productCode,
@@ -247,8 +269,19 @@ From (
                		       /*ifnull(I3.deferDate,'1999-01-01') as deferChk,*//*보류기준일*/
 						   /*ifnull(I4.orderDate,'1999-01-01') as orderChk,*//*발주기준일*/
                			   ifnull(I5.buyDate,'1999-01-01') as buyChk,/*구매기준일*/
-                           ifnull(I6.orderState,'01') as orderState,/*최신발주상태*/
-					       I6.orderCode/*최신발주코드*/
+               			   
+               			   T2.productPrice,
+               			   T2.vatRate,
+               			   T2.companyCode,
+               			   T3.companyName,
+               			   T7.limitStartDate,
+               			   T7.limitEndDate,
+               			   
+                           Case When I6.orderState in ('01','07','08','09') Then 'X' Else ifnull(I6.orderCode,'X') End orderCode,/*최신발주코드*/
+                           Case When I6.orderState in ('01','07','08','09') And (T7.limitStartDate <![CDATA[<=]]> now() And now() <![CDATA[<=]]> T7.limitEndDate) Then '00' /*제한상태*/
+                                Else (Case When I6.orderState in ('07','08','09') Then '01' Else ifnull(I6.orderState,'01') End ) /*최신발주상태 (07:등록완료 08:발주보류취소 09:검수취소)->대기상태*/
+                                End orderState /*최신발주상태*/
+                                
 					  From adStockMaster I1
 						   Left Join(
 									 Select groupID,productCode,stockDate,
@@ -299,67 +332,68 @@ From (
                                        				Left Join adOrder C8 On C7.orderCode=C8.orderCode
                         							Group By  groupID,productCode 
                         					 ) A5
-									) As I6 On I1.productCode = I6.productCode And I1.groupID = I6.groupID /*업데이트상태 및 주문번호*/  
+									) As I6 On I1.productCode = I6.productCode And I1.groupID = I6.groupID /*업데이트상태 및 주문번호*/ 
+									Left Join adProductMaster T2 On I1.ProductCode = T2.ProductCode
+                   					Left Join adCompany T3 On T2.companyCode = T3.companyCode 
+                   					Left Join adOrderLimit T7 On I1.groupID=T7.groupId And  T2.companyCode=T7.companyCode 
 					     Where 1=1 
 					     <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            					AND I1.groupId = #{con_groupId}
            				 </if>
 					   ) As TEMP
 		      Where TEMP.stockCnt  <![CDATA[<=]]> TEMP.safeStock
-					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk 
-					And TEMP.stockCnt  <![CDATA[<]]> TEMP.holdStock    
+					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk
+					And TEMP.stockCnt  <![CDATA[<]]> TEMP.holdStock 
 					<choose>
-						<when test=" con_orderState == '01' " >
-							AND TEMP.orderState in ('01','07','08','09')
-						</when>
 						<when  test="con_orderState != null and con_orderState != ''">
 							AND TEMP.orderState = #{con_orderState}
 						</when>
 						<when  test="con_orderState == null || con_orderState == ''">
-							AND TEMP.orderState in ('01','02','07','08','09')
+							AND TEMP.orderState in ('00','01','02')
 						</when>
 				   </choose>
 			  ) T1
-              Left Join adProductMaster T2 On T1.ProductCode = T2.ProductCode
-              Left Join adCompany T3 On T2.companyCode = T3.companyCode 
               Left Join ofGroup T4 On T1.groupID = T4.groupID 
-               /*  Left Join ofCode T5 On T1.orderState = T5.codeId and T5.codeGroupId = 'OD01'*/
-               Where 1=1
+       		  Left Join ofCode T5 On T1.orderState = T5.codeId and T5.codeGroupId = 'OD01'
+        	  Left Join adOrder T6 On T1.orderCode = T6.orderCode 
+              Where 1=1
                     <if test="searchValue != null and searchValue != ''" >
              		<choose>
                			<when test="searchGubun.equals('01')">
-           					AND T3.companyName  LIKE CONCAT('%', #{searchValue}, '%')
+           					AND T1.companyName  LIKE CONCAT('%', #{searchValue}, '%')
                			</when>
                			<when test="searchGubun.equals('02')">
-           					AND T2.companyCode  LIKE CONCAT('%', #{searchValue}, '%')
+           					AND T1.companyCode  LIKE CONCAT('%', #{searchValue}, '%')
                			</when>
                			<when test="searchGubun.equals('03')">
-           					AND T2.productName LIKE CONCAT('%', #{searchValue}, '%')
+           					AND T1.productName  LIKE CONCAT('%', #{searchValue}, '%')
                			</when>
                			<when test="searchGubun.equals('04')">
-           					AND T1.productCode   LIKE CONCAT('%', #{searchValue}, '%')
+           					AND T1.productCode  LIKE CONCAT('%', #{searchValue}, '%')
                			</when>
              		</choose>
            			</if> 
 			  Group By T1.groupID,
-			           T2.companyCode
+			           T1.companyCode
 	) As TOT
 			           
 </select>
 
 <select id="getStateCnt" resultMap="targetVO" >
 
-Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
+Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As failureCnt
   From (
 		Select X.groupId,
        		   X.companyCode,
        		   sum(deferCnt) as deferCnt,
-       		   sum(targetCnt) as targetCnt
+       		   sum(targetCnt) as targetCnt,
+       		   sum(failureCnt) as failureCnt
     	 From  (
   				  Select T1.groupID,
-						 T2.companyCode,
+						 T1.companyCode,
     					 Case When T1.orderState = '02' Then 1 Else 0 End deferCnt,
-    					 Case When T1.orderState != '02' Then 1 Else 0 End targetCnt
+    					 Case When T1.orderState != '02' Then 1 Else 0 End targetCnt,
+    					 Case When T1.orderState = '00' Then 1 Else 0 End failureCnt
   From (
 	      Select TEMP.orderState ,
 		         TEMP.stockCnt,
@@ -369,7 +403,8 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
 				 TEMP.productCode,
 				 TEMP.orderCode,
 				 (TEMP.holdStock-TEMP.stockCnt) as orderCnt,
-				 TEMP.stockChk as stockDate
+				 TEMP.stockChk as stockDate,
+				 TEMP.companyCode
 		    From (
 					Select I1.groupID,
 					       I1.productCode,
@@ -380,8 +415,14 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
                		       /*ifnull(I3.deferDate,'1999-01-01') as deferChk,*//*보류기준일*/
 						   /*ifnull(I4.orderDate,'1999-01-01') as orderChk,*//*발주기준일*/
                			   ifnull(I5.buyDate,'1999-01-01') as buyChk,/*구매기준일*/
-                           ifnull(I6.orderState,'01') as orderState,/*최신발주상태*/
-					       I6.orderCode/*최신발주코드*/
+               			   
+               			   T2.companyCode,
+               			   
+                           Case When I6.orderState in ('01','07','08','09') Then 'X' Else ifnull(I6.orderCode,'X') End orderCode,/*최신발주코드*/
+                           Case When I6.orderState in ('01','07','08','09') And (T7.limitStartDate <![CDATA[<=]]> now() And now() <![CDATA[<=]]> T7.limitEndDate) Then '00' /*제한상태*/
+                     	   		Else (Case When I6.orderState in ('07','08','09') Then '01' Else ifnull(I6.orderState,'01') End ) /*최신발주상태 (07:등록완료 08:발주보류취소 09:검수취소)->대기상태*/
+                     	   		End orderState
+                     	   		
 					  From adStockMaster I1
 						   Left Join(
 									 Select groupID,productCode,stockDate,
@@ -433,6 +474,8 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
                         							Group By  groupID,productCode 
                         					 ) A5
 									) As I6 On I1.productCode = I6.productCode And I1.groupID = I6.groupID /*업데이트상태 및 주문번호*/  
+									Left Join adProductMaster T2 On I1.ProductCode = T2.ProductCode
+                   					Left Join adOrderLimit T7 On I1.groupID=T7.groupId And  T2.companyCode=T7.companyCode
 					     Where 1=1 
 					     <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            					AND I1.groupId = #{con_groupId}
@@ -441,16 +484,14 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt
 		      Where TEMP.stockCnt  <![CDATA[<=]]> TEMP.safeStock
 					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk  
 					And TEMP.stockCnt  <![CDATA[<]]> TEMP.holdStock   
-           			AND TEMP.orderState in ('01','02','07','08','09')
+           			AND TEMP.orderState in ('00','01','02')
 			  ) T1
-              Left Join adProductMaster T2 On T1.ProductCode = T2.ProductCode
-              Left Join adCompany T3 On T2.companyCode = T3.companyCode 
-              			  Group By T1.groupID,
-			                       T2.companyCode
+              Group By T1.groupID,
+			           T1.companyCode
      )X
-			  Group By X.groupID,
-			           X.companyCode
-                 ) As Y
+	 Group By X.groupID,
+			  X.companyCode
+) As Y
 			           
 </select>
 

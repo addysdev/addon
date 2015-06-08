@@ -365,6 +365,7 @@ function fcDefer_reason(reason){
   		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[i].value))));
   		
   		if(holdStock<orderCnt){
+
   			NONSTOCK++;
   		}
   	}
@@ -399,7 +400,7 @@ function fcDefer_reason(reason){
  }
  
  function initNotify(){
-	 
+	
 	 if(NONSTOCK>0){
 		  
 		  alert('재고수량중 (-)재고가 '+NONSTOCK+'건 있습니다.(붉은색 표기됨)\n발주 수량은 보유수량을 초과 할 수 없습니다.\n해당 발주 수량을 보유수량에 맞추신 후 발주 부탁드립니다.');
@@ -764,7 +765,6 @@ function fcDefer_reason(reason){
                  <input type="hidden" id="orderCnt" name="orderCnt" value="${targetVO.orderCnt}" >
                  <input type="hidden" id="orderCntRaw" name="orderCntRaw" value="${targetVO.orderCnt}" >
                  <input type="hidden" id="vatRate" name="vatRate" value="${targetVO.vatRate}" >
-                 <input type="hidden" id="holdStock" name="holdStock" value="${targetVO.holdStock}" >
                  <td class='text-right'><input style="width:45px;text-align:right" type="text" class="form-control" id="addCnt" name="addCnt" maxlength="2" numberOnly onKeyup="fcAdd_Cnt('${status.count}')" value="0"></td>
                  <td class='text-right' ><input style="width:45px;text-align:right" type="text" class="form-control" id="lossCnt" name="lossCnt" maxlength="2" numberOnly onKeyup="fcLoss_Cnt('${status.count}')" value="0"></td>
                  <tr>

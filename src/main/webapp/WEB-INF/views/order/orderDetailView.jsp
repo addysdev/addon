@@ -885,33 +885,6 @@ function totalTargetAmt(){
     <!-- //보류 상세화면 -->
 	<script type="text/javascript">
 
-    $(function () {
-        $('#datetimepicker3').datetimepicker(
-        		{
-                	language:  'kr',
-                    format: 'yyyy-mm-dd',
-                    weekStart: 1,
-                    todayBtn:  1,
-            		autoclose: 1,
-            		todayHighlight: 1,
-            		startView: 2,
-            		minView: 2,
-            		forceParse: 0
-                });
-        $('#datetimepicker4').datetimepicker(
-        		{
-                	language:  'kr',
-                    format: 'yyyy-mm-dd',
-                    weekStart: 1,
-                    todayBtn:  1,
-            		autoclose: 1,
-            		todayHighlight: 1,
-            		startView: 2,
-            		minView: 2,
-            		forceParse: 0
-                });
-    });
-    
     totalTargetAmt();
     totalOrderAmt();
     totalCheck();

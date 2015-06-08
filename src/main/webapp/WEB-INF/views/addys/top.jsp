@@ -227,7 +227,10 @@
 			         <a class="dropdown-toggle" data-toggle="dropdown" href="#"   onmouseover="MM_nbGroup('over','menu_03','<%= request.getContextPath() %>/images/top/addys-menu_03_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_03_on.jpg',1)" onmouseout="MM_nbGroup('out')">
 						<img src="<%= request.getContextPath() %>/images/top/addys-menu_03.jpg"   name="menu_03" border="0" id="menu_03"  /></a>
 			          <ul class="dropdown-menu" role="menu">
-			            <c:if test="${strAuth != '03'}"><li><a href="<%= request.getContextPath() %>/master/productmanage">품목관리</a></li></c:if>
+			            <c:if test="${strAuth != '03'}">
+			            <li><a href="<%= request.getContextPath() %>/master/productmanage">품목 관리</a></li>
+			            <li><a href="<%= request.getContextPath() %>/master/orderlimitmanage">발주제한 관리</a></li>
+			            </c:if>
 			            <li><a href="<%= request.getContextPath() %>/master/stockmanage">재고현황 관리</a></li>   
 			            <li><a href="<%= request.getContextPath() %>/master/salesmanage">매출현황 관리</a></li>                            
 			          </ul>
