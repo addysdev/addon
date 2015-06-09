@@ -893,4 +893,120 @@ public class ManageController {
     	
         return mv;
     }
+    /**
+     * 업체관리 조회화면 로딩
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/manage/companysearch")
+    public ModelAndView companySearch(HttpServletRequest request, 
+    		                       HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start ");
+
+        ModelAndView mv = new ModelAndView();
+        
+     // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/loginForm");
+       		return mv;
+     	}
+        
+        CompanyManageVO companyConVO = new CompanyManageVO();
+        
+        companyConVO.setUserId(strUserId);
+        companyConVO.setGroupId(strGroupId);
+
+        // 조회조건저장
+        mv.addObject("userConVO", companyConVO);
+        
+        mv.setViewName("/common/companySearch");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    /**
+     * 업체관리 조회목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/manage/companysearchlist")
+    public ModelAndView companySearchList(@ModelAttribute("companyConVO") CompanyManageVO companyConVO, 
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : companyConVO" + companyConVO);
+
+        ModelAndView mv = new ModelAndView();
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/loginForm");
+       		return mv;
+     	}
+        
+        List<CompanyManageVO> companyList = null;
+
+        // 조회조건 null 일때 공백처리
+        if (companyConVO.getSearchGubun() == null) {
+        	companyConVO.setSearchGubun("01");
+        }
+        
+        // 조회값 null 일때 공백처리
+        if (companyConVO.getSearchValue() == null) {
+        	companyConVO.setSearchValue("");
+        }
+        
+        // 조회조건저장
+        mv.addObject("companyConVO", companyConVO);
+
+        // 페이징코드
+        companyConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(companyConVO.getCurPage(), companyConVO.getRowCount()));
+        companyConVO.setPage_limit_val2(StringUtil.nvl(companyConVO.getRowCount(), "10"));
+        
+        // 업체목록조회
+        companyList = companyManageSvc.getCompanyPageList(companyConVO);
+        mv.addObject("companyList", companyList);
+
+        // totalCount 조회
+        String totalCount = String.valueOf(companyManageSvc.getCompanyCnt(companyConVO));
+        mv.addObject("totalCount", totalCount);
+
+        mv.setViewName("/common/companySearchList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
 }

@@ -75,9 +75,7 @@ $(function() {
 	   	   $('#start_stockDate').datepicker("show");
 	   } else if(div == "2"){
 		   $('#end_stockDate').datepicker("show");
-	   } else if(div == "3"){
-		   $('#upload_stockDate').datepicker("show");
-	   }  
+	   }   
 	}
     // 리스트 조회
     function fcStock_listSearch(curPage){

@@ -891,7 +891,7 @@ public class RecoveryController {
 	   * @throws BizException
 	   */
 	  @RequestMapping({"/recovery/reproductexcelattach"})
-	  public ModelAndView stockMasterExcelImport(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO, 
+	  public ModelAndView reProductExcelAttach(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO, 
 	  		                            HttpServletRequest request, 
 	  		                            HttpServletResponse response, 
 	  		                            String fileName, 

@@ -75,9 +75,7 @@
 	   	   $('#start_recoveryDate').datepicker("show");
 	   } else if(div == "2"){
 		   $('#end_recoveryDate').datepicker("show");
-	   } else if(div == "3"){
-		   $('#recoveryClosingDate').datepicker("show");
-	   }  
+	   } 
 	}
     // 리스트 조회
     function fcCollect_listSearch(curPage){

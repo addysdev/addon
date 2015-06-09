@@ -75,8 +75,6 @@ $(function() {
 	   	   $('#start_salesDate').datepicker("show");
 	   } else if(div == "2"){
 		   $('#end_salesDate').datepicker("show");
-	   } else if(div == "3"){
-		   $('#upload_salesDate').datepicker("show");
 	   }  
 	}
     // 리스트 조회

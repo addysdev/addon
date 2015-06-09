@@ -55,13 +55,18 @@ import com.offact.addys.service.master.ProductMasterService;
 import com.offact.addys.service.master.StockMasterService;
 import com.offact.addys.service.master.StockService;
 import com.offact.addys.service.master.SalesService;
+import com.offact.addys.service.master.OrderLimitService;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.GroupVO;
+import com.offact.addys.vo.common.SmsVO;
+import com.offact.addys.vo.common.UserVO;
+import com.offact.addys.vo.common.CompanyVO;
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.master.StockMasterVO;
 import com.offact.addys.vo.master.ProductMasterVO;
 import com.offact.addys.vo.master.StockVO;
 import com.offact.addys.vo.master.SalesVO;
+import com.offact.addys.vo.master.OrderLimitVO;
 import com.offact.addys.vo.order.OrderVO;
 import com.offact.addys.vo.recovery.RecoveryVO;
 import com.offact.addys.vo.MultipartFileVO;
@@ -100,6 +105,9 @@ public class MasterController {
     
     @Autowired
     private SalesService salesSvc;
+    
+    @Autowired
+    private OrderLimitService orderLimitSvc;
     
     /**
      * 품목현황 관리화면
@@ -1969,9 +1977,9 @@ public class MasterController {
 		}
 
       
-      RecoveryVO collectConVO = new RecoveryVO();
+      OrderLimitVO orderLimitConVO = new OrderLimitVO();
       
-      collectConVO.setGroupId(strGroupId);
+      orderLimitConVO.setGroupId(strGroupId);
 
       //오늘 날짜
       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -1984,18 +1992,17 @@ public class MasterController {
       String strToday = simpleDateFormat.format(currentTime);
       String strDeliveryDay = simpleDateFormat.format(deliveryTime);
       
-      collectConVO.setStart_recoveryDate(strDeliveryDay);
-      collectConVO.setEnd_recoveryDate(strToday);
+      orderLimitConVO.setStart_limitDate(strDeliveryDay);
+      orderLimitConVO.setEnd_limitDate(strToday);
       
       // 조회조건저장
-      mv.addObject("collectConVO", collectConVO);
+      mv.addObject("orderLimitConVO", orderLimitConVO);
 
-      
-      // 공통코드 조회 (발주상태코드)
-      CodeVO code = new CodeVO();
-      code.setCodeGroupId("RE01");
-      List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
-      mv.addObject("code_comboList", code_comboList);
+      //조직정보 조회
+      GroupVO group = new GroupVO();
+      group.setGroupId(strGroupId);
+      List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+      mv.addObject("group_comboList", group_comboList);
      
       mv.setViewName("/master/orderLimitManage");
       
@@ -2017,7 +2024,7 @@ public class MasterController {
    * @throws BizException
    */
   @RequestMapping(value = "/master/orderlimitpagelist")
-  public ModelAndView orderLimitPageList(@ModelAttribute("collectConVO") RecoveryVO collectConVO, 
+  public ModelAndView orderLimitPageList(@ModelAttribute("orderlimitConVO") OrderLimitVO orderlimitConVO, 
   		                         HttpServletRequest request, 
   		                         HttpServletResponse response) throws BizException 
   {
@@ -2025,30 +2032,25 @@ public class MasterController {
   	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : collectConVO" + collectConVO);
+		logger.info("["+logid+"] Controller start : orderlimitConVO" + orderlimitConVO);
 
       ModelAndView mv = new ModelAndView();
-      List<RecoveryVO> collectList = null;
-
-      // 상태 값 null 일때 공백처리
-      if (collectConVO.getCon_collectState() == null) {
-      	collectConVO.setCon_collectState("");
-      }
+      List<OrderLimitVO> orderLimitList = null;
 
       // 조회조건저장
-      mv.addObject("collectConVO", collectConVO);
+      mv.addObject("orderlimitConVO", orderlimitConVO);
 
       // 페이징코드
-      collectConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(collectConVO.getCurPage(), collectConVO.getRowCount()));
-      collectConVO.setPage_limit_val2(StringUtil.nvl(collectConVO.getRowCount(), "10"));
+      orderlimitConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(orderlimitConVO.getCurPage(), orderlimitConVO.getRowCount()));
+      orderlimitConVO.setPage_limit_val2(StringUtil.nvl(orderlimitConVO.getRowCount(), "10"));
       
-      // 작업대상목록조회
-     // collectList = recoverySvc.getCollectPageList(collectConVO);
-     // mv.addObject("collectList", collectList);
+      // 발주제한목록조회
+      orderLimitList = orderLimitSvc.getOrderLimitPageList(orderlimitConVO);
+      mv.addObject("orderLimitList", orderLimitList);
 
-      // totalCount 조회
-     // String totalCount = String.valueOf(recoverySvc.getCollectCnt(collectConVO));
-     // mv.addObject("totalCount", totalCount);
+     //  totalCount 조회
+      String totalCount = String.valueOf(orderLimitSvc.getOrderLimitCnt(orderlimitConVO));
+      mv.addObject("totalCount", totalCount);
 
       mv.setViewName("/master/orderLimitPageList");
       
@@ -2058,5 +2060,465 @@ public class MasterController {
      	
       return mv;
   }
-   
+  
+  /**
+   * 발주대상 등록 화면
+   *
+   * @param request
+   * @param response
+   * @param model
+   * @param locale
+   * @return
+   * @throws BizException
+   */
+  @RequestMapping(value = "/master/orderlimitregistform")
+  public ModelAndView orderLimitRegistForm(HttpServletRequest request, 
+  		                               HttpServletResponse response) throws BizException 
+  {
+      
+  	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start ");
+
+      ModelAndView mv = new ModelAndView();
+      
+      // 사용자 세션정보
+      HttpSession session = request.getSession();
+      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+      
+      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+      	mv.setViewName("/addys/loginForm");
+     		return mv;
+		}
+     
+      //오늘 날짜
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+      Date currentTime = new Date();
+      Date deliveryTime = new Date();
+      int movedate=0;//(1:내일 ,-1:어제)
+      
+      deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+      
+      String strToday = simpleDateFormat.format(currentTime);
+      String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+      
+      //제한일자 세팅
+      mv.addObject("limitStartDate", strToday);
+      mv.addObject("limitEndDate", strToday);
+      
+      //조직정보 조회
+      GroupVO group = new GroupVO();
+      group.setGroupId("G00000");
+      List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+      mv.addObject("group_comboList", group_comboList);
+      
+      mv.setViewName("/master/orderLimitRegistForm");
+      
+     //log Controller execute time end
+    	long t2 = System.currentTimeMillis();
+    	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+    	
+      return mv;
+  }
+  /**
+ 	 * Simply selects the home view to render by returning its name.
+ 	 * @throws BizException
+ 	 */
+  @RequestMapping(value = "/master/orderlimitregislist")
+ 	public ModelAndView orderLimitRegisList(HttpServletRequest request) throws BizException 
+     {
+  		//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : reproductList");
+  			
+ 		ModelAndView mv = new ModelAndView();
+ 		
+ 		// 사용자 세션정보
+ 		HttpSession session = request.getSession();
+ 		String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+ 		String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+      
+      	if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+      		mv.setViewName("/addys/loginForm");
+      		return mv;
+		}
+      
+      	List companyList = new ArrayList(); //DB 성공 대상데이타
+      
+      	mv.addObject("excelTotal", "0");
+	  	mv.addObject("companyList", companyList);
+ 		
+	  	mv.setViewName("/master/orderLimitAttach");
+ 		
+ 	    //log Controller execute time end
+	 	long t2 = System.currentTimeMillis();
+	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+ 		
+ 		return mv;
+ 	}
+  /**
+ 	 * Simply selects the home view to render by returning its name.
+ 	 * @throws BizException
+ 	 */
+  @RequestMapping(value = "/master/orderlimitexcelform")
+ 	public ModelAndView orderLimitExcelForm(HttpServletRequest request) throws BizException 
+     {
+  	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : limitcompanyexcelform");
+  			
+ 		ModelAndView mv = new ModelAndView();
+ 		
+ 		mv.setViewName("/master/orderLimitExcelForm");
+ 		
+ 	    //log Controller execute time end
+	 	long t2 = System.currentTimeMillis();
+	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+ 		
+ 		return mv;
+ 	}
+  /**
+	   * 제한업체 일괄등록
+	   *
+	   * @param MultipartFileVO
+	   * @param request
+	   * @param response
+	   * @param model
+	   * @param locale
+	   * @return
+	   * @throws BizException
+	   */
+	  @RequestMapping({"/master/orderlimitattach"})
+	  public ModelAndView orderLimitAttach(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO, 
+	  		                            HttpServletRequest request, 
+	  		                            HttpServletResponse response, 
+	  		                            String fileName, 
+	  		                            String extension) throws IOException, BizException
+	  {
+	    
+		  //log Controller execute time start
+		    String logid=logid();
+		    long t1 = System.currentTimeMillis();
+		    logger.info("["+logid+"] Controller start : fileVO" + fileVO);
+		  			
+		    ModelAndView mv = new ModelAndView();
+
+		    HttpSession session = request.getSession();
+		    String strUserId = (String)session.getAttribute("strUserId");
+
+		    ResourceBundle rb = ResourceBundle.getBundle("config");
+		    String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
+		    
+		    this.logger.debug("파일정보:" + fileName + extension);
+		    this.logger.debug("file:" + fileVO);
+
+		    List excelUploadList = new ArrayList();//업로드 대상 데이타
+
+		    String excelInfo = "";//excel 추출데이타
+		    
+		    List companyList = new ArrayList(); //DB 성공 대상데이타
+
+		    if (fileName != null) {
+		  	  
+		      List<MultipartFile> files = fileVO.getFiles();
+		      List fileNames = new ArrayList();
+		      String orgFileName = null;
+
+		      if ((files != null) && (files.size() > 0))
+		      {
+		        for (MultipartFile multipartFile : files)
+		        {
+		          orgFileName = multipartFile.getOriginalFilename();
+		          String filePath = uploadFilePath;
+
+		          File file = new File(filePath + orgFileName);
+		          multipartFile.transferTo(file);
+		          fileNames.add(orgFileName);
+		        }
+		   
+		      }
+
+		      String fname = uploadFilePath + orgFileName;
+
+		      FileInputStream fileInput = null;
+
+		      fileInput = new FileInputStream(fname);
+
+		      XSSFWorkbook workbook = new XSSFWorkbook(fileInput);
+		      XSSFSheet sheet = workbook.getSheetAt(0);//첫번째 sheet
+		 
+		      int TITLE_POINT =0;//타이틀 항목위치
+		      int ROW_START = 1;//data row 시작지점
+		      
+		      int TOTAL_ROWS=sheet.getPhysicalNumberOfRows(); //전체 ROW 수를 가져온다.
+		      int TOTAL_CELLS=sheet.getRow(TITLE_POINT).getPhysicalNumberOfCells(); //전체 셀의 항목 수를 가져온다.
+		      
+		      XSSFCell myCell = null;
+		    
+		      this.logger.debug("TOTAL_ROWS :" + TOTAL_ROWS);
+		      this.logger.debug("TOTAL_CELLS :" + TOTAL_CELLS);
+		          
+		          try {
+
+		           for (int rowcnt = ROW_START; rowcnt < TOTAL_ROWS; rowcnt++) {
+		             
+		   		     CompanyVO companyVO = new CompanyVO();
+		   			
+		             XSSFRow row = sheet.getRow(rowcnt);
+
+		             //cell type 구분하여 담기  
+		             String[] cellItemTmp = new String[TOTAL_CELLS]; 
+		             for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
+			            myCell = row.getCell(cellcnt); 
+			            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
+
+			            	String rawCell = String.valueOf(myCell.getNumericCellValue()); 
+			            	int endChoice = rawCell.lastIndexOf("E");
+			            	if(endChoice>0){
+			            		rawCell= rawCell.substring(0, endChoice);
+			            		rawCell= rawCell.replace(".", "");
+			            	}
+			            	cellItemTmp[cellcnt]=rawCell;
+		    	
+			            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
+			            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
+			            }else{//그외 cell type
+			            	cellItemTmp[cellcnt] = ""; 
+			            }
+			            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
+			            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
+			         }
+		         
+			         if(cellItemTmp[0] != ""){
+			        	 
+			        	 companyVO.setCompanyCode(cellItemTmp[0]); 
+				
+				         excelUploadList.add(companyVO);
+
+				      }
+				     	
+				    }
+		          }catch (Exception e){
+		 
+		          excelInfo = excelInfo+"[error] : "+e.getMessage();
+		          CompanyVO companyVO = new CompanyVO();
+		          //limitCompanyVO.setErrMsg(excelInfo);
+		   	 
+		          //this.logger.info("["+logid+"] Controller getErrMsg : "+productMasterVO.getErrMsg());
+		        
+		          companyList.add(companyVO);
+
+		          mv.addObject("companyList", companyList);
+
+		          mv.setViewName("/master/uploadResult");
+		   	 
+		          //log Controller execute time end
+		          long t2 = System.currentTimeMillis();
+		          logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+		 	 	
+		          return mv;
+		   	   
+		      	}
+		    }
+		    
+		    //DB처리
+		    companyList = this.orderLimitSvc.getExcelAttach(excelUploadList);
+
+		    mv.addObject("excelTotal", excelUploadList.size());
+		    mv.addObject("companyList", companyList);
+		    
+		    mv.setViewName("/master/orderLimitAttach");
+
+		    //log Controller execute time end
+		    long t2 = System.currentTimeMillis();
+		    logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+			
+		    return mv;
+		        
+	  }
+	  
+  /**
+   * 발주대상 등록 처리
+   *
+   * @param TargetVO
+   * @param request
+   * @param response
+   * @param model
+   * @param locale
+   * @return
+   * @throws BizException
+   */
+  @RequestMapping({"/master/orderlimtregist"})
+  public @ResponseBody
+  String orderLimitRegist(@ModelAttribute("orderLimitVO") OrderLimitVO orderLimitVO,
+  		              @RequestParam(value="arrCheckGroupId", required=false, defaultValue="") String arrCheckGroupId,
+  		              @RequestParam(value="arrSelectCompanyCode", required=false, defaultValue="") String arrSelectCompanyCode,
+  		              HttpServletRequest request) throws BizException
+  {
+    
+	    //log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : orderLimitVO" + orderLimitVO);
+			
+	  String deferResult="orderlimit0000";
+		
+		// 사용자 세션정보
+      HttpSession session = request.getSession();
+      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+      
+      logger.info("@#@#@# arrCheckGroupId: " + arrCheckGroupId);
+      logger.info("@#@#@# arrSelectCompanyCode : " + arrSelectCompanyCode);
+	    
+      //오늘 날짜
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+      Date currentTime = new Date();
+      String strToday = simpleDateFormat.format(currentTime);
+      
+      RecoveryVO recoveryCon = new RecoveryVO();
+      //작업코드 생성
+      String collectCode="R"+strToday;
+      
+      recoveryCon.setCollectCode(collectCode);
+      
+      //recoveryCon=orderLimitSvc.getCollectCode(recoveryCon);
+
+      //recoveryVO.setCollectCode(recoveryCon.getCollectCode());
+     // recoveryVO.setRecoveryCode(recoveryCon.getRecoveryCode());
+	  //  recoveryVO.setCollectState("01");
+	  //  recoveryVO.setCollectUserId(strUserId);
+      /*	   
+      try{//01.발주제한처리
+     
+          int dbResult=recoverySvc.regiRecoveryRegist(recoveryVO , arrCheckGroupId ,arrSelectProductId);
+           
+	    	if(dbResult<1){//처리내역이 없을경우
+	    		
+	    		//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+		        return "recovery0001";
+		        
+	    	}
+	    	
+	    	//SMS발송
+	    	
+			SmsVO smsVO = new SmsVO();
+			SmsVO resultSmsVO = new SmsVO();
+			
+			smsVO.setSmsId(smsId);
+			smsVO.setSmsPw(smsPw);
+			smsVO.setSmsType(smsType);
+			smsVO.setSmsFrom(sendNo);
+			
+			String[] arrGroupId = arrCheckGroupId.split("\\^");
+			
+		    for (int i = 0; i < arrGroupId.length; i++) {
+		    	
+		    	List<UserVO> smsNoList = null;
+		    	UserVO userConVO = new UserVO();
+		    	String groupId=arrGroupId[i];
+		    	String smsNo="";
+		    	
+		    	userConVO.setGroupId(groupId);
+		    	
+		    	smsNoList=commonSvc.getSmsList(userConVO);
+		    	
+
+				smsVO.setSmsMsg("[애디스] 회수품목이 등록되었습니다."+recoveryVO.getRecoveryClosingDate()+"까지 해당품목을 발신처리 부탁드립니다.");
+
+				for (int j=0;j<smsNoList.size();j++){
+					
+					UserVO smsNoVO =new UserVO();
+					smsNoVO=smsNoList.get(j);
+					smsNo=smsNoVO.getMobliePhone();
+					logger.debug("sms groupId :"+groupId);
+					logger.debug("sms smsNo:"+smsNo);
+					
+					smsVO.setSmsTo(smsNo);
+					
+					logger.debug("#########devOption :"+devOption);
+					String[] devSmss= devSms.split("\\^");
+					
+		    		if(devOption.equals("true")){
+						for(int z=0;z<devSmss.length;z++){
+							
+							if(devSmss[z].equals(smsNo.trim().replace("-", ""))){
+								resultSmsVO=smsSvc.sendSms(smsVO);
+							}
+						}
+					}else{
+						resultSmsVO=smsSvc.sendSms(smsVO);
+					}
+		    		
+		    		logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+					logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+					logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+
+				}
+
+		    }
+
+	
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+	        return "recoveryr0002\n[errorMsg] : "+errMsg;
+	    	
+	    }
+*/
+		//log Controller execute time end
+	 	long t2 = System.currentTimeMillis();
+	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+  return deferResult;
+  }
+  /**
+   * 품목 재고수량 수정처리
+   *
+   * @param UserManageVO
+   * @param request
+   * @param response
+   * @param model
+   * @param locale
+   * @return
+   * @throws BizException
+   */
+  @RequestMapping(value = "/master/stockcntmodify", method = RequestMethod.POST)
+  public @ResponseBody
+  String stockCntModify(@ModelAttribute("stockVO") StockMasterVO stockVO, 
+  		          HttpServletRequest request, 
+  		          HttpServletResponse response) throws BizException
+  {
+  	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : stockVO" + stockVO);
+		
+		// 사용자 세션정보
+	    HttpSession session = request.getSession();
+	    String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	      
+	    stockVO.setUpdateUserId(strUserId);
+
+		int retVal=this.stockMasterSvc.stockCntUpdateProc(stockVO);
+		
+		//log Controller execute time end
+     	long t2 = System.currentTimeMillis();
+     	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+    return ""+retVal;
+  } 
 }

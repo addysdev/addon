@@ -16,11 +16,13 @@
 	        changeMonth: true,
 	        showMonthAfterYear: true ,
 	        changeYear: true,
-	        maxDate : "+0D",
-	        onSelect: true
+	        maxDate : "+0D"
 	    });
 
 	});
+	function showCalendar2(){
+		 $('#upload_stockDate').datepicker("show");
+		}
 function fcStock_excelimport(){
 
     if($("#files").val() == ''){
@@ -96,7 +98,7 @@ function uploadClose(msg){
     <!-- 재고일자-->
       <input class="form-control" style='width:135px' name="upload_stockDate" id="upload_stockDate" value="${stockConVO.start_stockDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
       <!-- 달력이미지 시작 -->
-      <span class="icon_calendar"><img border="0" onclick="showCalendar('3')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
+      <span class="icon_calendar"><img border="0" onclick="showCalendar2()" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
       <!-- 달력이미지 끝 -->
    </div>
     <br>

@@ -16,6 +16,7 @@ import com.offact.framework.util.StringUtil;
 import com.offact.framework.db.SqlSessionCommonDao;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.service.master.StockMasterService;
+import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.master.StockMasterVO;
 
 /**
@@ -126,5 +127,11 @@ public class StockMasterServiceImpl implements StockMasterService {
 
     	    return rtnMap;
     	  }
+	    @Override
+	    public int stockCntUpdateProc(StockMasterVO stock) throws BizException {
+	        // 사용자 상세정보 수정
+    	
+	    	return commonDao.update("StockMaster.stockCntUpdateProc", stock);
 
+    }
 }

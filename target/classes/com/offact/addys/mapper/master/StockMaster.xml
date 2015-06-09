@@ -99,4 +99,15 @@
 		                        
 </insert>
 
+<update id="stockCntUpdateProc" parameterType="com.offact.addys.vo.master.StockMasterVO" >
+        Update adStockMaster
+       		Set
+  				 safeStock = #{safeStock}
+  				,holdStock = #{holdStock}
+            	,updateUserId = #{updateUserId}
+            	,updateDateTime = now()
+ 		Where productCode = #{productCode}
+ 		  And groupId = #{groupId}
+</update>
+
 </mapper>

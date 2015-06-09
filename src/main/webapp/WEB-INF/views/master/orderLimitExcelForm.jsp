@@ -1,0 +1,102 @@
+<%@ include file="/WEB-INF/views/addys/base.jsp" %>
+<html>
+<head>
+<script src="http://malsup.github.com/jquery.form.js"></script> 
+<script language="javascript">
+//초기세팅
+<%-- function init() {
+
+	closeWaiting(); //처리중 메세지 비활성화
+
+	if('<%=importResult%>'!=''){
+		alert('<%=importResult%>');
+	}
+
+} --%>
+
+
+function fcLimitCompany_excelimport(){
+
+    if($("#files").val() == ''){
+    	
+        alert('등록 할 파일이 없습니다.');
+        return;
+    }
+    
+    var url;
+    var frm = document.excel_form;
+    var fileName = document.all.files.value;
+    var pos = fileName.lastIndexOf("\\");
+    var ln = fileName.lastIndexOf("\.");
+    var gap = fileName.substring(pos + 1, ln);
+    var gap1 = fileName.substring(ln+1);
+
+    if(gap1=="xls"){
+       url="<%= request.getContextPath() %>/master/orderlimitattach?fileName="+encodeURIComponent(gap)+"&extension="+gap1;
+    }else if(gap1=="xlsx"){
+       url="<%= request.getContextPath() %>/master/orderlimitattach?fileName="+encodeURIComponent(gap)+"&extension="+gap1;
+    }else{
+        alert("엑셀파일만 올려주세요");
+        return;
+    }
+    
+    frm.action = url;
+    
+    $("#excel_form").ajaxForm();
+    
+    commonDim(true);
+    
+    $("#excel_form").ajaxSubmit({
+        statusCode: {           
+          400: function() {
+        	commonDim(false);
+            alert("파일 내용이 잘못되었습니다.");
+          },            
+          500: function() {
+        	commonDim(false);
+            alert("파일을 업로드할 수 없습니다.");
+          }
+        },                      
+        success: function(result) {
+          //alert(result);
+          commonDim(false);
+          $("#orderLimitRegisList").html(result);
+          $('#orderlimitExcelForm').dialog('close');
+        }
+    });
+
+}
+</script>
+</head>
+<body>
+<iframe id="excel_import_result" name="excel_import_result" style="display: none" ></iframe>
+ <!-- content -->
+<div class="container-fluid">
+ <!-- form_area -->
+ <form:form class="form-inline" role="form" commandName="fileVO"  id="excel_form" method="post" target="excel_import_result"  name="excel_form"  enctype="multipart/form-data" >
+  <fieldset>
+  <div class="form-group" >
+  <h4><strong><font style="color:#428bca">업로드 파일 선택</font></strong></h4>
+  <h5><strong><font style="color:#FF9900">업로드 할 <em class="bold"> excel파일</em></font></strong></h5>
+  <input type="file"  id="files" name="files" />
+  <br><br> 
+  <h4><strong><font style="color:#428bca">업로드 시 주의사항</font></strong></h4>
+  <h6><strong><font style="color:#FF9900">엑셀파일 양식에 맞지 않으면 업로드가 불가능 합니다.</font></strong></h6>
+  <!-- >h6><strong><font style="color:#FF9900"> <span class="glyphicon glyphicon-tags"></span> 엑셀파일 업로드 양식을 다운로드 합니다. 
+  <a href="#"><strong><font style="color:#428bca">[양식다운로드]</font></strong></a></font></strong></h6 -->
+  <h6><strong><font style="color:#FF9900">파일 업로드 결과는 서버의 log 경로에서 확인이 가능합니다.</font></strong></h6>
+  </div>
+  </fieldset>
+</form:form>
+ <!-- //form_area --> 
+ <br>
+ <!-- button -->
+ <div >
+  <button type="button" class="btn btn-primary" onClick="javascript:fcLimitCompany_excelimport()">업로드</button>
+ </div>
+  <!-- //button -->
+</div>
+ </div>
+ <!-- //content -->
+</body>
+</html>

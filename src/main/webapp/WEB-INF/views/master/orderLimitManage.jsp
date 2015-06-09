@@ -3,7 +3,7 @@
 	$(function() {
 	    // 기간 설정 타입 1 
 	    // start Date 설정시 end Date의 min Date 지정
-	    $( "#start_recoveryDate" ).datepicker({
+	    $( "#start_limitDate" ).datepicker({
 	        dateFormat: "yy-mm-dd",
 	        dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
 	        monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
@@ -15,11 +15,11 @@
 	        changeYear: true,
 	        maxDate : "+0D",
 	        onClose: function( selectedDate ) {
-	            $( "#end_recoveryDate" ).datepicker( "option", "minDate", selectedDate );
+	            $( "#end_limitDate" ).datepicker( "option", "minDate", selectedDate );
 	        }
 	    }); 
 	     // end Date 설정시 start Date max Date 지정
-	    $( "#end_recoveryDate" ).datepicker({
+	    $( "#end_limitDate" ).datepicker({
 	        dateFormat: "yy-mm-dd",
 	        dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
 	        monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
@@ -29,15 +29,14 @@
 	        changeMonth: true,
 	        showMonthAfterYear: true ,
 	        changeYear: true,
-	        maxDate : "+0D",
 	        onClose: function( selectedDate ) {
-	            $( "#start_recoveryDate" ).datepicker( "option", "maxDate", selectedDate );
+	            $( "#start_limitDate" ).datepicker( "option", "maxDate", selectedDate );
 	        }
 	    });
 	
 	    // 기간 설정 타입 2 
 	    // start Date 설정시 end Date 가 start Date보다 작을 경우 end Date를 start Date와 같게 설정
-	    $("#start_recoveryDate").datepicker({
+	    $("#start_limitDate").datepicker({
 	        dateFormat: "yy-mm-dd",
 	        defaultDate: "+1w",
 	        numberOfMonths: 1,
@@ -45,14 +44,14 @@
 	        showMonthAfterYear: true ,
 	        changeYear: true,
 	        onClose: function( selectedDate ) {
-	            if ($( "#start_recoveryDate" ).val() < selectedDate)
+	            if ($( "#start_limitDate" ).val() < selectedDate)
 	            {
-	                $( "#end_recoveryDate" ).val(selectedDate);
+	                $( "#end_limitDate" ).val(selectedDate);
 	            }
 	        }
 	    }); 
 	    // end Date 설정시 end Date 가 start Date 보다 작을 경우 start Date를  end Date와 같게 설정
-	    $( "#end_recoveryDate" ).datepicker({
+	    $( "#end_limitDate" ).datepicker({
 	        dateFormat: "yy-mm-dd",
 	        defaultDate: "+1w",
 	        numberOfMonths: 1,
@@ -60,9 +59,9 @@
 	        showMonthAfterYear: true ,
 	        changeYear: true,
 	        onClose: function( selectedDate ) {
-	            if ($("#start_recoveryDate" ).val() > selectedDate)
+	            if ($("#start_limitDate" ).val() > selectedDate)
 	            {
-	                $("#start_recoveryDate" ).val(selectedDate);
+	                $("#end_limitDate" ).val(selectedDate);
 	            }
 	        }
 	    });
@@ -72,11 +71,9 @@
 	function showCalendar(div){
 
 	   if(div == "1"){
-	   	   $('#start_recoveryDate').datepicker("show");
+	   	   $('#start_limitDate').datepicker("show");
 	   } else if(div == "2"){
-		   $('#end_recoveryDate').datepicker("show");
-	   } else if(div == "3"){
-		   $('#recoveryClosingDate').datepicker("show");
+		   $('#end_limitDate').datepicker("show");
 	   }  
 	}
     // 리스트 조회
@@ -84,8 +81,8 @@
 
     	 curPage = (curPage==null) ? 1:curPage;
     	 orderLimitConForm.curPage.value = curPage;
-         
-         if(!dateCheck(document.orderLimitConForm.start_recoveryDate,document.orderLimitConForm.end_recoveryDate,'')){return;}
+    	 
+         if(!dateCheck(document.orderLimitConForm.start_limitDate,document.orderLimitConForm.end_limitDate,'')){return;}
 
          commonDim(true);
          $.ajax({
@@ -104,13 +101,13 @@
     /// key down function (엔터키가 입력되면 검색함수 호출)
     function checkKey(event){
         if(event.keyCode == 13){
-        	fcCollect_listSearch('1');
+        	fcOrderLimit_listSearch('1');
             return false;
         } else{
             return true;
         }
     }
-    // 회수 등록  Layup
+    // 발주제한 등록  Layup
     function fcOrderLimit_registForm() {
     	
     	var url='<%= request.getContextPath() %>/master/orderlimitregistform';
@@ -149,36 +146,39 @@
 	<!-- 서브타이틀 영역 : 끝 -->	
 
 	  <!-- 조회조건 -->
-	  <form:form class="form-inline" role="form" commandName="collectConVO" id="orderLimitConForm" name="orderLimitConForm" method="post" action="" >
+	  <form:form class="form-inline" role="form" commandName="orderLimitConVO" id="orderLimitConForm" name="orderLimitConForm" method="post" action="" >
         <input type="hidden" name="curPage"             id="curPage"            value="1" />
         <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
-        <input type="hidden" name="con_groupId"          id="con_groupId"         value="${collectConVO.groupId}"  />
-        <input type="hidden" name="authId"          id="authId"         value="${strAuth}"  />
         <fieldset>
         	<div class="form-group">
         		<label for="start_recoveryDate end_recoveryDate">발주제한 시작일자 :</label>
         		<!-- 조회시작일자-->
-			    <input  class="form-control" style='width:135px' name="start_recoveryDate" id="start_recoveryDate" value="${collectConVO.start_recoveryDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+			    <input  class="form-control" style='width:135px' name="start_limitDate" id="start_limitDate" value="${orderLimitConVO.start_limitDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
 			    <!-- 달력이미지 시작 -->
 			    <span class="icon_calendar"><img border="0" onclick="showCalendar('1')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
 			    <!-- 달력이미지 끝 -->
 	            &nbsp;~&nbsp;
                 <!-- 조회죵료일자-->
-			    <input  class="form-control" style='width:135px' name="end_recoveryDate" id="end_recoveryDate" value="${collectConVO.end_recoveryDate}" type="text" maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+			    <input  class="form-control" style='width:135px' name="end_limitDate" id="end_limitDate" value="${orderLimitConVO.end_limitDate}" type="text" maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
 			    <!-- 달력이미지 시작 -->
 			    <span class="icon_calendar"><img border="0" onclick="showCalendar('2')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
 			    <!-- 달력이미지 끝 -->
-				<label for="con_collectState">지점선택 :</label>
-				<select class="form-control" title="작업상태" id="con_collectState" name="con_collectState" value="">
-                	<option value="">전체</option>
-                    <c:forEach var="codeVO" items="${code_comboList}" >
-                    	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
+				<label for="con_groupId">지점선택 :</label>
+				<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${orderLimitConVO.groupId}">
+                    <option value="">전체</option>
+                    <c:forEach var="groupVO" items="${group_comboList}" >
+                    	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
                     </c:forEach>
-           		</select>
-           		<label for="searchGubun">업체 :</label>
+                </select>
+           		<label for="searchGubun">검색조건 :</label>
+				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="${collectConVO.searchGubun}">
+                	<option value="01" >업체명</option>
+                    <option value="02" >업체코드</option>
+                </select>
+                <label class="sr-only" for="searchValue"> 조회값 :</label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${collectConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
-				<button type="button" class="btn btn-primary" onClick="javascript:fcCollect_listSearch()">조회</button>		
+				<button type="button" class="btn btn-primary" onClick="javascript:fcOrderLimit_listSearch()">조회</button>		
 	            <!-- >button type="button" class="btn" onClick="">excel</button -->
             </div>
 	    </fieldset>
@@ -189,15 +189,15 @@
   <div id=orderLimitPageList></div>
 
   
-  <!-- //회수 등록화면 -->
-  <div id="orderLimitRegForm"  title="회수대상 등록"></div>
+  <!-- //발주제한 등록화면 -->
+  <div id="orderLimitRegForm"  title="발주제한 등록"></div>
 
   
-   <div id="recoveryProductList"  title="회수대상 품목조회"></div>
-  <!-- //검수 상세처리화면 -->
+   <div id="orderLimitCompanyList"  title="발주제한 업체조회"></div>
+  <!-- //발주제한 업체조회화면 -->
   
-   <!-- 보유재고 일괄등록-->
-  <div id="reProductExcelForm"  title="회수품목 일괄등록"></div>
+   <!-- 제한업체 일괄등록-->
+  <div id="orderlimitExcelForm"  title="발주제한  업체 일괄등록"></div>
   
 </div>
 <br>

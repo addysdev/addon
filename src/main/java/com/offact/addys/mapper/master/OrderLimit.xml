@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OrderLimit">
+
+<resultMap id="orderLimitVO" type="com.offact.addys.vo.master.OrderLimitVO" >
+  <result column="limitCode"      property="limitCode"  />
+  <result column="groupId"          property="groupId"  />
+  <result column="groupName"      property="groupName"  />
+  <result column="companyCode"      property="companyCode"  />
+  <result column="companyName"      property="companyName"  />
+  <result column="limitStartDate"     property="limitStartDate"  />
+  <result column="limitEndDate"          property="limitEndDate"  />
+  <result column="limitDateTime"           property="limitDateTime"  />
+  <result column="limitUserId"        property="limitUserId"  />
+  <result column="deletedYn"        property="deletedYn"  />
+  <result column="deletedDateTime"        property="deletedDateTime"  />
+  <result column="deletedUserId"        property="deletedUserId"  />
+</resultMap>
+
+<select id="getOrderLimitPageList"  resultMap="orderLimitVO" parameterType="com.offact.addys.vo.master.OrderLimitVO" >
+        Select T1.limitCode,
+       		   T2.groupName,
+       		   T3.companyName,
+       	   	   T1.limitStartDate,
+       		   T1.limitEndDate
+  		From adOrderLimit T1
+       		 Left Join ofGroup T2 On T1.groupId = T2.groupId
+       		 Left Join adCompany T3 On T1.companyCode = T3.companyCode
+  		Where T1.deletedYn = 'N'
+          And T1.limitStartDate between  #{start_limitDate} and #{end_limitDate}
+            <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           		AND T1.groupId = #{con_groupId}
+           </if>
+           <if test="searchValue != null and searchValue != ''" >
+             	<choose>
+               		<when test="searchGubun.equals('01')">
+           				AND T3.companyName  LIKE CONCAT('%', #{searchValue}, '%')
+               		</when>
+               		<when test="searchGubun.equals('02')">
+           				AND T1.companyCode  LIKE CONCAT('%', #{searchValue}, '%')
+               		</when>
+             	</choose>
+           	</if> 
+         ORDER BY limitDateTime desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getOrderLimitCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  			From adOrderLimit T1
+ 				 Left Join ofGroup T2 On T1.groupId = T2.groupId
+       			 Left Join adCompany T3 On T1.companyCode = T3.companyCode
+           Where T1.deletedYn = 'N'
+             And T1.limitStartDate between  #{start_limitDate} and #{end_limitDate}
+            <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           		AND T1.groupId = #{con_groupId}
+           </if>
+           <if test="searchValue != null and searchValue != ''" >
+             	<choose>
+               		<when test="searchGubun.equals('01')">
+           				AND T3.companyName  LIKE CONCAT('%', #{searchValue}, '%')
+               		</when>
+               		<when test="searchGubun.equals('02')">
+           				AND T1.companyCode  LIKE CONCAT('%', #{searchValue}, '%')
+               		</when>
+             	</choose>
+           	</if> 
+</select>
+
+</mapper>

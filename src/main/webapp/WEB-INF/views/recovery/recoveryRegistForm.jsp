@@ -12,13 +12,15 @@
 	        changeMonth: true,
 	        showMonthAfterYear: true ,
 	        changeYear: true,
-	        minDate : "+0D",
-	        onSelect : true
+	        minDate : "+0D"
 	    });
 	
 	
 	});
+	function showCalendar2(){
 
+		$('#recoveryClosingDate').datepicker("show");
+	}
 // 품목조회 리스트 Layup
 function fcProduct_list() {
 	
@@ -171,7 +173,7 @@ function fcProduct_Select(productcode,productname,recoveryyn){
 	var newRow = contentId.insertRow( rowCnt++ );
 	newRow.onmouseover=function(){contentId.clickedRowIndex=this.rowIndex};
 	var newCell = newRow.insertCell();
-	newCell.innerHTML ='<tr><input type="hidden" id="selectProduct" name="selectProduct" value='+productcode+'><td class="text-center">['+productcode+']'+productname+'&nbsp;<button type="button" class="btn btn-xs btn-info" onClick="delFile(this)" >삭제</button></td></tr>';
+	newCell.innerHTML ='<tr><input type="hidden" id="selectProduct" name="selectProduct" value='+productcode+'><td class="text-center">['+productcode+']'+productname+'&nbsp;<button type="button" class="btn btn-xs btn-info" onClick="delFile2(this)" >삭제</button></td></tr>';
 	
 	totalAttachCnt('add');
 	
@@ -199,7 +201,6 @@ function totalAttachCnt(flag){
 	document.all('totalAttachCnt').innerText='선택품목 건수 :'+addCommaStr(''+totalcnt)+' 건';
 	
 }
-
 function delFile(obj){ 
     var tr = obj // A 
              .parentNode // TD 
@@ -207,6 +208,16 @@ function delFile(obj){
     var table = tr.parentNode; 
     var index = tr.rowIndex; 
     table.deleteRow(index-1); 
+    
+    totalAttachCnt('del');
+} 
+function delFile2(obj){ 
+    var tr = obj // A 
+             .parentNode // TD 
+             .parentNode; // TR 
+    var table = tr.parentNode; 
+    var index = tr.rowIndex; 
+    table.deleteRow(index); 
     
     totalAttachCnt('del');
 } 
@@ -297,7 +308,7 @@ function fcGroup_checkAll(){
 <!-- 사용자관리 -->
 <body>
   <div class="container-fluid">
-	<h5><strong><font style="color:#428bca"><span class="glyphicon glyphicon-book"></span>회수관리&nbsp; 
+	<h5><strong><font style="color:#428bca">회수관리&nbsp; 
    		<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcProduct_list()" >회수 대상품목 추가</button>
    		<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcReProduct_excelForm()" >회수 대상품목 엑셀추가</button>
    		<button id="memoinfobtn" type="button" class="btn btn-xs btn-primary" onClick="fcRcovery_regist()" >회수요청</button>
@@ -314,7 +325,7 @@ function fcGroup_checkAll(){
 	              <!-- 발주일자-->
 			      <input class="form-control" style='width:135px' name="recoveryClosingDate" id="recoveryClosingDate" value="${recoveryClosingDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
 			      <!-- 달력이미지 시작 -->
-			      <span class="icon_calendar"><img border="0" onclick="showCalendar('3')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
+			      <span class="icon_calendar"><img border="0" onclick="showCalendar2()" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
 			      <!-- 달력이미지 끝 -->
 			  </div>
 	          </th>

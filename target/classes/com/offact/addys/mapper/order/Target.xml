@@ -84,7 +84,7 @@
          Case T1.orderState When '02' Then T6.safeOrderCnt
   						    Else COUNT(T1.productCode)
          				    End safeOrderCnt,/*안전재고 기준점 발생품목수량*/
-         date_format(date(max(T1.stockDate)),'%Y-%m-%d') as stockDate  /*재고현황 기준일*/
+         Case date_format(date(max(T1.stockDate)),'%Y-%m-%d') When '1999-01-02' Then date_format(date(now()),'%Y-%m-%d') Else date_format(date(max(T1.stockDate)),'%Y-%m-%d') End stockDate  /*재고현황 기준일*/
   From (
 	      Select TEMP.orderState ,
 		         TEMP.stockCnt,
@@ -107,7 +107,7 @@
 					       ifnull(I1.safeStock,0) as safeStock,/*안전재고수량*/
                            ifnull(I1.holdStock,0) as holdStock,/*보유재고수량*/
                            ifnull(I2.stockCnt,0) as stockCnt,/*재고수량*/ 
-						   ifnull(I2.stockDate,'1999-01-01') as stockChk,/*재고기준일*/
+						   ifnull(I2.stockDate,'1999-01-02') as stockChk,/*재고기준일*/
                		       /*ifnull(I3.deferDate,'1999-01-01') as deferChk,*//*보류기준일*/
 						   /*ifnull(I4.orderDate,'1999-01-01') as orderChk,*//*발주기준일*/
                			   ifnull(I5.buyDate,'1999-01-01') as buyChk,/*구매기준일*/
@@ -178,7 +178,7 @@
 									Left Join adProductMaster T2 On I1.ProductCode = T2.ProductCode
                    					Left Join adCompany T3 On T2.companyCode = T3.companyCode 
                    					Left Join adOrderLimit T7 On I1.groupID=T7.groupId And  T2.companyCode=T7.companyCode 
-					     Where 1=1 
+					     Where 1=1 And (I1.safeStock > 0 Or I1.holdStock >0) 
 					     <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            					AND I1.groupId = #{con_groupId}
            				 </if>
@@ -265,7 +265,7 @@ From (
 					       ifnull(I1.safeStock,0) as safeStock,/*안전재고수량*/
                            ifnull(I1.holdStock,0) as holdStock,/*보유재고수량*/
                            ifnull(I2.stockCnt,0) as stockCnt,/*재고수량*/ 
-						   ifnull(I2.stockDate,'1999-01-01') as stockChk,/*재고기준일*/
+						   ifnull(I2.stockDate,'1999-01-02') as stockChk,/*재고기준일*/
                		       /*ifnull(I3.deferDate,'1999-01-01') as deferChk,*//*보류기준일*/
 						   /*ifnull(I4.orderDate,'1999-01-01') as orderChk,*//*발주기준일*/
                			   ifnull(I5.buyDate,'1999-01-01') as buyChk,/*구매기준일*/
@@ -336,7 +336,7 @@ From (
 									Left Join adProductMaster T2 On I1.ProductCode = T2.ProductCode
                    					Left Join adCompany T3 On T2.companyCode = T3.companyCode 
                    					Left Join adOrderLimit T7 On I1.groupID=T7.groupId And  T2.companyCode=T7.companyCode 
-					     Where 1=1 
+					     Where 1=1  And (I1.safeStock > 0 Or I1.holdStock >0)
 					     <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            					AND I1.groupId = #{con_groupId}
            				 </if>
@@ -392,7 +392,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
   				  Select T1.groupID,
 						 T1.companyCode,
     					 Case When T1.orderState = '02' Then 1 Else 0 End deferCnt,
-    					 Case When T1.orderState != '02' Then 1 Else 0 End targetCnt,
+    					 Case When T1.orderState = '01' Then 1 Else 0 End targetCnt,
     					 Case When T1.orderState = '00' Then 1 Else 0 End failureCnt
   From (
 	      Select TEMP.orderState ,
@@ -411,7 +411,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 					       ifnull(I1.safeStock,0) as safeStock,/*안전재고수량*/
                            ifnull(I1.holdStock,0) as holdStock,/*보유재고수량*/
                            ifnull(I2.stockCnt,0) as stockCnt,/*재고수량*/ 
-						   ifnull(I2.stockDate,'1999-01-01') as stockChk,/*재고기준일*/
+						   ifnull(I2.stockDate,'1999-01-02') as stockChk,/*재고기준일*/
                		       /*ifnull(I3.deferDate,'1999-01-01') as deferChk,*//*보류기준일*/
 						   /*ifnull(I4.orderDate,'1999-01-01') as orderChk,*//*발주기준일*/
                			   ifnull(I5.buyDate,'1999-01-01') as buyChk,/*구매기준일*/
@@ -476,7 +476,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 									) As I6 On I1.productCode = I6.productCode And I1.groupID = I6.groupID /*업데이트상태 및 주문번호*/  
 									Left Join adProductMaster T2 On I1.ProductCode = T2.ProductCode
                    					Left Join adOrderLimit T7 On I1.groupID=T7.groupId And  T2.companyCode=T7.companyCode
-					     Where 1=1 
+					     Where 1=1 And (I1.safeStock > 0 Or I1.holdStock >0)
 					     <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            					AND I1.groupId = #{con_groupId}
            				 </if>
@@ -529,7 +529,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 					       ifnull(I1.safeStock,0) as safeStock,/*안전재고수량*/
                            ifnull(I1.holdStock,0) as holdStock,/*보유재고수량*/
                            ifnull(I2.stockCnt,0) as stockCnt,/*재고수량*/ 
-						   ifnull(I2.stockDate,'1999-01-01') as stockChk,/*재고기준일*/
+						   ifnull(I2.stockDate,'1999-01-02') as stockChk,/*재고기준일*/
                		       /*ifnull(I3.deferDate,'1999-01-01') as deferChk,*//*보류기준일*/
 						   /*ifnull(I4.orderDate,'1999-01-01') as orderChk,*//*발주기준일*/
                			   ifnull(I5.buyDate,'1999-01-01') as buyChk,/*구매기준일*/
@@ -587,7 +587,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
                         					 ) A5
 									) As I6 On I1.productCode = I6.productCode And I1.groupID = I6.groupID /*업데이트상태 및 주문번호*/  
 
-					     Where 1=1 
+					     Where 1=1 And (I1.safeStock > 0 Or I1.holdStock >0)
 					     	AND I1.groupId = #{con_groupId}
 					   ) As TEMP
 					     Left Join adProductMaster T1 On TEMP.ProductCode = T1.ProductCode 
