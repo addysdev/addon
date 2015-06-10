@@ -43,6 +43,7 @@ import com.offact.addys.service.manage.UserManageService;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.UserVO;
+import com.offact.addys.vo.common.WorkVO;
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.order.TargetVO;
 
@@ -288,6 +289,13 @@ public class AddysController {
 				strMainUrl = "addys/loginFail";
 			}
 			
+		    //작업이력
+			WorkVO work = new WorkVO();
+			work.setWorkUserId(strUserId);
+			work.setWorkCategory("CM");
+			work.setWorkCode("CM001");
+			commonSvc.regiHistoryInsert(work);
+		
 			mv.addObject("userId", strUserId);
 			
 			mv.setViewName(strMainUrl);
@@ -309,8 +317,11 @@ public class AddysController {
 	{
 		
 		logger.info("Good bye addys! ");
-		
+
 		HttpSession session = request.getSession(false);
+		
+		String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+		
 	 	session.removeAttribute("strUserId");
         session.removeAttribute("strUserName");
         session.removeAttribute("strGroupId");
@@ -327,6 +338,13 @@ public class AddysController {
         session.removeAttribute("strIp");
         session.removeAttribute("strAuth");
         
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("CM");
+		work.setWorkCode("CM002");
+		commonSvc.regiHistoryInsert(work);
+	
         ModelAndView mv = new ModelAndView();
         mv.setViewName("addys/loginForm");
 
@@ -383,6 +401,13 @@ public class AddysController {
 		
 		userVO.setUpdateUserId(strUserId);
 		mv.addObject("userVO", userVO);
+		
+		//작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("CM");
+		work.setWorkCode("CM003");
+		commonSvc.regiHistoryInsert(work);
 		
 		mv.setViewName("/addys/userModifyForm");
 		

@@ -108,37 +108,12 @@ function fCompany_list() {
 };
 function fcOrderLimit_regist(){
 	
-	alert('개발진행중입니다.');
-	return;
-
 	var frm=document.limitCompanyListForm;
 	var rfrm=document.orderLimitForm;
 	
-	 var arrCheckGroupId = "";
-	 var arrSelectProductId = "";
-	 
-	 var now = new Date(); // The current date and time
-	 var month = now.getMonth()+1;
-	 var day=now.getDate();
-	 
-	 if(month<10){
-		 month='0'+month;
-	 }
-	 
-	 if(day<10){
-		 day='0'+day;
-	 }
+	var arrCheckGroupId = "";
+	var arrSelectCompanyCode = "";
 
-	 var today=now.getFullYear()+'-'+month+'-'+day;
-	// alert(today);
-	 //alert(rfrm.recoveryClosingDate.value);
-	 
-	if(rfrm.recoveryClosingDate.value<=today) {
-		
-		alert('회수 마감일은 오늘날짜 이전으로는 선택 하실 수 없습니다.');
-		return;
-	}
-	
 	if(rfrm.regroupid!=undefined){
 
         $('input:checkbox[name="regroupid"]').each(function() {
@@ -149,51 +124,51 @@ function fcOrderLimit_regist(){
         
 	}else{
 		
-		alert('선택하신 회수 대상지점이 없습니다.');
+		alert('선택하신 제한 대상지점이 없습니다.');
 		return;
 	}
 	
-	if(frm.selectProduct!=undefined){
+	if(frm.selectCompany!=undefined){
 		
-		if(frm.selectProduct.length>1){
+		if(frm.selectCompany.length>1){
 			
-			for (i=0;i<frm.selectProduct.length;i++){
-				arrSelectProductId += frm.selectProduct[i].value + "^";
+			for (i=0;i<frm.selectCompany.length;i++){
+				arrSelectCompanyCode += frm.selectCompany[i].value + "^";
 			}
 		}else{		
-			arrSelectProductId += frm.selectProduct.value + "^";
+			arrSelectCompanyCode += frm.selectCompany.value + "^";
 		}
 	}else{
 		
-		alert('선택하신 품목코드가 없습니다.');
+		alert('선택하신 업체코드가 없습니다.');
 		return;
 	}
 	
 	//alert(arrCheckGroupId);
 	//alert(arrSelectProductId);
 	//return;
-	if (confirm('회수처리를 진행 하시겠습니까?')){ 
+	if (confirm('발주제한 등록을  하시겠습니까?')){ 
 	
-		   var paramString = $("#reProductForm").serialize()+ "&arrCheckGroupId="+arrCheckGroupId+'&arrSelectProductId='+arrSelectProductId;
+		   var paramString = $("#orderLimitForm").serialize()+ "&arrCheckGroupId="+arrCheckGroupId+'&arrSelectCompanyCode='+arrSelectCompanyCode;
 
 	  		$.ajax({
 		       type: "POST",
 		       async:false,
-		          url:  "<%= request.getContextPath() %>/recovery/recoveryregist",
+		          url:  "<%= request.getContextPath() %>/master/orderlimtregist",
 		          data:paramString,
 		          success: function(result) {
 	
 		        	resultMsg(result);
 
-					$('#recoveryRegForm').dialog('close');
-					fcCollect_listSearch();
+					$('#orderLimitRegForm').dialog('close');
+					fcOrderLimit_listSearch();
 						
 		          },
 		          error:function(){
 		          
-		          alert('회수 등록 호출오류!');
-                  $('#recoveryRegForm').dialog('close');
-                  fcCollect_listSearch();
+		          alert('발주제한 호출오류!');
+                  $('#orderLimitRegForm').dialog('close');
+                  fcOrderLimit_listSearch();
 		          }
 		    });
 	}
@@ -272,7 +247,7 @@ function delFile2(obj){
              .parentNode; // TR 
     var table = tr.parentNode; 
     var index = tr.rowIndex; 
-    table.deleteRow(index); 
+    table.deleteRow(index-1); 
     
     totalAttachCnt('del');
 } 

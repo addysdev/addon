@@ -59,6 +59,11 @@ function resultMsg(result){
 	 result=result.replace('recovery0041','처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
 	 result=result.replace('recovery0042','회수 상태 변경을 정상적으로 처리하지 못 했습니다..\n시스템 관리자에게 문의하세요.');
 	 
+	//발주제한처리
+	 result=result.replace('orderlimit0000','발주제한 등록을 완료했습니다.');
+	 result=result.replace('orderlimit0001','처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
+	 result=result.replace('orderlimit0002','발주제한 등록을 정상적으로 처리하지 못 했습니다..\n시스템 관리자에게 문의하세요.');
+	 
 	 alert(result);
 
 }

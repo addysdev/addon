@@ -24,8 +24,10 @@ public class UserManageVO extends AbstractVO {
 	private String email;
 	private String ip;
 	private String createUserId;
+	private String createUserName;
 	private String createDateTime;
 	private String updateUserId;
+	private String updateUserName;
 	private String updateDateTime;
 	private String useYn;
 	private String deletedYn;
@@ -255,6 +257,18 @@ public class UserManageVO extends AbstractVO {
 	}
 	public void setSmsYn(String smsYn) {
 		this.smsYn = smsYn;
+	}
+	public String getCreateUserName() {
+		return createUserName;
+	}
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
 	}
    
 }

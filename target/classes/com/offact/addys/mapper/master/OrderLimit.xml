@@ -67,4 +67,41 @@
            	</if> 
 </select>
 
+<insert id="orderLimitInsert"  parameterType="com.offact.addys.vo.master.OrderLimitVO" >
+		insert into adOrderLimit (
+				 limitCode
+            	,groupId
+            	,companyCode 
+            	,limitStartDate
+            	,limitEndDate
+            	,limitDateTime
+            	,limitUserId
+            	,deletedYn
+		)values(
+				 #{limitCode}
+	  			, #{groupId}
+	  			, #{companyCode}
+	  		    , #{limitStartDate}
+	  		    , #{limitEndDate}
+	  		    , now()
+	  		    , #{limitUserId}
+	  		    , 'N'
+		)
+		ON DUPLICATE KEY UPDATE limitStartDate = #{limitStartDate},
+		                        limitEndDate = #{limitEndDate},
+		                        updateUserId = #{limitUserId},
+		                        updateDateTime =now(),
+		                        deletedYn = 'N'
+</insert>
+
+
+<update id="orderLimitCance" parameterType="com.offact.addys.vo.master.OrderLimitVO" >
+        Update adOrderLimit
+       		Set
+  				 deletedYn = 'Y'
+  				,deletedUserId = #{deletedUserId}
+            	,deletedDateTime = now()
+ 		Where limitCode = #{limitCode}
+</update>
+
 </mapper>

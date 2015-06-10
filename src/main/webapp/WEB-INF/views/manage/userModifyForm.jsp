@@ -50,21 +50,21 @@
 	    <div class="form-group">
 		    <table class="table table-bordered" >
 			 	<tr>
-		          <th class='text-center' style="background-color:#E6F3FF" >사용자ID</th>
+		          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>사용자id</th>
 		          <th class='text-left'  width="250px"  ><c:out value="${userVO.userId}"></c:out></th>
 		          <input type="hidden" id="userId" name="userId" value="${userVO.userId}" >
 		      	</tr>
 		      	<tr>
-		          <th class='text-center' style="background-color:#E6F3FF" >PASSWORD</th>
+		          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>password</th>
 		          <th class='text-left'><input type="password" class="form-control" id="password" name="password" maxlength="50"  tabindex="2" value="${userVO.password}" ></th>
 		          <input type="hidden" id="regPassword" name="regPassword" value="${userVO.password}" > 
 		      	</tr>
 		      	<tr>
-		          <th class='text-center' style="background-color:#E6F3FF" >사용자명</th>
+		          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>사용자명</th>
 		          <th class='text-left'><input  type="text" class="form-control" id="userName"  name="userName" maxlength="25" tabindex="3" value="${userVO.userName}"></th>
 		      	</tr>
 		      	<tr>
-		          <th class='text-center' style="background-color:#E6F3FF" >조직</th>
+		          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>조직</th>
 		          <th class='text-left'>	    	
 		          	<select class="form-control" title="지점정보" id="groupId" name="groupId" value="${userVO.groupId}" tabindex="4">
 		                <c:forEach var="groupVO" items="${group_comboList}" >
@@ -74,12 +74,12 @@
 		            <input type="hidden" id="authId" name="authId" value="${userVO.authId}" ></th>
 		      	</tr>
 		      	<tr>
-		          <th class='text-center' style="background-color:#E6F3FF" >권한</th>
+		          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>권한</th>
 		          <th class='text-left'>
 		          	<select class="form-control" title="관리권한" id="auth" name="auth" value="${userVO.auth}" tabindex="5">
-		                <c:forEach var="codeVO" items="${code_comboList}" >
-		                	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
-		                </c:forEach>
+		                 <option value="03">일반</option>
+		                 <option value="02">관리자</option>
+		                 <c:if test="${strAuth=='01'}"><option value="01">슈퍼관리자</option></c:if>
 		       		</select></th>
 		      	</tr>
 		      	<tr>

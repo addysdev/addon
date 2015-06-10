@@ -242,6 +242,9 @@
 			          <ul class="dropdown-menu" role="menu">
 			            <li><a href="<%= request.getContextPath() %>/manage/usermanage">계정관리</a></li>
 			            <li><a href="<%= request.getContextPath() %>/manage/companymanage">업체관리</a></li>
+			            <c:if test="${strAuth == '01'}">
+			            <li><a href="<%= request.getContextPath() %>/manage/workhistorymanage">업무이력관리</a></li>
+			            </c:if>
 			            <!-- li><a href="#">조직관리</a></li>
 			            <li><a href="#">메뉴권한관리</a></li -->                        
 			          </ul>

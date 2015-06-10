@@ -50,6 +50,7 @@ import com.offact.addys.service.manage.UserManageService;
 import com.offact.addys.service.manage.CompanyManageService;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.GroupVO;
+import com.offact.addys.vo.common.WorkVO;
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.manage.CompanyManageVO;
 import com.offact.addys.vo.master.ProductMasterVO;
@@ -508,7 +509,7 @@ public class ManageController {
 	       XSSFWorkbook workbook = new XSSFWorkbook(fileInput);
 	       XSSFSheet sheet = workbook.getSheetAt(0);//첫번째 sheet
 	   
-	       int TITLE_POINT =0;//타이틀 항목위치
+	       int TITLE_POINT =2;//타이틀 항목위치
 	       int ROW_START = 4;//data row 시작지점
 	        
 	       int TOTAL_ROWS=sheet.getPhysicalNumberOfRows(); //전체 ROW 수를 가져온다.
@@ -1002,6 +1003,154 @@ public class ManageController {
         mv.addObject("totalCount", totalCount);
 
         mv.setViewName("/common/companySearchList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    
+    /**
+     * 중복체크
+     *
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/manage/usercheck", method = RequestMethod.POST)
+    public @ResponseBody
+    String userCheck(@ModelAttribute("userVO") UserManageVO userVO, 
+    		       HttpServletRequest request, 
+    		       HttpServletResponse response) throws BizException
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : userVO" + userVO);
+
+		int retVal=this.userManageSvc.getCheckCnt(userVO);
+		
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+      return ""+retVal;
+    }
+    
+    /**
+     * 업무히스토리 로딩
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/manage/workhistorymanage")
+    public ModelAndView workHistoryManage(HttpServletRequest request, 
+    		                       HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start ");
+
+        ModelAndView mv = new ModelAndView();
+        
+     // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/loginForm");
+       		return mv;
+     	}
+        
+        WorkVO workConVO = new WorkVO();
+        
+        workConVO.setUserId(strUserId);
+        workConVO.setGroupId(strGroupId);
+
+        // 조회조건저장
+        mv.addObject("workConVO", workConVO);
+        
+        mv.setViewName("/manage/workHistoryManage");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    /**
+     * 업무히스토리 목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/manage/workhistorypagelist")
+    public ModelAndView workHistoryPageList(@ModelAttribute("workConVO") WorkVO workConVO, 
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : workConVO" + workConVO);
+
+        ModelAndView mv = new ModelAndView();
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/loginForm");
+       		return mv;
+     	}
+        
+        List<WorkVO> workList = null;
+
+        // 조회조건 null 일때 공백처리
+        if (workConVO.getSearchGubun() == null) {
+        	workConVO.setSearchGubun("01");
+        }
+        
+        // 조회값 null 일때 공백처리
+        if (workConVO.getSearchValue() == null) {
+        	workConVO.setSearchValue("");
+        }
+        
+        // 조회조건저장
+        mv.addObject("workConVO", workConVO);
+
+        // 페이징코드
+        workConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(workConVO.getCurPage(), workConVO.getRowCount()));
+        workConVO.setPage_limit_val2(StringUtil.nvl(workConVO.getRowCount(), "10"));
+        
+        // 업무목록조회
+        workList = commonSvc.getWorkHistoryPageList(workConVO);
+        mv.addObject("workList", workList);
+
+        // totalCount 조회
+        String totalCount = String.valueOf(commonSvc.getCompanyCnt(workConVO));
+        mv.addObject("totalCount", totalCount);
+
+        mv.setViewName("/manage/workHistoryPageList");
         
         //log Controller execute time end
        	long t2 = System.currentTimeMillis();

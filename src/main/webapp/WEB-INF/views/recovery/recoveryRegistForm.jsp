@@ -217,7 +217,7 @@ function delFile2(obj){
              .parentNode; // TR 
     var table = tr.parentNode; 
     var index = tr.rowIndex; 
-    table.deleteRow(index); 
+    table.deleteRow(index-1); 
     
     totalAttachCnt('del');
 } 

@@ -19,14 +19,40 @@
         });
     }
     function fcLimit_cancel(limitcode){
+
+     	if (confirm('선택 지점 및 업체의 발주제한을 해제 하시겠습니까?')){    
+	
+     		var frm=document.orderLimitPageListForm;
+     		frm.limitCode.value=limitcode;
+     		
+		    $.ajax({
+		        type: "POST",
+		        async:false,
+		           url:  "<%= request.getContextPath() %>/master/limitcancel",
+		           data:$("#orderLimitPageListForm").serialize(),
+		           success: function(result) {
+	
+						if(result=='1'){
+							 alert('발주제한을 해제를 성공했습니다.');
+							 fcOrderLimit_listSearch();
+						} else{
+							 alert('발주제한을 해제를 실패했습니다.');
+						}
+		           },
+		           error:function(){
+		        	   
+		        	   alert('발주제한을 해제를 실패했습니다.');
+		           }
+		    });
+	    
+     	}
     	
-    	alert('개발진행중입니다.');
-    	return;
     	
     }
 	
 </SCRIPT>
-     <form:form commandName="orderLimitVO" name="orderLimitPageListForm" method="post" action="" >
+     <form:form commandName="orderLimitVO" name="orderLimitPageListForm" id="orderLimitPageListForm" method="post" action="" >
+     <input type="hidden" name="limitCode" id="limitCode">
       <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span>전체건수 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table  class="table table-bordered">
 	    <thead>

@@ -1,5 +1,7 @@
 eclipse.preferences.version=1
 encoding//src/main/resources/messages.properties=UTF-8
+encoding//src/main/resources_dev/config.properties=UTF-8
+encoding//src/main/resources_real/config.properties=UTF-8
 encoding//src/main/webapp/WEB-INF/views/addys/base.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/addys/top.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/addys/userModifyForm.jsp=UTF-8
@@ -19,6 +21,8 @@ encoding//src/main/webapp/WEB-INF/views/manage/userManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/manage/userModifyForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/manage/userPageList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/manage/userRegForm.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/manage/workHistoryManage.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/manage/workHistoryPageList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/master/holdStockExcelForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/master/orderLimitAttach.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/master/orderLimitExcelForm.jsp=UTF-8

@@ -9,7 +9,7 @@
 			
 			var frm=document.userRegistForm;
 			
-			if(frm.userId.value==''){
+			if(frm.d_userId.value==''){
 				alert('사용자 아이디를 입력하세요');
 				return;
 			}
@@ -23,6 +23,13 @@
 				alert('사용자명을 입력하세요');
 				return;
 			}
+
+			if(frm.d_userId.disabled==false){
+				alert('아이디 중복체크가 필요합니다.');
+				return;
+			}
+			
+			frm.userId.value=frm.d_userId.value;
 			
 		    $.ajax({
 		        type: "POST",
@@ -31,7 +38,7 @@
 		           data:$("#userRegistForm").serialize(),
 		           success: function(result) {
 
-						if(result=='1'){
+						if(result>0){
 							 alert('사용자 등록을 성공했습니다.');
 						} else{
 							 alert('사용자 등록에 실패했습니다.');
@@ -48,28 +55,74 @@
 		           }
 		    });
 		}
+		function fcCheck(){
+			
+			var frm=document.userRegistForm;
+			
+			if(frm.d_userId.value==''){
+				alert('사용자 아이디를 입력하세요');
+				return;
+			}
+			
+			 $.ajax({
+			        type: "POST",
+			        async:false,
+			           url:  "<%= request.getContextPath() %>/manage/usercheck",
+			           data:$("#userRegistForm").serialize(),
+			           success: function(result) {
+
+							if(result=='1'){
+								 alert('이미 등록된 아이디 입니다.');
+								 frm.d_userId.value='';
+								 frm.userId.value='';
+								 frm.d_userId.focus(1);
+							} else{
+								 
+								 if (confirm('사용가능한 아이디 입니다.\n해당 아이디를 선택 하시겠습니까?')){ 
+								 	frm.d_userId.disabled=true;
+								 	frm.userId.value=frm.d_userId.value;
+								 }else{
+									frm.d_userId.disabled=false;
+									frm.userId.value='';
+								 }
+							}
+							
+			           },
+			           error:function(){
+			        	   
+			        	   alert('중복체크 호출에 실패했습니다.');
+			        	 
+			           }
+			    });
+		}
 	</script>
   </head>
   <body>
 	<div class="container-fluid">
       <form:form class="form-inline" commandName="userVO" id="userRegistForm" name="userRegistForm" method="post" action="">
       <input type="hidden" id="createUserId" name="createUserId" value="${userVO.createUserId}" >
+      <input type="hidden" id="userId" name="userId" value="" >
 	    <div class="form-group">
 		    <table class="table table-bordered" >
 		 	<tr>
-	          <th class='text-center' style="background-color:#E6F3FF" >사용자ID</th>
-	          <th class='text-left'  width="250px"  ><input type="text" class="form-control" id="userId" name="userId" maxlength="10"  tabindex="1" value=""></th>
+	          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>사용자id</th>
+	          <th class='text-left'  width="250px"  >
+	          <div class="form-inline">
+	          <input type="text" class="form-control" id="d_userId" name="d_userId" maxlength="10"  tabindex="1" value="">
+	          <button id="checkbtn" type="button" class="btn btn-info" onClick="fcCheck()" >중복체크</button>
+    	      </div> 
+	          </th>
 	      	</tr>
 	      	<tr>
-	          <th class='text-center' style="background-color:#E6F3FF" >PASSWORD</th>
+	          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>password</th>
 	          <th class='text-left'><input type="password" class="form-control" id="password" name="password" maxlength="50"  tabindex="2" value="" ></th>
 	      	</tr>
 	      	<tr>
-	          <th class='text-center' style="background-color:#E6F3FF" >사용자명</th>
+	          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>사용자명</th>
 	          <th class='text-left'><input  type="text" class="form-control" id="userName"  name="userName" maxlength="25" tabindex="3" value=""></th>
 	      	</tr>
 	      	<tr>
-	          <th class='text-center' style="background-color:#E6F3FF" >조직</th>
+	          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>조직</th>
 	          <th class='text-left'>	    	
 	          	<select class="form-control" title="지점정보" id="groupId" name="groupId" value="" tabindex="4">
 	                <c:forEach var="groupVO" items="${group_comboList}" >
@@ -79,12 +132,12 @@
 	            <input type="hidden" id="authId" name="authId" value="G00000" ></th>
 	      	</tr>
 	      	<tr>
-	          <th class='text-center' style="background-color:#E6F3FF" >권한</th>
+	          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>권한</th>
 	          <th class='text-left'>
 	          	<select class="form-control" title="관리권한" id="auth" name="auth" value="" tabindex="5">
-	                <c:forEach var="codeVO" items="${code_comboList}" >
-	                	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
-	                </c:forEach>
+	                <option value="03">일반</option>
+	                <option value="02">관리자</option>
+	                <c:if test="${strAuth=='01'}"><option value="01">슈퍼관리자</option></c:if>
 	       		</select></th>
 	      	</tr>
 	      	<tr>

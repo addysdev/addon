@@ -146,4 +146,8 @@ public class UserManageServiceImpl implements UserManageService {
     	    return rtnMap;
     	  }
 
+    @Override
+    public int getCheckCnt(UserManageVO usercondition) throws BizException {
+        return commonDao.selectOne("UserManage.getCheckCnt", usercondition);
+    }
 }

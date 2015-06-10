@@ -207,9 +207,9 @@
   <div id=userManagePageList></div>
   
   <!-- //사용자 등록/삭제 -->
-  <button type="button" class="btn btn-primary" onClick="fcUserManage_excelForm()">사용자 일괄등록</button>
   <button type="button" class="btn btn-primary" onClick="fcUserManage_regForm()">등록</button>
   <button type="button" class="btn btn-danger" onClick="fcUserManage_delete()">삭제</button>
+  <button type="button" class="btn btn-primary" onClick="fcUserManage_excelForm()">사용자 일괄등록</button>
   
   <!-- 사용자 일괄등록-->
   <div id="userExcelForm"  title="사용자 일괄등록"></div>

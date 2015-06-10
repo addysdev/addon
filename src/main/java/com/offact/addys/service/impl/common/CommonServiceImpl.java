@@ -18,6 +18,7 @@ import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CompanyVO;
 import com.offact.addys.vo.common.CommentVO;
 import com.offact.addys.vo.common.UserVO;
+import com.offact.addys.vo.common.WorkVO;
 
 /**
  * @author 4530
@@ -101,5 +102,40 @@ public class CommonServiceImpl implements CommonService {
        List<UserVO> smsnoList = commonDao.selectList("User.getSmsBatchList", usercon);
 
        return smsnoList;
+   }
+   
+   @Override
+   public int regiHistoryInsert(WorkVO work)
+   	    throws BizException
+	{
+	    int retVal=-1;
+	    
+	    try{
+	
+	    	retVal=this.commonDao.insert("Work.WorkInsert", work);
+	
+	    }catch(Exception e){
+	    	
+	    	e.printStackTrace();
+	    	e.printStackTrace();
+	    	throw new BizException(e.getMessage());
+
+	    }
+	
+	    return retVal;
+	    
+  }
+   
+   @Override
+   public List<WorkVO> getWorkHistoryPageList(WorkVO workcondition) throws BizException {
+   	
+       List<WorkVO> workList = commonDao.selectList("Work.getWorkHistoryPageList", workcondition);
+
+       return workList;
+   }
+
+   @Override
+   public int getCompanyCnt(WorkVO workcondition) throws BizException {
+       return commonDao.selectOne("Work.getWorkHistoryCnt", workcondition);
    }
 }

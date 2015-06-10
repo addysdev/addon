@@ -269,7 +269,10 @@ public class RecoveryServiceImpl implements RecoveryService {
     	    	ProductMasterVO reProductVO = (ProductMasterVO)excelUploadList.get(i);
 
     	    	reProductVO=this.commonDao.selectOne("ProductMaster.getProductDetail", reProductVO);
-    	    	reProductAttachList.add(reProductVO);
+    	    	
+    	    	if(null!=reProductVO){
+    	    		reProductAttachList.add(reProductVO);
+    	    	}
     	      
     	      } catch (Exception e) {
     	        

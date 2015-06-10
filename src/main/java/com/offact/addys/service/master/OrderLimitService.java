@@ -10,6 +10,8 @@ import java.util.Map;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.vo.common.CompanyVO;
 import com.offact.addys.vo.master.OrderLimitVO;
+import com.offact.addys.vo.master.StockMasterVO;
+import com.offact.addys.vo.recovery.RecoveryVO;
 
 /**
  * @author
@@ -41,7 +43,6 @@ public interface OrderLimitService {
     public abstract Map regiExcelUpload(List<OrderLimitVO> paramList , OrderLimitVO orderlimit)
     	    throws BizException;
     
-
     /**
      * 제한업체 attach
      * 
@@ -49,4 +50,22 @@ public interface OrderLimitService {
      * @throws BizException
      */
     public List<CompanyVO> getExcelAttach(List<CompanyVO> excelUploadList) throws BizException;
+    
+    /**
+     * 발주제한 등록
+     * 
+     * @param OrderLimitVO
+     * @return
+     * @throws BizException
+     */
+    public int regiOrderLimitRegist(OrderLimitVO orderlimt, String arrCheckGroupId ,String arrSelectCompanyCode)
+    	    throws BizException;
+    
+    /**
+     * 발주제한 해제
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int orderLimitCance(OrderLimitVO orderlimt) throws BizException;
 }

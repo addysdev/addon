@@ -2365,7 +2365,7 @@ public class MasterController {
 		long t1 = System.currentTimeMillis();
 		logger.info("["+logid+"] Controller start : orderLimitVO" + orderLimitVO);
 			
-	  String deferResult="orderlimit0000";
+	  String limitResult="orderlimit0000";
 		
 		// 사용자 세션정보
       HttpSession session = request.getSession();
@@ -2379,22 +2379,11 @@ public class MasterController {
       Date currentTime = new Date();
       String strToday = simpleDateFormat.format(currentTime);
       
-      RecoveryVO recoveryCon = new RecoveryVO();
-      //작업코드 생성
-      String collectCode="R"+strToday;
-      
-      recoveryCon.setCollectCode(collectCode);
-      
-      //recoveryCon=orderLimitSvc.getCollectCode(recoveryCon);
-
-      //recoveryVO.setCollectCode(recoveryCon.getCollectCode());
-     // recoveryVO.setRecoveryCode(recoveryCon.getRecoveryCode());
-	  //  recoveryVO.setCollectState("01");
-	  //  recoveryVO.setCollectUserId(strUserId);
-      /*	   
+      orderLimitVO.setLimitUserId(strUserId);
+      	   
       try{//01.발주제한처리
      
-          int dbResult=recoverySvc.regiRecoveryRegist(recoveryVO , arrCheckGroupId ,arrSelectProductId);
+          int dbResult=orderLimitSvc.regiOrderLimitRegist(orderLimitVO , arrCheckGroupId ,arrSelectCompanyCode);
            
 	    	if(dbResult<1){//처리내역이 없을경우
 	    		
@@ -2402,66 +2391,8 @@ public class MasterController {
 		       	long t2 = System.currentTimeMillis();
 		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 
-		        return "recovery0001";
+		        return "orderlimit0001";
 		        
-	    	}
-	    	
-	    	//SMS발송
-	    	
-			SmsVO smsVO = new SmsVO();
-			SmsVO resultSmsVO = new SmsVO();
-			
-			smsVO.setSmsId(smsId);
-			smsVO.setSmsPw(smsPw);
-			smsVO.setSmsType(smsType);
-			smsVO.setSmsFrom(sendNo);
-			
-			String[] arrGroupId = arrCheckGroupId.split("\\^");
-			
-		    for (int i = 0; i < arrGroupId.length; i++) {
-		    	
-		    	List<UserVO> smsNoList = null;
-		    	UserVO userConVO = new UserVO();
-		    	String groupId=arrGroupId[i];
-		    	String smsNo="";
-		    	
-		    	userConVO.setGroupId(groupId);
-		    	
-		    	smsNoList=commonSvc.getSmsList(userConVO);
-		    	
-
-				smsVO.setSmsMsg("[애디스] 회수품목이 등록되었습니다."+recoveryVO.getRecoveryClosingDate()+"까지 해당품목을 발신처리 부탁드립니다.");
-
-				for (int j=0;j<smsNoList.size();j++){
-					
-					UserVO smsNoVO =new UserVO();
-					smsNoVO=smsNoList.get(j);
-					smsNo=smsNoVO.getMobliePhone();
-					logger.debug("sms groupId :"+groupId);
-					logger.debug("sms smsNo:"+smsNo);
-					
-					smsVO.setSmsTo(smsNo);
-					
-					logger.debug("#########devOption :"+devOption);
-					String[] devSmss= devSms.split("\\^");
-					
-		    		if(devOption.equals("true")){
-						for(int z=0;z<devSmss.length;z++){
-							
-							if(devSmss[z].equals(smsNo.trim().replace("-", ""))){
-								resultSmsVO=smsSvc.sendSms(smsVO);
-							}
-						}
-					}else{
-						resultSmsVO=smsSvc.sendSms(smsVO);
-					}
-		    		
-		    		logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
-					logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
-					logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
-
-				}
-
 		    }
 
 	
@@ -2475,20 +2406,20 @@ public class MasterController {
 	       	long t2 = System.currentTimeMillis();
 	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
 
-	        return "recoveryr0002\n[errorMsg] : "+errMsg;
+	        return "orderlimit0002\n[errorMsg] : "+errMsg;
 	    	
 	    }
-*/
+
 		//log Controller execute time end
 	 	long t2 = System.currentTimeMillis();
 	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 
-  return deferResult;
+  return limitResult;
   }
   /**
    * 품목 재고수량 수정처리
    *
-   * @param UserManageVO
+   * @param stockVO
    * @param request
    * @param response
    * @param model
@@ -2514,6 +2445,43 @@ public class MasterController {
 	    stockVO.setUpdateUserId(strUserId);
 
 		int retVal=this.stockMasterSvc.stockCntUpdateProc(stockVO);
+		
+		//log Controller execute time end
+     	long t2 = System.currentTimeMillis();
+     	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+    return ""+retVal;
+  } 
+  
+  /**
+   * 발주제한 해제처리
+   *
+   * @param 
+   * @param request
+   * @param response
+   * @param model
+   * @param locale
+   * @return
+   * @throws BizException
+   */
+  @RequestMapping(value = "/master/limitcancel", method = RequestMethod.POST)
+  public @ResponseBody
+  String limitCancel(@ModelAttribute("orderLimitVO") OrderLimitVO orderLimitVO, 
+  		          HttpServletRequest request, 
+  		          HttpServletResponse response) throws BizException
+  {
+  	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : orderLimitVO" + orderLimitVO);
+		
+		// 사용자 세션정보
+	    HttpSession session = request.getSession();
+	    String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	      
+	    orderLimitVO.setDeletedUserId(strUserId);
+
+		int retVal=this.orderLimitSvc.orderLimitCance(orderLimitVO);
 		
 		//log Controller execute time end
      	long t2 = System.currentTimeMillis();

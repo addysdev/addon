@@ -49,15 +49,17 @@
 		      ,T1.ip
 			  ,T1.createUserId
 			  ,T1.updateUserId
+			  ,T4.userName as updateUserName
 			  ,T1.createDateTime As CreateDateTime
 			  ,T1.updateDateTime As UpdateDateTime
 			  ,T1.useYn
 			  ,T1.deletedYn
-			  ,T1.smsYn
+			  ,ifnull(T1.smsYn,'N') as smsYn
           FROM ofUser T1
           	   Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join ofGroup T3 On T1.authId=T3.groupId
-         WHERE T1.deletedYn='N'
+			   Left Join ofUser T4 On T1.updateUserId=T4.userId
+         WHERE T1.deletedYn='N' And T1.userId <![CDATA[<>]]> 'system'
            <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            AND T1.groupId = #{con_groupId}
            </if>
@@ -81,7 +83,7 @@
 <select id="getUserCnt" resultType="int">
 		SELECT count(*) AS TOT_COUNT
   			FROM ofUser
- 			WHERE deletedYn='N'
+ 			WHERE deletedYn='N' And userId <![CDATA[<>]]> 'system'
            	<if test="con_groupId != null and con_groupId != ''" >
            	AND groupId = #{con_groupId}
            	</if>
@@ -171,7 +173,19 @@
 	  		, #{createUserId}
 	  		, now()
 	  		, #{smsYn}
-	  		)       
+	  		)
+	  		ON DUPLICATE KEY UPDATE userName = #{userName},
+		                        groupId = #{groupId},
+		                        password = password(#{password}),
+		                        auth = #{auth},
+		                        email = #{email},
+		                        officePhone = #{officePhone},
+		                        mobliePhone = #{mobliePhone},
+		                        smsYn = #{smsYn},
+		                        mobliePhone = #{mobliePhone},
+		                        updateUserId = #{createUserId},
+		                        updateDateTime =now() ,
+		                        deletedYn= 'N'  
 </insert>
 
 <select id="getUserDetail" resultMap="userListVO" parameterType="com.offact.addys.vo.manage.UserManageVO" >
@@ -237,6 +251,8 @@
             	,officePhone
             	,mobliePhone
             	,ip
+            	,useYn
+            	,smsYn
             	,createUserId
             	,createDateTime
 		)values(
@@ -245,27 +261,29 @@
 	  			, #{groupId}
 	  		    , '03'
 	  			, #{authId}
-	  			, #{excelAuth}
+	  			, 'N'
 	  			, password(#{password})
 	  			, #{email}
-	  		, #{officePhone}
-	  		, #{mobliePhone}
-	  		, #{ip}
-	  		, #{createUserId}
-	  		, now()
+	  		    , #{officePhone}
+	  		    , #{mobliePhone}
+	  		    , #{ip}
+	  		    , #{useYn}
+	  		    ,'N'
+	  		    , #{createUserId}
+	  		    , now()
 		)
 		ON DUPLICATE KEY UPDATE userName = #{userName},
 		                        groupId = #{groupId},
-		                        authId = #{authId},
-		                        excelAuth = #{excelAuth},
 		                        password = password(#{password}),
-		                        email = #{email},
-		                        officePhone = #{officePhone},
 		                        mobliePhone = #{mobliePhone},
-		                        ip = #{ip},
 		                        updateUserId = #{createUserId},
 		                        updateDateTime =now()
 </insert>
 
+<select id="getCheckCnt" resultType="int">
+		SELECT count(*) 
+  			FROM ofUser
+ 			WHERE deletedYn='N' And userId = #{userId}
+</select>
 
 </mapper>

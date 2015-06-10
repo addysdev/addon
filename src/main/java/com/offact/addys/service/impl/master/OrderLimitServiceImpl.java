@@ -17,6 +17,8 @@ import com.offact.framework.db.SqlSessionCommonDao;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.service.master.OrderLimitService;
 import com.offact.addys.vo.master.OrderLimitVO;
+import com.offact.addys.vo.master.StockMasterVO;
+import com.offact.addys.vo.recovery.RecoveryVO;
 import com.offact.addys.vo.common.CompanyVO;
 
 /**
@@ -104,9 +106,13 @@ public class OrderLimitServiceImpl implements OrderLimitService {
     	        
     	    	idx = i + 2;
     	    	CompanyVO companyVO = (CompanyVO)excelUploadList.get(i);
-
+    	    	
     	    	companyVO=this.commonDao.selectOne("Company.getCompany", companyVO);
-    	    	companyAttachList.add(companyVO);
+    	    	
+    	    	if(null!=companyVO){
+    	    		companyAttachList.add(companyVO);
+    	    	}
+    	    	
     	      
     	      } catch (Exception e) {
     	        
@@ -120,5 +126,64 @@ public class OrderLimitServiceImpl implements OrderLimitService {
 
     	    return companyAttachList;
     	  }
+    
+    @Override
+    public int regiOrderLimitRegist(OrderLimitVO orderlimt, String arrCheckGroupId ,String arrSelectCompanyCode)
+    	    throws BizException
+	{
+	    int retVal=-1;
+	    
+	    try{//제한 등록
+	    	
+	    	arrCheckGroupId = arrCheckGroupId.substring(0, arrCheckGroupId.lastIndexOf("^"));
+		    String[] arrGroupId = arrCheckGroupId.split("\\^");
+	    	
+		    for (int i = 0; i < arrGroupId.length; i++) {
+		    	
+		    	long t1 = System.currentTimeMillis();
+		    	String groupId=arrGroupId[i];
+
+		    	String arrGroupSelectCompanyCode = arrSelectCompanyCode.substring(0, arrSelectCompanyCode.lastIndexOf("^"));
+			    String[] arrGroupCompanyCode = arrGroupSelectCompanyCode.split("\\^");
+			    
+			    for (int j = 0; j < arrGroupCompanyCode.length; j++) {
+			    	
+			    	String companyCode=arrGroupCompanyCode[j];
+			    	
+			    	OrderLimitVO orderLimitVO = new OrderLimitVO();
+			    	
+			    	orderLimitVO.setLimitCode(groupId+companyCode);
+			    	orderLimitVO.setGroupId(groupId);
+			    	orderLimitVO.setCompanyCode(companyCode);
+			    	orderLimitVO.setLimitStartDate(orderlimt.getLimitStartDate());
+			    	orderLimitVO.setLimitEndDate(orderlimt.getLimitEndDate());
+			    	orderLimitVO.setLimitUserId(orderlimt.getLimitUserId());
+			    	
+	
+			    	retVal=this.commonDao.insert("OrderLimit.orderLimitInsert", orderLimitVO);
+			    	
+			    }
+	
+		    }
+		    
+	    }catch(Exception e){
+	    	
+	    	e.printStackTrace();
+	    	e.printStackTrace();
+	    	throw new BizException(e.getMessage());
+
+	    }
+	
+	    return retVal;
+	    
+   }
+    
+    @Override
+    public int orderLimitCance(OrderLimitVO orderlimt) throws BizException {
+        // 사용자 상세정보 수정
+	
+    	return commonDao.update("OrderLimit.orderLimitCance", orderlimt);
+
+    }
 
 }

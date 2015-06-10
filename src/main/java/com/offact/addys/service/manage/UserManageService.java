@@ -73,5 +73,14 @@ public interface UserManageService {
      */
     public abstract Map regiExcelUpload(List<UserManageVO> paramList)
     	    throws BizException;
+    
+    /**
+     * 중복 갯수
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int getCheckCnt(UserManageVO user) throws BizException;
+
 
 }

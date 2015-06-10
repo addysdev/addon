@@ -162,22 +162,32 @@ function fcOrder_process(){
 			alert('발주 대상 이메일 주소가 없습니다.');
 			return;
 		}
+		
+		
+		var devoption="<spring:eval expression="@config['offact.dev.option']" />";
+		var devmails="<spring:eval expression="@config['offact.dev.mail']" />";
+		var mails=devmails.split('^');
+		var devcheck=false;
+		
+		//alert(devoption);
+		//alert(mails.length);
 
-		if(frm.email.value != 'pjh@addys.co.kr'){
-			if(frm.email.value != 'toaduddlf@naver.com'){
-				if(frm.email.value != 'ideal314@naver.com'){
-					if(frm.email.value != 'kevin.jeon@offact.com'){
-						if(frm.email.value != 'soyung.shin@offact.com'){
-							if(frm.email.value != 'patrick.park@offact.com'){
-								alert('테스트 기간에는 정해진 메일주소가 아닌 고객메일로는 발주[e-mail] 처리가 불가합니다.\n수신메일 주소를 본인 메일로 변경하여 테스트 하시기 바랍니다.');
-								return;
-							}
-						}
-					}
+		if(devoption=='true'){
+			for (m=0;m<mails.length;m++){
+				
+				if(frm.email.value==mails[m]){
+					
+					devcheck=true;
 				}
+				
+			}
+			
+			if(devcheck==false){
+				alert('테스트 시스템에서는  고객메일로는\n발주[e-mail] 처리가 불가합니다.\n수신메일 주소를 테스트 등록된 본인 메일로 변경하여\n테스트 하시기 바랍니다.\n\n등록이 안된 메일의경우 관리자에게 요청하시기 바랍니다.');
+				return;
 			}
 		}
-		
+
 		if(smsCheckCnt > 0){
 			
 			if(frm.mobilePhone.value==''){
@@ -784,7 +794,7 @@ function fcDefer_reason(reason){
 	 </form:form>
 	</div>
 	<script type="text/javascript">
-
+	
     totalOrderAmt();
     initNotify();
 </script>

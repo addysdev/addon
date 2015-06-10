@@ -12,6 +12,8 @@ import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CompanyVO;
 import com.offact.addys.vo.common.CommentVO;
 import com.offact.addys.vo.common.UserVO;
+import com.offact.addys.vo.common.WorkVO;
+import com.offact.addys.vo.manage.CompanyManageVO;
 /**
  * @author 4530
  */
@@ -80,5 +82,30 @@ public interface CommonService {
      * @throws BizException
      */
     public List<UserVO> getSmsBatchList(UserVO usercon) throws BizException;
+    /**
+     * 업무이력저장
+     * 
+     * @param TargetVO
+     * @return
+     * @throws BizException
+     */
+    public int regiHistoryInsert(WorkVO work)
+    	    throws BizException;
     
+    /**
+     * 업무이력 조회
+     * 
+     * @return
+     * @throws BizException
+     */
+    public List<WorkVO> getWorkHistoryPageList(WorkVO work) throws BizException;
+
+    /**
+     * 업무이력 갯수
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int getCompanyCnt(WorkVO work) throws BizException;
+
 }
