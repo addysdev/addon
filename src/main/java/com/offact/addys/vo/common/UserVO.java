@@ -29,6 +29,9 @@ public class UserVO extends AbstractVO {
 	private String updateDateTime;
 	private String useYn;
 	private String deletedYn;
+	private String loginYn;
+	private String loginDateTime;
+	private String connectIp;
 	
 	public String getUserId() {
 		return userId;
@@ -161,6 +164,24 @@ public class UserVO extends AbstractVO {
 	}
 	public void setAuth(String auth) {
 		this.auth = auth;
+	}
+	public String getLoginYn() {
+		return loginYn;
+	}
+	public void setLoginYn(String loginYn) {
+		this.loginYn = loginYn;
+	}
+	public String getLoginDateTime() {
+		return loginDateTime;
+	}
+	public void setLoginDateTime(String loginDateTime) {
+		this.loginDateTime = loginDateTime;
+	}
+	public String getConnectIp() {
+		return connectIp;
+	}
+	public void setConnectIp(String connectIp) {
+		this.connectIp = connectIp;
 	}
 	
 }

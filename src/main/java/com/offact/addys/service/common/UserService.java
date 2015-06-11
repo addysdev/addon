@@ -21,6 +21,15 @@ public interface UserService {
 	 */
 	public UserVO getUser(UserVO user) throws BizException;
 	
-	
+	/**
+     * 사용자 상태저장
+     * 
+     * @param TargetVO
+     * @return
+     * @throws BizException
+     */
+    public int regiLoginYnUpdate(UserVO user)
+    	    throws BizException;
+    
 	
 }

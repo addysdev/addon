@@ -55,12 +55,15 @@ import com.offact.addys.service.order.OrderService;
 import com.offact.addys.service.order.TargetService;
 import com.offact.addys.service.common.MailService;
 import com.offact.addys.service.common.SmsService;
+import com.offact.addys.service.common.UserService;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.CompanyVO;
 import com.offact.addys.vo.common.EmailVO;
 import com.offact.addys.vo.common.SmsVO;
 import com.offact.addys.vo.common.CommentVO;
+import com.offact.addys.vo.common.UserVO;
+import com.offact.addys.vo.common.WorkVO;
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.master.StockVO;
 import com.offact.addys.vo.order.TargetVO;
@@ -124,6 +127,9 @@ public class OrderController {
     @Autowired
     private SmsService smsSvc;
     
+	@Autowired
+	private UserService userSvc;
+    
 	 /**
      * 발주대상 화면
      *
@@ -151,9 +157,27 @@ public class OrderController {
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -290,9 +314,27 @@ public class OrderController {
         String strOfficePhone = StringUtil.nvl((String) session.getAttribute("strOfficePhone"));
         String strMobliePhone = StringUtil.nvl((String) session.getAttribute("strMobliePhone"));
         String strEmail = StringUtil.nvl((String) session.getAttribute("strEmail"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
         
@@ -452,6 +494,11 @@ public class OrderController {
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
     	logger.info("["+logid+"] Controller start : targetVO" + targetVO);
+    	
+    	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
 		
 		String[] orderList = request.getParameterValues("seqs"); 		
    	    String[] r_data=null;
@@ -512,6 +559,13 @@ public class OrderController {
         mv.addObject("deliveryDates3", deliveryDates[2]);
    		
    		mv.setViewName("/order/targetDetailPrint");
+   		
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("OD");
+		work.setWorkCode("OD003");
+		commonSvc.regiHistoryInsert(work);
    		
    		return mv;
    	}
@@ -863,6 +917,7 @@ public class OrderController {
 					smsVO.setSmsTo(targetVO.getMobilePhone());
 					smsVO.setSmsFrom(targetVO.getOrderMobilePhone());
 					smsVO.setSmsMsg(targetVO.getSms());
+					smsVO.setSmsUserId(strUserId);
 					
 					logger.debug("sms targetVO.getMobilePhone() :"+targetVO.getMobilePhone());
 					logger.debug("sms targetVO.getOrderMobilePhone() :"+targetVO.getOrderMobilePhone());
@@ -919,6 +974,13 @@ public class OrderController {
 
 	        return "order0004\n[errorMsg] : "+errMsg;
 		}
+		
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("OD");
+		work.setWorkCode("OD004");
+		commonSvc.regiHistoryInsert(work);
 
 		//log Controller execute time end
        	long t2 = System.currentTimeMillis();
@@ -1011,6 +1073,13 @@ public class OrderController {
 	        return "defer0002\n[errorMsg] : "+errMsg;
 	    	
 	    }
+        
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("OD");
+		work.setWorkCode("OD001");
+		commonSvc.regiHistoryInsert(work);
 		
 		//log Controller execute time end
 	 	long t2 = System.currentTimeMillis();
@@ -1086,6 +1155,13 @@ public class OrderController {
 	    	
 	    }
 		
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("OD");
+		work.setWorkCode("OD002");
+		commonSvc.regiHistoryInsert(work);
+		
 		//log Controller execute time end
 	 	long t2 = System.currentTimeMillis();
 	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -1119,9 +1195,27 @@ public class OrderController {
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
         
@@ -1258,9 +1352,27 @@ public class OrderController {
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -1364,6 +1476,13 @@ public class OrderController {
 	    	
 	    }
 		
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("CH");
+		work.setWorkCode("CH001");
+		commonSvc.regiHistoryInsert(work);
+        
 		//log Controller execute time end
 	 	long t2 = System.currentTimeMillis();
 	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -1436,6 +1555,13 @@ public class OrderController {
 	    	
 	    }
 		
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("CH");
+		work.setWorkCode("CH002");
+		commonSvc.regiHistoryInsert(work);
+		
 		//log Controller execute time end
 	 	long t2 = System.currentTimeMillis();
 	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -1505,6 +1631,7 @@ public class OrderController {
 				smsVO.setSmsTo(orderVO.getMobilePhone());
 				smsVO.setSmsFrom(orderVO.getOrderMobilePhone());
 				smsVO.setSmsMsg(orderVO.getDeliveryCharge()+"님 '"+orderVO.getOrderName()+"' 에서 '"+strToday+"'자로 '"+orderVO.getOrderCode()+"'의 발주건이 취소되었습니다.");
+				smsVO.setSmsUserId(strUserId);
 				
 				logger.debug("sms orderVO.getMobilePhone() :"+orderVO.getMobilePhone());
 				logger.debug("sms orderVO.getOrderMobilePhone() :"+orderVO.getOrderMobilePhone());
@@ -1546,6 +1673,13 @@ public class OrderController {
 	        return "order0012\n[errorMsg] : "+errMsg;
 	    	
 	    }
+		
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("CH");
+		work.setWorkCode("CH004");
+		commonSvc.regiHistoryInsert(work);
 		
 		//log Controller execute time end
 	 	long t2 = System.currentTimeMillis();
@@ -1618,6 +1752,13 @@ public class OrderController {
 	    	
 	    }
 		
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("CH");
+		work.setWorkCode("CH010");
+		commonSvc.regiHistoryInsert(work);
+		
 		//log Controller execute time end
 	 	long t2 = System.currentTimeMillis();
 	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -1654,9 +1795,27 @@ public class OrderController {
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
         
@@ -1713,9 +1872,27 @@ public class OrderController {
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -1767,9 +1944,27 @@ public class OrderController {
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
         
@@ -1799,6 +1994,20 @@ public class OrderController {
         mv.addObject("commentList", commentList);
         
         mv.setViewName("/order/memoManage");
+        
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		
+		if(commentVO.getCommentCategory().equals("03")){
+			work.setWorkCategory("CH");
+			work.setWorkCode("CH006");
+			commonSvc.regiHistoryInsert(work);
+		}else if(commentVO.getCommentCategory().equals("05")){
+			work.setWorkCategory("RE");
+			work.setWorkCode("RE003");
+			commonSvc.regiHistoryInsert(work);
+		}
         
         //log Controller execute time end
        	long t2 = System.currentTimeMillis();
@@ -1839,9 +2048,27 @@ public class OrderController {
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
         
@@ -1901,9 +2128,27 @@ public class OrderController {
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -1949,9 +2194,27 @@ public class OrderController {
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
         
@@ -1983,6 +2246,20 @@ public class OrderController {
         mv.addObject("commentList", commentList);
         
         mv.setViewName("/order/etcManage");
+        
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		
+		if(commentVO.getCommentCategory().equals("04")){
+			work.setWorkCategory("CH");
+			work.setWorkCode("CH007");
+			commonSvc.regiHistoryInsert(work);
+		}else if(commentVO.getCommentCategory().equals("06")){
+			work.setWorkCategory("RE");
+			work.setWorkCode("RE007");
+			commonSvc.regiHistoryInsert(work);
+		}
         
         //log Controller execute time end
        	long t2 = System.currentTimeMillis();
@@ -2019,9 +2296,27 @@ public class OrderController {
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -2118,6 +2413,13 @@ public class OrderController {
 	    	
 	    }
 		
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("CH");
+		work.setWorkCode("CH008");
+		commonSvc.regiHistoryInsert(work);
+        
 		//log Controller execute time end
 	 	long t2 = System.currentTimeMillis();
 	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -2231,6 +2533,13 @@ public class OrderController {
 
 	        return "order0033\n[errorMsg] : "+errMsg;
 		}
+		
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("CH");
+		work.setWorkCode("CH005");
+		commonSvc.regiHistoryInsert(work);
 
 		//log Controller execute time end
        	long t2 = System.currentTimeMillis();
@@ -2267,9 +2576,27 @@ public class OrderController {
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
         String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -2298,6 +2625,13 @@ public class OrderController {
    
         mv.setViewName("/order/orderDetailPrint");
         
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("CH");
+		work.setWorkCode("CH003");
+		commonSvc.regiHistoryInsert(work);
+		
         //log Controller execute time end
        	long t2 = System.currentTimeMillis();
        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -2366,6 +2700,13 @@ public class OrderController {
    	 
    		mv.setViewName("/order/orderExcelList");
    		
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("CH");
+		work.setWorkCode("CH009");
+		commonSvc.regiHistoryInsert(work);
+   		
    		return mv;
    	}
     /**
@@ -2395,9 +2736,27 @@ public class OrderController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));    
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
         

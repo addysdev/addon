@@ -31,5 +31,28 @@ public class UserServiceImpl implements UserService {
 	public UserVO getUser(UserVO user) throws BizException {
 		return commonDao.selectOne("User.getUser", user);
 	}
+	
+	@Override
+	   public int regiLoginYnUpdate(UserVO user)
+	   	    throws BizException
+		{
+		    int retVal=-1;
+		    
+		    try{
+		
+		    	retVal=this.commonDao.insert("User.userLoginYnUpdate", user);
+		
+		    }catch(Exception e){
+		    	
+		    	e.printStackTrace();
+		    	e.printStackTrace();
+		    	throw new BizException(e.getMessage());
+
+		    }
+		
+		    return retVal;
+		    
+	  }
+	   
 
 }

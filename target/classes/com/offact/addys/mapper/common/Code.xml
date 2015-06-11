@@ -29,7 +29,19 @@
         <if test="codeGroupId != null and codeGroupId != ''" >
         	And T1.codeGroupId = #{codeGroupId}
         </if>
-        Order By codeId ASC
+        Order By orderNo ,codeId ASC
     </select>   
  
+ <select id="getWorkCodeList"  resultMap="codeVO" parameterType="com.offact.addys.vo.common.CodeVO" >
+        SELECT
+               codeGroupId,
+               codeId, 
+               codeName,
+               description
+        From ofCode 
+        Where deletedYn = 'N' 
+          And codeGroupId= 'SE02'             
+       	  And Left(codeId,2) = #{codeId}
+         Order By orderNo ,codeId ASC
+    </select>   
 </mapper>

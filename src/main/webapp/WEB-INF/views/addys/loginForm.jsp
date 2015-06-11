@@ -1,4 +1,12 @@
 <%@ page contentType="text/html; charset=utf-8"%>
+<%@ page import="java.net.*" %>
+<%@ page import="com.offact.framework.util.StringUtil"%>
+<%
+	String ipaddress = InetAddress.getLocalHost().getHostAddress();
+	if (ipaddress == null) ipaddress = InetAddress.getLocalHost().getHostAddress();
+	
+	String sClientIP = request.getRemoteAddr();
+%>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -97,6 +105,7 @@ function loginInit(){
 </head>
 <body onload="loginInit()">
 <form method="post" id="loginForm" name="loginForm"  role="form" action="<%= request.getContextPath() %>/addys/login">
+<input type="hidden" id="sClientIP" name="sClientIP" value="<%=sClientIP%>" >
 <table width="100%" height="100%" cellspacing="0" cellpadding="0">
 	<tr>
 		<td align="center" valign="middle"><table width="100%" cellspacing="0" cellpadding="0">

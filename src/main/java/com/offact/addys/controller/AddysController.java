@@ -154,10 +154,49 @@ public class AddysController {
 
 		String strUserId = StringUtil.nvl(request.getParameter("id"));
 		String strUserPw = StringUtil.nvl(request.getParameter("pwd"));
+		String sClientIP = StringUtil.nvl(request.getParameter("sClientIP"));
 		
 		logger.info(">>>> userId :"+strUserId);
 		logger.info(">>>> userPw :"+strUserPw);
+		logger.info(">>>> sClientIP :"+sClientIP);
 		
+		String ip = request.getHeader("X-Forwarded-For");
+
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+
+		    ip = request.getHeader("Proxy-Client-IP"); 
+		    logger.info(">>>> ip :"+ip);
+
+		} 
+
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+
+		    ip = request.getHeader("WL-Proxy-Client-IP"); 
+		    logger.info(">>>> ip :"+ip);
+
+		} 
+
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+
+		    ip = request.getHeader("HTTP_CLIENT_IP"); 
+		    logger.info(">>>> ip :"+ip);
+
+		} 
+
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+
+		    ip = request.getHeader("HTTP_X_FORWARDED_FOR"); 
+		    logger.info(">>>> ip :"+ip);
+
+		} 
+
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+
+		    ip = request.getRemoteAddr(); 
+		    logger.info(">>>> ip :"+ip);
+
+		}
+
 		String strMainUrl = "";
 		
 		// # 2. 넘겨받은 아이디로 데이터베이스를 조회하여 사용자가 있는지를 체크한다.
@@ -181,9 +220,11 @@ public class AddysController {
 		String strEmail = "";
 		String strIp = "";
 		
-		String userIp = request.getRemoteAddr();
+		strIp = ip;
+		sClientIP = request.getLocalAddr();
 
-		logger.info(">>>> userIp :"+userIp);
+		logger.info(">>>> [strIp] :"+strIp);
+		logger.info(">>>> [sClientIP] :"+sClientIP);
 	
 		if(userChk != null)
 		{
@@ -218,7 +259,6 @@ public class AddysController {
 			strMobliePhone = userChk.getMobliePhone();
 			strMobliePhoneFormat = userChk.getMobliePhoneFormat();
 			strEmail = userChk.getEmail();
-			strIp = userChk.getIp();
 			strAuth =userChk.getAuth();
 
 			// # 3. Session 객체에 셋팅
@@ -246,19 +286,20 @@ public class AddysController {
 				session.setAttribute("strEmail", strEmail);
 				session.setAttribute("strIp", strIp);
 				session.setAttribute("strAuth", strAuth);
+				session.setAttribute("sClientIP", sClientIP);
 				
-				//로그인 이력처리		
-				/*
+				//로그인 상태처리		
+				
+				userChk.setUserId(strUserId);
 				userChk.setLoginYn("Y");
-				userChk.setConnectIp(userIp);
+				userChk.setIp(strIp);
+				userChk.setConnectIp(sClientIP);
 				try{
-					//cmmService.setUserState(userChk);
-					//cmmService.setInsertUserState(userChk);
-					//cmmService.setUpdateUserState(userChk);
+					userSvc.regiLoginYnUpdate(userChk);
 				}catch(Exception e){
 					logger.debug("[Error]USER SQL lock 오류");
 				}
-		        */
+		        
 				mv.addObject("userId", strUserId);
 				
 				//발주리스트 화면 로직 추가
@@ -321,6 +362,8 @@ public class AddysController {
 		HttpSession session = request.getSession(false);
 		
 		String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+		String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+		String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
 		
 	 	session.removeAttribute("strUserId");
         session.removeAttribute("strUserName");
@@ -337,6 +380,15 @@ public class AddysController {
         session.removeAttribute("strEmail");
         session.removeAttribute("strIp");
         session.removeAttribute("strAuth");
+        session.removeAttribute("sClientIP");
+        
+        //로그인 상태처리		
+		UserVO userState =new UserVO();
+		userState.setUserId(strUserId);
+		userState.setLoginYn("N");
+		userState.setIp(strIp);
+		userState.setConnectIp(sClientIP);
+		userSvc.regiLoginYnUpdate(userState);
         
         //작업이력
 		WorkVO work = new WorkVO();
@@ -392,8 +444,26 @@ public class AddysController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	//로그인 상태처리		
+    		UserVO userState =new UserVO();
+    		userState.setUserId(strUserId);
+    		userState.setLoginYn("N");
+    		userState.setIp(strIp);
+    		userState.setConnectIp(sClientIP);
+    		userSvc.regiLoginYnUpdate(userState);
+            
+            //작업이력
+    		WorkVO work = new WorkVO();
+    		work.setWorkUserId(strUserId);
+    		work.setWorkCategory("CM");
+    		work.setWorkCode("CM004");
+    		commonSvc.regiHistoryInsert(work);
+    		
         	mv.setViewName("/addys/loginForm");
        		return mv;
      	}

@@ -74,5 +74,15 @@
                                   And T3.smsYn = 'Y'
                                   And T1.recoveryState ='01'
 </select>
+
+<update id="userLoginYnUpdate" parameterType="com.offact.addys.vo.common.UserVO" >
+        Update ofUser
+       		Set 
+       		     ip = #{ip}
+       		    ,connectIp = #{connectIp}
+            	,loginYn = #{loginYn}
+  				,loginDateTime = now()
+ 		Where userId = #{userId}
+</update>
  
 </mapper>

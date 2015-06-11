@@ -48,11 +48,13 @@ import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.addys.service.common.CommonService;
 import com.offact.addys.service.common.SmsService;
+import com.offact.addys.service.common.UserService;
 import com.offact.addys.service.recovery.RecoveryService;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.SmsVO;
 import com.offact.addys.vo.common.UserVO;
+import com.offact.addys.vo.common.WorkVO;
 import com.offact.addys.vo.master.SalesVO;
 import com.offact.addys.vo.master.StockMasterVO;
 import com.offact.addys.vo.master.ProductMasterVO;
@@ -109,6 +111,9 @@ public class RecoveryController {
     @Autowired
     private SmsService smsSvc;
     
+	@Autowired
+	private UserService userSvc;
+	
 	 /**
      * 회수대상 작업화면
      *
@@ -135,9 +140,27 @@ public class RecoveryController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -263,9 +286,27 @@ public class RecoveryController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -456,9 +497,27 @@ public class RecoveryController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
        
@@ -564,6 +623,7 @@ public class RecoveryController {
 			smsVO.setSmsPw(smsPw);
 			smsVO.setSmsType(smsType);
 			smsVO.setSmsFrom(sendNo);
+			smsVO.setSmsUserId(strUserId);
 			
 			String[] arrGroupId = arrCheckGroupId.split("\\^");
 			
@@ -628,6 +688,13 @@ public class RecoveryController {
 	    	
 	    }
 
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("RE");
+		work.setWorkCode("RE001");
+		commonSvc.regiHistoryInsert(work);
+		
 		//log Controller execute time end
 	 	long t2 = System.currentTimeMillis();
 	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -664,9 +731,27 @@ public class RecoveryController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
 
@@ -775,6 +860,13 @@ public class RecoveryController {
 	        return "recovery0012\n[errorMsg] : "+errMsg;
 	    	
 	    }
+        
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("RE");
+		work.setWorkCode("RE005");
+		commonSvc.regiHistoryInsert(work);
 		
 		//log Controller execute time end
 	 	long t2 = System.currentTimeMillis();
@@ -849,6 +941,13 @@ public class RecoveryController {
 	        return "recovery0022\n[errorMsg] : "+errMsg;
 	    	
 	    }
+		
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("RE");
+		work.setWorkCode("RE008");
+		commonSvc.regiHistoryInsert(work);
 		
 		//log Controller execute time end
 	 	long t2 = System.currentTimeMillis();
@@ -1057,9 +1156,27 @@ public class RecoveryController {
 	        HttpSession session = request.getSession();
 	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
 	        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
 	        
 	        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-	        	mv.setViewName("/addys/loginForm");
+	        	
+	 	       	//로그인 상태처리		
+	 	   		UserVO userState =new UserVO();
+	 	   		userState.setUserId(strUserId);
+	 	   		userState.setLoginYn("N");
+	 	   		userState.setIp(strIp);
+	 	   		userState.setConnectIp(sClientIP);
+	 	   		userSvc.regiLoginYnUpdate(userState);
+	 	           
+	 	           //작업이력
+	 	   		WorkVO work = new WorkVO();
+	 	   		work.setWorkUserId(strUserId);
+	 	   		work.setWorkCategory("CM");
+	 	   		work.setWorkCode("CM004");
+	 	   		commonSvc.regiHistoryInsert(work);
+	 	   		
+	 	       	mv.setViewName("/addys/loginForm");
 	       		return mv;
 			}
 	        
@@ -1088,7 +1205,10 @@ public class RecoveryController {
 	    	//log Controller execute time start
 			String logid=logid();
 			long t1 = System.currentTimeMillis();
-
+			
+			// 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
 
 	   		ModelAndView mv = new ModelAndView();
 	   		
@@ -1096,6 +1216,13 @@ public class RecoveryController {
 	     	mv.addObject("recoveryCode", recoveryCode);
 	   		
 	   		mv.setViewName("/recovery/recoveryCodePrint");
+	   		
+	        //작업이력
+			WorkVO work = new WorkVO();
+			work.setWorkUserId(strUserId);
+			work.setWorkCategory("RE");
+			work.setWorkCode("RE004");
+			commonSvc.regiHistoryInsert(work);
 	   		
 	   		return mv;
 	   	}
@@ -1166,6 +1293,13 @@ public class RecoveryController {
 		        return "recovery0032\n[errorMsg] : "+errMsg;
 		    	
 		    }
+	        
+	        //작업이력
+			WorkVO work = new WorkVO();
+			work.setWorkUserId(strUserId);
+			work.setWorkCategory("RE");
+			work.setWorkCode("RE006");
+			commonSvc.regiHistoryInsert(work);
 			
 			//log Controller execute time end
 		 	long t2 = System.currentTimeMillis();
@@ -1241,6 +1375,13 @@ public class RecoveryController {
 		        return "recovery0042\n[errorMsg] : "+errMsg;
 		    	
 		    }
+	        
+	        //작업이력
+			WorkVO work = new WorkVO();
+			work.setWorkUserId(strUserId);
+			work.setWorkCategory("RE");
+			work.setWorkCode("RE002");
+			commonSvc.regiHistoryInsert(work);
 			
 			//log Controller execute time end
 		 	long t2 = System.currentTimeMillis();
@@ -1289,6 +1430,13 @@ public class RecoveryController {
 	   	    mv.addObject("recoveryExcelList", recoveryExcelList);
 	   	 
 	   		mv.setViewName("/recovery/recoveryExcelList");
+	   		
+	        //작업이력
+			WorkVO work = new WorkVO();
+			work.setWorkUserId(strUserId);
+			work.setWorkCategory("RE");
+			work.setWorkCode("RE009");
+			commonSvc.regiHistoryInsert(work);
 	   		
 	   		return mv;
 	   	}
@@ -1360,6 +1508,19 @@ public class RecoveryController {
 		        return "recovery0042\n[errorMsg] : "+errMsg;
 		    	
 		    }
+	    	
+	    	 //작업이력
+			WorkVO work = new WorkVO();
+	       	
+	    	if(collectState.equals("02")){
+	    		work.setWorkCategory("RE");
+				work.setWorkCode("RE010");
+	    	}else{
+	    		work.setWorkCategory("RE");
+				work.setWorkCode("RE012");
+	    	}
+			work.setWorkUserId(strUserId);
+			commonSvc.regiHistoryInsert(work);
 			
 			//log Controller execute time end
 		 	long t2 = System.currentTimeMillis();
@@ -1435,6 +1596,13 @@ public class RecoveryController {
 		        return "recovery0042\n[errorMsg] : "+errMsg;
 		    	
 		    }
+	        
+	        //작업이력
+			WorkVO work = new WorkVO();
+			work.setWorkUserId(strUserId);
+			work.setWorkCategory("RE");
+			work.setWorkCode("RE011");
+			commonSvc.regiHistoryInsert(work);
 			
 			//log Controller execute time end
 		 	long t2 = System.currentTimeMillis();

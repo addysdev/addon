@@ -51,6 +51,7 @@ import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.addys.service.common.CommonService;
+import com.offact.addys.service.common.UserService;
 import com.offact.addys.service.master.ProductMasterService;
 import com.offact.addys.service.master.StockMasterService;
 import com.offact.addys.service.master.StockService;
@@ -61,6 +62,7 @@ import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.SmsVO;
 import com.offact.addys.vo.common.UserVO;
 import com.offact.addys.vo.common.CompanyVO;
+import com.offact.addys.vo.common.WorkVO;
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.master.StockMasterVO;
 import com.offact.addys.vo.master.ProductMasterVO;
@@ -93,6 +95,9 @@ public class MasterController {
 	}
     @Autowired
     private CommonService commonSvc;
+    
+	@Autowired
+	private UserService userSvc;
     
     @Autowired
     private ProductMasterService productMasterSvc;
@@ -135,8 +140,26 @@ public class MasterController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	//로그인 상태처리		
+    		UserVO userState =new UserVO();
+    		userState.setUserId(strUserId);
+    		userState.setLoginYn("N");
+    		userState.setIp(strIp);
+    		userState.setConnectIp(sClientIP);
+    		userSvc.regiLoginYnUpdate(userState);
+            
+            //작업이력
+    		WorkVO work = new WorkVO();
+    		work.setWorkUserId(strUserId);
+    		work.setWorkCategory("CM");
+    		work.setWorkCode("CM004");
+    		commonSvc.regiHistoryInsert(work);
+    		
         	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
@@ -278,8 +301,26 @@ public class MasterController {
      HttpSession session = request.getSession();
      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+     String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+     String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
      
      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+     	
+     	//로그인 상태처리		
+ 		UserVO userState =new UserVO();
+ 		userState.setUserId(strUserId);
+ 		userState.setLoginYn("N");
+ 		userState.setIp(strIp);
+ 		userState.setConnectIp(sClientIP);
+ 		userSvc.regiLoginYnUpdate(userState);
+         
+         //작업이력
+ 		WorkVO work = new WorkVO();
+ 		work.setWorkUserId(strUserId);
+ 		work.setWorkCategory("CM");
+ 		work.setWorkCode("CM004");
+ 		commonSvc.regiHistoryInsert(work);
+ 		
      	mv.setViewName("/addys/loginForm");
     		return mv;
 		}
@@ -401,7 +442,7 @@ public class MasterController {
           mv.addObject("rtnSuccessList", rtnSuccessList);
 
           mv.setViewName("/master/uploadResult");
-    	 
+          
           //log Controller execute time end
           long t2 = System.currentTimeMillis();
           logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -423,7 +464,14 @@ public class MasterController {
      mv.addObject("rtnSuccessList", rtnSuccessList);
        
      mv.setViewName("/master/uploadResult");
-
+     
+     //작업이력
+	  WorkVO work = new WorkVO();
+	  work.setWorkUserId(strUserId);
+	  work.setWorkCategory("PD");
+	  work.setWorkCode("PD001");
+	  commonSvc.regiHistoryInsert(work);
+	 
      //log Controller execute time end
      long t2 = System.currentTimeMillis();
      logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -458,8 +506,26 @@ public class MasterController {
        HttpSession session = request.getSession();
        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+       String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+       String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
        
        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+       	
+       	//로그인 상태처리		
+   		UserVO userState =new UserVO();
+   		userState.setUserId(strUserId);
+   		userState.setLoginYn("N");
+   		userState.setIp(strIp);
+   		userState.setConnectIp(sClientIP);
+   		userSvc.regiLoginYnUpdate(userState);
+           
+           //작업이력
+   		WorkVO work = new WorkVO();
+   		work.setWorkUserId(strUserId);
+   		work.setWorkCategory("CM");
+   		work.setWorkCode("CM004");
+   		commonSvc.regiHistoryInsert(work);
+   		
        	mv.setViewName("/addys/loginForm");
       		return mv;
 		}
@@ -546,8 +612,26 @@ public class MasterController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	//로그인 상태처리		
+    		UserVO userState =new UserVO();
+    		userState.setUserId(strUserId);
+    		userState.setLoginYn("N");
+    		userState.setIp(strIp);
+    		userState.setConnectIp(sClientIP);
+    		userSvc.regiLoginYnUpdate(userState);
+            
+            //작업이력
+    		WorkVO work = new WorkVO();
+    		work.setWorkUserId(strUserId);
+    		work.setWorkCategory("CM");
+    		work.setWorkCode("CM004");
+    		commonSvc.regiHistoryInsert(work);
+    		
         	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
@@ -726,13 +810,16 @@ public class MasterController {
 	    //DB처리
 	    
 	     Map rtmMap=null;
+		 WorkVO work = new WorkVO();
 	    
 	     if("hold".equals(importType)){
 	    	 this.logger.info("보유재고 DB Insert");
 	    	 rtmMap = this.stockMasterSvc.holdRegiExcelUpload(stockMasterListResult);
+	    	 work.setWorkCode("PD002");
 	     }else{
 	    	 this.logger.info("안전재고 DB Insert");
-	    	 rtmMap = this.stockMasterSvc.safeRegiExcelUpload(stockMasterListResult); 
+	    	 rtmMap = this.stockMasterSvc.safeRegiExcelUpload(stockMasterListResult);
+	    	 work.setWorkCode("PD003");
 	     }
 	
 	     rtnErrorList = (List)rtmMap.get("rtnErrorList");
@@ -744,6 +831,13 @@ public class MasterController {
 	     mv.addObject("rtnSuccessList", rtnSuccessList);
 	    
 	     mv.setViewName("/master/uploadResult");
+	     
+	     //작업이력
+
+		 work.setWorkUserId(strUserId);
+		 work.setWorkCategory("PD");
+		 
+		  commonSvc.regiHistoryInsert(work);
 	
 	    //log Controller execute time end
 	     long t2 = System.currentTimeMillis();
@@ -939,8 +1033,26 @@ public class MasterController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	//로그인 상태처리		
+    		UserVO userState =new UserVO();
+    		userState.setUserId(strUserId);
+    		userState.setLoginYn("N");
+    		userState.setIp(strIp);
+    		userState.setConnectIp(sClientIP);
+    		userSvc.regiLoginYnUpdate(userState);
+            
+            //작업이력
+    		WorkVO work = new WorkVO();
+    		work.setWorkUserId(strUserId);
+    		work.setWorkCategory("CM");
+    		work.setWorkCode("CM004");
+    		commonSvc.regiHistoryInsert(work);
+    		
         	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
@@ -1001,8 +1113,26 @@ public class MasterController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	//로그인 상태처리		
+    		UserVO userState =new UserVO();
+    		userState.setUserId(strUserId);
+    		userState.setLoginYn("N");
+    		userState.setIp(strIp);
+    		userState.setConnectIp(sClientIP);
+    		userSvc.regiLoginYnUpdate(userState);
+            
+            //작업이력
+    		WorkVO work = new WorkVO();
+    		work.setWorkUserId(strUserId);
+    		work.setWorkCategory("CM");
+    		work.setWorkCode("CM004");
+    		commonSvc.regiHistoryInsert(work);
+    		
         	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
@@ -1046,8 +1176,26 @@ public class MasterController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	//로그인 상태처리		
+    		UserVO userState =new UserVO();
+    		userState.setUserId(strUserId);
+    		userState.setLoginYn("N");
+    		userState.setIp(strIp);
+    		userState.setConnectIp(sClientIP);
+    		userSvc.regiLoginYnUpdate(userState);
+            
+            //작업이력
+    		WorkVO work = new WorkVO();
+    		work.setWorkUserId(strUserId);
+    		work.setWorkCategory("CM");
+    		work.setWorkCode("CM004");
+    		commonSvc.regiHistoryInsert(work);
+    		
         	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
@@ -1254,6 +1402,13 @@ public class MasterController {
      mv.addObject("rtnSuccessList", rtnSuccessList);
        
      mv.setViewName("/master/uploadResult");
+     
+     //작업이력
+	 WorkVO work = new WorkVO();
+	 work.setWorkUserId(strUserId);
+	 work.setWorkCategory("ST");
+	 work.setWorkCode("ST001");
+	 commonSvc.regiHistoryInsert(work);
 
      //log Controller execute time end
      long t2 = System.currentTimeMillis();
@@ -1290,9 +1445,27 @@ public class MasterController {
        HttpSession session = request.getSession();
        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+       String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+       String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
        
        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-       	mv.setViewName("/addys/loginForm");
+       	
+	       	//로그인 상태처리		
+	   		UserVO userState =new UserVO();
+	   		userState.setUserId(strUserId);
+	   		userState.setLoginYn("N");
+	   		userState.setIp(strIp);
+	   		userState.setConnectIp(sClientIP);
+	   		userSvc.regiLoginYnUpdate(userState);
+	           
+	           //작업이력
+	   		WorkVO work = new WorkVO();
+	   		work.setWorkUserId(strUserId);
+	   		work.setWorkCategory("CM");
+	   		work.setWorkCode("CM004");
+	   		commonSvc.regiHistoryInsert(work);
+	   		
+	       	mv.setViewName("/addys/loginForm");
       		return mv;
 		}
 	   
@@ -1340,9 +1513,27 @@ public class MasterController {
        HttpSession session = request.getSession();
        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+       String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+       String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
        
        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-       	mv.setViewName("/addys/loginForm");
+       	
+	       	//로그인 상태처리		
+	   		UserVO userState =new UserVO();
+	   		userState.setUserId(strUserId);
+	   		userState.setLoginYn("N");
+	   		userState.setIp(strIp);
+	   		userState.setConnectIp(sClientIP);
+	   		userSvc.regiLoginYnUpdate(userState);
+	           
+	           //작업이력
+	   		WorkVO work = new WorkVO();
+	   		work.setWorkUserId(strUserId);
+	   		work.setWorkCategory("CM");
+	   		work.setWorkCode("CM004");
+	   		commonSvc.regiHistoryInsert(work);
+	   		
+	       	mv.setViewName("/addys/loginForm");
       		return mv;
 		}
        
@@ -1397,9 +1588,27 @@ public class MasterController {
        HttpSession session = request.getSession();
        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+       String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+       String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
        
        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-       	mv.setViewName("/addys/loginForm");
+       	
+	       	//로그인 상태처리		
+	   		UserVO userState =new UserVO();
+	   		userState.setUserId(strUserId);
+	   		userState.setLoginYn("N");
+	   		userState.setIp(strIp);
+	   		userState.setConnectIp(sClientIP);
+	   		userSvc.regiLoginYnUpdate(userState);
+	           
+	           //작업이력
+	   		WorkVO work = new WorkVO();
+	   		work.setWorkUserId(strUserId);
+	   		work.setWorkCategory("CM");
+	   		work.setWorkCode("CM004");
+	   		commonSvc.regiHistoryInsert(work);
+	   		
+	       	mv.setViewName("/addys/loginForm");
       		return mv;
 		}
        
@@ -1459,9 +1668,27 @@ public class MasterController {
        HttpSession session = request.getSession();
        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+       String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+       String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
        
        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-       	mv.setViewName("/addys/loginForm");
+       	
+	       	//로그인 상태처리		
+	   		UserVO userState =new UserVO();
+	   		userState.setUserId(strUserId);
+	   		userState.setLoginYn("N");
+	   		userState.setIp(strIp);
+	   		userState.setConnectIp(sClientIP);
+	   		userSvc.regiLoginYnUpdate(userState);
+	           
+	           //작업이력
+	   		WorkVO work = new WorkVO();
+	   		work.setWorkUserId(strUserId);
+	   		work.setWorkCategory("CM");
+	   		work.setWorkCode("CM004");
+	   		commonSvc.regiHistoryInsert(work);
+	   		
+	       	mv.setViewName("/addys/loginForm");
       		return mv;
 		}
        
@@ -1504,9 +1731,27 @@ public class MasterController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	mv.setViewName("/addys/loginForm");
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
        		return mv;
  		}
         
@@ -1694,6 +1939,13 @@ public class MasterController {
           mv.addObject("rtnSuccessList", rtnSuccessList);
 
           mv.setViewName("/master/uploadResult");
+          
+          //작업이력
+     	  WorkVO work = new WorkVO();
+     	  work.setWorkUserId(strUserId);
+     	  work.setWorkCategory("SA");
+     	  work.setWorkCode("SA001");
+     	  commonSvc.regiHistoryInsert(work);
    	 
           //log Controller execute time end
           long t2 = System.currentTimeMillis();
@@ -1752,9 +2004,27 @@ public class MasterController {
 	   HttpSession session = request.getSession();
 	   String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
 	   String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
-	   
-	   if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-	   	mv.setViewName("/addys/loginForm");
+       String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+       String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+       
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+       	
+	       	//로그인 상태처리		
+	   		UserVO userState =new UserVO();
+	   		userState.setUserId(strUserId);
+	   		userState.setLoginYn("N");
+	   		userState.setIp(strIp);
+	   		userState.setConnectIp(sClientIP);
+	   		userSvc.regiLoginYnUpdate(userState);
+	           
+	           //작업이력
+	   		WorkVO work = new WorkVO();
+	   		work.setWorkUserId(strUserId);
+	   		work.setWorkCategory("CM");
+	   		work.setWorkCode("CM004");
+	   		commonSvc.regiHistoryInsert(work);
+	   		
+	       	mv.setViewName("/addys/loginForm");
 	  		return mv;
 		}
 	   
@@ -1802,9 +2072,27 @@ public class MasterController {
       HttpSession session = request.getSession();
       String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
       String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+      String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+      String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
       
       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-      	mv.setViewName("/addys/loginForm");
+      	
+	       	//로그인 상태처리		
+	   		UserVO userState =new UserVO();
+	   		userState.setUserId(strUserId);
+	   		userState.setLoginYn("N");
+	   		userState.setIp(strIp);
+	   		userState.setConnectIp(sClientIP);
+	   		userSvc.regiLoginYnUpdate(userState);
+	           
+	           //작업이력
+	   		WorkVO work = new WorkVO();
+	   		work.setWorkUserId(strUserId);
+	   		work.setWorkCategory("CM");
+	   		work.setWorkCode("CM004");
+	   		commonSvc.regiHistoryInsert(work);
+	   		
+	       	mv.setViewName("/addys/loginForm");
      		return mv;
    	}
       
@@ -1860,9 +2148,27 @@ public class MasterController {
     HttpSession session = request.getSession();
     String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
     String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+    String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+    String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
     
     if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-    	mv.setViewName("/addys/loginForm");
+    	
+	       	//로그인 상태처리		
+	   		UserVO userState =new UserVO();
+	   		userState.setUserId(strUserId);
+	   		userState.setLoginYn("N");
+	   		userState.setIp(strIp);
+	   		userState.setConnectIp(sClientIP);
+	   		userSvc.regiLoginYnUpdate(userState);
+	           
+	           //작업이력
+	   		WorkVO work = new WorkVO();
+	   		work.setWorkUserId(strUserId);
+	   		work.setWorkCategory("CM");
+	   		work.setWorkCode("CM004");
+	   		commonSvc.regiHistoryInsert(work);
+	   		
+	       	mv.setViewName("/addys/loginForm");
    		return mv;
  	}
 
@@ -1902,9 +2208,27 @@ public class MasterController {
       HttpSession session = request.getSession();
       String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
       String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+      String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+      String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
       
       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-      	mv.setViewName("/addys/loginForm");
+      	
+	       	//로그인 상태처리		
+	   		UserVO userState =new UserVO();
+	   		userState.setUserId(strUserId);
+	   		userState.setLoginYn("N");
+	   		userState.setIp(strIp);
+	   		userState.setConnectIp(sClientIP);
+	   		userSvc.regiLoginYnUpdate(userState);
+	           
+	           //작업이력
+	   		WorkVO work = new WorkVO();
+	   		work.setWorkUserId(strUserId);
+	   		work.setWorkCategory("CM");
+	   		work.setWorkCode("CM004");
+	   		commonSvc.regiHistoryInsert(work);
+	   		
+	       	mv.setViewName("/addys/loginForm");
      		return mv;
    	}
       
@@ -1970,9 +2294,27 @@ public class MasterController {
       HttpSession session = request.getSession();
       String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
       String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+      String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+      String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
       
       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-      	mv.setViewName("/addys/loginForm");
+      	
+	       	//로그인 상태처리		
+	   		UserVO userState =new UserVO();
+	   		userState.setUserId(strUserId);
+	   		userState.setLoginYn("N");
+	   		userState.setIp(strIp);
+	   		userState.setConnectIp(sClientIP);
+	   		userSvc.regiLoginYnUpdate(userState);
+	           
+	           //작업이력
+	   		WorkVO work = new WorkVO();
+	   		work.setWorkUserId(strUserId);
+	   		work.setWorkCategory("CM");
+	   		work.setWorkCode("CM004");
+	   		commonSvc.regiHistoryInsert(work);
+	   		
+	       	mv.setViewName("/addys/loginForm");
      		return mv;
 		}
 
@@ -2087,9 +2429,27 @@ public class MasterController {
       HttpSession session = request.getSession();
       String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
       String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+      String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+      String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
       
       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-      	mv.setViewName("/addys/loginForm");
+      	
+	       	//로그인 상태처리		
+	   		UserVO userState =new UserVO();
+	   		userState.setUserId(strUserId);
+	   		userState.setLoginYn("N");
+	   		userState.setIp(strIp);
+	   		userState.setConnectIp(sClientIP);
+	   		userSvc.regiLoginYnUpdate(userState);
+	           
+	           //작업이력
+	   		WorkVO work = new WorkVO();
+	   		work.setWorkUserId(strUserId);
+	   		work.setWorkCategory("CM");
+	   		work.setWorkCode("CM004");
+	   		commonSvc.regiHistoryInsert(work);
+	   		
+	       	mv.setViewName("/addys/loginForm");
      		return mv;
 		}
      
@@ -2140,9 +2500,27 @@ public class MasterController {
  		HttpSession session = request.getSession();
  		String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
  		String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
-      
-      	if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-      		mv.setViewName("/addys/loginForm");
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
       		return mv;
 		}
       
@@ -2410,6 +2788,13 @@ public class MasterController {
 	    	
 	    }
 
+	      //작업이력
+	 	 WorkVO work = new WorkVO();
+	 	 work.setWorkUserId(strUserId);
+	 	 work.setWorkCategory("LM");
+	 	 work.setWorkCode("LM001");
+	 	 commonSvc.regiHistoryInsert(work);
+ 	 
 		//log Controller execute time end
 	 	long t2 = System.currentTimeMillis();
 	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -2445,6 +2830,13 @@ public class MasterController {
 	    stockVO.setUpdateUserId(strUserId);
 
 		int retVal=this.stockMasterSvc.stockCntUpdateProc(stockVO);
+		
+	     //작업이력
+		 WorkVO work = new WorkVO();
+		 work.setWorkUserId(strUserId);
+		 work.setWorkCategory("PD");
+		 work.setWorkCode("PD004");
+		 commonSvc.regiHistoryInsert(work);
 		
 		//log Controller execute time end
      	long t2 = System.currentTimeMillis();
@@ -2482,6 +2874,13 @@ public class MasterController {
 	    orderLimitVO.setDeletedUserId(strUserId);
 
 		int retVal=this.orderLimitSvc.orderLimitCance(orderLimitVO);
+		
+	     //작업이력
+		 WorkVO work = new WorkVO();
+		 work.setWorkUserId(strUserId);
+		 work.setWorkCategory("LM");
+		 work.setWorkCode("LM002");
+		 commonSvc.regiHistoryInsert(work);
 		
 		//log Controller execute time end
      	long t2 = System.currentTimeMillis();

@@ -31,6 +31,8 @@ public class SmsServiceImpl implements SmsService {
 
 	private final Logger        logger = Logger.getLogger(getClass());
 
+  @Autowired
+    private SqlSessionCommonDao commonDao;
 
 	@Override
 
@@ -90,6 +92,9 @@ public class SmsServiceImpl implements SmsService {
     		sms.setResultCode(""+retCode);
     		sms.setResultMessage(""+retMessage);
     		sms.setResultLastPoint(""+retLastPoint);
+    		
+    		//sms history db insert
+    		this.commonDao.insert("Sms.smsHistoryInsert", sms);
     		
 
         } catch(Exception e){

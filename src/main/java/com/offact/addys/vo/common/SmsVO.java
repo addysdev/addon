@@ -16,6 +16,7 @@ public class SmsVO extends AbstractVO {
 	 String smsMsg;
 	 String smsDateTime;
 	 String smsUserId;
+	 String smsUserName;
 	 String resultCode;
 	 String resultMessage;
 	 String resultLastPoint;
@@ -98,6 +99,12 @@ public class SmsVO extends AbstractVO {
 	}
 	public void setSmsType(String smsType) {
 		this.smsType = smsType;
+	}
+	public String getSmsUserName() {
+		return smsUserName;
+	}
+	public void setSmsUserName(String smsUserName) {
+		this.smsUserName = smsUserName;
 	}
 
 }

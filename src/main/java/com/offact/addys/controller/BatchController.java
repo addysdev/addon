@@ -213,6 +213,7 @@ public class BatchController {
 		smsVO.setSmsPw(smsPw);
 		smsVO.setSmsType(smsType);
 		smsVO.setSmsFrom(sendNo);
+		smsVO.setSmsUserId("system");
 
     	List<UserVO> smsNoList = null;
     	UserVO userConVO = new UserVO();

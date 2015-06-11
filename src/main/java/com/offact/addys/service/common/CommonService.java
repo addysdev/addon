@@ -26,6 +26,14 @@ public interface CommonService {
      * @throws BizException
      */
     public List<CodeVO> getCodeComboList(CodeVO code) throws BizException;
+    
+    /**
+     * 코드 목록
+     *
+     * @return
+     * @throws BizException
+     */
+    public List<CodeVO> getWorkCodeList(CodeVO code) throws BizException;
 
     /**
      * 그룹 목록
@@ -92,20 +100,5 @@ public interface CommonService {
     public int regiHistoryInsert(WorkVO work)
     	    throws BizException;
     
-    /**
-     * 업무이력 조회
-     * 
-     * @return
-     * @throws BizException
-     */
-    public List<WorkVO> getWorkHistoryPageList(WorkVO work) throws BizException;
-
-    /**
-     * 업무이력 갯수
-     * 
-     * @return
-     * @throws BizException
-     */
-    public int getCompanyCnt(WorkVO work) throws BizException;
 
 }

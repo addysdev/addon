@@ -39,6 +39,13 @@ public class CommonServiceImpl implements CommonService {
         return codeList;
     }
    
+   @Override
+   public List<CodeVO> getWorkCodeList(CodeVO code) throws BizException {
+       List<CodeVO> codeList = commonDao.selectList("Code.getWorkCodeList", code);
+
+       return codeList;
+   }
+  
 
    @Override
     public List<GroupVO> getGroupComboList(GroupVO group) throws BizException {
@@ -125,17 +132,5 @@ public class CommonServiceImpl implements CommonService {
 	    return retVal;
 	    
   }
-   
-   @Override
-   public List<WorkVO> getWorkHistoryPageList(WorkVO workcondition) throws BizException {
-   	
-       List<WorkVO> workList = commonDao.selectList("Work.getWorkHistoryPageList", workcondition);
 
-       return workList;
-   }
-
-   @Override
-   public int getCompanyCnt(WorkVO workcondition) throws BizException {
-       return commonDao.selectOne("Work.getWorkHistoryCnt", workcondition);
-   }
 }
