@@ -22,14 +22,14 @@
 /*
 * 후이즈와 계약한 아이디와 패스워드로 아래 값을 변경해서 사용해주세요
 */
-String sms_id = "smstest";
-String sms_passwd = "smstest";
+String sms_id = "netscyber";
+String sms_passwd = "doeltm0407";
 
 // 로그인
 whois_sms.login (sms_id, sms_passwd);
 
 // 파라메터 설정
-whois_sms.setParams (2008, 11);	// whois_sms.setParams ([년도], [월]);
+whois_sms.setParams (2015, 06);	// whois_sms.setParams ([년도], [월]);
 
 // 월별 발송 통계
 whois_sms.emmaStatistic();

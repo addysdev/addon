@@ -169,7 +169,7 @@
 <div class="container-fluid">
     <!-- 서브타이틀 영역 : 시작 -->
 	<div class="sub_title">
-   		<p class="titleP">업무이력</p>
+   		<p class="titleP">업무 처리이력</p>
 	</div>
 	<!-- 서브타이틀 영역 : 끝 -->
 	  <!-- 조회조건 -->

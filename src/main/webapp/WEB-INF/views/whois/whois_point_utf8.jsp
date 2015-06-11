@@ -21,8 +21,8 @@
 /*
 * 후이즈와 계약한 아이디와 패스워드로 아래 값을 변경해서 사용해주세요
 */
-String sms_id = "smstest";
-String sms_passwd = "smstest";
+String sms_id = "netscyber";
+String sms_passwd = "doeltm0407";
 
 // 로그인
 whois_sms.login (sms_id, sms_passwd);

@@ -19,7 +19,7 @@
         });
     }
     // 재고 상세 페이지 리스트 Layup
-    function fcTarget_detail(orderCode,groupId,groupName,companyCode,companyName,orderState,productPrice,vat,orderPrice,safeOrderCnt) {
+    function fcTarget_detail(orderCode,groupId,groupName,companyCode,companyName,orderState,productPrice,vat,orderPrice,safeOrderCnt,orderAddress) {
 
     	if(companyName==''){
     		
@@ -49,7 +49,7 @@
                 //팝업 가져올 url
                 $(this).load(url+'?orderCode='+orderCode+'&groupId='+groupId+'&safeOrderCnt='+safeOrderCnt+
                 		'&groupName='+encodeURIComponent(groupName)+'&companyCode='+companyCode+
-                		'&orderState='+orderState+'&productPrice='+productPrice+'&vat='+vat+'&orderPrice='+orderPrice);
+                		'&orderState='+orderState+'&productPrice='+productPrice+'&vat='+vat+'&orderPrice='+orderPrice+'&orderAddress='+encodeURIComponent(orderAddress));
                
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#targetDetailView").dialog('close');
@@ -103,7 +103,7 @@
 					</c:when>
 					<c:otherwise>
 						<tr id="select_tr_${targetVO.groupId}_${targetVO.companyCode}">
-						 <td class='text-center'><a href="javascript:fcTarget_detail('${targetVO.orderCode}','${targetVO.groupId}','${targetVO.groupName}','${targetVO.companyCode}','${targetVO.companyName}','${targetVO.orderState}','${targetVO.productPrice}','${targetVO.vat}','${targetVO.orderPrice}','${targetVO.safeOrderCnt}')">       
+						 <td class='text-center'><a href="javascript:fcTarget_detail('${targetVO.orderCode}','${targetVO.groupId}','${targetVO.groupName}','${targetVO.companyCode}','${targetVO.companyName}','${targetVO.orderState}','${targetVO.productPrice}','${targetVO.vat}','${targetVO.orderPrice}','${targetVO.safeOrderCnt}','${targetVO.orderAddress}')">       
 					</c:otherwise>
 				</c:choose>
                  <c:out value="${targetVO.orderStateView}"></c:out></a></td>

@@ -209,8 +209,8 @@
 					   <img src="<%= request.getContextPath() %>/images/top/addys-menu_01.jpg" name="menu_01" border="0" id="menu_01" />
 					</a> 
 			          <ul class="dropdown-menu" role="menu">
-			            <li><a href="<%= request.getContextPath() %>/order/targetmanage" >발주리스트</a></li>
-			            <li><a href="<%= request.getContextPath() %>/order/ordermanage" >검수리스트</a></li>                        
+			            <li><a href="<%= request.getContextPath() %>/order/targetmanage" >발주 리스트</a></li>
+			            <li><a href="<%= request.getContextPath() %>/order/ordermanage" >검수 리스트</a></li>                        
 			          </ul>
 			        </li>
 					<!-- 발주관리 끝 -->
@@ -220,7 +220,7 @@
 					   <img src="<%= request.getContextPath() %>/images/top/addys-menu_02.jpg"   name="menu_02" border="0" id="menu_02"  /></a>
 					</a> 
 			          <ul class="dropdown-menu" role="menu">
-		            	<li><a href="<%= request.getContextPath() %>/recovery/collectmanage">회수리스트</a></li>                    
+		            	<li><a href="<%= request.getContextPath() %>/recovery/collectmanage">회수 리스트</a></li>                    
 		          	</ul>
 			        </li>
 			        <c:if test="${strAuth != '03'}">
@@ -230,9 +230,9 @@
 					   <img src="<%= request.getContextPath() %>/images/top/addys-menu_05.jpg"   name="menu_05" border="0" id="menu_05"  /></a>
 					</a> 
 			          <ul class="dropdown-menu" role="menu">
-			            <li><a href="<%= request.getContextPath() %>/history/smshistorymanage">SMS이력</a></li>
+			            <li><a href="<%= request.getContextPath() %>/history/smshistorymanage">SMS 전송이력</a></li>
 			            <c:if test="${strAuth == '01'}">
-			            <li><a href="<%= request.getContextPath() %>/history/workhistorymanage">업무이력</a></li>
+			            <li><a href="<%= request.getContextPath() %>/history/workhistorymanage">업무 처리이력</a></li>
 			            </c:if>             
 		          	</ul>
 			        </li>
@@ -256,8 +256,8 @@
 			          <a class="dropdown-toggle" data-toggle="dropdown" href="#"  onmouseover="MM_nbGroup('over','menu_04','<%= request.getContextPath() %>/images/top/addys-menu_04_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_04_on.jpg',1)" onmouseout="MM_nbGroup('out')">
 						<img src="<%= request.getContextPath() %>/images/top/addys-menu_04.jpg"   name="menu_04" border="0" id="menu_04"  /></a>
 			          <ul class="dropdown-menu" role="menu">
-			            <li><a href="<%= request.getContextPath() %>/manage/usermanage">계정관리</a></li>
-			            <li><a href="<%= request.getContextPath() %>/manage/companymanage">업체관리</a></li>
+			            <li><a href="<%= request.getContextPath() %>/manage/usermanage">계정 관리</a></li>
+			            <li><a href="<%= request.getContextPath() %>/manage/companymanage">업체 관리</a></li>
 			            <!-- li><a href="#">조직관리</a></li>
 			            <li><a href="#">메뉴권한관리</a></li -->                        
 			          </ul>

@@ -74,6 +74,7 @@
          T1.limitEndDate,
          T1.groupID,
          T4.groupName,
+         T4.address as orderAddress,
 		 T1.companyCode,
          T1.companyName,
          SUM(T1.orderCnt) as orderCnt,/*안전재고 기준점 TOTAL  해당*/

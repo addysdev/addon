@@ -294,7 +294,8 @@ public class OrderController {
     		                              String productPrice,
     		                              String vat,
     		                              String orderPrice,
-    		                              String safeOrderCnt) throws BizException 
+    		                              String safeOrderCnt,
+    		                              String orderAddress) throws BizException 
     {   	
     	//log Controller execute time start
 		String logid=logid();
@@ -390,6 +391,8 @@ public class OrderController {
         targetVO.setTelNumber(companyVO.getCompanyPhone());
         targetVO.setEmail(companyVO.getEmail());
         targetVO.setDeliveryDate(strDeliveryDay);
+        
+        targetVO.setOrderAddress(orderAddress);
         
         mv.addObject("targetVO", targetVO);
         

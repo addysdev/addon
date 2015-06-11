@@ -646,7 +646,7 @@ function fcDefer_reason(reason){
 		  </div>
           </th>
           <th rowspan='2' class='text-center' style="background-color:#E6F3FF">배송주소</th>
-          <th rowspan='2' class='text-center'><textarea style='height:82px'  class="form-control" row="2" id="orderAddress"  maxlength="50"  name="orderAddress" >서울특별시 영등포구 여의도동 54-6 영창빌딩 6층 물류팀</textarea></th>
+          <th rowspan='2' class='text-center'><textarea style='height:82px'  class="form-control" row="2" id="orderAddress"  maxlength="50"  name="orderAddress" >${targetVO.orderAddress}</textarea></th>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">납품일자</th>
