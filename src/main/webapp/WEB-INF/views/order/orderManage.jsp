@@ -200,6 +200,7 @@
 </div>
 <div id="deferDialog"  title="보류사유를 입력하세요"></div>
 <div id="deferReasonList"  title="보류사유"></div>
+<div id="barCodeDialog"  title="바코드 검수"></div>
 <br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>
 <script type="text/javascript">

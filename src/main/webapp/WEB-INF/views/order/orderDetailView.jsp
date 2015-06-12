@@ -626,6 +626,59 @@ function totalTargetAmt(){
             }
         });
     };
+    
+    function fcBarCode_check(){
+    	
+    	if (confirm('바코드 스캐너를 통해 검수수량을 자동입력 하시겠습니까?')){ 
+    	
+	    	var url='<%= request.getContextPath() %>/order/barcodecheck';
+	
+	    	$('#barCodeDialog').dialog({
+	            resizable : false, //사이즈 변경 불가능
+	            draggable : true, //드래그 불가능
+	            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+	
+	            width : 300,
+	            height : 490,
+	            modal : true, //주위를 어둡게
+	
+	            open:function(){
+	                //팝업 가져올 url
+	              //  $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode+'&productNaem='+encodeURIComponent(productName));
+	                $(this).load(url);
+	               
+	                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+	                    $("#barCodeDialog").dialog('close');
+	
+	                    });
+	            }
+	            ,close:function(){
+	            	$('#barCodeDialog').empty();
+	            }
+	        });
+	    	
+	    	var frm=document.orderDetailListForm;
+			var amtCnt = frm.productCode.length;
+			
+			if(amtCnt==undefined){
+				amtCnt=1;
+			}
+			
+			if(amtCnt > 1){
+				
+		    	for(i=0;i<amtCnt;i++){
+		    		frm.orderResultCnt[i].value=0;
+		    	}
+		    	
+			}else{
+				
+				frm.orderResultCnt.value=0;
+			}
+			
+			totalOrderAmt(); 	
+	    	
+    	}
+    };
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -750,7 +803,8 @@ function totalTargetAmt(){
           <span id="totalOrderCnt" style="color:red"></span> 
           <span style="color:blue"> [검수 합계금액] :</span>
           <span id="totalOrderAmt" style="color:red">
-        </span>
+          </span>&nbsp;&nbsp;&nbsp;&nbsp;
+          <button type="button" class="btn btn-xs btn-info" onClick="fcBarCode_check()" >바코드 검수</button>
       </p> 
       
        <div class="thead">
@@ -759,8 +813,8 @@ function totalTargetAmt(){
  		<colgroup>
 	      <col width="50px" >
 	      <col width="80px" >
-	      <col width="100px" >
-	      <col width="240px">
+	      <col width="110px" >
+	      <col width="230px">
 	      <col width="50px">
 	      <col width="65px">
 	      <col width="70px">
@@ -798,8 +852,8 @@ function totalTargetAmt(){
 	      <colgroup>
 	      <col width="50px" >
 	      <col width="80px" >
-	      <col width="100px" >
-	      <col width="240px">
+	      <col width="110px" >
+	      <col width="230px">
 	      <col width="50px">
 	      <col width="65px">
 	      <col width="70px">
@@ -834,7 +888,9 @@ function totalTargetAmt(){
 					</c:otherwise>
 				</c:choose>
                  <td class='text-center'><c:out value="${orderVO.productCode}"></c:out></td>
-                 <td class='text-center'><c:out value="${orderVO.barCode}"></c:out></td>
+                 <td class='text-center'><c:out value="${orderVO.barCode}"></c:out>
+                 <br>
+                 <span id="barCodeView" style="color:red"></span></td>
                  <td class='text-left'><c:out value="${orderVO.productName}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.orderCnt}"/></td>
                  <input type="hidden" name="orderCnt" value="${orderVO.orderCnt}">
