@@ -183,7 +183,7 @@ function barCodeCheck(){
           <span id="checkFCnt" style="color:red">0건
           </span>
           <br><br>
-<p><textarea style='height:340px;ime-mode:active;' class="form-control" id="barcode_list" maxlength="200" name="barcode_list"  value=""  placeholder="바코드를 스캔하세요" onkeyPress='javascript:EnterKey(event);' /></p>
+<p><textarea style='height:340px;ime-mode:active;' class="form-control" id="barcode_list" name="barcode_list"  value=""  placeholder="바코드를 스캔하세요" onkeyPress='javascript:EnterKey(event);' /></p>
 <br>
 <button id="deferpopclosebtn" type="button" class="btn btn-danger" onClick="fcBarCode_cancel()">바코드 검수취소</button>&nbsp;<button id="deferpopclosebtn" type="button" class="btn btn-default" onClick="fcBarCode_close()">닫기</button>  
 </form:form>

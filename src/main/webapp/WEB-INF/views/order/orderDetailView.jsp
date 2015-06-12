@@ -629,7 +629,7 @@ function totalTargetAmt(){
     
     function fcBarCode_check(){
     	
-    	if (confirm('바코드 스캐너를 통해 검수수량을 자동입력 하시겠습니까?')){ 
+    	if (confirm('바코드 스캐너를 통해 검수수량을 자동입력 하시겠습니까?\n자동검수 처리시 스캐너 연동 및 환경이 정상적으로 설정 되어 있어야 합니다.')){ 
     	
 	    	var url='<%= request.getContextPath() %>/order/barcodecheck';
 	

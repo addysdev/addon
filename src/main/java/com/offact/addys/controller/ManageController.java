@@ -995,7 +995,15 @@ public class ManageController {
                  for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
 	   	            myCell = row.getCell(cellcnt); 
 	   	            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
-	   	            	cellItemTmp[cellcnt] = String.valueOf(myCell.getNumericCellValue()); 
+	   	            	
+	   	            	String rawCell = String.valueOf(myCell.getNumericCellValue());
+		            	int endChoice = rawCell.lastIndexOf("E");
+		            	if(endChoice>0){
+		            		rawCell= rawCell.substring(0, endChoice);
+			            	rawCell= rawCell.replace(".", "");
+		            	}
+		            	cellItemTmp[cellcnt]=rawCell;
+		            	
 	   	            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
 	   	            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
 	   	            }else{//그외 cell type
