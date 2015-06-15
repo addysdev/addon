@@ -5,6 +5,7 @@ encoding//src/main/resources_real/config.properties=UTF-8
 encoding//src/main/webapp/WEB-INF/views/addys/base.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/addys/top.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/addys/userModifyForm.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/analysis/holdStockManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/common/companySearch.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/common/companySearchList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/common/productSearch.jsp=UTF-8

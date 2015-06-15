@@ -223,6 +223,16 @@
 		            	<li><a href="<%= request.getContextPath() %>/recovery/collectmanage">회수 리스트</a></li>                    
 		          	</ul>
 			        </li>
+			        <!-- 분석 시작 -->
+					<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#"   onmouseover="MM_nbGroup('over','menu_06','<%= request.getContextPath() %>/images/top/addys-menu_06_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_06_on.jpg',1)" onmouseout="MM_nbGroup('out')">
+					   <img src="<%= request.getContextPath() %>/images/top/addys-menu_06.jpg"   name="menu_06" border="0" id="menu_06"  /></a>
+					</a> 
+			          <ul class="dropdown-menu" role="menu">
+		            	<li><a href="<%= request.getContextPath() %>/analysis/holdstockmanage">보유재고 분석/추천</a></li> 
+		            	<li><a href="<%= request.getContextPath() %>/analysis/gmroimanage">GMROI 분석</a></li>                           
+		          	</ul>
+			        </li>
 			        <c:if test="${strAuth != '03'}">
 			        <!-- 이력 시작 -->
 					<li class="dropdown">
