@@ -43,6 +43,20 @@
             }
             ,close:function(){
                 $('#orderDetailView').empty();
+                
+                
+               	try{
+	           		 // alert(barcodeObj);
+	               	  if(barcodeObj==undefined){
+	               		 	return;
+	                 	  }else{
+	                 		barcodeObj.close();
+	                 	  }
+	           		  
+	           	  }catch(e){
+	           		 return;
+	           	  }
+
             }
         });
     };

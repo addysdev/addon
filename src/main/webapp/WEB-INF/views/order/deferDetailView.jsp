@@ -2,7 +2,7 @@
 <style>
 
  .thead { height:67px; overflow:hidden; border:0px solid #dcdcdc; border-bottom:none; border-top:none; }
- .tbody { height:710px; .height:700px; overflow-y:scroll; overflow-x:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
+ .tbody { height:680px; .height:670px; overflow-y:scroll; overflow-x:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
  .tbody_evScore {height:530px;}
  .tbl_type {width:100%;border-bottom:1px solid #dcdcdc;text-align:center; table-layout:fixed;border-collapse:collapse;word-break:break-all;}
  .tbl_type td { padding:6px 0px; }
@@ -640,16 +640,27 @@ function fcDefer_modify(reason){
 	  </form:form>
 	 </div>
 	 
-     <form:form commandName="deferListVO" id="deferDetailListForm" name="deferDetailListForm" method="post" action="" >
-      <p> <span class="glyphicon glyphicon-asterisk"></span> 
-          <span style="color:blue"> [품목건수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetDetailList.size()}" /> 건   [발주 수량] </span>
-          <span id="totalOrderCnt" style="color:red">
-          </span><span style="color:blue"> [발주 합계금액]</span>
-          <span id="totalOrderAmt" style="color:red">
-          </span>
-        </span>
-      </p>  
-      
+     <form:form commandName="deferListVO" id="deferDetailListForm" name="deferDetailListForm" method="post" action="" > 
+       <table style="width:460px" class="table table-bordered tbl_type" >
+	     <colgroup>
+	      <col width="80px" >
+	      <col width="50px" >
+	      <col width="80px" >
+	      <col width="50px">
+	      <col width="100px">
+	      <col width="100px">
+	     </colgroup>
+	     <tr>
+	     	<td style="background-color:#E6F3FF">발주 건수</td>
+	     	<td class='text-right'><span style="color:red">
+	          <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetDetailList.size()}" /> 건
+	          </span></td>
+	     	<td style="background-color:#E6F3FF">발주 수량</td>
+	     	<td class='text-right'><span id="totalOrderCnt" style="color:red"></span></td>
+	     	<td style="background-color:#E6F3FF">발주 합계금액</td>
+	     	<td class='text-right'><span id="totalOrderAmt" style="color:red"></span></td>
+	     </tr>
+     </table>
       <div class="thead">
 	   <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed">
 	    <caption>발주대상리스트</caption>

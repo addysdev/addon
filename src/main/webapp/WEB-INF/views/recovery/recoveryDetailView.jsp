@@ -2,7 +2,7 @@
 <style>
 
  .thead { height:30px; overflow:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
- .tbody { height:730px; .height:720px; overflow-y:scroll; overflow-x:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
+ .tbody { height:680px; .height:670px; overflow-y:scroll; overflow-x:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
  .tbody_evScore {height:530px;}
  .tbl_type {width:100%;border-bottom:1px solid #dcdcdc;text-align:center; table-layout:fixed;border-collapse:collapse;word-break:break-all;}
  .tbl_type td { padding:6px 0px; }
@@ -541,8 +541,12 @@ function fcResult_cal(){
 		amtCnt=1;
 	}
 
+	var totalcnt=0;
+	var totalresultcnt=0;
 	var totalamt=0;
 	var totalresultamt=0;
+	
+	var totalprodcnt=0;
 
 	if(amtCnt>1){
     	for(i=0;i<amtCnt;i++){
@@ -554,7 +558,13 @@ function fcResult_cal(){
     		var sum_supplyresultAmt=productPrice*recoveryResultCnt;
 
     		totalamt=totalamt+sum_supplyAmt;
+    		totalcnt=totalcnt+recoveryCnt;
     		totalresultamt=totalresultamt+sum_supplyresultAmt;
+    		totalresultcnt=totalresultcnt+recoveryResultCnt;
+    		
+    		if(recoveryResultCnt>0){
+	    		totalprodcnt++;
+    		}
 
     	}
 	}else{
@@ -567,10 +577,18 @@ function fcResult_cal(){
 		var sum_supplyresultAmt=productPrice*recoveryResultCnt;
 
 		totalamt=totalamt+sum_supplyAmt;
+		totalcnt=totalcnt+recoveryCnt;
 		totalresultamt=totalresultamt+sum_supplyresultAmt;
+		totalresultcnt=totalresultcnt+recoveryResultCnt;
+		
+		if(recoveryResultCnt>0){
+    		totalprodcnt++;
+		}
 		
 	}
-
+	  document.all('totalProdCnt').innerText=addCommaStr(''+totalprodcnt)+' 건  ';
+	  document.all('totalRecoveryCnt').innerText=addCommaStr(''+totalcnt)+' 건  ';
+	  document.all('totalRecoveryResultCnt').innerText=addCommaStr(''+totalresultcnt)+' 건  ';
 	  document.all('totalRecoveryAmt').innerText=addCommaStr(''+totalamt)+' 원  ';
 	  document.all('totalRecoveryResultAmt').innerText=addCommaStr(''+totalresultamt)+' 원  ';
 		
@@ -711,17 +729,34 @@ function fcResult_cal(){
 	 </div>
 	 
      <form:form commandName="recoveryListVO" id="recoveryDetailListForm" name="recoveryDetailListForm" method="post" action="" >
-      <p> <span class="glyphicon glyphicon-asterisk"></span> 
-        <span style="color:blue"> [품목건수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryDetailList.size()}" /> 건  [회수합계 금액] :</span>
-        <span id="totalRecoveryAmt" style="color:gray">
-        </span>
-      </p>  
-      <p><span class="glyphicon glyphicon-asterisk"></span> 
-          <span style="color:blue"> [검수합계 금액] :</span>
-          <span id="totalRecoveryResultAmt" style="color:red">
-        </span>
-      </p>
-      
+       <table style="width:460px" class="table table-bordered tbl_type" >
+	     <colgroup>
+	      <col width="80px" >
+	      <col width="50px" >
+	      <col width="80px" >
+	      <col width="50px" >
+	      <col width="100px">
+	      <col width="100px">
+	     </colgroup>
+	     <tr>
+	     	<td style="background-color:#E6F3FF">회수 건수</td>
+	     	<td class='text-right'><span style="color:gray">
+	          <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryDetailList.size()}" /> 건  
+	          </span></td>
+	        <td style="background-color:#E6F3FF">회수 수량</td>
+	     	<td class='text-right'><span id="totalRecoveryCnt" style="color:gray"></span></td>  
+	     	<td style="background-color:#E6F3FF">회수 합계금액</td>
+	     	<td class='text-right'><span id="totalRecoveryAmt" style="color:gray"></span></td>
+	     </tr>
+	     <tr>
+	        <td style="background-color:#E6F3FF">검수 건수</td>
+	     	<td class='text-right'><span id="totalProdCnt" style="color:red"></span></td>
+	     	<td style="background-color:#E6F3FF">검수 수량</td>
+	     	<td class='text-right'><span id="totalRecoveryResultCnt" style="color:red"></span></td>
+	     	<td style="background-color:#E6F3FF">검수 합계금액</td>
+	     	<td class='text-right'><span id="totalRecoveryResultAmt" style="color:red"></span></td>
+	     </tr>
+     </table>
        <div class="thead">
 	   <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed">
 	    <caption>발주대상리스트</caption>

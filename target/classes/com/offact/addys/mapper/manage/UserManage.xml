@@ -52,7 +52,7 @@
 			  ,T4.userName as updateUserName
 			  ,T1.createDateTime As CreateDateTime
 			  ,T1.updateDateTime As UpdateDateTime
-			  ,T1.useYn
+			  ,ifnull(T1.useYn,'Y') as useYn
 			  ,T1.deletedYn
 			  ,ifnull(T1.smsYn,'N') as smsYn
           FROM ofUser T1
@@ -76,7 +76,7 @@
            <if test="con_useYn != null and con_useYn != ''" >
            AND T1.useYn = #{con_useYn}
            </if>
-         ORDER BY createDateTime desc
+         ORDER BY createDateTime,userId,groupId desc
  LIMIT ${page_limit_val1} , ${page_limit_val2}
 </select>
 

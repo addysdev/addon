@@ -191,7 +191,7 @@
   <!-- 조회결과리스트 -->
   <div id=orderPageList></div>
   <!-- 검수 상세처리화면-->
-  <div id="orderDetailView"  title="검수 처리화면"></div>
+  <div id="orderDetailView"  title="검수 처리화면" onkeyPress='javascript:EnterKey(event);' ></div>
   <!-- //검수 상세처리화면 -->
   
   <div id="memoManage"  title="메모관리"></div>

@@ -27,6 +27,19 @@
             ,close:function(){
          
                 $('#recoveryDetailView').empty();
+  
+                try{
+	           		 // alert(barcodeObj);
+	               	  if(transObj==undefined){
+	               		 	return;
+	                 	  }else{
+	                 		 transObj.close();
+	                 	  }
+	           		  
+	           	  }catch(e){
+	           		 return;
+	           	  }
+               
             }
         });
     };

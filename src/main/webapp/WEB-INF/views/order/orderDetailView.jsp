@@ -2,7 +2,7 @@
 <style>
 
  .thead { height:67px; overflow:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
- .tbody { height:700px; .height:690px; overflow-y:scroll; overflow-x:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
+ .tbody { height:640px; .height:650px; overflow-y:scroll; overflow-x:hidden; border:1px solid #dcdcdc; border-bottom:none; border-top:none; }
  .tbody_evScore {height:530px;}
  .tbl_type {width:100%;border-bottom:1px solid #dcdcdc;text-align:center; table-layout:fixed;border-collapse:collapse;word-break:break-all;}
  .tbl_type td { padding:6px 0px; }
@@ -298,6 +298,7 @@ function totalTargetAmt(){
     	var vatamt=0;
     	var totalamt=0;
     	var totalcnt=0;
+    	var totalprodcnt=0;
     	
     	if(amtCnt > 1){
     		
@@ -314,7 +315,11 @@ function totalTargetAmt(){
 	    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
 	    		vatamt=vatamt+sum_vatAmt;
 	    		totalcnt=totalcnt+orderCnt;
-	
+	    		
+	    		if(orderCnt>0){
+		    		totalprodcnt++;
+	    		}
+
 	    		document.all('orderTotalPriceView')[i].innerText=addCommaStr(''+(productPrice*orderCnt));
 	
 	    	}
@@ -332,12 +337,17 @@ function totalTargetAmt(){
     		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
     		vatamt=vatamt+sum_vatAmt;
     		totalcnt=totalcnt+orderCnt;
+    		
+    		if(orderCnt>0){
+	    		totalprodcnt++;
+    		}
 
     		document.all('orderTotalPriceView').innerText=addCommaStr(''+(productPrice*orderCnt));
     	}
 
     	  totalamt=supplyamt+vatamt;
     	
+    	  document.all('totalProdCnt').innerText=' '+addCommaStr(''+totalprodcnt)+' 건';
     	  document.all('totalOrderCnt').innerText=' '+addCommaStr(''+totalcnt)+' 건';
     	  document.all('totalOrderAmt').innerText=' '+addCommaStr(''+totalamt)+' 원';//  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
     }
@@ -626,13 +636,27 @@ function totalTargetAmt(){
             }
         });
     };
-    
+    /*
+     * 화면 POPUP
+     */
+    function tmt_winLaunch(theURL,winName,targetName,features) {
+    	
+    	//var targetRandom=Math.random();
+    	eval(winName+"=window.open('"+theURL+"','"+targetName+"','"+features+"')");
+
+    }
     function fcBarCode_check(){
     	
     	if (confirm('바코드 스캐너를 통해 검수수량을 자동입력 하시겠습니까?\n자동검수 처리시 스캐너 연동 및 환경이 정상적으로 설정 되어 있어야 합니다.')){ 
     	
 	    	var url='<%= request.getContextPath() %>/order/barcodecheck';
+
+			var h=490;
+			var s=300;
+
+		    tmt_winLaunch(url, 'barcodeObj', 'barcodeObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=no,scrollbars=yes');
 	
+		    /*
 	    	$('#barCodeDialog').dialog({
 	            resizable : false, //사이즈 변경 불가능
 	            draggable : true, //드래그 불가능
@@ -656,6 +680,7 @@ function totalTargetAmt(){
 	            	$('#barCodeDialog').empty();
 	            }
 	        });
+	    	*/
 	    	
 	    	var frm=document.orderDetailListForm;
 			var amtCnt = frm.productCode.length;
@@ -679,6 +704,27 @@ function totalTargetAmt(){
 	    	
     	}
     };
+    
+    function EnterKey(e)
+    { 
+      if(e.keyCode == 13)    // KeyCode  가 아니고 keyCode 입니다 .. 소문자 k
+      {
+    	  try{
+    		 // alert(barcodeObj);
+        	  if(barcodeObj==undefined){
+          		
+          	  }else{
+          		alert('[바코드 인식 실패!!]\n바코드 검수 상태에서는 바코드 검수창에 커서키가 놓여있어야 \n바코드 정상 인식 가능합니다.\n확인 후 다시한번 바코드 인식 부탁드립니다.');
+          		barcodeObj.document.barCodeForm.barcode_list.focus(1);
+          		//return;
+          	  }
+    		  
+    	  }catch(e){
+    		 return;
+    	  }
+    	 
+      }
+    }
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -792,21 +838,36 @@ function totalTargetAmt(){
 	 </div>
 	 
      <form:form commandName="orderListVO" id="orderDetailListForm" name="orderDetailListForm" method="post" action="" >
-      <p> <span class="glyphicon glyphicon-asterisk"></span> 
-          <span style="color:blue"> [품목건수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderDetailList.size()}" /> 건   [발주 수량] </span>
-          <span id="totalTargetCnt" style="color:gray">
-          </span><span style="color:blue"> [발주 합계금액]</span>
-          <span id="totalTargetAmt" style="color:gray">
-          </span>  
-      <p><span class="glyphicon glyphicon-asterisk"></span>
-          <span style="color:blue">[검수 수량] </span>
-          <span id="totalOrderCnt" style="color:red"></span> 
-          <span style="color:blue"> [검수 합계금액] :</span>
-          <span id="totalOrderAmt" style="color:red">
-          </span>&nbsp;&nbsp;&nbsp;&nbsp;
-          <button type="button" class="btn btn-xs btn-info" onClick="fcBarCode_check()" >바코드 검수</button>
-      </p> 
-      
+     <table style="width:460px" class="table table-bordered tbl_type" >
+	     <colgroup>
+	      <col width="80px" >
+	      <col width="50px" >
+	      <col width="80px" >
+	      <col width="50px">
+	      <col width="100px">
+	      <col width="100px">
+	      <col width="100px">
+	     </colgroup>
+	     <tr>
+	     	<td style="background-color:#E6F3FF">발주 건수</td>
+	     	<td class='text-right'><span style="color:gray">
+	          <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderDetailList.size()}" /> 건  
+	          </span></td>
+	     	<td style="background-color:#E6F3FF">발주 수량</td>
+	     	<td class='text-right'><span id="totalTargetCnt" style="color:gray"></span></td>
+	     	<td style="background-color:#E6F3FF">발주 합계금액</td>
+	     	<td class='text-right'><span id="totalTargetAmt" style="color:gray"></span></td>
+	     </tr>
+	     <tr>
+	        <td style="background-color:#E6F3FF">검수 건수</td>
+	     	<td class='text-right'><span id="totalProdCnt" style="color:red"></span></td>
+	     	<td style="background-color:#E6F3FF">검수 수량</td>
+	     	<td class='text-right'><span id="totalOrderCnt" style="color:red"></span></td>
+	     	<td style="background-color:#E6F3FF">검수 합계금액</td>
+	     	<td class='text-right'><span id="totalOrderAmt" style="color:red"></span></td>	
+	     	<c:if test="${orderVO.orderState=='03'}"><td>&nbsp;<button type="button" class="btn btn-xs btn-info" onClick="fcBarCode_check()" >바코드 검수</button></td></c:if>
+	     </tr>
+     </table>
        <div class="thead">
 	   <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed">
 	    <caption>발주대상리스트</caption>
@@ -867,7 +928,7 @@ function totalTargetAmt(){
 	        <c:if test="${!empty orderDetailList}">
              <c:forEach items="${orderDetailList}" var="orderVO" varStatus="status">
              	 <input type="hidden" id="seqs" name="seqs" >
-	             <tr id="select_tr_${orderVO.productCode}">
+	             <tr id="barCodeCheckColor" >
 				 <input type="hidden" name="productCode" value="${orderVO.productCode}">
 				 <input type="hidden" name="barCode" value="${orderVO.barCode}">
 				 <input type="hidden" name="productName" value="${orderVO.productName}">
@@ -935,7 +996,6 @@ function totalTargetAmt(){
       
 	 </form:form>
 	</div>
-
     <!-- //보류 상세화면 -->
 
     <!-- //보류 상세화면 -->
