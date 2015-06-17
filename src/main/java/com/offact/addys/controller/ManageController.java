@@ -457,12 +457,23 @@ public class ManageController {
     public @ResponseBody
     String userModify(@ModelAttribute("userVO") UserManageVO userVO, 
     		          HttpServletRequest request, 
-    		          HttpServletResponse response) throws BizException
+    		          HttpServletResponse response,
+    		          String workCode) throws BizException
     {
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
 		logger.info("["+logid+"] Controller start : userVO" + userVO);
+		
+		workCode=StringUtil.nvl(workCode,"MU002");
+		String workCategory="MU";
+		
+		if(workCode.equals("CM003")){
+			workCategory="CM";
+		}else{
+			workCategory="MU";
+			workCode="MU002";	
+		}
 
 		int retVal=this.userManageSvc.userUpdateProc(userVO);
 		
@@ -473,8 +484,8 @@ public class ManageController {
 		//작업이력
 		WorkVO work = new WorkVO();
 		work.setWorkUserId(strUserId);
-		work.setWorkCategory("MU");
-		work.setWorkCode("MU002");
+		work.setWorkCategory(workCategory);
+		work.setWorkCode(workCode);
 		commonSvc.regiHistoryInsert(work);
 		
 		//log Controller execute time end

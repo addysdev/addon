@@ -1,94 +1,78 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <SCRIPT>
     // 페이지 이동
-    function goPageProductMasterPageList(page) {
-        document.productMasterConForm.curPage.value = page;
-        var dataParam = $("#productMasterConForm").serialize();
+    function goPageGmroiPageList(page) {
+        document.gmroiConForm.curPage.value = page;
+        var dataParam = $("#gmroiConForm").serialize();
         commonDim(true);
         $.ajax({
             type: "POST",
-            url:  "<%= request.getContextPath() %>/master/productpagelist",
+            url:  "<%= request.getContextPath() %>/analysis/gmroipagelist",
               data:dataParam,
             success: function(result) {
                    commonDim(false);
-                   $("#productMasterPageList").html(result);
+                   $("#gmroiPageList").html(result);
             },
             error:function(){
                 commonDim(false);
             }
         });
     }
-    
-    // 품목 상세 페이지 Layup
-    function fcProduct_detailSearch(productCode) {
-
-    	$('#productDetail').dialog({
-            resizable : false, //사이즈 변경 불가능
-            draggable : true, //드래그 불가능
-            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
-
-            width : 650,
-            height : 750,
-            modal : true, //주위를 어둡게
-
-            open:function(){
-                //팝업 가져올 url
-                $(this).load('<%= request.getContextPath() %>/master/productmasterdetail?productCode='+productCode);
-                //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
-                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
-                    $("#productDetail").dialog('close');
-
-                    });
-            }
-            ,close:function(){
-                $('#productDetail').empty();
-            }
-        });
-    };
-
-
 </SCRIPT>
 
-     <form:form commandName="productMasterVO" name="productMasterPageListForm" method="post" action="" >
+     <form:form commandName="gmroiVO" name="gmroiPageListForm" method="post" action="" >
       <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
 	  <table class="table table-bordered">
 	  	<colgroup>
 	     <col width="10%" />
-         <col width="10%" />
-         <col width="*" />
-         <col width="10%" />
-         <col width="20%" />
-         <col width="10%" />
-         <col width="15%" />
+	     <col width="*" />
+         <col width="9%" />
+         <col width="9%" />
+         <col width="9%" />
+         <col width="9%" />
+         <col width="9%" />
+         <col width="9%" />
+         <col width="6%" />
+         <col width="6%" />
         </colgroup>
 	    <thead>
 	      <tr style="background-color:#E6F3FF">
-	        <th class='text-center'>품목코드</th>
-            <th class='text-center'>바코드</th>
-            <th class='text-center'>품목명</th>
-            <th class='text-center'>진행여부</th>
-            <th class='text-center'>구매처</th>
-            <th class='text-center'>업데이트 User</th>
-            <th class='text-center'>업데이트 일시</th>
+	        <th rowspan="2" class='text-center'>품목코드</th>
+            <th rowspan="2" class='text-center'>품목명</th>
+            <th colspan="2" class='text-center'>재고</th>
+            <th colspan="4" class='text-center'>매출</th>
+            <th rowspan="2" class='text-center'>재고금액<br>회전율</th>
+            <th rowspan="2" class='text-center'>GMROI</th>
+	      </tr>
+	      <tr style="background-color:#E6F3FF">
+	        <th class='text-center'>평균 재고수량</th>
+            <th class='text-center'>평균 재고금액</th>
+            <th class='text-center'>총 매출수량</th>
+            <th class='text-center'>총 매출금액</th>
+            <th class='text-center'>총 이익금액</th>
+            <th class='text-center'>총 이익율</th>
 	      </tr>
 	    </thead>
 	    <tbody>
-	    	<c:if test="${!empty productList}">
-             <c:forEach items="${productList}" var="productMasterVO" varStatus="status">
-             <tr id="select_tr_${productMasterVO.productCode}">
-                 <td class='text-center'><a href="javascript:fcProduct_detailSearch('${productMasterVO.productCode}')"><c:out value="${productMasterVO.productCode}"></c:out></a></td>
-                 <td class='text-center'><c:out value="${productMasterVO.barCode}"></c:out></td>
-                 <td><c:out value="${productMasterVO.productName}"></c:out></td>
-                 <td class='text-center'><c:out value="${productMasterVO.recoveryYnView}"></c:out></td>
-                 <td class='text-center'><c:out value="${productMasterVO.companyName}"></c:out></td>
-                 <td class='text-center'><c:out value="${productMasterVO.updateUserName}"></c:out></td>
-                 <td class='text-center'><c:out value="${productMasterVO.updateDateTime}"></c:out></td>
+	    	<c:if test="${!empty gmroiList}">
+             <c:forEach items="${gmroiList}" var="gmroiVO" varStatus="status">
+             <tr id="select_tr_${gmroiVO.productCode}">
+                 <td class='text-center'><c:out value="${gmroiVO.productCode}"></c:out></td>
+                 <td><c:out value="${gmroiVO.productName}"></c:out></td>
+                 <td class='text-center'><c:out value="${gmroiVO.avgStockCnt}"></c:out></td>
+                 <td class='text-center'><c:out value="${gmroiVO.avgStockAmt}"></c:out></td>
+                 <td class='text-center'><c:out value="${gmroiVO.totalSaleCnt}"></c:out></td>
+                 <td class='text-center'><c:out value="${gmroiVO.totalSaleAmt}"></c:out></td>
+                 <td class='text-center'><c:out value="${gmroiVO.profitSaleAmt}"></c:out></td>
+                 <td class='text-center'><c:out value="${gmroiVO.avgSaleRate}"></c:out></td>
+                 <td class='text-center'><c:out value="${gmroiVO.stockCycleRate}"></c:out></td>
+                 <td class='text-center'><c:out value="${gmroiVO.gmroiRate}"></c:out></td>
               </tr>
              </c:forEach>
             </c:if>
-           <c:if test="${empty productList}">
+           <c:if test="${empty gmroiList}">
            <tr>
-           	<td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='10' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>
@@ -96,6 +80,6 @@
 	 </form:form>
 
 	 <!-- 페이징 -->
-     <taglib:paging cbFnc="goPageProductMasterPageList" totalCount="${totalCount}" curPage="${productCon.curPage}" rowCount="${productCon.rowCount}" />
+     <taglib:paging cbFnc="goPageGmRoiPageList" totalCount="${totalCount}" curPage="${gmroiCon.curPage}" rowCount="${gmroiCon.rowCount}" />
      <!-- //페이징 -->
 

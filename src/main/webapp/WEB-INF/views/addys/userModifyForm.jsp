@@ -21,7 +21,7 @@
 		        type: "POST",
 		        async:false,
 		           url:  "<%= request.getContextPath() %>/manage/usermodify",
-		           data:$("#userModifyForm").serialize(),
+		           data:$("#userModifyForm").serialize()+"&workCode=CM003",
 		           success: function(result) {
 
 						if(result=='1'){

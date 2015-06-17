@@ -77,7 +77,7 @@
 </SCRIPT>
      <form:form commandName="targetVO" name="targetPageListForm" method="post" action="" >
       <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> 전체건수 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span> 
-      <span style="color:blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[발주제한] :</font> <a href="javascript:stateSearch('00')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.failureCnt}" /></a><font style="color:#FF9900">
+      <span style="color:blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[발주제한] :</font> <a href="javascript:stateSearch('00')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.failureCnt}" /></a>
       &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[발주대기] :</font> <a href="javascript:stateSearch('01')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.targetCnt}" /></a><font style="color:#FF9900">
       &nbsp;&nbsp;&nbsp;&nbsp;[발주보류] :</font> <a href="javascript:stateSearch('02')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.deferCnt}" /></a></span></p>       
 	  <table class="table table-bordered">

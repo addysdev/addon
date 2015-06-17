@@ -1,94 +1,88 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <SCRIPT>
     // 페이지 이동
-    function goPageProductMasterPageList(page) {
-        document.productMasterConForm.curPage.value = page;
-        var dataParam = $("#productMasterConForm").serialize();
+    function goPageHoldStockPageList(page) {
+        document.holdStockConForm.curPage.value = page;
+        var dataParam = $("#holdStockConForm").serialize();
         commonDim(true);
         $.ajax({
             type: "POST",
-            url:  "<%= request.getContextPath() %>/master/productpagelist",
+            url:  "<%= request.getContextPath() %>/analysis/holdstockpagelist",
               data:dataParam,
             success: function(result) {
                    commonDim(false);
-                   $("#productMasterPageList").html(result);
+                   $("#holdStockPageList").html(result);
             },
             error:function(){
                 commonDim(false);
             }
         });
     }
-    
-    // 품목 상세 페이지 Layup
-    function fcProduct_detailSearch(productCode) {
-
-    	$('#productDetail').dialog({
-            resizable : false, //사이즈 변경 불가능
-            draggable : true, //드래그 불가능
-            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
-
-            width : 650,
-            height : 750,
-            modal : true, //주위를 어둡게
-
-            open:function(){
-                //팝업 가져올 url
-                $(this).load('<%= request.getContextPath() %>/master/productmasterdetail?productCode='+productCode);
-                //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
-                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
-                    $("#productDetail").dialog('close');
-
-                    });
-            }
-            ,close:function(){
-                $('#productDetail').empty();
-            }
-        });
-    };
-
-
 </SCRIPT>
 
-     <form:form commandName="productMasterVO" name="productMasterPageListForm" method="post" action="" >
-      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
+     <form:form commandName="holdStockVO" name="holdStockPageListForm" method="post" action="" >
+      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span>
+      <span style="color:blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[total 보유재고금액] :</font><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalPriceVO.holdStockPrice}" /> 원 
+      &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[total 추천 보유재고금액] :</font> <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalPriceVO.recomendPrice}" /> 원 </span>
+      </p>       
 	  <table class="table table-bordered">
 	  	<colgroup>
 	     <col width="10%" />
          <col width="10%" />
          <col width="*" />
+         <col width="7%" />
+         <col width="7%" />
          <col width="10%" />
-         <col width="20%" />
-         <col width="10%" />
-         <col width="15%" />
+         <col width="7%" />
+         <col width="7%" />
+         <col width="7%" />
+         <col width="7%" />
+         <col width="5%" />
         </colgroup>
 	    <thead>
 	      <tr style="background-color:#E6F3FF">
-	        <th class='text-center'>품목코드</th>
-            <th class='text-center'>바코드</th>
-            <th class='text-center'>품목명</th>
-            <th class='text-center'>진행여부</th>
-            <th class='text-center'>구매처</th>
-            <th class='text-center'>업데이트 User</th>
-            <th class='text-center'>업데이트 일시</th>
+	        <th rowspan="2" class='text-center'>지점</th>
+	        <th rowspan="2" class='text-center'>품목코드</th>
+            <th rowspan="2" class='text-center'>품목명</th>
+            <th colspan="3" class='text-center'>보유재고</th>
+            <th colspan="3" class='text-center'>추천 보유재고</th>
+            <th rowspan="2" class='text-center'>증감율</th>
+            <th rowspan="2" class='text-center'>업데이트</th>
+	      </tr>
+	      <tr style="background-color:#E6F3FF">
+	        <th class='text-center'>적용(보유)일수</th>
+            <th class='text-center'>보유재고</th>
+            <th class='text-center'>보유재고 업데이트일시</th>
+            <th class='text-center'>평균매출수량</th>
+            <th class='text-center'>적용(보유)일수</th>
+            <th class='text-center'>추천 보유재고</th>
 	      </tr>
 	    </thead>
 	    <tbody>
-	    	<c:if test="${!empty productList}">
-             <c:forEach items="${productList}" var="productMasterVO" varStatus="status">
-             <tr id="select_tr_${productMasterVO.productCode}">
-                 <td class='text-center'><a href="javascript:fcProduct_detailSearch('${productMasterVO.productCode}')"><c:out value="${productMasterVO.productCode}"></c:out></a></td>
-                 <td class='text-center'><c:out value="${productMasterVO.barCode}"></c:out></td>
-                 <td><c:out value="${productMasterVO.productName}"></c:out></td>
-                 <td class='text-center'><c:out value="${productMasterVO.recoveryYnView}"></c:out></td>
-                 <td class='text-center'><c:out value="${productMasterVO.companyName}"></c:out></td>
-                 <td class='text-center'><c:out value="${productMasterVO.updateUserName}"></c:out></td>
-                 <td class='text-center'><c:out value="${productMasterVO.updateDateTime}"></c:out></td>
+	    	<c:if test="${!empty holdStockList}">
+             <c:forEach items="${holdStockList}" var="holdStockVO" varStatus="status">
+             <tr id="select_tr_${holdStockVO.productCode}">
+                 <td class='text-center'><c:out value="${holdStockVO.groupName}"></c:out></td>
+                 <td class='text-center'><c:out value="${holdStockVO.productCode}"></c:out></td>
+                 <td><c:out value="${holdStockVO.productName}"></c:out></td>
+                 <td class='text-right'><c:out value="${holdStockVO.applyDateCnt}일"></c:out></td>
+                 <td class='text-right'><sapn style="color:blue"><c:out value="${holdStockVO.holdStockCnt}"></c:out></sapn></td>
+                 <td class='text-center'><c:out value="${holdStockVO.holdStockDateTime}"></c:out></td>
+                 <td class='text-right'><c:out value="${holdStockVO.saleAvg}"></c:out></td>
+                 <td class='text-right'><c:out value="${holdStockVO.con_applyDateCnt}일"></c:out></td>
+                 <td class='text-right'><sapn style="color:red"><c:out value="${holdStockVO.recomendCnt}"></c:out></sapn></td>
+                 <td class='text-right'><c:out value="${holdStockVO.resultRate}%"></c:out></td>
+                 <td class='text-center'>
+                 <c:if test="${strAuth!='03'}">
+                 <button type="button" id="updatebtn" class="btn btn-xs btn-success" onClick="fcRecomend_update('${holdStockVO.productCode}','${holdStockVO.groupId}');">업데이트</button>
+                 </c:if>
+                 </td>
               </tr>
              </c:forEach>
             </c:if>
-           <c:if test="${empty productList}">
+           <c:if test="${empty holdStockList}">
            <tr>
-           	<td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='9' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>
@@ -96,6 +90,6 @@
 	 </form:form>
 
 	 <!-- 페이징 -->
-     <taglib:paging cbFnc="goPageProductMasterPageList" totalCount="${totalCount}" curPage="${productCon.curPage}" rowCount="${productCon.rowCount}" />
+     <taglib:paging cbFnc="goPageHoldStockPageList" totalCount="${totalCount}" curPage="${holdStockConVO.curPage}" rowCount="${holdStockConVO.rowCount}" />
      <!-- //페이징 -->
 

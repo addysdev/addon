@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -165,35 +169,35 @@ public class AddysController {
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
 
 		    ip = request.getHeader("Proxy-Client-IP"); 
-		    logger.info(">>>> ip :"+ip);
+		    logger.info(">>>> Proxy-Client-IP :"+ip);
 
 		} 
 
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
 
 		    ip = request.getHeader("WL-Proxy-Client-IP"); 
-		    logger.info(">>>> ip :"+ip);
+		    logger.info(">>>> WL-Proxy-Client-IP :"+ip);
 
 		} 
 
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
 
 		    ip = request.getHeader("HTTP_CLIENT_IP"); 
-		    logger.info(">>>> ip :"+ip);
+		    logger.info(">>>> HTTP_CLIENT_IP :"+ip);
 
 		} 
 
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
 
 		    ip = request.getHeader("HTTP_X_FORWARDED_FOR"); 
-		    logger.info(">>>> ip :"+ip);
+		    logger.info(">>>> HTTP_X_FORWARDED_FOR :"+ip);
 
 		} 
 
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
 
 		    ip = request.getRemoteAddr(); 
-		    logger.info(">>>> ip :"+ip);
+		    logger.info(">>>> RemoteAddr :"+ip);
 
 		}
 
@@ -220,9 +224,23 @@ public class AddysController {
 		String strEmail = "";
 		String strIp = "";
 		
-		strIp = ip;
+		strIp = ip;//Client 외부IP or G/W
+		
+		//서버 IP/MAC정보
 		sClientIP = request.getLocalAddr();
+		InetAddress serverIp;
+		serverIp=InetAddress.getLocalHost();
+		NetworkInterface network = NetworkInterface.getByInetAddress(serverIp);
+		byte[] mac = network.getHardwareAddress();
 
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < mac.length; i++) {
+			sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));		
+		}
+		logger.info(">>>> [Current MAC address ] ");
+		logger.info("@@@@ [serverIp] :"+serverIp);
+		logger.info("@@@@ [MAC addres] :"+sb.toString());
+		
 		logger.info(">>>> [strIp] :"+strIp);
 		logger.info(">>>> [sClientIP] :"+sClientIP);
 	
@@ -471,13 +489,6 @@ public class AddysController {
 		
 		userVO.setUpdateUserId(strUserId);
 		mv.addObject("userVO", userVO);
-		
-		//작업이력
-		WorkVO work = new WorkVO();
-		work.setWorkUserId(strUserId);
-		work.setWorkCategory("CM");
-		work.setWorkCode("CM003");
-		commonSvc.regiHistoryInsert(work);
 		
 		mv.setViewName("/addys/userModifyForm");
 		

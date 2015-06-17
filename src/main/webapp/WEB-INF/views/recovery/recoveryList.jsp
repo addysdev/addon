@@ -117,12 +117,35 @@
      <form:form commandName="recoveryVO" name="recoveryPageListForm" method="post" action="" >
       <input type="hidden" name="collectCode" id="collectCode" value="${recoveryConVO.collectCode}">
       <c:if test="${strAuth != '03'}">
-      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> 전체건수 : <a href="javascript:stateSearch('')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.totalCnt}" /></a></span> 
-      <span style="color:blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[대기] :</font> <a href="javascript:stateSearch('01')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.waitCnt}" /></a>
-      &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[발신] :</font> <a href="javascript:stateSearch('02')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.sendCnt}" /></a>    
-	  &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[수신] :</font> <a href="javascript:stateSearch('03')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.receiveCnt}" /></a>     
-	  &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[완료] :</font> <a href="javascript:stateSearch('04')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.checkCnt}" /></a>
-	  </span></p>   
+      <br>
+	  <table style="width:530px" class="table table-bordered tbl_type" >
+	     <colgroup>
+	      <col width="80px" >
+	      <col width="50px" >
+	      <col width="50px" >
+	      <col width="50px">
+	      <col width="50px" >
+	      <col width="50px" >
+	      <col width="50px" >
+	      <col width="50px">
+	      <col width="50px" >
+	      <col width="50px" >
+	     </colgroup>
+	     <tr>
+	     	<td class='text-center' style="background-color:#E6F3FF">전체건수</td>
+	     	<td class='text-right'><a href="javascript:stateSearch('')"><span style="color:red">
+	          <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.totalCnt}" />
+	          </span></a></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">대기</td>
+	     	<td class='text-right'><a href="javascript:stateSearch('01')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.waitCnt}" /></a></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">발신</td>
+	     	<td class='text-right'><a href="javascript:stateSearch('02')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.sendCnt}" /></a></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">수신</td>
+	     	<td class='text-right'><a href="javascript:stateSearch('03')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.receiveCnt}" /></a></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">완료</td>
+	     	<td class='text-right'><a href="javascript:stateSearch('04')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryState.checkCnt}" /></a></td>
+	     </tr>
+     </table>
 	  </c:if> 
 	  <input type="hidden" id="totalCnt" name="totalCnt" value="${recoveryState.totalCnt}">
 	  <input type="hidden" id="waitCnt" name="waitCnt" value="${recoveryState.waitCnt}">

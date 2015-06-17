@@ -48,8 +48,8 @@ import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.addys.service.common.CommonService;
 import com.offact.addys.service.common.UserService;
-import com.offact.addys.service.history.WorkHistoryService;
-import com.offact.addys.service.history.SmsHistoryService;
+import com.offact.addys.service.analysis.HoldStockService;
+import com.offact.addys.service.analysis.GmroiService;
 import com.offact.addys.service.master.ProductMasterService;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.GroupVO;
@@ -57,9 +57,12 @@ import com.offact.addys.vo.common.UserVO;
 import com.offact.addys.vo.common.WorkVO;
 import com.offact.addys.vo.master.StockMasterVO;
 import com.offact.addys.vo.master.ProductMasterVO;
+import com.offact.addys.vo.master.StockVO;
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.manage.CompanyManageVO;
 import com.offact.addys.vo.master.ProductMasterVO;
+import com.offact.addys.vo.analysis.HoldStockVO;
+import com.offact.addys.vo.analysis.GmroiVO;
 import com.offact.addys.vo.MultipartFileVO;
 
 /**
@@ -90,7 +93,10 @@ public class AnalysisController {
 	private UserService userSvc;
 	
     @Autowired
-    private ProductMasterService productMasterSvc;
+    private HoldStockService holdStockSvc;
+    
+    @Autowired
+    private GmroiService gmroiSvc;
     
     /**
      * 보유재고 분석/추천
@@ -142,21 +148,34 @@ public class AnalysisController {
        		return mv;
 		}
         
-        UserManageVO userConVO = new UserManageVO();
+      //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        Date deliveryTime = new Date();
+        int movedate=-7;//(1:내일 ,-1:어제)
         
-        userConVO.setUserId(strUserId);
-        userConVO.setGroupId(strGroupId);
-
+        deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+        
+        String strToday = simpleDateFormat.format(currentTime);
+        String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+        
+        HoldStockVO holdStockConVO = new HoldStockVO();
+        
+        holdStockConVO.setStart_saleDate(strDeliveryDay);
+        holdStockConVO.setEnd_saleDate(strToday);
+        
+        holdStockConVO.setUserId(strUserId);
+        holdStockConVO.setGroupId(strGroupId);
+        holdStockConVO.setApplyDateCnt("7");
+       
         // 조회조건저장
-        mv.addObject("userConVO", userConVO);
-
-        // 공통코드 조회 (사용자그룹코드)
-        /*
-        ADCodeManageVO code = new ADCodeManageVO();
-        code.setCodeId("IG11");
-        List<ADCodeManageVO> searchCondition1 = codeService.getCodeComboList(code);
-        mv.addObject("searchCondition1", searchCondition1);
-       */
+        mv.addObject("holdStockConVO", holdStockConVO);
+        
+        //조직정보 조회
+        GroupVO group = new GroupVO();
+        group.setGroupId(strGroupId);
+        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+        mv.addObject("group_comboList", group_comboList);
         
         mv.setViewName("/analysis/holdStockManage");
         
@@ -178,55 +197,59 @@ public class AnalysisController {
      * @throws BizException
      */
     @RequestMapping(value = "/analysis/holdstockpagelist")
-    public ModelAndView holdStockPageList(@ModelAttribute("productConVO") ProductMasterVO productConVO, 
+    public ModelAndView holdStockPageList(@ModelAttribute("holdStockConVO") HoldStockVO holdStockConVO, 
     		                         HttpServletRequest request, 
     		                         HttpServletResponse response) throws BizException 
     {
         
     	//log Controller execute time start
-    			String logid=logid();
-    			long t1 = System.currentTimeMillis();
-    			logger.info("["+logid+"] Controller start : productConVO" + productConVO);
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : holdStockConVO" + holdStockConVO);
 
-    	        ModelAndView mv = new ModelAndView();
-    	        
-    	        // 사용자 세션정보
-    	        HttpSession session = request.getSession();
-    	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-    	        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
-    	        
-    	        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-    	        	mv.setViewName("/addys/loginForm");
-    	       		return mv;
-    			}
-    	        
-    	        List<ProductMasterVO> productList = null;
+        ModelAndView mv = new ModelAndView();
+        
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/loginForm");
+       		return mv;
+		}
+        
+        List<HoldStockVO> holdStockList = null;
 
-    	        // 조회조건 null 일때 공백처리
-    	        if (productConVO.getSearchGubun() == null) {
-    	        	productConVO.setSearchGubun("01");
-    	        }
-    	        
-    	        // 조회값 null 일때 공백처리
-    	        if (productConVO.getSearchValue() == null) {
-    	        	productConVO.setSearchValue("");
-    	        }
-    	        
-    	        // 조회조건저장
-    	        mv.addObject("productCon", productConVO);
+        // 조회조건 null 일때 공백처리
+        if (holdStockConVO.getSearchGubun() == null) {
+        	holdStockConVO.setSearchGubun("01");
+        }
+        
+        // 조회값 null 일때 공백처리
+        if (holdStockConVO.getSearchValue() == null) {
+        	holdStockConVO.setSearchValue("");
+        }
+        
+        // 조회조건저장
+        mv.addObject("holdStockConVO", holdStockConVO);
 
-    	        // 페이징코드
-    	        productConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(productConVO.getCurPage(), productConVO.getRowCount()));
-    	        productConVO.setPage_limit_val2(StringUtil.nvl(productConVO.getRowCount(), "10"));
-    	        
-    	        // 사용자목록조회
-    	        productList = productMasterSvc.getProductList(productConVO);
-    	        mv.addObject("productList", productList);
+        // 페이징코드
+        holdStockConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(holdStockConVO.getCurPage(), holdStockConVO.getRowCount()));
+        holdStockConVO.setPage_limit_val2(StringUtil.nvl(holdStockConVO.getRowCount(), "10"));
+        
+        // 보유재고 추천목록조회
+        holdStockList = holdStockSvc.getHoldStockPageList(holdStockConVO);
+        mv.addObject("holdStockList", holdStockList);
 
-    	        // totalCount 조회
-    	        String totalCount = String.valueOf(productMasterSvc.getProductCnt(productConVO));
-    	        mv.addObject("totalCount", totalCount);
-
+        // totalCount 조회
+        String totalCount = String.valueOf(holdStockSvc.getHoldStockCnt(holdStockConVO));
+        mv.addObject("totalCount", totalCount);
+        
+        // totalPrice 조회
+        HoldStockVO totalPriceVO = new HoldStockVO();
+        totalPriceVO = holdStockSvc.getTotalHoldPrice(holdStockConVO);
+        mv.addObject("totalPriceVO", totalPriceVO );
 
         mv.setViewName("/analysis/holdStockPageList");
         
@@ -288,21 +311,33 @@ public class AnalysisController {
        		return mv;
 		}
         
-        UserManageVO userConVO = new UserManageVO();
+      //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        Date deliveryTime = new Date();
+        int movedate=-7;//(1:내일 ,-1:어제)
         
-        userConVO.setUserId(strUserId);
-        userConVO.setGroupId(strGroupId);
-
+        deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+        
+        String strToday = simpleDateFormat.format(currentTime);
+        String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+        
+        GmroiVO gmroiConVO = new GmroiVO();
+        
+        gmroiConVO.setStart_saleDate(strDeliveryDay);
+        gmroiConVO.setEnd_saleDate(strToday);
+        
+        gmroiConVO.setUserId(strUserId);
+        gmroiConVO.setGroupId(strGroupId);
+       
         // 조회조건저장
-        mv.addObject("userConVO", userConVO);
-
-        // 공통코드 조회 (사용자그룹코드)
-        /*
-        ADCodeManageVO code = new ADCodeManageVO();
-        code.setCodeId("IG11");
-        List<ADCodeManageVO> searchCondition1 = codeService.getCodeComboList(code);
-        mv.addObject("searchCondition1", searchCondition1);
-       */
+        mv.addObject("gmroiConVO", gmroiConVO);
+        
+        //조직정보 조회
+        GroupVO group = new GroupVO();
+        group.setGroupId(strGroupId);
+        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+        mv.addObject("group_comboList", group_comboList);
         
         mv.setViewName("/analysis/gmroiManage");
         
@@ -324,55 +359,55 @@ public class AnalysisController {
      * @throws BizException
      */
     @RequestMapping(value = "/analysis/gmroipagelist")
-    public ModelAndView gmroiPageList(@ModelAttribute("ProductConVO") ProductMasterVO productConVO, 
+    public ModelAndView gmroiPageList(@ModelAttribute("gmroiConVO") GmroiVO gmroiConVO, 
     		                         HttpServletRequest request, 
     		                         HttpServletResponse response) throws BizException 
     {
         
     	//log Controller execute time start
-    			String logid=logid();
-    			long t1 = System.currentTimeMillis();
-    			logger.info("["+logid+"] Controller start : productConVO" + productConVO);
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : gmroiConVO" + gmroiConVO);
 
-    	        ModelAndView mv = new ModelAndView();
-    	        
-    	        // 사용자 세션정보
-    	        HttpSession session = request.getSession();
-    	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-    	        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
-    	        
-    	        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-    	        	mv.setViewName("/addys/loginForm");
-    	       		return mv;
-    			}
-    	        
-    	        List<ProductMasterVO> productList = null;
+        ModelAndView mv = new ModelAndView();
+        
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/loginForm");
+       		return mv;
+		}
+        
+        List<GmroiVO> gmroiList = null;
 
-    	        // 조회조건 null 일때 공백처리
-    	        if (productConVO.getSearchGubun() == null) {
-    	        	productConVO.setSearchGubun("01");
-    	        }
-    	        
-    	        // 조회값 null 일때 공백처리
-    	        if (productConVO.getSearchValue() == null) {
-    	        	productConVO.setSearchValue("");
-    	        }
-    	        
-    	        // 조회조건저장
-    	        mv.addObject("productCon", productConVO);
+        // 조회조건 null 일때 공백처리
+        if (gmroiConVO.getSearchGubun() == null) {
+        	gmroiConVO.setSearchGubun("01");
+        }
+        
+        // 조회값 null 일때 공백처리
+        if (gmroiConVO.getSearchValue() == null) {
+        	gmroiConVO.setSearchValue("");
+        }
+        
+        // 조회조건저장
+        mv.addObject("gmroiConVO", gmroiConVO);
 
-    	        // 페이징코드
-    	        productConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(productConVO.getCurPage(), productConVO.getRowCount()));
-    	        productConVO.setPage_limit_val2(StringUtil.nvl(productConVO.getRowCount(), "10"));
-    	        
-    	        // 사용자목록조회
-    	        productList = productMasterSvc.getProductList(productConVO);
-    	        mv.addObject("productList", productList);
+        // 페이징코드
+        gmroiConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(gmroiConVO.getCurPage(), gmroiConVO.getRowCount()));
+        gmroiConVO.setPage_limit_val2(StringUtil.nvl(gmroiConVO.getRowCount(), "10"));
+        
+        // 사용자목록조회
+        //gmroiList = productMasterSvc.getProductList(gmroiConVO);
+        mv.addObject("gmroiList", gmroiList);
 
-    	        // totalCount 조회
-    	        String totalCount = String.valueOf(productMasterSvc.getProductCnt(productConVO));
-    	        mv.addObject("totalCount", totalCount);
-
+        // totalCount 조회
+        String totalCount="0";
+        //String totalCount = String.valueOf(productMasterSvc.getProductCnt(gmroiConVO));
+        mv.addObject("totalCount", totalCount);
 
         mv.setViewName("/analysis/gmroiPageList");
         

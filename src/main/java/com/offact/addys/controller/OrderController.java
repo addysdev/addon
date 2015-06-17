@@ -2785,7 +2785,8 @@ public class OrderController {
      */
     @RequestMapping(value = "/order/barcodecheck")
     public ModelAndView barCodeCheck(HttpServletRequest request, 
-    		                       HttpServletResponse response) throws BizException 
+    		                       HttpServletResponse response,
+    		                       String orderCnt) throws BizException 
     {
         
     	//log Controller execute time start
@@ -2822,6 +2823,9 @@ public class OrderController {
  	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
+        
+        
+        mv.addObject("orderCnt", orderCnt);
         
         mv.setViewName("/order/barCodeCheck");
         

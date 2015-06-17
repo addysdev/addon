@@ -649,10 +649,11 @@ function totalTargetAmt(){
     	
     	if (confirm('바코드 스캐너를 통해 검수수량을 자동입력 하시겠습니까?\n자동검수 처리시 스캐너 연동 및 환경이 정상적으로 설정 되어 있어야 합니다.')){ 
     	
-	    	var url='<%= request.getContextPath() %>/order/barcodecheck';
+    		var orderCnt=document.all('totalTargetCnt').innerText;
+	    	var url='<%= request.getContextPath() %>/order/barcodecheck?orderCnt='+encodeURIComponent(orderCnt);
 
-			var h=490;
-			var s=300;
+			var h=530;
+			var s=250;
 
 		    tmt_winLaunch(url, 'barcodeObj', 'barcodeObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=no,scrollbars=yes');
 	

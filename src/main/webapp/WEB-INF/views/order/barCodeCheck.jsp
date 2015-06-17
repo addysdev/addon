@@ -270,16 +270,28 @@ function barCodeCheck(){
 <div class="container-fluid">
 <form:form commandName="barCodeVO" id="barCodeForm" name="barCodeForm" method="post" action="" >
 <br>
-<span style="color:blue">[검수]</span>
-          <span id="checkTCnt" style="color:red">0건
-          </span>&nbsp;
-          <span style="color:blue">[일치]</span>
-          <span id="checkSCnt" style="color:red">0건
-          </span>&nbsp;
-           <span style="color:blue">[미일치]</span>
-          <span id="checkFCnt" style="color:red">0건
-          </span>
-          <br><br>
+		<table class="table table-bordered tbl_type" >
+	     <colgroup>
+	      <col width="70px" >
+	      <col width="50px" >
+	      <col width="70px" >
+	      <col width="50px" >
+	     </colgroup>
+	     <tr>
+	     	<td style="background-color:#E6F3FF" class='text-center'>검수대상</td>
+	     	<td class='text-right'><span style="color:gray">
+	          ${orderCnt}
+	          </span></td>
+	        <td style="background-color:#E6F3FF" class='text-center' >검수대기</td>
+	     	<td class='text-right'><span id="checkTCnt" style="color:red">0건</span></td>
+	     </tr>
+	     <tr>
+	     	<td style="background-color:#E6F3FF" class='text-center' >일치</td>
+	     	<td class='text-right'><span id="checkSCnt" style="color:red">0건</span></td>
+	     	<td style="background-color:#E6F3FF" class='text-center' >미일치</td>
+	     	<td class='text-right'><span id="checkFCnt" style="color:red">0건</span></td>	
+	     </tr>
+     </table>  
 <p><textarea style='height:340px;ime-mode:active;' class="form-control" id="barcode_list" name="barcode_list"  value=""  placeholder="바코드를 스캔하세요"  onkeyPress='javascript:EnterKey(event);'/></textarea></p>
 <br>
 <button id="deferpopclosebtn" type="button" class="btn btn-danger" onClick="fcBarCode_cancel()">바코드 검수취소</button>&nbsp;<button id="deferpopclosebtn" type="button" class="btn btn-default" onClick="fcBarCode_close()">닫기</button>  
