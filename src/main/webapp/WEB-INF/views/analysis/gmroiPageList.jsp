@@ -2,6 +2,7 @@
 <SCRIPT>
     // 페이지 이동
     function goPageGmroiPageList(page) {
+   
         document.gmroiConForm.curPage.value = page;
         var dataParam = $("#gmroiConForm").serialize();
         commonDim(true);
@@ -59,14 +60,14 @@
              <tr id="select_tr_${gmroiVO.productCode}">
                  <td class='text-center'><c:out value="${gmroiVO.productCode}"></c:out></td>
                  <td><c:out value="${gmroiVO.productName}"></c:out></td>
-                 <td class='text-center'><c:out value="${gmroiVO.avgStockCnt}"></c:out></td>
-                 <td class='text-center'><c:out value="${gmroiVO.avgStockAmt}"></c:out></td>
-                 <td class='text-center'><c:out value="${gmroiVO.totalSaleCnt}"></c:out></td>
-                 <td class='text-center'><c:out value="${gmroiVO.totalSaleAmt}"></c:out></td>
-                 <td class='text-center'><c:out value="${gmroiVO.profitSaleAmt}"></c:out></td>
-                 <td class='text-center'><c:out value="${gmroiVO.avgSaleRate}"></c:out></td>
-                 <td class='text-center'><c:out value="${gmroiVO.stockCycleRate}"></c:out></td>
-                 <td class='text-center'><c:out value="${gmroiVO.gmroiRate}"></c:out></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${gmroiVO.avgStockCnt}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${gmroiVO.avgStockAmt}"/>&nbsp;원</td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${gmroiVO.totalSaleCnt}"/></td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${gmroiVO.totalSaleAmt}"/>&nbsp;원</td>
+                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${gmroiVO.profitSaleAmt}"/>&nbsp;원</td>
+                 <td class='text-right'><c:out value="${gmroiVO.avgSaleRate}"></c:out>&nbsp;%</td>
+                 <td class='text-right'><c:out value="${gmroiVO.stockCycleRate}"></c:out>&nbsp;%</td>
+                 <td class='text-right'><c:out value="${gmroiVO.gmroiRate}"></c:out>&nbsp;%</td>
               </tr>
              </c:forEach>
             </c:if>
@@ -80,6 +81,6 @@
 	 </form:form>
 
 	 <!-- 페이징 -->
-     <taglib:paging cbFnc="goPageGmRoiPageList" totalCount="${totalCount}" curPage="${gmroiCon.curPage}" rowCount="${gmroiCon.rowCount}" />
+     <taglib:paging cbFnc="goPageGmroiPageList" totalCount="${totalCount}" curPage="${gmroiConVO.curPage}" rowCount="${gmroiConVO.rowCount}" />
      <!-- //페이징 -->
 

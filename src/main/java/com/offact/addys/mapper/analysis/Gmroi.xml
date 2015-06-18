@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Gmroi">
+
+<resultMap id="gmroiVO" type="com.offact.addys.vo.analysis.GmroiVO" >
+  <result column="groupId"              property="groupId"  />
+  <result column="groupName"            property="groupName"  />
+  <result column="userId"      	   property="userId"  />
+  <result column="userName"       	   property="userName"  />
+  <result column="gmroi"       	   property="gmroi"  />
+  <result column="productCode"       	   property="productCode"  />
+  <result column="productName"       	   property="productName"  />
+  <result column="group1"              property="group1"  />
+  <result column="group1Name"                property="group1Name"  />
+  <result column="group2"                property="group2"  />
+  <result column="group2Name"                property="group2Name"  />
+  <result column="group3"                property="group3"  />
+  <result column="group3Name"                property="group3Name"  />
+  <result column="avgStockCnt"                property="avgStockCnt"  />
+  <result column="avgStockAmt"                property="avgStockAmt"  />
+  <result column="totalSaleCnt"                property="totalSaleCnt"  />
+  <result column="totalSaleAmt"                property="totalSaleAmt"  />
+  <result column="profitSaleAmt"                property="profitSaleAmt"  />
+  <result column="avgSaleRate"                property="avgSaleRate"  />
+  <result column="stockCycleRate"                property="stockCycleRate"  />
+  <result column="gmroiRate"                property="gmroiRate"  />
+</resultMap>
+
+<select id="getGmroiPageList"  resultMap="gmroiVO" parameterType="com.offact.addys.vo.analysis.GmroiVO" >
+Select T4.productCode,
+       T5.productName,
+       T4.avgStockCnt,
+       T4.avgStockAmt,
+       T4.totalSaleCnt,
+       T4.totalSaleAmt,
+       T4.profitSaleAmt,
+       T4.avgSaleRate,
+       T4.stockCycleRate,
+       T4.gmroiRate
+From (       
+      Select T1.productCode,
+             round(T3.stockCnt/2) as avgStockCnt,
+             round(T3.productPrice/2) as avgStockAmt,
+             T2.salesCnt as totalSaleCnt,
+             T2.salesPrice as totalSaleAmt,
+             T2.profitPrice as profitSaleAmt,
+             round((T2.profitPrice/T2.salesPrice)*100,2) as avgSaleRate,
+             round((T2.salesPrice/round(T3.productPrice/2)),2) as stockCycleRate,
+             round((T2.profitPrice/round(T3.productPrice/2))*100,2) as gmroiRate
+      from adStockMaster T1
+      Left Join (
+                  Select productCode,
+                         sum(salesCnt) as salesCnt,
+                         sum(salesPrice) as salesPrice,
+                         sum(salesPrice-productPrice) as profitPrice
+                         from adSalesDetail 
+                  Where salesDate between #{start_saleDate} And #{end_saleDate} 
+                  <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+          				 And groupId=#{con_groupId}
+           		  </if>
+                  group by productCode
+                  ) T2 On T1.productCode=T2.productCode       
+      Left Join (
+                  Select productCode,
+                         sum(stockCnt) as stockCnt,
+                         sum(productPrice) as productPrice
+                         from adStockDetail 
+                  Where stockDate in(#{start_saleDate},#{end_saleDate}) 
+                  <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+          				 And groupId=#{con_groupId}
+           		  </if>
+                  group by productCode
+                ) T3 On T1.productCode = T3.productCode 
+      Where 1=1
+       		<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+         		  And T1.groupId=#{con_groupId} 
+          	</if>
+      ) as T4
+      Left Join adProductMaster T5 On T4.productCode = T5.productCode
+      Where 1=1
+            <if test="start_gmroi != null and start_gmroi != '' " >
+          			And T4.gmroiRate between ${start_gmroi} and ${end_gmroi}
+           	</if>
+            <if test="con_group1Name != null and con_group1Name != '' " >
+          			And T5.group1Name LIKE CONCAT('%', #{con_group1Name}, '%')
+           	</if>
+            <if test="con_group2Name != null and con_group2Name != '' " >
+          			And T5.group2Name LIKE CONCAT('%', #{con_group2Name}, '%')
+           	</if>
+           	<if test="con_group3Name != null and con_group3Name != '' " >
+          			And T5.group3Name LIKE CONCAT('%', #{con_group3Name}, '%')
+           	</if>
+            <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           			AND T5.productName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           			AND T5.productCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>     
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getGmroiCnt" resultType="int">
+SELECT count(*) AS TOT_COUNT
+ FROM (
+       Select T4.productCode,
+       T5.productName,
+       T4.avgStockCnt,
+       T4.avgStockAmt,
+       T4.totalSaleCnt,
+       T4.totalSaleAmt,
+       T4.profitSaleAmt,
+       T4.avgSaleRate,
+       T4.stockCycleRate,
+       T4.gmroiRate
+From (       
+      Select T1.productCode,
+             round(T3.stockCnt/2) as avgStockCnt,
+             round(T3.productPrice/2) as avgStockAmt,
+             T2.salesCnt as totalSaleCnt,
+             T2.salesPrice as totalSaleAmt,
+             T2.profitPrice as profitSaleAmt,
+             round((T2.profitPrice/T2.salesPrice)*100,2) as avgSaleRate,
+             round((T2.salesPrice/round(T3.productPrice/2)),2) as stockCycleRate,
+             round((T2.profitPrice/round(T3.productPrice/2))*100,2) as gmroiRate
+      from adStockMaster T1
+      Left Join (
+                  Select productCode,
+                         sum(salesCnt) as salesCnt,
+                         sum(salesPrice) as salesPrice,
+                         sum(salesPrice-productPrice) as profitPrice
+                         from adSalesDetail 
+                  Where salesDate between #{start_saleDate} And #{end_saleDate} 
+                  <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+          				 And groupId=#{con_groupId}
+           		  </if>
+                  group by productCode
+                  ) T2 On T1.productCode=T2.productCode       
+      Left Join (
+                  Select productCode,
+                         sum(stockCnt) as stockCnt,
+                         sum(productPrice) as productPrice
+                         from adStockDetail 
+                  Where stockDate in(#{start_saleDate},#{end_saleDate}) 
+                  <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+          				 And groupId=#{con_groupId}
+           		  </if>
+                  group by productCode
+                ) T3 On T1.productCode = T3.productCode 
+      Where 1=1
+       		<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+         		 And T1.groupId=#{con_groupId} 
+          	</if>
+      ) as T4
+      Left Join adProductMaster T5 On T4.productCode = T5.productCode
+      Where 1=1
+            <if test="start_gmroi != null and start_gmroi != '' " >
+          			And T4.gmroiRate between ${start_gmroi} and ${end_gmroi}
+           	</if>
+            <if test="con_group1Name != null and con_group1Name != '' " >
+          			And T5.group1Name LIKE CONCAT('%', #{con_group1Name}, '%')
+           	</if>
+            <if test="con_group2Name != null and con_group2Name != '' " >
+          			And T5.group2Name LIKE CONCAT('%', #{con_group2Name}, '%')
+           	</if>
+           	<if test="con_group3Name != null and con_group3Name != '' " >
+          			And T5.group3Name LIKE CONCAT('%', #{con_group3Name}, '%')
+           	</if>
+            <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           			AND T5.productName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           			AND T5.productCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>  
+) as TOT
+</select>
+
+</mapper>

@@ -182,7 +182,8 @@
 <div><!-- 왼쪽 배경 -->
 	<!-- 로고 시작 -->
 	<div id="gnb_logo">
-		<h1><img src="<%= request.getContextPath() %>/images/top/addys_logo.gif" width="296" height="40" /></h1>
+	<h1><img src="<%= request.getContextPath() %>/images/top/addys_logo.gif" width="296" height="40" /></h1>
+	<!--  <h1><img src="<%= request.getContextPath() %>/images/top/offact_logo.jpg" width="296" height="40" />-->	
 	</div>
 	<!-- 로고 끝 -->
 	<!-- 최상단메뉴 시작 -->

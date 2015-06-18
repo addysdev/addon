@@ -329,6 +329,9 @@ public class AnalysisController {
         
         gmroiConVO.setUserId(strUserId);
         gmroiConVO.setGroupId(strGroupId);
+        
+        gmroiConVO.setStart_gmroi("0");
+        gmroiConVO.setEnd_gmroi("1000");
        
         // 조회조건저장
         mv.addObject("gmroiConVO", gmroiConVO);
@@ -382,6 +385,16 @@ public class AnalysisController {
 		}
         
         List<GmroiVO> gmroiList = null;
+        
+        // 조회조건 null 일때 공백처리
+        if (gmroiConVO.getStart_gmroi() == null) {
+        	gmroiConVO.setStart_gmroi("0");
+        }
+        
+        // 조회조건 null 일때 공백처리
+        if (gmroiConVO.getEnd_gmroi() == null) {
+        	gmroiConVO.setEnd_gmroi("1000");
+        }
 
         // 조회조건 null 일때 공백처리
         if (gmroiConVO.getSearchGubun() == null) {
@@ -401,12 +414,11 @@ public class AnalysisController {
         gmroiConVO.setPage_limit_val2(StringUtil.nvl(gmroiConVO.getRowCount(), "10"));
         
         // 사용자목록조회
-        //gmroiList = productMasterSvc.getProductList(gmroiConVO);
+        gmroiList = gmroiSvc.getGmroiPageList(gmroiConVO);
         mv.addObject("gmroiList", gmroiList);
 
         // totalCount 조회
-        String totalCount="0";
-        //String totalCount = String.valueOf(productMasterSvc.getProductCnt(gmroiConVO));
+        String totalCount = String.valueOf(gmroiSvc.getGmroiCnt(gmroiConVO));
         mv.addObject("totalCount", totalCount);
 
         mv.setViewName("/analysis/gmroiPageList");

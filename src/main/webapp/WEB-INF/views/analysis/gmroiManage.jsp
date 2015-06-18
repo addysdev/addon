@@ -134,8 +134,8 @@
 			    <span class="icon_calendar"><img border="0" onclick="showCalendar('2')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
 			    <!-- 달력이미지 끝 -->
 			    <label for="start_gmroi end_gmroi"> gmroi 기준값 : </label>
-				<input type="text" style="width:50px" class="form-control" id="start_gmroi" name="start_gmroi"  value="${gmroiConVO.start_gmroi}" />~
-				<input type="text" style="width:50px" class="form-control" id="end_gmroi" name="end_gmroi"  value="${gmroiConVO.end_gmroi}" />
+				<input type="text" style="width:70px" maxlength="4" numberOnly class="form-control text-right" id="start_gmroi" name="start_gmroi"  value="${gmroiConVO.start_gmroi}" />~
+				<input type="text" style="width:70px" maxlength="4" numberOnly class="form-control text-right"  id="end_gmroi" name="end_gmroi"  value="${gmroiConVO.end_gmroi}" />
 			    
 				<br>
 				<c:choose>
@@ -162,10 +162,8 @@
 				
 				<label for="searchGubun"><h6><strong>검색조건 :</label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
-                	<option value="03" >품목명</option>
-                    <option value="01" >품목코드</option>
-                	<option value="02" >바코드</option>
-                    <option value="04" >구매처명</option>
+                	<option value="01" >품목명</option>
+                    <option value="02" >품목코드</option>
            		</select>
 				<label class="sr-only" for="searchValue"> 조회값 </label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${gmroiConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>

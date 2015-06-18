@@ -7,7 +7,15 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.css">
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/css/bootstrap.css">
-
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.11.2.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/js/locales/bootstrap-datetimepicker.kr.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.number.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/addys.js"></script>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/js/utils.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/errorMsg.js"></script>
 	<script>
 	
 	  function init(){
@@ -23,10 +31,10 @@
 	  }
 	 	  
 	  function gmroiCal(){
-			
+		 
 		  var avgStockAmt=(isnullStr(parseInt(isnullStr(deleteCommaStr($('#firstStockAmt').val()))))+
 				  isnullStr(parseInt(isnullStr(deleteCommaStr($('#lastStockAmt').val())))))/2;
-		  
+		
 		  var profitSaleAmt=isnullStr(parseInt(isnullStr(deleteCommaStr($('#profitSaleAmt').val()))));
 		  var totalSaleAmt =isnullStr(parseInt(isnullStr(deleteCommaStr($('#totalSaleAmt').val()))));
 		  var avgSaleRate=0;
