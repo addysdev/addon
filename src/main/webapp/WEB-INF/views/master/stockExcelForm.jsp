@@ -6,7 +6,7 @@
 //초기세팅
 	$(function() {
 	    
-	    $( "#upload_stockDate" ).datepicker({
+	    $( "#upload_stockDate_view" ).datepicker({
 	        dateFormat: "yy-mm-dd",
 	        dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
 	        monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
@@ -21,7 +21,7 @@
 
 	});
 	function showCalendar2(){
-		 $('#upload_stockDate').datepicker("show");
+		 $('#upload_stockDate_view').datepicker("show");
 		}
 function fcStock_excelimport(){
 
@@ -31,7 +31,7 @@ function fcStock_excelimport(){
         return;
     }
     
-    if($("#upload_stockDate").val() == ''){
+    if($("#upload_stockDate_view").val() == ''){
     	
         alert('재고기준일을 선택하셔야 합니다.');
         return;
@@ -62,6 +62,9 @@ function fcStock_excelimport(){
         alert("엑셀파일만 올려주세요");
         return;
     }
+    
+    frm.upload_stockDate.value=frm.upload_stockDate_view.value;
+    
     commonDim(true);
     frm.action = url;
     frm.target="excel_import_result";
@@ -96,7 +99,8 @@ function uploadClose(msg){
 	<div class="form-inline">
 	<label for="start_stockDate"><h6><strong><font style="color:#FF9900"> 재고일자 : </font></strong></h6></label>
     <!-- 재고일자-->
-      <input class="form-control" style='width:135px' name="upload_stockDate" id="upload_stockDate" value="${stockConVO.start_stockDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+      <input type="hidden" name="upload_stockDate" id="upload_stockDate" value="${stockConVO.start_stockDate}"  >
+      <input class="form-control" disabled style='width:135px' name="upload_stockDate_view" id="upload_stockDate_view" value="${stockConVO.start_stockDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
       <!-- 달력이미지 시작 -->
       <span class="icon_calendar"><img border="0" onclick="showCalendar2()" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
       <!-- 달력이미지 끝 -->

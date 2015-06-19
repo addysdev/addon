@@ -652,7 +652,7 @@ function totalTargetAmt(){
     		var orderCnt=document.all('totalTargetCnt').innerText;
 	    	var url='<%= request.getContextPath() %>/order/barcodecheck?orderCnt='+encodeURIComponent(orderCnt);
 
-			var h=530;
+			var h=510;
 			var s=250;
 
 		    tmt_winLaunch(url, 'barcodeObj', 'barcodeObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=no,scrollbars=yes');
@@ -938,15 +938,15 @@ function totalTargetAmt(){
 		    		<c:when test="${orderVO.orderState!='06' && orderVO.orderState!='07'}">
 	                 <c:choose>
 			    		<c:when test="${orderVO.orderCheck=='Y'}">
-							<td class='text-center'>${status.count}.<input type="checkbox" id="orderCheck" name="orderCheck" value="${orderVO.productCode}" title="선택" checked onChange="totalCheck()" /></td>
+							<td class='text-center'>${status.count}<br><input type="checkbox" id="orderCheck" name="orderCheck" value="${orderVO.productCode}" title="선택" checked onChange="totalCheck()" /></td>
 						</c:when>
 						<c:otherwise>
-							<td class='text-center'>${status.count}.<input type="checkbox" id="orderCheck" name="orderCheck" value="${orderVO.productCode}" title="선택" onChange="totalCheck()" /></td>
+							<td class='text-center'>${status.count}<br><input type="checkbox" id="orderCheck" name="orderCheck" value="${orderVO.productCode}" title="선택" onChange="totalCheck()" /></td>
 						</c:otherwise>
 					</c:choose>
 					</c:when>
 					<c:otherwise>
-						<td class='text-center'>${status.count}.<input type="checkbox" id="orderCheck" name="orderCheck" value="${orderVO.productCode}" title="선택" checked disabled  /></td>
+						<td class='text-center'>${status.count}<br><input type="checkbox" id="orderCheck" name="orderCheck" value="${orderVO.productCode}" title="선택" checked disabled  /></td>
 					</c:otherwise>
 				</c:choose>
                  <td class='text-center'><c:out value="${orderVO.productCode}"></c:out></td>

@@ -31,29 +31,32 @@
 			
 			frm.userId.value=frm.d_userId.value;
 			
-		    $.ajax({
-		        type: "POST",
-		        async:false,
-		           url:  "<%= request.getContextPath() %>/manage/userreg",
-		           data:$("#userRegistForm").serialize(),
-		           success: function(result) {
-
-						if(result>0){
-							 alert('사용자 등록을 성공했습니다.');
-						} else{
-							 alert('사용자 등록에 실패했습니다.');
-						}
-						
-						$('#userManageRegist').dialog('close');
-						fcUserManage_listSearch();
-						
-		           },
-		           error:function(){
-		        	   
-		        	   alert('사용자 등록에 실패했습니다.');
-		        	   $('#userManageRegist').dialog('close');
-		           }
-		    });
+			if (confirm('사용자 정보를 등록 하시겠습니까?')){ 
+			
+			    $.ajax({
+			        type: "POST",
+			        async:false,
+			           url:  "<%= request.getContextPath() %>/manage/userreg",
+			           data:$("#userRegistForm").serialize(),
+			           success: function(result) {
+	
+							if(result>0){
+								 alert('사용자 등록을 성공했습니다.');
+							} else{
+								 alert('사용자 등록에 실패했습니다.');
+							}
+							
+							$('#userManageRegist').dialog('close');
+							fcUserManage_listSearch();
+							
+			           },
+			           error:function(){
+			        	   
+			        	   alert('사용자 등록에 실패했습니다.');
+			        	   $('#userManageRegist').dialog('close');
+			           }
+			    });
+			}
 		}
 		function fcCheck(){
 			

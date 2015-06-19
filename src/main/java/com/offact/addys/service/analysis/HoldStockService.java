@@ -41,5 +41,28 @@ public interface HoldStockService {
      * @throws BizException
      */
     public HoldStockVO getTotalHoldPrice(HoldStockVO holdstock) throws BizException;
-
+    
+    /**
+     * 보유재고 추천 일괄업데이트
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int holdStockUpdatesProc(HoldStockVO holdstock) throws BizException;
+    
+    /**
+     * 보유재고 추천 일괄업데이트
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int holdStockUpdateProc(HoldStockVO holdstock) throws BizException;
+   
+    /**
+     * 보유재고 추천 조회(EXCEL)
+     * 
+     * @return
+     * @throws BizException
+     */
+    public List<HoldStockVO> getHoldStockList(HoldStockVO holdstock) throws BizException;
 }

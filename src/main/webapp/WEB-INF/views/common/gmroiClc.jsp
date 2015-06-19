@@ -32,8 +32,8 @@
 	 	  
 	  function gmroiCal(){
 		 
-		  var avgStockAmt=(isnullStr(parseInt(isnullStr(deleteCommaStr($('#firstStockAmt').val()))))+
-				  isnullStr(parseInt(isnullStr(deleteCommaStr($('#lastStockAmt').val())))))/2;
+		  var avgStockAmt=Math.floor((isnullStr(parseInt(isnullStr(deleteCommaStr($('#firstStockAmt').val()))))+
+				  isnullStr(parseInt(isnullStr(deleteCommaStr($('#lastStockAmt').val())))))/2);
 		
 		  var profitSaleAmt=isnullStr(parseInt(isnullStr(deleteCommaStr($('#profitSaleAmt').val()))));
 		  var totalSaleAmt =isnullStr(parseInt(isnullStr(deleteCommaStr($('#totalSaleAmt').val()))));
@@ -60,7 +60,8 @@
 			  gmroiRate=0;
 		  }else{
 			  gmroiRate=(profitSaleAmt/avgStockAmt)*10000
-			  gmroiRate=(Math.floor(gmroiRate)*0.01).toFixed(2);
+			 
+			  gmroiRate=(Math.round(gmroiRate)*0.01).toFixed(2);
 		  }
 
 		  $('#avgStockAmtclc').val=avgStockAmt;

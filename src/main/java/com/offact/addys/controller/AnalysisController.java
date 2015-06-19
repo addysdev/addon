@@ -61,6 +61,7 @@ import com.offact.addys.vo.master.StockVO;
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.manage.CompanyManageVO;
 import com.offact.addys.vo.master.ProductMasterVO;
+import com.offact.addys.vo.order.OrderVO;
 import com.offact.addys.vo.analysis.HoldStockVO;
 import com.offact.addys.vo.analysis.GmroiVO;
 import com.offact.addys.vo.MultipartFileVO;
@@ -259,8 +260,152 @@ public class AnalysisController {
        	
         return mv;
     }
-    
+    /**
+     * 추천보유재고 일괄처리
+     *
+     * @param HoldStockVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/analysis/holdstockupdates", method = RequestMethod.POST)
+    public @ResponseBody
+    String holdStockUpdates(@ModelAttribute("holdStockConVO") HoldStockVO holdStockConVO, 
+			            HttpServletRequest request, 
+			            HttpServletResponse response) throws BizException 
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : HoldStockVO" + holdStockConVO);
+
 	
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
+        holdStockConVO.setUserId(strUserId);
+        
+    	// 보유재고 추천목록조회 업데이트
+		int retVal=this.holdStockSvc.holdStockUpdatesProc(holdStockConVO);
+		
+		//작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("AH");
+		work.setWorkCode("AH001");
+		commonSvc.regiHistoryInsert(work);
+		
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+      return ""+retVal;
+    }
+    /**
+     * 보유재고 업데이트
+     *
+     * @param HoldStockVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/analysis/holdstockupdate", method = RequestMethod.POST)
+    public @ResponseBody
+    String holdStockUpdate(@ModelAttribute("holdStockVO") HoldStockVO holdStockConVO, 
+			            HttpServletRequest request, 
+			            HttpServletResponse response) throws BizException 
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : HoldStockVO" + holdStockConVO);
+
+	
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
+        holdStockConVO.setUserId(strUserId);
+        
+    	// 보유재고 추천목록조회 업데이트
+		int retVal=this.holdStockSvc.holdStockUpdateProc(holdStockConVO);
+		
+		//작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("AH");
+		work.setWorkCode("AH002");
+		commonSvc.regiHistoryInsert(work);
+		
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+      return ""+retVal;
+    }
+    /**
+   	 * Simply selects the home view to render by returning its name.
+   	 * @throws BizException
+   	 */
+    @RequestMapping(value = "/analysis/holdstockexcellist")
+   	public ModelAndView holdStockExcelList(@ModelAttribute("holdStockConVO") HoldStockVO holdStockConVO, 
+            HttpServletRequest request, 
+            HttpServletResponse response) throws BizException 
+       {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+
+   		ModelAndView mv = new ModelAndView();
+   		
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));   
+        
+        List<HoldStockVO> holdStockExcelList = new ArrayList();
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/loginForm");
+       		return mv;
+		}
+        
+       // 조회조건 null 일때 공백처리
+        if (holdStockConVO.getSearchGubun() == null) {
+        	holdStockConVO.setSearchGubun("01");
+        }
+        
+        // 조회값 null 일때 공백처리
+        if (holdStockConVO.getSearchValue() == null) {
+        	holdStockConVO.setSearchValue("");
+        }
+        
+        // 조회조건저장
+        mv.addObject("holdStockConVO", holdStockConVO);
+
+        // 보유재고 추천목록조회
+        holdStockExcelList = holdStockSvc.getHoldStockList(holdStockConVO);
+
+   	    mv.addObject("holdStockExcelList", holdStockExcelList);
+   	 
+   		mv.setViewName("/analysis/holdStockExcelList");
+   		
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("AH");
+		work.setWorkCode("AH003");
+		commonSvc.regiHistoryInsert(work);
+   		
+   		return mv;
+   	}
     /**
      * gmroi관리
      *
@@ -429,4 +574,70 @@ public class AnalysisController {
        	
         return mv;
     }
+    /**
+   	 * Simply selects the home view to render by returning its name.
+   	 * @throws BizException
+   	 */
+    @RequestMapping(value = "/analysis/gmroiexcellist")
+   	public ModelAndView gmroiExcelList(@ModelAttribute("gmroiConVO") GmroiVO gmroiConVO, 
+   									   HttpServletRequest request, 
+   									   HttpServletResponse response) throws BizException 
+       {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+
+   		ModelAndView mv = new ModelAndView();
+   		
+   	 // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	mv.setViewName("/addys/loginForm");
+       		return mv;
+		}
+        
+        List<GmroiVO> gmroiExcelList = null;
+        
+        // 조회조건 null 일때 공백처리
+        if (gmroiConVO.getStart_gmroi() == null) {
+        	gmroiConVO.setStart_gmroi("0");
+        }
+        
+        // 조회조건 null 일때 공백처리
+        if (gmroiConVO.getEnd_gmroi() == null) {
+        	gmroiConVO.setEnd_gmroi("1000");
+        }
+
+        // 조회조건 null 일때 공백처리
+        if (gmroiConVO.getSearchGubun() == null) {
+        	gmroiConVO.setSearchGubun("01");
+        }
+        
+        // 조회값 null 일때 공백처리
+        if (gmroiConVO.getSearchValue() == null) {
+        	gmroiConVO.setSearchValue("");
+        }
+        
+        // 조회조건저장
+        mv.addObject("gmroiConVO", gmroiConVO);
+
+        // 사용자목록조회
+        gmroiExcelList = gmroiSvc.getGmroiList(gmroiConVO);
+
+   	    mv.addObject("gmroiExcelList", gmroiExcelList);
+   	 
+   		mv.setViewName("/analysis/gmroiExcelList");
+   		
+        //작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("AH");
+		work.setWorkCode("AH003");
+		commonSvc.regiHistoryInsert(work);
+   		
+   		return mv;
+   	}
 }

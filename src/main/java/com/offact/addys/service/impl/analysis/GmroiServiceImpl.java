@@ -43,4 +43,12 @@ public class GmroiServiceImpl implements GmroiService {
    public int getGmroiCnt(GmroiVO gmroi) throws BizException {
        return commonDao.selectOne("Gmroi.getGmroiCnt", gmroi);
    }
+   
+   @Override
+   public List<GmroiVO> getGmroiList(GmroiVO gmroi) throws BizException {
+   	
+       List<GmroiVO> gmroiList = commonDao.selectList("Gmroi.getGmroiList", gmroi);
+
+       return gmroiList;
+   }
 }

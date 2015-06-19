@@ -2,7 +2,7 @@
 <SCRIPT>
 	$(function() {
 	    
-	    $( "#recoveryClosingDate" ).datepicker({
+	    $( "#recoveryClosingDate_view" ).datepicker({
 	        dateFormat: "yy-mm-dd",
 	        dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
 	        monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
@@ -19,7 +19,7 @@
 	});
 	function showCalendar2(){
 
-		$('#recoveryClosingDate').datepicker("show");
+		$('#recoveryClosingDate_view').datepicker("show");
 	}
 // 품목조회 리스트 Layup
 function fcProduct_list() {
@@ -75,7 +75,7 @@ function fcRcovery_regist(){
 	// alert(today);
 	 //alert(rfrm.recoveryClosingDate.value);
 	 
-	if(rfrm.recoveryClosingDate.value<=today) {
+	if(rfrm.recoveryClosingDate_view.value<=today) {
 		
 		alert('회수 마감일은 오늘날짜 이전으로는 선택 하실 수 없습니다.');
 		return;
@@ -110,6 +110,9 @@ function fcRcovery_regist(){
 		alert('선택하신 품목코드가 없습니다.');
 		return;
 	}
+	
+	alert(rfrm.recoveryClosingDate_view.value);
+	rfrm.recoveryClosingDate.value=rfrm.recoveryClosingDate_view.value;
 	
 	//alert(arrCheckGroupId);
 	//alert(arrSelectProductId);
@@ -323,7 +326,8 @@ function fcGroup_checkAll(){
 		      <th class='text-left'>
 	          <div class="form-inline">
 	              <!-- 발주일자-->
-			      <input class="form-control" style='width:135px' name="recoveryClosingDate" id="recoveryClosingDate" value="${recoveryClosingDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+	              <input type="hidden" name="recoveryClosingDate" id="recoveryClosingDate" value="${recoveryClosingDate}"  >
+			      <input class="form-control" style='width:135px' name="recoveryClosingDate_view" disabled  id="recoveryClosingDate_view" value="${recoveryClosingDate}" type="text"  maxlength="10" dispName="날짜"  />
 			      <!-- 달력이미지 시작 -->
 			      <span class="icon_calendar"><img border="0" onclick="showCalendar2()" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
 			      <!-- 달력이미지 끝 -->

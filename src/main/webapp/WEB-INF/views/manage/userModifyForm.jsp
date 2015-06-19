@@ -15,29 +15,32 @@
 				frm.pw_modifyYn.value='N';
 			}
 
-		    $.ajax({
-		        type: "POST",
-		        async:false,
-		           url:  "<%= request.getContextPath() %>/manage/usermodify",
-		           data:$("#userModifyForm").serialize(),
-		           success: function(result) {
-
-						if(result=='1'){
-							 alert('사용자정보 수정을 성공했습니다.');
-						} else{
-							 alert('사용자정보 수정에 실패했습니다.');
-						}
-						
-						$('#userManageModify').dialog('close');
-						fcUserManage_listSearch();
-						
-		           },
-		           error:function(){
-		        	   
-		        	   alert('사용자 등록에 실패했습니다.');
-		        	   $('#userManageModify').dialog('close');
-		           }
-		    });
+			if (confirm('사용자 정보를 수정 하시겠습니까?')){ 
+				
+			    $.ajax({
+			        type: "POST",
+			        async:false,
+			           url:  "<%= request.getContextPath() %>/manage/usermodify",
+			           data:$("#userModifyForm").serialize(),
+			           success: function(result) {
+	
+							if(result=='1'){
+								 alert('사용자정보 수정을 성공했습니다.');
+							} else{
+								 alert('사용자정보 수정에 실패했습니다.');
+							}
+							
+							$('#userManageModify').dialog('close');
+							fcUserManage_listSearch();
+							
+			           },
+			           error:function(){
+			        	   
+			        	   alert('사용자 등록에 실패했습니다.');
+			        	   $('#userManageModify').dialog('close');
+			           }
+			    });
+			}
 		}
 		
 	</script>

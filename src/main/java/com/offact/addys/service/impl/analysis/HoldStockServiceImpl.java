@@ -48,4 +48,40 @@ public class HoldStockServiceImpl implements HoldStockService {
    public HoldStockVO getTotalHoldPrice(HoldStockVO holdstock) throws BizException {
        return commonDao.selectOne("HoldStock.getTotalHoldPrice", holdstock);
    }
+   
+   @Override
+   public int holdStockUpdatesProc(HoldStockVO holdstock) throws BizException {
+	   
+	   String userId=holdstock.getUserId();
+	   List<HoldStockVO> holdStockList = commonDao.selectList("HoldStock.getHoldStockList", holdstock);
+	   int retVal=0;
+	   
+	   for (int i = 0; i < holdStockList.size(); i++) {
+		   
+		   HoldStockVO holdStockVo = new HoldStockVO();
+		   holdStockVo=holdStockList.get(i);
+		   holdStockVo.setUserId(userId);
+		   retVal=this.commonDao.update("HoldStock.updateHoldStockRecomend", holdStockVo);
+	   }
+
+       return retVal;
+   }
+   
+   @Override
+   public int holdStockUpdateProc(HoldStockVO holdstock) throws BizException {
+	   
+	   int retVal=0;
+	   
+	   retVal=this.commonDao.update("HoldStock.updateHoldStockRecomend", holdstock);
+	   
+       return retVal;
+   }
+   
+   @Override
+   public List<HoldStockVO> getHoldStockList(HoldStockVO holdstock) throws BizException {
+   	
+       List<HoldStockVO> holdStockList = commonDao.selectList("HoldStock.getHoldStockList", holdstock);
+
+       return holdStockList;
+   }
 }

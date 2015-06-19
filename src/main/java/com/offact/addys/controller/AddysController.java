@@ -227,7 +227,9 @@ public class AddysController {
 		strIp = ip;//Client 외부IP or G/W
 		
 		//서버 IP/MAC정보
+		
 		sClientIP = request.getLocalAddr();
+		/*
 		InetAddress serverIp;
 		serverIp=InetAddress.getLocalHost();
 		NetworkInterface network = NetworkInterface.getByInetAddress(serverIp);
@@ -240,7 +242,7 @@ public class AddysController {
 		logger.info(">>>> [Current MAC address ] ");
 		logger.info("@@@@ [serverIp] :"+serverIp);
 		logger.info("@@@@ [MAC addres] :"+sb.toString());
-		
+		*/
 		logger.info(">>>> [strIp] :"+strIp);
 		logger.info(">>>> [sClientIP] :"+sClientIP);
 	

@@ -68,6 +68,8 @@ function fcDefer_reasonadd(){
 }
 function fcBarCode_close(){
 	//$("#barCodeDialog").dialog('close');
+	barCodeCheck();
+	
 	this.close();
 }
 
@@ -108,12 +110,23 @@ function fcBarCode_cancel(){
 	}
 }
 
+var totCnt=0;
 var cCnt=0;
 
 function EnterKey(e)
 { 
   if(e.keyCode == 13)    // KeyCode  가 아니고 keyCode 입니다 .. 소문자 k
   {
+	  totCnt++;
+	  document.all('checkTCnt').innerText=totCnt+'건';
+
+  } else {
+      // 엔터가 아닌 경우
+  }
+}
+
+function barCodeCheck(){
+	
 	var ibarCode=trim(document.barCodeForm.barcode_list.value);
 
 	var barCodes=ibarCode.split('\n');
@@ -128,6 +141,8 @@ function EnterKey(e)
 	var totCnt=0;
 	var sCnt=0;
 	var fCnt=0;
+	var totalFMsg='';
+    var fMsg='';
 
 	if(amtCnt > 1){
 		
@@ -147,6 +162,8 @@ function EnterKey(e)
 		totCnt++;
 		
 		if(amtCnt > 1){
+			
+			fMsg='['+x+'] 번째 바코드 :'+barCodes[x]+"\n";
 
 	    	for(i=0;i<amtCnt;i++){
 
@@ -162,13 +179,18 @@ function EnterKey(e)
 	    			}
 
 	    			sCnt++;
+	    			fMsg='';
 	    			
 	    			break;
 	    		}
 	    		
 	    	}
 	    	
+	    	totalFMsg=totalFMsg+fMsg;
+	    	
 		}else{
+			
+			fMsg='['+x+'] 번째 바코드 :'+barCodes[x]+"|";
 
 			if(frm.barCode.value==barCodes[x]){	
 				
@@ -182,86 +204,33 @@ function EnterKey(e)
     			}
 				
     			sCnt++;
-    		
+    			fMsg='';
 
     		}
+			
+			totalFMsg=totalFMsg+fMsg;
 		}
 		
 	}
     fCnt=totCnt-sCnt;
-    
+  /*  
     if(fCnt>cCnt){
     	cCnt++;
     	alert('바코드 미일치 품목건수 가 발생했습니다.\n검수품목을 확인 하시기 바랍니다.');
     }
+*/
 
+    if(fCnt>0){
+    	
+    	alert('미일치 바코드 정보가 아래와 같이 발생했습니다\n'+totalFMsg);
+    }
+     
 	opener.totalOrderAmt();
 	opener.totalCheck();
 
-	document.all('checkTCnt').innerText=totCnt+'건';
-	document.all('checkSCnt').innerText=sCnt+'건';
-	document.all('checkFCnt').innerText=fCnt+'건';
-
-  } else {
-      // 엔터가 아닌 경우
-  }
-}
-
-function barCodeCheck(){
-	
-	var frm=document.orderDetailListForm;
-	var amtCnt = frm.productCode.length;
-	
-	if(amtCnt==undefined){
-		amtCnt=1;
-	}
-	
-	var supplyamt=0;
-	var vatamt=0;
-	var totalamt=0;
-	var totalcnt=0;
-	
-	if(amtCnt > 1){
-		
-    	for(i=0;i<amtCnt;i++){
-    		
-    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultPrice[i].value))));
-    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultCnt[i].value))));
-    		var vatAmt=frm.orderVatRate[i].value;
-    		var sum_supplyAmt=productPrice*orderCnt;
-
-    		var sum_supplyAmt=productPrice*orderCnt;
-    		supplyamt=supplyamt+sum_supplyAmt;
-    		
-    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
-    		vatamt=vatamt+sum_vatAmt;
-    		totalcnt=totalcnt+orderCnt;
-
-    		document.all('orderTotalPriceView')[i].innerText=addCommaStr(''+(productPrice*orderCnt));
-
-    	}
-    	
-	}else{
-		
-		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultPrice.value))));
-		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultCnt.value))));
-		var vatAmt=frm.orderVatRate.value;
-		var sum_supplyAmt=productPrice*orderCnt;
-
-		var sum_supplyAmt=productPrice*orderCnt;
-		supplyamt=supplyamt+sum_supplyAmt;
-		
-		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
-		vatamt=vatamt+sum_vatAmt;
-		totalcnt=totalcnt+orderCnt;
-
-		document.all('orderTotalPriceView').innerText=addCommaStr(''+(productPrice*orderCnt));
-	}
-
-	  totalamt=supplyamt+vatamt;
-	
-	  document.all('totalOrderCnt').innerText=' '+addCommaStr(''+totalcnt)+' 건';
-	  document.all('totalOrderAmt').innerText=' '+addCommaStr(''+totalamt)+' 원';//  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
+	//document.all('checkTCnt').innerText=totCnt+'건';
+	//document.all('checkSCnt').innerText=sCnt+'건';
+	//document.all('checkFCnt').innerText=fCnt+'건';
 }
 </SCRIPT>
 </head>
@@ -285,12 +254,13 @@ function barCodeCheck(){
 	        <td style="background-color:#E6F3FF" class='text-center' >검수대기</td>
 	     	<td class='text-right'><span id="checkTCnt" style="color:red">0건</span></td>
 	     </tr>
-	     <tr>
+	   <!-- <tr>
 	     	<td style="background-color:#E6F3FF" class='text-center' >일치</td>
 	     	<td class='text-right'><span id="checkSCnt" style="color:red">0건</span></td>
 	     	<td style="background-color:#E6F3FF" class='text-center' >미일치</td>
 	     	<td class='text-right'><span id="checkFCnt" style="color:red">0건</span></td>	
 	     </tr>
+	       --> 
      </table>  
 <p><textarea style='height:340px;ime-mode:active;' class="form-control" id="barcode_list" name="barcode_list"  value=""  placeholder="바코드를 스캔하세요"  onkeyPress='javascript:EnterKey(event);'/></textarea></p>
 <br>

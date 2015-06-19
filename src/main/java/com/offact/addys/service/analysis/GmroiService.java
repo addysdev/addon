@@ -34,4 +34,12 @@ public interface GmroiService {
      */
     public int getGmroiCnt(GmroiVO gmroi) throws BizException;
 
+    /**
+     * 보유재고 추천 조회(Excel)
+     * 
+     * @return
+     * @throws BizException
+     */
+    public List<GmroiVO> getGmroiList(GmroiVO gmroi) throws BizException;
+
 }

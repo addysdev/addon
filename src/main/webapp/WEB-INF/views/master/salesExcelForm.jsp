@@ -5,7 +5,7 @@
 //초기세팅
 $(function() {
 	    
-	    $( "#upload_salesDate" ).datepicker({
+	    $( "#upload_salesDate_view" ).datepicker({
 	        dateFormat: "yy-mm-dd",
 	        dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
 	        monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
@@ -20,7 +20,7 @@ $(function() {
 
 	});
   function showCalendar2(){	
-	  $('#upload_salesDate').datepicker("show");  
+	  $('#upload_salesDate_view').datepicker("show");  
 	}
 function fcSales_excelimport(){
 
@@ -30,7 +30,7 @@ function fcSales_excelimport(){
         return;
     }
     
-    if($("#upload_salesDate").val() == ''){
+    if($("#upload_salesDate_view").val() == ''){
     	
         alert('매출기준일을 선택하셔야 합니다.');
         return;
@@ -58,6 +58,9 @@ function fcSales_excelimport(){
         alert("엑셀파일만 올려주세요");
         return;
     }
+    
+    frm.upload_salesDate.value=frm.upload_salesDate_view.value;
+    
     commonDim(true);
     frm.action = url;
     frm.target="excel_import_result";
@@ -88,11 +91,11 @@ function uploadClose(msg){
   <input type="file"  id="files" name="files" />
   <br><br> 
    <h4><strong><font style="color:#428bca">매출 기준 선택</font></strong></h4>
+   <div class="form-inline">
 	<label for="start_salesDate"><h6><strong><font style="color:#FF9900"> 매출일자 : </font></strong></h6></label>
-		<div class="form-inline">
-	<label for="start_stockDate"><h6><strong><font style="color:#FF9900"> 재고일자 : </font></strong></h6></label>
     <!-- 재고일자-->
-      <input class="form-control" style='width:135px' name="upload_salesDate" id="upload_salesDate" value="${salesConVO.start_salesDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+      <input type="hidden" name="upload_salesDate" id="upload_salesDate" value="${salesConVO.start_salesDate}"  >
+      <input  disabled class="form-control" style='width:135px' name="upload_salesDate_view" id="upload_salesDate_view" value="${salesConVO.start_salesDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
       <!-- 달력이미지 시작 -->
       <span class="icon_calendar"><img border="0" onclick="showCalendar2()" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
       <!-- 달력이미지 끝 -->

@@ -810,10 +810,10 @@ function fcResult_cal(){
 	             <tr id="select_tr_${recoveryVO.productCode}">
                  <c:choose>
 		    		<c:when test="${(recoveryConVO.receiveCnt+recoveryConVO.checkCnt)==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"> 
-						<td class='text-center'>${status.count}.<input type="checkbox" id="recoveryCheck" name="recoveryCheck" value="${recoveryVO.productCode}" title="선택"  onChange="totalCheck()" /></td>
+						<td class='text-center'>${status.count}<br><input type="checkbox" id="recoveryCheck" name="recoveryCheck" value="${recoveryVO.productCode}" title="선택"  onChange="totalCheck()" /></td>
 		    		</c:when>
 					<c:otherwise>
-						<td class='text-center'>${status.count}.<input type="checkbox" id="recoveryCheck" name="recoveryCheck" value="${recoveryVO.productCode}" title="선택" disabled  /></td>
+						<td class='text-center'>${status.count}<br><input type="checkbox" id="recoveryCheck" name="recoveryCheck" value="${recoveryVO.productCode}" title="선택" disabled  /></td>
 					</c:otherwise>
 				</c:choose>
                  <td class='text-left'><c:out value="${recoveryVO.productName}"></c:out></td>

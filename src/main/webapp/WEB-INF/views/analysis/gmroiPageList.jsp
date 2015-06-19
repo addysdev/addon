@@ -66,7 +66,7 @@
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${gmroiVO.totalSaleAmt}"/>&nbsp;원</td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${gmroiVO.profitSaleAmt}"/>&nbsp;원</td>
                  <td class='text-right'><c:out value="${gmroiVO.avgSaleRate}"></c:out>&nbsp;%</td>
-                 <td class='text-right'><c:out value="${gmroiVO.stockCycleRate}"></c:out>&nbsp;%</td>
+                 <td class='text-right'><c:out value="${gmroiVO.stockCycleRate}"></c:out>&nbsp;회전</td>
                  <td class='text-right'><c:out value="${gmroiVO.gmroiRate}"></c:out>&nbsp;%</td>
               </tr>
              </c:forEach>

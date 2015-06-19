@@ -106,6 +106,15 @@
     		   $('#end_saleDate').datepicker("show");
     	   }   
     	}
+    	
+   	 function goGmroiExcel(){
+
+       	var frm = document.gmroiConForm;
+       	frm.action = "<%=request.getContextPath()%>/analysis/gmroiexcellist";	
+       	frm.method = "POST";
+       	frm.submit();
+ 	 
+ 	 }
 </SCRIPT>
 <div class="container-fluid">
 
@@ -168,7 +177,7 @@
 				<label class="sr-only" for="searchValue"> 조회값 </label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${gmroiConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
 				<button type="button" class="btn btn-primary" onClick="javascript:fcGmroi_listSearch()">조회</button>
-	            <button type="button" class="btn" onClick="">excel</button>
+	            <button type="button" class="btn" onClick="goGmroiExcel()">excel</button>
             </div>
 	    </fieldset>
 	  </form:form>

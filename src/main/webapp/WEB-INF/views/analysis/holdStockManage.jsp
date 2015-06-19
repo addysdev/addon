@@ -106,6 +106,42 @@
     		   $('#end_saleDate').datepicker("show");
     	   }   
     	}
+    	function fcRecomend_updates(){
+
+    		if (confirm('추천 보유재고를 조회하신 조건으로 일괄 등록 하시겠습니까?')){ 
+
+    		 commonDim(true);
+    	        $.ajax({
+    	            type: "POST",
+    	               url:  "<%= request.getContextPath() %>/analysis/holdstockupdates",
+    	                    data:$("#holdStockConForm").serialize(),
+    	               success: function(result) {
+    	                   commonDim(false);
+    	                   if(result=='1'){
+  							 	alert('추천보유재고 일괄적용을 성공했습니다.');
+  							 	fcHoldStock_listSearch();
+	  						} else{
+	  							alert('추천보유재고 일괄적용을 실패했습니다.');
+	  						}
+    	               },
+    	               error:function() {
+    	                   commonDim(false);
+    	                   alert('추천보유재고 일괄적용을 실패했습니다.');
+    	               }
+    	        });
+    			
+    		}
+    	}
+    	
+    	 function goHoldStockExcel(){
+
+          	var frm = document.holdStockConForm;
+          	frm.action = "<%=request.getContextPath()%>/analysis/holdstockexcellist";	
+          	frm.method = "POST";
+          	frm.submit();
+    	 
+    	 }
+    	 
 </SCRIPT>
 <div class="container-fluid">
 
@@ -161,7 +197,7 @@
 				<label class="sr-only" for="searchValue"> 조회값 </label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${holdStockConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
 				<button type="button" class="btn btn-primary" onClick="javascript:fcHoldStock_listSearch()">조회</button>
-	            <button type="button" class="btn" onClick="">excel</button>
+	            <button type="button" class="btn" onClick="goHoldStockExcel()">excel</button>
             </div>
 	    </fieldset>
 	  </form:form>
