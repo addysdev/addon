@@ -507,12 +507,13 @@ public class AnalysisController {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
         Date currentTime = new Date();
         Date deliveryTime = new Date();
-        int movedate=-7;//(1:내일 ,-1:어제)
-        
-        deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+        int movedate=-1;//(1:내일 ,-1:어제)
+
+        deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24*30)*movedate);
         
         String strToday = simpleDateFormat.format(currentTime);
-        String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+       // String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+        String strDeliveryDay = getMonthAgoDate();
         
         GmroiVO gmroiConVO = new GmroiVO();
         
@@ -522,8 +523,8 @@ public class AnalysisController {
         gmroiConVO.setUserId(strUserId);
         gmroiConVO.setGroupId(strGroupId);
         
-        gmroiConVO.setStart_gmroi("0");
-        gmroiConVO.setEnd_gmroi("1000");
+        gmroiConVO.setStart_gmroi("");
+        gmroiConVO.setEnd_gmroi("");
        
         // 조회조건저장
         mv.addObject("gmroiConVO", gmroiConVO);
@@ -687,4 +688,14 @@ public class AnalysisController {
    		
    		return mv;
    	}
+    
+    private String getMonthAgoDate() {
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        cal.add(Calendar.MONTH ,-1); // 한달전 날짜 가져오기
+          java.util.Date monthago = cal.getTime();
+           SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+           return formatter.format(monthago);
+       }
 }
+
+

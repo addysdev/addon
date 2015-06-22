@@ -97,7 +97,7 @@
 		objCell = objRow.createCell((short)2);
 		objCell.setCellValue(holdStockVO.getProductName());
 		objCell = objRow.createCell((short)3);
-		objCell.setCellValue(holdStockVO.getApplyDateCnt()+" 일");
+		objCell.setCellValue(holdStockVO.getApplyDateCnt()+"일");
 		objCell = objRow.createCell((short)4);
 		objCell.setCellValue(holdStockVO.getHoldStockCnt());
 		objCell = objRow.createCell((short)5);
@@ -105,11 +105,11 @@
 		objCell = objRow.createCell((short)6);
 		objCell.setCellValue(holdStockVO.getSaleAvg());
 		objCell = objRow.createCell((short)7);
-		objCell.setCellValue(holdStockVO.getCon_applyDateCnt()+" 일");
+		objCell.setCellValue(holdStockVO.getCon_applyDateCnt()+"일");
 		objCell = objRow.createCell((short)8);
 		objCell.setCellValue(holdStockVO.getRecomendCnt());
 		objCell = objRow.createCell((short)9);
-		objCell.setCellValue(holdStockVO.getResultRate()+" %");
+		objCell.setCellValue(holdStockVO.getResultRate()+"%");
 	}
 
 	

@@ -142,7 +142,7 @@
 			    <!-- 달력이미지 시작 -->
 			    <span class="icon_calendar"><img border="0" onclick="showCalendar('2')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
 			    <!-- 달력이미지 끝 -->
-			    <label for="start_gmroi end_gmroi"> gmroi 기준값 : </label>
+			    <label for="start_gmroi end_gmroi"> GMROI 기준값 : </label>
 				<input type="text" style="width:70px" maxlength="4" numberOnly class="form-control text-right" id="start_gmroi" name="start_gmroi"  value="${gmroiConVO.start_gmroi}" />~
 				<input type="text" style="width:70px" maxlength="4" numberOnly class="form-control text-right"  id="end_gmroi" name="end_gmroi"  value="${gmroiConVO.end_gmroi}" />
 			    
