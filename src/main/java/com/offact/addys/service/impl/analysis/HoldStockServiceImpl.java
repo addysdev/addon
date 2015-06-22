@@ -18,6 +18,7 @@ import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CompanyVO;
 import com.offact.addys.vo.common.CommentVO;
 import com.offact.addys.vo.common.UserVO;
+import com.offact.addys.vo.order.OrderVO;
 import com.offact.addys.vo.analysis.HoldStockVO;
 
 /**
@@ -73,6 +74,43 @@ public class HoldStockServiceImpl implements HoldStockService {
 	   int retVal=0;
 	   
 	   retVal=this.commonDao.update("HoldStock.updateHoldStockRecomend", holdstock);
+	   
+       return retVal;
+   }
+   
+   @Override
+   public int holdStockPageUpdateProc(String[] recomends,HoldStockVO holdstock) throws BizException {
+	   
+	   int retVal=-1;
+	    
+	    try{
+
+	    	String[] r_data=null;
+	
+		    for(int i=0;i<recomends.length;i++){
+	
+		        r_data = StringUtil.getTokens(recomends[i], "|");
+		        
+		        HoldStockVO holdstockVo = new HoldStockVO();
+		    	
+		        holdstockVo.setProductCode(StringUtil.nvl(r_data[0],""));
+		        holdstockVo.setGroupId(StringUtil.nvl(r_data[1],""));
+		        holdstockVo.setCon_applyDateCnt(StringUtil.nvl(r_data[2],""));
+		        holdstockVo.setRecomendCnt(StringUtil.nvl(r_data[3],""));
+		        holdstockVo.setUserId(holdstock.getUserId());
+		    	
+	            retVal=this.commonDao.update("HoldStock.updateHoldStockRecomend", holdstockVo);
+		      
+		      }
+		    
+	    }catch(Exception e){
+	    	
+	    	e.printStackTrace();
+	    	e.printStackTrace();
+	    	throw new BizException(e.getMessage());
+
+	    }
+	
 	   
        return retVal;
    }

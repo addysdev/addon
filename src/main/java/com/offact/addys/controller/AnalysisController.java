@@ -351,6 +351,53 @@ public class AnalysisController {
       return ""+retVal;
     }
     /**
+     * 보유재고 업데이트
+     *
+     * @param HoldStockVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/analysis/holdstockpageupdate", method = RequestMethod.POST)
+    public @ResponseBody
+    String holdStockPageUpdate(@ModelAttribute("holdStockVO") HoldStockVO holdStockConVO, 
+			            HttpServletRequest request, 
+			            HttpServletResponse response) throws BizException 
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : HoldStockVO" + holdStockConVO);
+
+	
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
+        holdStockConVO.setUserId(strUserId);
+        
+        String[] recomends = request.getParameterValues("seqs");
+        
+    	// 보유재고 추천목록조회 업데이트
+		int retVal=this.holdStockSvc.holdStockPageUpdateProc(recomends,holdStockConVO);
+		
+		//작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("AH");
+		work.setWorkCode("AH002");
+		commonSvc.regiHistoryInsert(work);
+		
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+      return ""+retVal;
+    }
+    /**
    	 * Simply selects the home view to render by returning its name.
    	 * @throws BizException
    	 */

@@ -62,6 +62,7 @@ public class SalesServiceImpl implements SalesService {
 
     	    List rtnSuccessList = new ArrayList();
     	    List rtnErrorList = new ArrayList();
+    	    String errorMsgList ="";
     	    
     	    this.commonDao.delete("Sales.salesDeleteAll", salesTotal);
     	    this.commonDao.insert("Sales.insertSales", salesTotal);
@@ -72,12 +73,13 @@ public class SalesServiceImpl implements SalesService {
 
     	    for (int i = 0; i < excelUploadList.size(); i++) {
     	      
-    	      try 
-    	      {
-    	        
+    	     
     	    	idx = i + 2;
     	    	SalesVO salesrVO = (SalesVO)excelUploadList.get(i);
     	    	salesrVO.setErrMsg("");
+    	    	
+	    	try 
+    	      { 
                 this.commonDao.insert("Sales.insertExcelSalesdDetail", salesrVO);
                 rtnSuccessList.add(salesrVO);
     	      
@@ -88,6 +90,7 @@ public class SalesServiceImpl implements SalesService {
     	        errMsg = errMsg.substring(errMsg.lastIndexOf("Exception"));
     	        ((SalesVO)excelUploadList.get(i)).setErrMsg(((SalesVO)excelUploadList.get(i)).getErrMsg() + "\n\r(" + idx + ")" + errMsg);
     	        rtnErrorList.add((SalesVO)excelUploadList.get(i));
+    	        errorMsgList=errorMsgList+"["+(i+1)+"]번째 품목코드 :"+salesrVO.getProductCode()+"\\^";
     	        
     	        this.logger.debug("[key]:"+ ((SalesVO)excelUploadList.get(i)).getProductCode()+" [msg] : " + ((SalesVO)excelUploadList.get(i)).getErrMsg());
     	        

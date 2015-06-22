@@ -60,6 +60,14 @@ public class CommonServiceImpl implements CommonService {
 
        return companyDetail;
    }
+   
+   @Override
+   public List<CompanyVO> getCompanyList(CompanyVO company) throws BizException {
+       List<CompanyVO> companyList = commonDao.selectList("Company.getCompanyList", company);
+
+       return companyList;
+   }
+   
    @Override
    public List<CommentVO> getCommentList(CommentVO comment) throws BizException {
    	

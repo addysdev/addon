@@ -57,6 +57,14 @@ public interface HoldStockService {
      * @throws BizException
      */
     public int holdStockUpdateProc(HoldStockVO holdstock) throws BizException;
+    
+    /**
+     * 보유재고 추천 페이지 일괄업데이트
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int holdStockPageUpdateProc(String[] recomends,HoldStockVO holdstock) throws BizException;
    
     /**
      * 보유재고 추천 조회(EXCEL)

@@ -57,6 +57,7 @@ public class TargetVO extends AbstractVO {
 	private String deletedDateTime;
 	
 	private String etc;
+	private String orderCheck;
 	
 	//상세 추가항목
 	private String productCode;
@@ -596,6 +597,12 @@ public class TargetVO extends AbstractVO {
 	}
 	public void setLimitEndDate(String limitEndDate) {
 		this.limitEndDate = limitEndDate;
+	}
+	public String getOrderCheck() {
+		return orderCheck;
+	}
+	public void setOrderCheck(String orderCheck) {
+		this.orderCheck = orderCheck;
 	}
     
 }

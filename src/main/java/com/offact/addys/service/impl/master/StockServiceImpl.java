@@ -16,6 +16,7 @@ import com.offact.framework.util.StringUtil;
 import com.offact.framework.db.SqlSessionCommonDao;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.service.master.StockService;
+import com.offact.addys.vo.master.SalesVO;
 import com.offact.addys.vo.master.StockVO;
 
 /**
@@ -62,6 +63,7 @@ public class StockServiceImpl implements StockService {
 
     	    List rtnSuccessList = new ArrayList();
     	    List rtnErrorList = new ArrayList();
+    	    String errorMsgList ="";
     	    
     	    this.commonDao.delete("Stock.stockDeleteAll", stockTotal);
     	    this.commonDao.insert("Stock.insertStock", stockTotal);
@@ -72,12 +74,14 @@ public class StockServiceImpl implements StockService {
 
     	    for (int i = 0; i < excelUploadList.size(); i++) {
     	      
-    	      try 
-    	      {
+
     	        
     	    	idx = i + 2;
     	    	StockVO stockVO = (StockVO)excelUploadList.get(i);
     	    	stockVO.setErrMsg("");
+    	    	
+      	      try 
+      	      {
                 this.commonDao.insert("Stock.insertExcelStockdDetail", stockVO);
                 rtnSuccessList.add(stockVO);
     	      
@@ -88,6 +92,7 @@ public class StockServiceImpl implements StockService {
     	        errMsg = errMsg.substring(errMsg.lastIndexOf("Exception"));
     	        ((StockVO)excelUploadList.get(i)).setErrMsg(((StockVO)excelUploadList.get(i)).getErrMsg() + "\n\r(" + idx + ")" + errMsg);
     	        rtnErrorList.add((StockVO)excelUploadList.get(i));
+    	        errorMsgList=errorMsgList+"["+(i+1)+"]번째 품목코드 :"+stockVO.getProductCode()+"\\^";
     	        
     	        this.logger.debug("[key]:"+ ((StockVO)excelUploadList.get(i)).getProductCode()+" [msg] : " + ((StockVO)excelUploadList.get(i)).getErrMsg());
     	        
@@ -97,6 +102,7 @@ public class StockServiceImpl implements StockService {
 
     	    rtnMap.put("rtnSuccessList", rtnSuccessList);
     	    rtnMap.put("rtnErrorList", rtnErrorList);
+    	    rtnMap.put("errorMsgList", errorMsgList);
 
     	    return rtnMap;
     	  }

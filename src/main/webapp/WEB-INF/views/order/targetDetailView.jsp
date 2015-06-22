@@ -112,7 +112,7 @@ function fcTargetDetail_print(){
 				frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
 	   			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
 	   			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
-	   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.group1Name[i].value);
+	   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.group1Name[i].value)+'|'+fillSpace(frm.orderCheck[i].checked);
 
 	   		}
 	   	}else{
@@ -120,7 +120,7 @@ function fcTargetDetail_print(){
 				frm.seqs.value=fillSpace(frm.productCode.value)+
 				'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
 				'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
-				'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.group1Name.value);
+				'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.group1Name.value)+'|'+fillSpace(frm.orderCheck.checked);
 
 
 	   	}
@@ -148,6 +148,13 @@ function fcOrder_process(){
 		return;
 		
 	}
+	
+	var checkedCnt = $('input:checkbox[ name="orderCheck"]:checked').length;
+
+	if(checkedCnt <= 0){
+    	alert("선택된 발주대상이 없습니다\n발주 대상건을 선택해 주세요!");
+    	return;
+    }
 	
 	var frm=document.targetDetailForm;
 	var emailCheckCnt = 1;//$('input:checkbox[ name="emailCheck"]:checked').length;
@@ -225,7 +232,7 @@ function fcOrder_process(){
 			frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
    			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
    			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
-   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.group1Name[i].value);
+   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.group1Name[i].value)+'|'+fillSpace(frm.orderCheck[i].checked);
 
    		}
    	}else{
@@ -233,11 +240,10 @@ function fcOrder_process(){
 			frm.seqs.value=fillSpace(frm.productCode.value)+
 			'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
 			'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
-			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.group1Name.value);
+			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.group1Name.value)+'|'+fillSpace(frm.orderCheck.checked);
 
 
    	}
-	
 	
     $.ajax({
         type: "POST",
@@ -269,22 +275,16 @@ function fcDefer_reason(reason){
     		alert('보류사유를 입력하세요!');
     		return;
     	}else{
-    		/*
-    		var checkedCnt = $('input:checkbox[ name="deferCheck"]:checked').length;
+    
+    		var checkedCnt = $('input:checkbox[ name="orderCheck"]:checked').length;
 
-        	if(checkedCnt <= 0){
-            	alert("보류 대상을 선택해 주세요!");
-            	return;
-            }
-        
+
             var arrDeferProductId = "";
-            $('input:checkbox[name="deferCheck"]').each(function() {
+            $('input:checkbox[name="orderCheck"]').each(function() {
                 if ($(this).is(":checked")) {
                 	arrDeferProductId += $(this).val() + "^";
                 }   
             });
-            */
-            arrDeferProductId="^";
             
             var frm = document.targetDetailListForm;
        
@@ -344,7 +344,7 @@ function fcDefer_reason(reason){
  */    
  function totalOrderAmt(){
  	
-	NONSTOCK=0;
+	T_NONSTOCK=0;
 	
  	var frm=document.targetDetailListForm;
  	var amtCnt = frm.productPrice.length;
@@ -357,56 +357,67 @@ function fcDefer_reason(reason){
  	var vatamt=0;
  	var totalamt=0;
  	var totalcnt=0;
+ 	var checkcnt=0;
  	
  	if(amtCnt>1){
-  	for(i=0;i<amtCnt;i++){
-  		
-  		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice[i].value))));
-  		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt[i].value))));
-  		var vatAmt=frm.vatRate[i].value;
-  		
-  		var sum_supplyAmt=productPrice*orderCnt;
-  		supplyamt=supplyamt+sum_supplyAmt;
-  		
-  		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
-  		vatamt=vatamt+sum_vatAmt;
-  		totalcnt=totalcnt+orderCnt;
-  		
-  		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[i].value))));
-  		
-  		if(holdStock<orderCnt){
-
-  			NONSTOCK++;
-  		}
-  	}
+	  	for(i=0;i<amtCnt;i++){
+	  		
+	  		if(frm.orderCheck[i].checked==true){
+	  			
+	  			checkcnt++;
+		  		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice[i].value))));
+		  		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt[i].value))));
+		  		var vatAmt=frm.vatRate[i].value;
+		  		
+		  		var sum_supplyAmt=productPrice*orderCnt;
+		  		supplyamt=supplyamt+sum_supplyAmt;
+		  		
+		  		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
+		  		vatamt=vatamt+sum_vatAmt;
+		  		totalcnt=totalcnt+orderCnt;
+		  		
+		  		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[i].value))));
+		  		
+		  		if(holdStock<orderCnt){
+		
+		  			T_NONSTOCK++;
+		  		}
+	  		}
+	
+	  	}
   	
  	}else{
  		
- 		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice.value))));
- 		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt.value))));
- 		var vatAmt=frm.vatRate.value;
- 		
- 		var sum_supplyAmt=productPrice*orderCnt;
- 		supplyamt=supplyamt+sum_supplyAmt;
- 		
- 		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
-  		vatamt=vatamt+sum_vatAmt;
-  		totalcnt=totalcnt+orderCnt;
-  		
-  		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
-  		
-  		if(holdStock<orderCnt){
-  			NONSTOCK++;
-  		}
+ 		if(frm.orderCheck.checked==true){
+ 			
+ 			checkcnt++;
+	 		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice.value))));
+	 		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCnt.value))));
+	 		var vatAmt=frm.vatRate.value;
+	 		
+	 		var sum_supplyAmt=productPrice*orderCnt;
+	 		supplyamt=supplyamt+sum_supplyAmt;
+	 		
+	 		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
+	  		vatamt=vatamt+sum_vatAmt;
+	  		totalcnt=totalcnt+orderCnt;
+	  		
+	  		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
+	  		
+	  		if(holdStock<orderCnt){
+	  			T_NONSTOCK++;
+	  		}
+ 		}
  		
  	}
 
  	  totalamt=supplyamt+vatamt;
  	 
+ 	  document.all('totalCheckCnt').innerText=' '+addCommaStr(''+checkcnt)+' 건';
  	  document.all('totalOrderCnt').innerText=' '+addCommaStr(''+totalcnt)+' 건';
  	  document.all('totalOrderAmt').innerText=' '+addCommaStr(''+totalamt)+' 원';//  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
  	  
- 	 
+ 	  NONSTOCK=T_NONSTOCK;
  }
  
  function initNotify(){
@@ -567,6 +578,58 @@ function fcDefer_reason(reason){
             }
         });
     };
+    
+	//체크박스 전체선택
+    function fcOrder_checkAll(){
+		
+    	$("input:checkbox[id='orderCheck']").prop("checked", $("#orderCheckAll").is(":checked"));
+    	totalCheck();
+    }
+	
+	function totalCheck(){
+    	
+    	var frm=document.targetDetailListForm;
+    	var amtCnt = frm.productCode.length;
+    	
+    	if(amtCnt==undefined){
+    		amtCnt=1;
+    	}
+    	
+    	var chkCnt=0;
+    	
+    	if(amtCnt > 1){
+			for(i=0;i<amtCnt;i++){
+	    		
+	    		if(frm.orderCheck[i].checked==true){
+	    			//frm.addCnt[i].disabled=true;
+	    			//frm.lossCnt[i].disabled=true;
+	    			chkCnt++;
+	    		}else{
+	    			//frm.addCnt[i].disabled=false;
+	    			//frm.lossCnt[i].disabled=false;
+	    		}
+	    	}
+    	}else{
+
+    		if(frm.orderCheck.checked==true){
+    			//frm.addCnt.disabled=true;
+    			//frm.lossCnt.disabled=true;
+    			chkCnt++;
+	   		}else{
+	   			//frm.addCnt.disabled=false;
+    			//frm.lossCnt.disabled=false;
+	   		}
+	  	}
+    	
+    	if(amtCnt==chkCnt){
+    		frm.orderCheckAll.checked=true;
+    		
+    	}else{
+    		frm.orderCheckAll.checked=false;
+    	}
+
+        totalOrderAmt();
+    }
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -682,17 +745,15 @@ function fcDefer_reason(reason){
       <table style="width:460px" class="table table-bordered tbl_type" >
 	     <colgroup>
 	      <col width="80px" >
-	      <col width="50px" >
+	      <col width="70px" >
 	      <col width="80px" >
-	      <col width="50px">
+	      <col width="70px">
 	      <col width="100px">
 	      <col width="100px">
 	     </colgroup>
 	     <tr>
 	     	<td style="background-color:#E6F3FF">발주 건수</td>
-	     	<td class='text-right'><span style="color:red">
-	          <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetDetailList.size()}" /> 건
-	          </span></td>
+	     	<td class='text-right'><span id="totalCheckCnt" style="color:red"></span></td>
 	     	<td style="background-color:#E6F3FF">발주 수량</td>
 	     	<td class='text-right'><span id="totalOrderCnt" style="color:red"></span></td>
 	     	<td style="background-color:#E6F3FF">발주 합계금액</td>
@@ -717,7 +778,9 @@ function fcDefer_reason(reason){
 	    <thead>
 		    <tr style="background-color:#E6F3FF">
 	          <!-- >th rowspan='2' class='text-center' >보류<br><input type="checkbox"  id="deferCheckAll"  name="deferCheckAll" onchange="fcDefer_checkAll();" title="전체선택" /></th -->
-	          <th rowspan='2' class='text-center'>no</th>
+	          <th rowspan='2' class='text-center'>no<br>
+	          <input type="checkbox"  id="orderCheckAll"  name="orderCheckAll" onchange="fcOrder_checkAll();" checked title="전체선택" />
+	          </th>
 	          <th rowspan='2' class='text-center'>품목코드</th>
 	          <th rowspan='2' class='text-center'>상품명</th>
 	          <th colspan='3' class='text-center'>재고</th>
@@ -775,7 +838,7 @@ function fcDefer_reason(reason){
 				 <input type="hidden" name="stockDate" value="${targetVO.stockDate}">
 				 <input type="hidden" name="group1Name" value="${targetVO.group1Name}">
                  <!-- >td class='text-center'><input type="checkbox" id="deferCheck" name="deferCheck" value="${targetVO.productCode}" title="선택" /></td -->
-                 <td class='text-center'><c:out value="${status.count}"></c:out></td>
+                 <td class='text-center'>${status.count}<br><input type="checkbox" id="orderCheck" checked name="orderCheck" value="${targetVO.productCode}" title="선택" onChange="totalCheck()" /></td>
                  <td class='text-center'><c:out value="${targetVO.productCode}"></c:out></td>
                  <td class='text-left'><c:out value="${targetVO.productName}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeStock}"/></td>
@@ -807,6 +870,6 @@ function fcDefer_reason(reason){
 	</div>
 	<script type="text/javascript">
 	
-    totalOrderAmt();
+	totalCheck();
     initNotify();
 </script>

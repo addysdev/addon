@@ -67,11 +67,22 @@ function fcSales_excelimport(){
 
     frm.submit();        
 }
-function uploadClose(msg){
+function uploadClose(msg,obj){
 	
 	 commonDim(false);
-	  
+
 	 alert(msg);
+
+	 if(obj.length>0){
+		 if(obj[0] !=''){
+			 var eMsg='오류 품목코드 정보\n';
+			 for (i=0;i<obj.length;i++){
+				 eMsg=eMsg+obj[i]+'\n';
+			 }
+			 
+			 alert(eMsg);
+		 }
+	 }
 	 
 	 $('#salesExcelForm').dialog('close');
 	 fcSales_listSearch();

@@ -516,23 +516,28 @@ public class OrderController {
 	    for(int i=0;i<orderList.length;i++){
 	
 	        r_data = StringUtil.getTokens(orderList[i], "|");
+	        
+	        if(r_data[13].equals("true") && !r_data[3].equals("0") ){ //체크박스 선택된 발주건 과 수량이 0이 아닌 대상건 선별
 	    
-	        TargetVO targetDetailVo = new TargetVO();
-			
-	        targetDetailVo.setProductCode(StringUtil.nvl(r_data[0],""));
-			targetDetailVo.setProductName(StringUtil.nvl(r_data[1],""));
-			targetDetailVo.setProductPrice(StringUtil.nvl(r_data[2],""));
-			targetDetailVo.setOrderCnt(StringUtil.nvl(r_data[3],""));
-			targetDetailVo.setAddCnt(StringUtil.nvl(r_data[4],""));
-			targetDetailVo.setLossCnt(StringUtil.nvl(r_data[5],""));
-			targetDetailVo.setSafeStock(StringUtil.nvl(r_data[6],""));
-			targetDetailVo.setHoldStock(StringUtil.nvl(r_data[7],""));
-			targetDetailVo.setStockCnt(StringUtil.nvl(r_data[8],""));
-			targetDetailVo.setStockDate(StringUtil.nvl(r_data[9],""));
-			targetDetailVo.setVatRate(StringUtil.nvl(r_data[10],""));
-	    	targetDetailVo.setEtc(StringUtil.nvl(r_data[11],""));
-			
-	        targetExcelList.add(targetDetailVo);
+		        TargetVO targetDetailVo = new TargetVO();
+				
+		        targetDetailVo.setProductCode(StringUtil.nvl(r_data[0],""));
+				targetDetailVo.setProductName(StringUtil.nvl(r_data[1],""));
+				targetDetailVo.setProductPrice(StringUtil.nvl(r_data[2],""));
+				targetDetailVo.setOrderCnt(StringUtil.nvl(r_data[3],""));
+				targetDetailVo.setAddCnt(StringUtil.nvl(r_data[4],""));
+				targetDetailVo.setLossCnt(StringUtil.nvl(r_data[5],""));
+				targetDetailVo.setSafeStock(StringUtil.nvl(r_data[6],""));
+				targetDetailVo.setHoldStock(StringUtil.nvl(r_data[7],""));
+				targetDetailVo.setStockCnt(StringUtil.nvl(r_data[8],""));
+				targetDetailVo.setStockDate(StringUtil.nvl(r_data[9],""));
+				targetDetailVo.setVatRate(StringUtil.nvl(r_data[10],""));
+		    	targetDetailVo.setEtc(StringUtil.nvl(r_data[11],""));
+		    	targetDetailVo.setOrderCheck(StringUtil.nvl(r_data[13],"false"));
+				
+		        targetExcelList.add(targetDetailVo);
+	        
+	        }
 	      /* 
 	       * targetExcelList.add(targetDetailVo);
 	        targetExcelList.add(targetDetailVo);
@@ -660,6 +665,41 @@ public class OrderController {
 	        return "order0002\n[errorMsg] : "+errMsg;
 	    	
 	    }
+	    
+	    //이메일 주문서에 담기위한 데이타 선별값 START
+		String[] orderList = orders; 		
+   	    String[] r_data=null;
+
+        List<TargetVO> targetEailList = new ArrayList();
+        
+	    for(int i=0;i<orderList.length;i++){
+	
+	        r_data = StringUtil.getTokens(orderList[i], "|");
+	        
+	        if(r_data[13].equals("true") && !r_data[3].equals("0") ){//체크박스 선택된 발주건 과 수량이 0이 아닌 대상건 선별
+	    
+		        TargetVO targetDetailVo = new TargetVO();
+				
+		        targetDetailVo.setProductCode(StringUtil.nvl(r_data[0],""));
+				targetDetailVo.setProductName(StringUtil.nvl(r_data[1],""));
+				targetDetailVo.setProductPrice(StringUtil.nvl(r_data[2],""));
+				targetDetailVo.setOrderCnt(StringUtil.nvl(r_data[3],""));
+				targetDetailVo.setAddCnt(StringUtil.nvl(r_data[4],""));
+				targetDetailVo.setLossCnt(StringUtil.nvl(r_data[5],""));
+				targetDetailVo.setSafeStock(StringUtil.nvl(r_data[6],""));
+				targetDetailVo.setHoldStock(StringUtil.nvl(r_data[7],""));
+				targetDetailVo.setStockCnt(StringUtil.nvl(r_data[8],""));
+				targetDetailVo.setStockDate(StringUtil.nvl(r_data[9],""));
+				targetDetailVo.setVatRate(StringUtil.nvl(r_data[10],""));
+		    	targetDetailVo.setEtc(StringUtil.nvl(r_data[11],""));
+		    	targetDetailVo.setOrderCheck(StringUtil.nvl(r_data[13],"false"));
+				
+		    	targetEailList.add(targetDetailVo);
+	        
+	        }
+
+		}
+	   //이메일 주문서에 담기위한 데이타 선별값 END
 
 		ResourceBundle rb = ResourceBundle.getBundle("config");
 	    String uploadFilePath = rb.getString("offact.upload.path") + "html/";
@@ -706,15 +746,13 @@ public class OrderController {
 			szContent += "<div align='left'>";
 			
 			int num=0;
-			int totalnum=orders.length;
+			int totalnum=targetEailList.size();
 			int etcnum=0;
 			int maxlist=25;
 			int resultlist=totalnum;
 			int removecnt=0;
 			int numcnt=0;
-			
-			String[] r_data=null;
-			
+
 			int pagenum = Math.floorDiv(totalnum, maxlist);
 			
 			for(int x=0; x<=pagenum; x++){
@@ -797,22 +835,17 @@ public class OrderController {
 					
 					for(int i=0;i<resultlist;i++){
 						num++;
-	
-						r_data = StringUtil.getTokens(orders[num-1], "|");
+						TargetVO targetDetaiList = new TargetVO();
+						targetDetaiList=targetEailList.get(num-1);
 						
-						if(StringUtil.nvl(r_data[3],"0").equals("0")){
-							removecnt++;
-						}else{
-							numcnt++;
+						numcnt++;
 	
-					        szContent += "<tr bgcolor='#FFFFFF'>";
-							szContent += "<td align='center' height='27'>"+numcnt+"</td>";
-							szContent += "<td colspan='9' align='left'>&nbsp;"+StringUtil.nvl(r_data[1],"")+"</td>";
-							szContent += "<td align='center'>"+StringUtil.nvl(r_data[3],"")+"</td>";
-							szContent += "<td  align='left'>&nbsp;"+StringUtil.nvl(r_data[11],"")+"</td>";
-							szContent += "</tr>";
-						
-						}
+				        szContent += "<tr bgcolor='#FFFFFF'>";
+						szContent += "<td align='center' height='27'>"+numcnt+"</td>";
+						szContent += "<td colspan='9' align='left'>&nbsp;"+targetDetaiList.getProductName()+"</td>";
+						szContent += "<td align='center'>"+targetDetaiList.getOrderCnt()+"</td>";
+						szContent += "<td  align='left'>&nbsp;"+targetDetaiList.getEtc()+"</td>";
+						szContent += "</tr>";
 				
 					}
 	
@@ -826,35 +859,23 @@ public class OrderController {
 						szContent += "</tr>";
 				
 					}
-					
-					for(int a=0;a<removecnt;a++){
-						szContent += "<tr bgcolor='#FFFFFF'>";
-						szContent += "<td align='center' height='27'>&nbsp;</td>";
-						szContent += "<td colspan='9' align='center'>&nbsp;</td>";
-						szContent += "<td align='center'>&nbsp;</td>";
-						szContent += "<td  align='center'>&nbsp;</td>";
-						szContent += "</tr>";
-					}
-					
+				
 				}else if(resultlist>maxlist){
 					
 					for(int z=0;z<maxlist;z++){
 						num++;
-						r_data = StringUtil.getTokens(orders[num-1], "|");
+						TargetVO targetDetaiList = new TargetVO();
+						targetDetaiList=targetEailList.get(num-1);
 						
-						if(StringUtil.nvl(r_data[3],"0").equals("0")){
-							removecnt++;
-						}else{
-							numcnt++;
+						numcnt++;
 							
-							szContent += "<tr bgcolor='#FFFFFF'>";
-							szContent += "<td align='center' height='27'>"+numcnt+"</td>";
-							szContent += "<td colspan='9' align='left'>&nbsp;"+StringUtil.nvl(r_data[1],"")+"</td>";
-							szContent += "<td align='center'>"+StringUtil.nvl(r_data[3],"")+"</td>";
-							szContent += "<td  align='left'>&nbsp;"+StringUtil.nvl(r_data[11],"")+"</td>";
-							szContent += "</tr>";
-						}
-						
+						szContent += "<tr bgcolor='#FFFFFF'>";
+						szContent += "<td align='center' height='27'>"+numcnt+"</td>";
+						szContent += "<td colspan='9' align='left'>&nbsp;"+targetDetaiList.getProductName()+"</td>";
+						szContent += "<td align='center'>"+targetDetaiList.getOrderCnt()+"</td>";
+						szContent += "<td  align='left'>&nbsp;"+targetDetaiList.getEtc()+"</td>";
+						szContent += "</tr>";
+
 					}
 					
 					resultlist=resultlist-maxlist;
@@ -2828,6 +2849,70 @@ public class OrderController {
         mv.addObject("orderCnt", orderCnt);
         
         mv.setViewName("/order/barCodeCheck");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller deferReason end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    
+    /**
+     * 메모관리
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/barcodecheckresult")
+    public ModelAndView barCodeCheckResult(HttpServletRequest request, 
+    		                       HttpServletResponse response,
+    		                       String totalFMsg,
+    		                       String fCnt) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller barcodelist start");
+
+        ModelAndView mv = new ModelAndView();
+        
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));    
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
+       		return mv;
+		}
+        
+        mv.addObject("fCnt", fCnt);
+        mv.addObject("totalFMsg", totalFMsg);
+        
+        mv.setViewName("/order/barCodeCheckResult");
         
        //log Controller execute time end
       	long t2 = System.currentTimeMillis();

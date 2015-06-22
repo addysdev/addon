@@ -91,7 +91,7 @@ public class TargetServiceImpl implements TargetService {
 	
 		      //바주대상품목 리스트 삭제 업데이트
 		      this.commonDao.update("Target.deferDeletesProc", targetVo);
-	    /*
+	    
 		      arrDeferProductId = arrDeferProductId.substring(0, arrDeferProductId.lastIndexOf("^"));
 		      String[] arrDeferId = arrDeferProductId.split("\\^");
 	      
@@ -106,7 +106,7 @@ public class TargetServiceImpl implements TargetService {
 		    	retVal=this.commonDao.update("Target.deferUpdateProc", updateMap);
 	
 		    }
-		  */  
+		    
 	    }catch(Exception e){
 	    	
 	    	e.printStackTrace();
@@ -137,24 +137,28 @@ public class TargetServiceImpl implements TargetService {
 		
 		        r_data = StringUtil.getTokens(orderList[i], "|");
 		    
-			    TargetVO targetDetailVo = new TargetVO();
-				
-				targetDetailVo.setOrderCode(targetVo.getOrderCode());
-				targetDetailVo.setProductCode(StringUtil.nvl(r_data[0],""));
-				targetDetailVo.setProductName(StringUtil.nvl(r_data[1],""));
-				targetDetailVo.setProductPrice(StringUtil.nvl(r_data[2],""));
-				targetDetailVo.setOrderCnt(StringUtil.nvl(r_data[3],""));
-				targetDetailVo.setAddCnt(StringUtil.nvl(r_data[4],""));
-				targetDetailVo.setLossCnt(StringUtil.nvl(r_data[5],""));
-				targetDetailVo.setSafeStock(StringUtil.nvl(r_data[6],""));
-				targetDetailVo.setHoldStock(StringUtil.nvl(r_data[7],""));
-				targetDetailVo.setStockCnt(StringUtil.nvl(r_data[8],""));
-				targetDetailVo.setStockDate(StringUtil.nvl(r_data[9],""));
-				targetDetailVo.setVatRate(StringUtil.nvl(r_data[10],""));
-		    	targetDetailVo.setEtc(StringUtil.nvl(r_data[11],""));
-				targetDetailVo.setCreateUserId(targetVo.getOrderUserId());
-				
-			    retVal=this.commonDao.insert("Target.insertOrderDetail", targetDetailVo);
+		        if(r_data[13].equals("true")){
+		        
+				    TargetVO targetDetailVo = new TargetVO();
+					
+					targetDetailVo.setOrderCode(targetVo.getOrderCode());
+					targetDetailVo.setProductCode(StringUtil.nvl(r_data[0],""));
+					targetDetailVo.setProductName(StringUtil.nvl(r_data[1],""));
+					targetDetailVo.setProductPrice(StringUtil.nvl(r_data[2],""));
+					targetDetailVo.setOrderCnt(StringUtil.nvl(r_data[3],""));
+					targetDetailVo.setAddCnt(StringUtil.nvl(r_data[4],""));
+					targetDetailVo.setLossCnt(StringUtil.nvl(r_data[5],""));
+					targetDetailVo.setSafeStock(StringUtil.nvl(r_data[6],""));
+					targetDetailVo.setHoldStock(StringUtil.nvl(r_data[7],""));
+					targetDetailVo.setStockCnt(StringUtil.nvl(r_data[8],""));
+					targetDetailVo.setStockDate(StringUtil.nvl(r_data[9],""));
+					targetDetailVo.setVatRate(StringUtil.nvl(r_data[10],""));
+			    	targetDetailVo.setEtc(StringUtil.nvl(r_data[11],""));
+					targetDetailVo.setCreateUserId(targetVo.getOrderUserId());
+					targetDetailVo.setOrderCheck(StringUtil.nvl(r_data[13],"true"));
+					
+				    retVal=this.commonDao.insert("Target.insertOrderDetail", targetDetailVo);
+		        }
 			
 			}
 			    

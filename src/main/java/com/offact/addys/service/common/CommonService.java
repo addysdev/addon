@@ -51,6 +51,15 @@ public interface CommonService {
      * @throws BizException
      */
     public CompanyVO getCompanyDetail(CompanyVO company) throws BizException;
+    
+    /**
+     * 코드 목록
+     *
+     * @return
+     * @throws BizException
+     */
+    public List<CompanyVO> getCompanyList(CompanyVO company) throws BizException;
+    
     /**
      * comment 조회
      * 

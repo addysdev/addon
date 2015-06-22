@@ -209,18 +209,18 @@ function fcCompany_Select(companycode,companyname){
 function totalAttachCnt(flag){
 
 	var totalcnt=0;
-	var frm = document.recoveryProductListForm;
+	var frm = document.limitCompanyListForm;
 	
 	if(flag=='add'){
 		//alert(frm.selectProduct.length);
-		if(frm.selectProduct.length!=undefined ){
-			totalcnt=frm.selectProduct.length;
+		if(frm.selectCompany.length!=undefined ){
+			totalcnt=frm.selectCompany.length;
 		}else{
 			totalcnt=1;	
 		}
 	}else{
-		if(frm.selectProduct!=undefined ){
-			totalcnt=frm.selectProduct.length;
+		if(frm.selectCompany!=undefined ){
+			totalcnt=frm.selectCompany.length;
 		}else{
 			totalcnt=0;
 		}
@@ -301,6 +301,28 @@ function fcGroup_checkAll(){
 	$("input:checkbox[id='regroupid']").prop("checked", $("#regroupidCheckAll").is(":checked"));
 
 }
+
+function fcCompany_allAttach(){
+
+	if (confirm('전체 업체를 발주제한 업체로 추가하시겠습니까?')){ 
+	
+	    commonDim(true);
+	    
+	    $.ajax({
+	        type: "POST",
+	           url:  "<%= request.getContextPath() %>/master/orderlimitalllist",
+	                data:$("#orderLimitForm").serialize(),
+	           success: function(result) {
+	               commonDim(false);
+	               $("#orderLimitRegisList").html(result);
+	           },
+	           error:function() {
+	           	
+	           }
+	    });
+	}
+
+}
 //--> 
 
 </SCRIPT>
@@ -308,8 +330,9 @@ function fcGroup_checkAll(){
 <body>
   <div class="container-fluid">
 	<h5><strong><font style="color:#428bca">발주제한 관리&nbsp; 
-   		<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fCompany_list()" >발주제한 업체 추가</button>
-   		<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcCompany_excelForm()" >발주제한 업체 엑셀추가</button>
+   		<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fCompany_list()" >제한 업체</button>
+   		<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcCompany_excelForm()" >제한 업체 엑셀추가</button>
+   		<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcCompany_allAttach()" >제한 업체 전체추가</button>
    		<button id="memoinfobtn" type="button" class="btn btn-xs btn-primary" onClick="fcOrderLimit_regist()" >발주제한 요청</button>
     	</font></strong></h5>
 		  <form:form commandName="orderLimitVO" id="orderLimitForm" name="orderLimitForm" method="post" action="" >

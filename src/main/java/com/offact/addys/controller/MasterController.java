@@ -336,6 +336,8 @@ public class MasterController {
      String excelInfo = "";//excel 추출데이타
      List rtnErrorList = new ArrayList(); //DB 에러 대상데이타
      List rtnSuccessList = new ArrayList(); //DB 성공 대상데이타
+     
+     String errorMsgList="";
 
      if (fileName != null) {
    	  
@@ -457,11 +459,14 @@ public class MasterController {
 
      rtnErrorList = (List)rtmMap.get("rtnErrorList");
      rtnSuccessList = (List)rtmMap.get("rtnSuccessList");
+     errorMsgList = (String)rtmMap.get("errorMsgList");
 
      this.logger.info("rtnErrorList.size() :"+ rtnErrorList.size()+"rtnSuccessList.size() :"+ rtnSuccessList.size());
   
      mv.addObject("rtnErrorList", rtnErrorList);
      mv.addObject("rtnSuccessList", rtnSuccessList);
+     
+     mv.addObject("errorMsgList", errorMsgList);
        
      mv.setViewName("/master/uploadResult");
      
@@ -648,6 +653,7 @@ public class MasterController {
 	    String excelInfo = "";//excel 추출데이타
 	    List rtnErrorList = new ArrayList(); //DB 에러 대상데이타
 	    List rtnSuccessList = new ArrayList(); //DB 성공 대상데이타
+	    String errorMsgList ="";
 	
 	    if (fileName != null) {
 	  	  
@@ -824,11 +830,14 @@ public class MasterController {
 	
 	     rtnErrorList = (List)rtmMap.get("rtnErrorList");
 	     rtnSuccessList = (List)rtmMap.get("rtnSuccessList");
+	     errorMsgList = (String)rtmMap.get("errorMsgList");
 	
 	     this.logger.info("rtnErrorList.size() :"+ rtnErrorList.size()+"rtnSuccessList.size() :"+ rtnSuccessList.size());
 	  
 	     mv.addObject("rtnErrorList", rtnErrorList);
 	     mv.addObject("rtnSuccessList", rtnSuccessList);
+	     
+	     mv.addObject("errorMsgList", errorMsgList);
 	    
 	     mv.setViewName("/master/uploadResult");
 	     
@@ -1280,6 +1289,8 @@ public class MasterController {
      String excelInfo = "";//excel 추출데이타
      List rtnErrorList = new ArrayList(); //DB 에러 대상데이타
      List rtnSuccessList = new ArrayList(); //DB 성공 대상데이타
+     
+     String  errorMsgList ="";   
 
      if (fileName != null) {
    	  
@@ -1375,9 +1386,12 @@ public class MasterController {
 	          this.logger.info("["+logid+"] Controller getErrMsg : "+stockVO.getErrMsg());
          
 	          rtnErrorList.add(stockVO);
+	          errorMsgList=errorMsgList+stockVO.getErrMsg()+"\\^";
 
 	          mv.addObject("rtnErrorList", rtnErrorList);
 	          mv.addObject("rtnSuccessList", rtnSuccessList);
+	          
+	          mv.addObject("errorMsgList", errorMsgList);
 
 	          mv.setViewName("/master/uploadResult");
     	 
@@ -1395,11 +1409,14 @@ public class MasterController {
 
      rtnErrorList = (List)rtmMap.get("rtnErrorList");
      rtnSuccessList = (List)rtmMap.get("rtnSuccessList");
+     errorMsgList = (String)rtmMap.get("errorMsgList");
 
      this.logger.info("rtnErrorList.size() :"+ rtnErrorList.size()+"rtnSuccessList.size() :"+ rtnSuccessList.size());
   
      mv.addObject("rtnErrorList", rtnErrorList);
      mv.addObject("rtnSuccessList", rtnSuccessList);
+     
+     mv.addObject("errorMsgList", errorMsgList);
        
      mv.setViewName("/master/uploadResult");
      
@@ -1836,6 +1853,8 @@ public class MasterController {
     String excelInfo = "";//excel 추출데이타
     List rtnErrorList = new ArrayList(); //DB 에러 대상데이타
     List rtnSuccessList = new ArrayList(); //DB 성공 대상데이타
+    
+    String errorMsgList ="";
 
     if (fileName != null) {
   	  
@@ -1934,10 +1953,13 @@ public class MasterController {
           this.logger.info("["+logid+"] Controller getErrMsg : "+salesVO.getErrMsg());
         
           rtnErrorList.add(salesVO);
+          errorMsgList=errorMsgList+salesVO.getErrMsg()+"\\^";
 
           mv.addObject("rtnErrorList", rtnErrorList);
           mv.addObject("rtnSuccessList", rtnSuccessList);
-
+          
+          mv.addObject("errorMsgList", errorMsgList);
+          
           mv.setViewName("/master/uploadResult");
           
           //작업이력
@@ -1961,11 +1983,15 @@ public class MasterController {
 
     rtnErrorList = (List)rtmMap.get("rtnErrorList");
     rtnSuccessList = (List)rtmMap.get("rtnSuccessList");
+    
+    errorMsgList = (String)rtmMap.get("errorMsgList");
 
     this.logger.info("rtnErrorList.size() :"+ rtnErrorList.size()+"rtnSuccessList.size() :"+ rtnSuccessList.size());
  
     mv.addObject("rtnErrorList", rtnErrorList);
     mv.addObject("rtnSuccessList", rtnSuccessList);
+    
+    mv.addObject("errorMsgList", errorMsgList);
       
     mv.setViewName("/master/uploadResult");
 
@@ -2888,4 +2914,63 @@ public class MasterController {
 
     return ""+retVal;
   } 
+  
+  /**
+ 	 * Simply selects the home view to render by returning its name.
+ 	 * @throws BizException
+ 	 */
+  @RequestMapping(value = "/master/orderlimitalllist")
+ 	public ModelAndView orderLimitAllList(HttpServletRequest request) throws BizException 
+     {
+  		//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : reproductList");
+  			
+ 		ModelAndView mv = new ModelAndView();
+ 		
+ 		// 사용자 세션정보
+ 		HttpSession session = request.getSession();
+ 		String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+ 		String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	           //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
+      		return mv;
+		}
+      
+      	List companyList = new ArrayList(); //DB 성공 대상데이타
+      	CompanyVO companyConVo = new CompanyVO();
+      	
+      	companyList=commonSvc.getCompanyList(companyConVo);
+      
+      	mv.addObject("excelTotal", "0");
+	  	mv.addObject("companyList", companyList);
+ 		
+	  	mv.setViewName("/master/orderLimitAttach");
+ 		
+ 	    //log Controller execute time end
+	 	long t2 = System.currentTimeMillis();
+	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+ 		
+ 		return mv;
+ 	}
 }

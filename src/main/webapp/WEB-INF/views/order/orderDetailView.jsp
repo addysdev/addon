@@ -316,9 +316,9 @@ function totalTargetAmt(){
 	    		vatamt=vatamt+sum_vatAmt;
 	    		totalcnt=totalcnt+orderCnt;
 	    		
-	    		if(orderCnt>0){
+	    		//if(orderCnt>0){
 		    		totalprodcnt++;
-	    		}
+	    		//}
 
 	    		document.all('orderTotalPriceView')[i].innerText=addCommaStr(''+(productPrice*orderCnt));
 	
@@ -338,9 +338,9 @@ function totalTargetAmt(){
     		vatamt=vatamt+sum_vatAmt;
     		totalcnt=totalcnt+orderCnt;
     		
-    		if(orderCnt>0){
+    		//if(orderCnt>0){
 	    		totalprodcnt++;
-    		}
+    		//}
 
     		document.all('orderTotalPriceView').innerText=addCommaStr(''+(productPrice*orderCnt));
     	}

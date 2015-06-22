@@ -46,6 +46,7 @@ public class StockMasterServiceImpl implements StockMasterService {
 
     	    List rtnSuccessList = new ArrayList();
     	    List rtnErrorList = new ArrayList();
+    	    String errorMsgList ="";
     	    
     	    deleteMap.put("updateUserId", "system");  //기존 데이타 삭제필드 업데이트
     	    this.commonDao.update("StockMaster.stockDeleteAll", deleteMap);
@@ -53,13 +54,13 @@ public class StockMasterServiceImpl implements StockMasterService {
     	    int idx = 0;
 
     	    for (int i = 0; i < excelUploadList.size(); i++) {
-    	      
-    	      try 
-    	      {
-    	        
+    	          	        
     	    	idx = i + 2;
     	    	StockMasterVO stockMasterVO = (StockMasterVO)excelUploadList.get(i);
     	    	stockMasterVO.setErrMsg("");
+    	    	
+      	      try 
+      	      {
                 this.commonDao.insert("StockMaster.insertExcelSafe", stockMasterVO);
                 rtnSuccessList.add(stockMasterVO);
     	      
@@ -70,6 +71,7 @@ public class StockMasterServiceImpl implements StockMasterService {
     	        errMsg = errMsg.substring(errMsg.lastIndexOf("Exception"));
     	        ((StockMasterVO)excelUploadList.get(i)).setErrMsg(((StockMasterVO)excelUploadList.get(i)).getErrMsg() + "\n\r(" + idx + ")" + errMsg);
     	        rtnErrorList.add((StockMasterVO)excelUploadList.get(i));
+    	        errorMsgList=errorMsgList+"["+(i+1)+"]번째 품목코드 :"+stockMasterVO.getProductCode()+"\\^";
     	        
     	        this.logger.debug("[key1]:"+ ((StockMasterVO)excelUploadList.get(i)).getProductCode()+"[key2]:"+ ((StockMasterVO)excelUploadList.get(i)).getGroupId()+" [msg] : " + ((StockMasterVO)excelUploadList.get(i)).getErrMsg());
     	        
@@ -79,6 +81,7 @@ public class StockMasterServiceImpl implements StockMasterService {
 
     	    rtnMap.put("rtnSuccessList", rtnSuccessList);
     	    rtnMap.put("rtnErrorList", rtnErrorList);
+    	    rtnMap.put("errorMsgList", errorMsgList);
 
     	    return rtnMap;
     	  }
@@ -91,6 +94,7 @@ public class StockMasterServiceImpl implements StockMasterService {
 
     	    List rtnSuccessList = new ArrayList();
     	    List rtnErrorList = new ArrayList();
+    	    String errorMsgList ="";
     	    
     	    deleteMap.put("updateUserId", "system");  //기존 데이타 삭제필드 업데이트
     	    this.commonDao.update("StockMaster.stockDeleteAll", deleteMap);
@@ -98,13 +102,13 @@ public class StockMasterServiceImpl implements StockMasterService {
     	    int idx = 0;
 
     	    for (int i = 0; i < excelUploadList.size(); i++) {
-    	      
-    	      try 
-    	      {
-    	        
+
     	    	idx = i + 2;
     	    	StockMasterVO stockMasterVO = (StockMasterVO)excelUploadList.get(i);
     	    	stockMasterVO.setErrMsg("");
+    	    	
+      	      try 
+      	      {
                 this.commonDao.insert("StockMaster.insertExcelHold", stockMasterVO);
                 rtnSuccessList.add(stockMasterVO);
     	      
@@ -115,7 +119,7 @@ public class StockMasterServiceImpl implements StockMasterService {
     	        errMsg = errMsg.substring(errMsg.lastIndexOf("Exception"));
     	        ((StockMasterVO)excelUploadList.get(i)).setErrMsg(((StockMasterVO)excelUploadList.get(i)).getErrMsg() + "\n\r(" + idx + ")" + errMsg);
     	        rtnErrorList.add((StockMasterVO)excelUploadList.get(i));
-    	        
+    	        errorMsgList=errorMsgList+"["+(i+1)+"]번째 품목코드 :"+stockMasterVO.getProductCode()+"\\^";
     	        this.logger.debug("[key1]:"+ ((StockMasterVO)excelUploadList.get(i)).getProductCode()+"[key2]:"+ ((StockMasterVO)excelUploadList.get(i)).getGroupId()+" [msg] : " + ((StockMasterVO)excelUploadList.get(i)).getErrMsg());
     	        
     	      }
@@ -124,6 +128,7 @@ public class StockMasterServiceImpl implements StockMasterService {
 
     	    rtnMap.put("rtnSuccessList", rtnSuccessList);
     	    rtnMap.put("rtnErrorList", rtnErrorList);
+    	    rtnMap.put("errorMsgList", errorMsgList);
 
     	    return rtnMap;
     	  }

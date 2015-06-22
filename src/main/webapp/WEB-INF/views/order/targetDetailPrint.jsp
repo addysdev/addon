@@ -132,11 +132,8 @@ window.print();
 						TargetVO targetDetaiList = new TargetVO();
 						targetDetaiList=targetLsit.get(num-1);
 						
-						if(targetDetaiList.getOrderCnt().equals("0")){
-							removecnt++;
-						}else{
-							numcnt++;
-		
+						numcnt++;
+						
 					%>
 						<tr bgcolor='#FFFFFF'>
 						<td align='center' height='27'><%=numcnt %></td>
@@ -145,7 +142,6 @@ window.print();
 						<td align='left'><%=targetDetaiList.getEtc() %></td>
 						</tr>	
 					<%
-						}
 					}
 					
 					for(int y=0;y<etcnum;y++){
@@ -158,18 +154,7 @@ window.print();
 						</tr>	
 					<% 	
 					}
-					
-					for(int a=0;a<removecnt;a++){
-						%>		
-							<tr bgcolor='#FFFFFF'>
-							<td align='center' height='27'></td>
-							<td colspan='9' align='center'></td>
-							<td align='center'></td>
-							<td align='center'></td>
-							</tr>	
-						<% 	
-					}
-					
+
 				}else if(resultlist>maxlist){
 					
 					for(int z=0;z<maxlist;z++){
@@ -177,10 +162,7 @@ window.print();
 						TargetVO targetDetaiList = new TargetVO();
 						targetDetaiList=targetLsit.get(num-1);
 						
-						if(targetDetaiList.getOrderCnt().equals("0")){
-							removecnt++;
-						}else{
-							numcnt++;
+						numcnt++;
 					%>
 						<tr bgcolor='#FFFFFF'>
 						<td align='center' height='27'><%=numcnt %></td>
@@ -189,7 +171,7 @@ window.print();
 						<td align='left'><%=targetDetaiList.getEtc() %></td>
 						</tr>	
 				    <%
-						}
+
 					}
 					
 					resultlist=resultlist-maxlist;

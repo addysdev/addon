@@ -58,6 +58,7 @@ public class ProductMasterServiceImpl implements ProductMasterService {
 
     	    List rtnSuccessList = new ArrayList();
     	    List rtnErrorList = new ArrayList();
+    	    String errorMsgList ="";
     	    
     	    deleteMap.put("updateUserId", "system");  //기존 데이타 삭제필드 업데이트
     	    this.commonDao.update("ProductMaster.productDeleteAll", deleteMap);
@@ -65,13 +66,13 @@ public class ProductMasterServiceImpl implements ProductMasterService {
     	    int idx = 0;
 
     	    for (int i = 0; i < excelUploadList.size(); i++) {
-    	      
-    	      try 
-    	      {
     	        
     	    	idx = i + 2;
     	        ProductMasterVO productMasterVO = (ProductMasterVO)excelUploadList.get(i);
     	        productMasterVO.setErrMsg("");
+    	        
+      	      try 
+      	      {
                 this.commonDao.insert("ProductMaster.insertExcelProduct", productMasterVO);
                 rtnSuccessList.add(productMasterVO);
     	      
@@ -82,6 +83,7 @@ public class ProductMasterServiceImpl implements ProductMasterService {
     	        errMsg = errMsg.substring(errMsg.lastIndexOf("Exception"));
     	        ((ProductMasterVO)excelUploadList.get(i)).setErrMsg(((ProductMasterVO)excelUploadList.get(i)).getErrMsg() + "\n\r(" + idx + ")" + errMsg);
     	        rtnErrorList.add((ProductMasterVO)excelUploadList.get(i));
+    	        errorMsgList=errorMsgList+"["+(i+1)+"]번째 품목코드 :"+productMasterVO.getProductCode()+"\\^";
     	        
     	        this.logger.debug("[key]:"+ ((ProductMasterVO)excelUploadList.get(i)).getProductCode()+" [msg] : " + ((ProductMasterVO)excelUploadList.get(i)).getErrMsg());
     	        
@@ -91,6 +93,7 @@ public class ProductMasterServiceImpl implements ProductMasterService {
 
     	    rtnMap.put("rtnSuccessList", rtnSuccessList);
     	    rtnMap.put("rtnErrorList", rtnErrorList);
+    	    rtnMap.put("errorMsgList", errorMsgList);
 
     	    return rtnMap;
     	  }

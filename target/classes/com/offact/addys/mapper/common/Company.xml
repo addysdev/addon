@@ -27,5 +27,19 @@
 				  From adCompany 
 				  Where companyCode = #{companyCode} And deletedYn='N'
 </select>
+
+<select id="getCompanyList" resultMap="companyVO" parameterType="com.offact.addys.vo.common.CompanyVO" >
+			Select	   companyCode
+					  ,companyName
+					  ,companyPhone
+					  ,postCode
+				  	  ,address1
+				  	  ,faxNumber
+					  ,mobilePhone
+					  ,email
+					  ,chargeName
+				  From adCompany 
+				  Where deletedYn='N'
+</select>
  
 </mapper>
