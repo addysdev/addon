@@ -143,8 +143,9 @@ public class RecoveryController {
         String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
         String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
-        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
+        	strIp = request.getRemoteAddr(); 
  	       	//로그인 상태처리		
  	   		UserVO userState =new UserVO();
  	   		userState.setUserId(strUserId);
@@ -153,9 +154,10 @@ public class RecoveryController {
  	   		userState.setConnectIp(sClientIP);
  	   		userSvc.regiLoginYnUpdate(userState);
  	           
- 	           //작업이력
+ 	        //작업이력
  	   		WorkVO work = new WorkVO();
  	   		work.setWorkUserId(strUserId);
+ 	   	    work.setWorkIp(strIp);
  	   		work.setWorkCategory("CM");
  	   		work.setWorkCode("CM004");
  	   		commonSvc.regiHistoryInsert(work);
@@ -289,8 +291,9 @@ public class RecoveryController {
         String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
         String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
-        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
+        	strIp = request.getRemoteAddr(); 
  	       	//로그인 상태처리		
  	   		UserVO userState =new UserVO();
  	   		userState.setUserId(strUserId);
@@ -299,9 +302,10 @@ public class RecoveryController {
  	   		userState.setConnectIp(sClientIP);
  	   		userSvc.regiLoginYnUpdate(userState);
  	           
- 	           //작업이력
+ 	        //작업이력
  	   		WorkVO work = new WorkVO();
  	   		work.setWorkUserId(strUserId);
+ 	   	    work.setWorkIp(strIp);
  	   		work.setWorkCategory("CM");
  	   		work.setWorkCode("CM004");
  	   		commonSvc.regiHistoryInsert(work);
@@ -500,8 +504,9 @@ public class RecoveryController {
         String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
         String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
-        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
+        	strIp = request.getRemoteAddr(); 
  	       	//로그인 상태처리		
  	   		UserVO userState =new UserVO();
  	   		userState.setUserId(strUserId);
@@ -510,9 +515,10 @@ public class RecoveryController {
  	   		userState.setConnectIp(sClientIP);
  	   		userSvc.regiLoginYnUpdate(userState);
  	           
- 	           //작업이력
+ 	        //작업이력
  	   		WorkVO work = new WorkVO();
  	   		work.setWorkUserId(strUserId);
+ 	   	    work.setWorkIp(strIp);
  	   		work.setWorkCategory("CM");
  	   		work.setWorkCode("CM004");
  	   		commonSvc.regiHistoryInsert(work);
@@ -693,6 +699,7 @@ public class RecoveryController {
 		work.setWorkUserId(strUserId);
 		work.setWorkCategory("RE");
 		work.setWorkCode("RE001");
+		work.setWorkKey1(collectCode);
 		commonSvc.regiHistoryInsert(work);
 		
 		//log Controller execute time end
@@ -734,8 +741,9 @@ public class RecoveryController {
         String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
         String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
-        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
+        	strIp = request.getRemoteAddr(); 
  	       	//로그인 상태처리		
  	   		UserVO userState =new UserVO();
  	   		userState.setUserId(strUserId);
@@ -744,9 +752,10 @@ public class RecoveryController {
  	   		userState.setConnectIp(sClientIP);
  	   		userSvc.regiLoginYnUpdate(userState);
  	           
- 	           //작업이력
+ 	        //작업이력
  	   		WorkVO work = new WorkVO();
  	   		work.setWorkUserId(strUserId);
+ 	   	    work.setWorkIp(strIp);
  	   		work.setWorkCategory("CM");
  	   		work.setWorkCode("CM004");
  	   		commonSvc.regiHistoryInsert(work);
@@ -866,6 +875,8 @@ public class RecoveryController {
 		work.setWorkUserId(strUserId);
 		work.setWorkCategory("RE");
 		work.setWorkCode("RE005");
+		work.setWorkKey1(recoveryVO.getRecoveryCode());
+		work.setSearchKey2(recoveryVO.getGroupId());
 		commonSvc.regiHistoryInsert(work);
 		
 		//log Controller execute time end
@@ -947,6 +958,8 @@ public class RecoveryController {
 		work.setWorkUserId(strUserId);
 		work.setWorkCategory("RE");
 		work.setWorkCode("RE008");
+		work.setWorkKey1(recoveryVO.getRecoveryCode());
+		work.setSearchKey2(recoveryVO.getGroupId());
 		commonSvc.regiHistoryInsert(work);
 		
 		//log Controller execute time end
@@ -1161,6 +1174,7 @@ public class RecoveryController {
 	        
 	        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
 	        	
+	        	strIp = request.getRemoteAddr(); 
 	 	       	//로그인 상태처리		
 	 	   		UserVO userState =new UserVO();
 	 	   		userState.setUserId(strUserId);
@@ -1169,9 +1183,10 @@ public class RecoveryController {
 	 	   		userState.setConnectIp(sClientIP);
 	 	   		userSvc.regiLoginYnUpdate(userState);
 	 	           
-	 	           //작업이력
+	 	        //작업이력
 	 	   		WorkVO work = new WorkVO();
 	 	   		work.setWorkUserId(strUserId);
+	 	   	    work.setWorkIp(strIp);
 	 	   		work.setWorkCategory("CM");
 	 	   		work.setWorkCode("CM004");
 	 	   		commonSvc.regiHistoryInsert(work);
@@ -1200,6 +1215,7 @@ public class RecoveryController {
 	    @RequestMapping(value = "/recovery/recoverycodeprint")
 	   	public ModelAndView recoveryCodePrint(HttpServletRequest request,
                                               String recoveryCode,
+                                              String groupId,
                                               String groupName) throws BizException 
 	       {
 	    	//log Controller execute time start
@@ -1222,6 +1238,8 @@ public class RecoveryController {
 			work.setWorkUserId(strUserId);
 			work.setWorkCategory("RE");
 			work.setWorkCode("RE004");
+			work.setWorkKey1(recoveryCode);
+			work.setSearchKey2(groupId);
 			commonSvc.regiHistoryInsert(work);
 	   		
 	   		return mv;
@@ -1240,6 +1258,7 @@ public class RecoveryController {
 	    @RequestMapping({"/recovery/receiveprocess"})
 	    public @ResponseBody
 	    String receiveProcess(String recoveryCode,
+	    					  String groupId,
 	    		            HttpServletRequest request) throws BizException
 	    {
 	      
@@ -1299,6 +1318,8 @@ public class RecoveryController {
 			work.setWorkUserId(strUserId);
 			work.setWorkCategory("RE");
 			work.setWorkCode("RE006");
+			work.setWorkKey1(recoveryCode);
+			work.setSearchKey2(groupId);
 			commonSvc.regiHistoryInsert(work);
 			
 			//log Controller execute time end
@@ -1381,6 +1402,7 @@ public class RecoveryController {
 			work.setWorkUserId(strUserId);
 			work.setWorkCategory("RE");
 			work.setWorkCode("RE002");
+			work.setWorkKey1(collectCode);
 			commonSvc.regiHistoryInsert(work);
 			
 			//log Controller execute time end
@@ -1406,10 +1428,31 @@ public class RecoveryController {
 	      	// 사용자 세션정보
 	        HttpSession session = request.getSession();
 	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-	        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));   
+	        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+	        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));  
 	        
 	        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-	        	mv.setViewName("/addys/loginForm");
+	        	
+	        	strIp = request.getRemoteAddr(); 
+	 	       	//로그인 상태처리		
+	 	   		UserVO userState =new UserVO();
+	 	   		userState.setUserId(strUserId);
+	 	   		userState.setLoginYn("N");
+	 	   		userState.setIp(strIp);
+	 	   		userState.setConnectIp(sClientIP);
+	 	   		userSvc.regiLoginYnUpdate(userState);
+	 	           
+	 	        //작업이력
+	 	   		WorkVO work = new WorkVO();
+	 	   		work.setWorkUserId(strUserId);
+	 	   	    work.setWorkIp(strIp);
+	 	   		work.setWorkCategory("CM");
+	 	   		work.setWorkCode("CM004");
+	 	   		commonSvc.regiHistoryInsert(work);
+	 	   		
+	 	       	mv.setViewName("/addys/loginForm");
 	       		return mv;
 			}
 
@@ -1436,6 +1479,7 @@ public class RecoveryController {
 			work.setWorkUserId(strUserId);
 			work.setWorkCategory("RE");
 			work.setWorkCode("RE009");
+			work.setWorkKey1(collectCode);
 			commonSvc.regiHistoryInsert(work);
 	   		
 	   		return mv;
@@ -1515,9 +1559,11 @@ public class RecoveryController {
 	    	if(collectState.equals("02")){
 	    		work.setWorkCategory("RE");
 				work.setWorkCode("RE010");
+				work.setWorkKey1(collectCode);
 	    	}else{
 	    		work.setWorkCategory("RE");
 				work.setWorkCode("RE012");
+				work.setWorkKey1(collectCode);
 	    	}
 			work.setWorkUserId(strUserId);
 			commonSvc.regiHistoryInsert(work);
@@ -1602,6 +1648,7 @@ public class RecoveryController {
 			work.setWorkUserId(strUserId);
 			work.setWorkCategory("RE");
 			work.setWorkCode("RE011");
+			work.setWorkKey1(collectCode);
 			commonSvc.regiHistoryInsert(work);
 			
 			//log Controller execute time end

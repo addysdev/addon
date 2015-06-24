@@ -410,7 +410,7 @@ function totalTargetAmt(){
     }
 	
  // 보류 상세 페이지 리스트 Layup
-    function fcMemo_detail(orderCode,memo) {
+    function fcMemo_detail(orderCode,memo,companyCode) {
     	
     	//$('#targetEtcView').attr('title',productName);
     	var url='<%= request.getContextPath() %>/order/memomanage';
@@ -427,7 +427,7 @@ function totalTargetAmt(){
             open:function(){
                 //팝업 가져올 url
               //  $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode+'&productNaem='+encodeURIComponent(productName));
-                $(this).load(url+'?orderCode='+orderCode+'&category=03'+'&memo='+encodeURIComponent(memo));
+                $(this).load(url+'?orderCode='+orderCode+'&category=03'+'&companyCode='+companyCode+'&memo='+encodeURIComponent(memo));
                
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#memoManage").dialog('close');
@@ -440,7 +440,7 @@ function totalTargetAmt(){
         });
     };
     // 품목 상세 페이지 리스트 Layup
-    function  fcEtc_detail(orderCode,productCode,productName,etc,idx) {
+    function  fcEtc_detail(orderCode,productCode,productName,etc,idx,companyCode) {
 
     	//$('#targetEtcView').attr('title',productName);
     	var url='<%= request.getContextPath() %>/order/etcmanage';
@@ -461,7 +461,7 @@ function totalTargetAmt(){
             open:function(){
                 //팝업 가져올 url
               //  $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode+'&productNaem='+encodeURIComponent(productName));
-                $(this).load(url+'?orderCode='+orderCode+'&category=04'+'&idx='+idx+'&productCode='+productCode+'&productName='+encodeURIComponent(productName)+'&etc='+encodeURIComponent(etc));
+                $(this).load(url+'?orderCode='+orderCode+'&category=04'+'&idx='+idx+'&productCode='+productCode+'&companyCode='+companyCode+'&productName='+encodeURIComponent(productName)+'&etc='+encodeURIComponent(etc));
                
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#etcManage").dialog('close');
@@ -831,7 +831,7 @@ function totalTargetAmt(){
       	</tr>
       	<tr>
           <th colspan='2' class='text-center' style="background-color:#E6F3FF">메모&nbsp;(<span id="memoCnt" style="color:blue">${orderVO.memoCnt}</span>)
-          <button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcMemo_detail('${orderVO.orderCode}','${orderVO.memo}')" >관리</button></th>
+          <button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcMemo_detail('${orderVO.orderCode}','${orderVO.memo}','${orderVO.companyCode}')" >관리</button></th>
           <th colspan='4' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${orderVO.memo}" placeholder="메모" disabled /></th>
       	</tr>
 	  </table>
@@ -839,6 +839,8 @@ function totalTargetAmt(){
 	 </div>
 	 
      <form:form commandName="orderListVO" id="orderDetailListForm" name="orderDetailListForm" method="post" action="" >
+     <input type="hidden" name="orderCode" value="${orderVO.orderCode}" >
+     <input type="hidden" name="companyCode" value="${orderVO.companyCode}" >
      <table style="width:460px" class="table table-bordered tbl_type" >
 	     <colgroup>
 	      <col width="80px" >
@@ -976,7 +978,7 @@ function totalTargetAmt(){
 						<td class='text-right' id="etcAdd" name="etcAdd" style="background-color:#FEE2B4;color:blue"><img id="etcbtn" onClick="fcEtc_detail('${orderVO.orderCode}','${orderVO.productCode}','${orderVO.productName}','${orderVO.etc}','${status.count}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${orderVO.etcCnt}</span>)</td>
 					</c:when>
 					<c:otherwise>
-						<td class='text-right' id="etcAdd" name="etcAdd"><img id="etcbtn" onClick="fcEtc_detail('${orderVO.orderCode}','${orderVO.productCode}','${orderVO.productName}','${orderVO.etc}','${status.count}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${orderVO.etcCnt}</span>)</td>
+						<td class='text-right' id="etcAdd" name="etcAdd"><img id="etcbtn" onClick="fcEtc_detail('${orderVO.orderCode}','${orderVO.productCode}','${orderVO.productName}','${orderVO.etc}','${status.count}','${orderVO.companyCode}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${orderVO.etcCnt}</span>)</td>
 					</c:otherwise>
 				</c:choose>
                  

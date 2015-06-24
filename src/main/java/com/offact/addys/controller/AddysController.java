@@ -353,6 +353,7 @@ public class AddysController {
 		    //작업이력
 			WorkVO work = new WorkVO();
 			work.setWorkUserId(strUserId);
+			work.setWorkIp(strIp);
 			work.setWorkCategory("CM");
 			work.setWorkCode("CM001");
 			commonSvc.regiHistoryInsert(work);
@@ -413,6 +414,7 @@ public class AddysController {
         //작업이력
 		WorkVO work = new WorkVO();
 		work.setWorkUserId(strUserId);
+		work.setWorkIp(strIp);
 		work.setWorkCategory("CM");
 		work.setWorkCode("CM002");
 		commonSvc.regiHistoryInsert(work);
@@ -469,17 +471,18 @@ public class AddysController {
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
-        	//로그인 상태처리		
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
     		UserVO userState =new UserVO();
     		userState.setUserId(strUserId);
     		userState.setLoginYn("N");
     		userState.setIp(strIp);
     		userState.setConnectIp(sClientIP);
     		userSvc.regiLoginYnUpdate(userState);
-            
+
             //작업이력
     		WorkVO work = new WorkVO();
     		work.setWorkUserId(strUserId);
+    		work.setWorkIp(strIp);
     		work.setWorkCategory("CM");
     		work.setWorkCode("CM004");
     		commonSvc.regiHistoryInsert(work);

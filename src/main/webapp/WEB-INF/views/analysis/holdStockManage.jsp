@@ -188,6 +188,13 @@
 		                </select>
 					</c:otherwise>
 				</c:choose>
+				
+				<label for="con_group1Name"> 그룹1 </label>
+				<input type="text" style="width:70px" class="form-control" id="con_group1Name" name="con_group1Name"  value="${holdStockConVO.con_group1Name}" />
+				<label for="con_group2Name"> 그룹2 </label>
+				<input type="text" style="width:70px" class="form-control" id="con_group2Name" name="con_group2Name"  value="${holdStockConVO.con_group2Name}" />
+				<label for="con_group3Name"> 그룹3 </label>
+				<input type="text" style="width:70px" class="form-control" id="con_group3Name" name="con_group3Name"  value="${holdStockConVO.con_group3Name}" />
         	
 				<label for="searchGubun"><h6><strong>검색조건 :</label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">

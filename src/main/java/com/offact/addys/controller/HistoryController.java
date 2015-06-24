@@ -125,7 +125,7 @@ public class HistoryController {
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
-        	//로그인 상태처리		
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
     		UserVO userState =new UserVO();
     		userState.setUserId(strUserId);
     		userState.setLoginYn("N");
@@ -134,15 +134,16 @@ public class HistoryController {
     		userSvc.regiLoginYnUpdate(userState);
             
             //작업이력
-    		WorkVO work = new WorkVO();
-    		work.setWorkUserId(strUserId);
-    		work.setWorkCategory("CM");
-    		work.setWorkCode("CM004");
-    		commonSvc.regiHistoryInsert(work);
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
     		
         	mv.setViewName("/addys/loginForm");
        		return mv;
-     	}
+		}
         
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -209,6 +210,7 @@ public class HistoryController {
 		logger.info("["+logid+"] Controller start : workConVO" + workConVO);
 
         ModelAndView mv = new ModelAndView();
+    
         // 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
@@ -218,7 +220,7 @@ public class HistoryController {
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
-        	//로그인 상태처리		
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
     		UserVO userState =new UserVO();
     		userState.setUserId(strUserId);
     		userState.setLoginYn("N");
@@ -227,15 +229,16 @@ public class HistoryController {
     		userSvc.regiLoginYnUpdate(userState);
             
             //작업이력
-    		WorkVO work = new WorkVO();
-    		work.setWorkUserId(strUserId);
-    		work.setWorkCategory("CM");
-    		work.setWorkCode("CM004");
-    		commonSvc.regiHistoryInsert(work);
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
     		
         	mv.setViewName("/addys/loginForm");
        		return mv;
-     	}
+		}
 
         List<WorkHistoryVO> workList = null;
 
@@ -325,7 +328,7 @@ public class HistoryController {
 
         ModelAndView mv = new ModelAndView();
         
-     // 사용자 세션정보
+       // 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
@@ -334,7 +337,7 @@ public class HistoryController {
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
-        	//로그인 상태처리		
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
     		UserVO userState =new UserVO();
     		userState.setUserId(strUserId);
     		userState.setLoginYn("N");
@@ -343,15 +346,16 @@ public class HistoryController {
     		userSvc.regiLoginYnUpdate(userState);
             
             //작업이력
-    		WorkVO work = new WorkVO();
-    		work.setWorkUserId(strUserId);
-    		work.setWorkCategory("CM");
-    		work.setWorkCode("CM004");
-    		commonSvc.regiHistoryInsert(work);
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
     		
         	mv.setViewName("/addys/loginForm");
        		return mv;
-     	}
+		}
         
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -413,6 +417,7 @@ public class HistoryController {
 		logger.info("["+logid+"] Controller start : smsConVO" + smsConVO);
 
         ModelAndView mv = new ModelAndView();
+      
         // 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
@@ -422,7 +427,7 @@ public class HistoryController {
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
-        	//로그인 상태처리		
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
     		UserVO userState =new UserVO();
     		userState.setUserId(strUserId);
     		userState.setLoginYn("N");
@@ -431,15 +436,16 @@ public class HistoryController {
     		userSvc.regiLoginYnUpdate(userState);
             
             //작업이력
-    		WorkVO work = new WorkVO();
-    		work.setWorkUserId(strUserId);
-    		work.setWorkCategory("CM");
-    		work.setWorkCode("CM004");
-    		commonSvc.regiHistoryInsert(work);
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
     		
         	mv.setViewName("/addys/loginForm");
        		return mv;
-     	}
+		}
 
         List<SmsHistoryVO> smsList = null;
 

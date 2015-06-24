@@ -120,10 +120,31 @@
       <input type="hidden" ip="groupId" name="groupId" value="" >
       <input type="hidden" ip="con_applyDateCnt" name="con_applyDateCnt" value="" >
       <input type="hidden" ip="recomendCnt" name="recomendCnt" value="" >
-      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span>
-      <span style="color:blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[total 보유재고금액] :</font><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalPriceVO.holdStockPrice}" /> 원 
-      &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[total 추천 보유재고금액] :</font> <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalPriceVO.recomendPrice}" /> 원 </span>
-      </p>       
+      <p><table   class="table table-bordered tbl_type" >
+	     <colgroup>
+	      <col width="100px" >
+	      <col width="100px" >
+	      <col width="100px" >
+	      <col width="100px">
+	      <col width="100px" >
+	      <col width="100px" >
+	      <col width="100px" >
+	      <col width="100px">
+	     </colgroup>
+	     <tr>
+	     	<td class='text-center' style="background-color:#E6F3FF">전체건수</td>
+	     	<td class='text-right'><a href="javascript:stateSearch('')"><span style="color:red">
+	          <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" />
+	          </span></a></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">총 보유재고금액</td>
+	     	<td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalPriceVO.holdStockPrice}" /></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">총 추천 보유재고금액</td>
+	     	<td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalPriceVO.recomendPrice}" /></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">보유재고 차액</td>
+	     	<td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalPriceVO.calPrice}" /></td>
+	     </tr>
+     </table>
+      </p>     
 	  <table class="table table-bordered">
 	  	<colgroup>
 	     <col width="10%" />

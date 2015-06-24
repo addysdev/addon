@@ -10,6 +10,7 @@ public class CommentVO extends AbstractVO {
 	
 	private String idx;
 	private String orderCode;
+	private String companyCode;
 	private String productCode;
 	private String productName;
 	private String commentCategory;
@@ -19,6 +20,8 @@ public class CommentVO extends AbstractVO {
 	private String commentDateTime;
 	private String commentUserId;
 	private String commentUserName;
+	
+	private String title;
 	
 	public String getOrderCode() {
 		return orderCode;
@@ -85,6 +88,18 @@ public class CommentVO extends AbstractVO {
 	}
 	public void setCommentTypeView(String commentTypeView) {
 		this.commentTypeView = commentTypeView;
+	}
+	public String getCompanyCode() {
+		return companyCode;
+	}
+	public void setCompanyCode(String companyCode) {
+		this.companyCode = companyCode;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	
 }

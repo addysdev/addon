@@ -191,6 +191,14 @@
 			    <!-- 달력이미지 시작 -->
 			    <span class="icon_calendar"><img border="0" onclick="showCalendar('2')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
 			    <!-- 달력이미지 끝 -->
+			    <label for="searchGubun">작업구분 :</label>
+				<select class="form-control" title="작업구분" id="con_workCategory" name="con_workCategory" value="" onChange="codSetting()">
+                	<option value="">전체</option>
+                    <c:forEach var="codeVO" items="${code_comboList}" >
+                    	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
+                    </c:forEach>
+           		</select>
+           		<div class="form-group" id=workCodeOption></div>
 	            <br><br>
         	    <label for="con_groupId">지점선택 :</label>
 				<select class="form-control" title="지점정보" id="con_groupId" name="con_groupId" value="${workConVO.groupId}">
@@ -199,21 +207,21 @@
                     	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
                     </c:forEach>
                 </select>
-               <label for="searchGubun">작업구분 :</label>
-				<select class="form-control" title="작업구분" id="con_workCategory" name="con_workCategory" value="" onChange="codSetting()">
-                	<option value="">전체</option>
-                    <c:forEach var="codeVO" items="${code_comboList}" >
-                    	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
-                    </c:forEach>
-           		</select>
-           		<div class="form-group" id=workCodeOption></div>
 				<label for="searchGubun">검색조건 :</label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
                 	<option value="01" >사용자명</option>
                     <option value="02" >사용자Id</option>
            		</select>
 				<label class="sr-only" for="searchValue"> 조회값 </label>
-				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${workConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
+				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${workConVO.searchKey1Value}" onkeypress="javascript:return checkKey(event);"/>
+				
+				<label for="searchGubun">업체 :</label>
+				<select class="form-control" title="검색조건" id="searchKey1Gubun" name="searchKey1Gubun" value="">
+                	<option value="01" >업체명</option>
+                    <option value="02" >업체코드</option>
+           		</select>
+				<label class="sr-only" for="searchValue"> 조회값 </label>
+				<input type="text" class="form-control" id="searchKey1Value" name="searchKey1Value"  value="${workConVO.searchKey1Value}" onkeypress="javascript:return checkKey(event);"/>
 				<button type="button" class="btn btn-primary" onClick="javascript:fcWorkManage_listSearch()">조회</button>
 	            <!--  >button type="button" class="btn" onClick="">excel</button-->
             </div>
@@ -224,6 +232,7 @@
   <!-- 조회결과리스트 -->
   <div id=workHistoryPageList></div>
 
+  <div id="workDetail"  title="업무상세내역"></div>
 </div>
 <br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>

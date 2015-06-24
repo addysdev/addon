@@ -23,12 +23,24 @@
             	,workUserId 
             	,workCategory
             	,workCode
+            	,workKey1
+            	,workKey2
+            	,workKey3
+            	,searchKey1
+            	,searchKey2
+            	,searchKey3
 		)values(
 				 now()
 	  			, #{workIp}
 	  			, #{workUserId}
 	  		    , #{workCategory}
 	  		    , #{workCode}
+	  		    , #{workKey1}
+	  		    , #{workKey2}
+	  		    , #{workKey3}
+	  		    , #{searchKey1}
+	  		    , #{searchKey2}
+	  		    , #{searchKey3}
 		)
 
 </insert>

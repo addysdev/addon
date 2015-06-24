@@ -336,7 +336,8 @@ From (
          T1.recoveryYn,
          T1.etc,
          (select count(idx) from adComment T7 Where T1.recoveryCode = T7.orderCode  And T1.productCode=T7.productCode And T7.commentCategory='06') as etcCnt,
-         T2.recoveryState
+         T2.recoveryState,
+         T2.groupId
     From adRecoveryDetail T1
          Left Join adRecovery T2 On T1.recoveryCode=T2.recoveryCode
          Left Join adCollect T3 On T2.collectCode=T3.collectCode

@@ -130,7 +130,7 @@ public class AnalysisController {
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
-        	//로그인 상태처리		
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
     		UserVO userState =new UserVO();
     		userState.setUserId(strUserId);
     		userState.setLoginYn("N");
@@ -138,12 +138,15 @@ public class AnalysisController {
     		userState.setConnectIp(sClientIP);
     		userSvc.regiLoginYnUpdate(userState);
             
-            //작업이력
-    		WorkVO work = new WorkVO();
-    		work.setWorkUserId(strUserId);
-    		work.setWorkCategory("CM");
-    		work.setWorkCode("CM004");
-    		commonSvc.regiHistoryInsert(work);
+    		String workIp = request.getRemoteAddr(); 
+    		
+	        //작업이력
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(workIp);
+	 		work.setWorkIp(workIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
     		
         	mv.setViewName("/addys/loginForm");
        		return mv;
@@ -210,12 +213,31 @@ public class AnalysisController {
 
         ModelAndView mv = new ModelAndView();
         
-        // 사용자 세션정보
+     // 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
+    		UserVO userState =new UserVO();
+    		userState.setUserId(strUserId);
+    		userState.setLoginYn("N");
+    		userState.setIp(strIp);
+    		userState.setConnectIp(sClientIP);
+    		userSvc.regiLoginYnUpdate(userState);
+            
+            //작업이력
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
+    		
         	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
@@ -412,14 +434,33 @@ public class AnalysisController {
 
    		ModelAndView mv = new ModelAndView();
    		
-      	// 사용자 세션정보
-        HttpSession session = request.getSession();
-        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));   
-        
         List<HoldStockVO> holdStockExcelList = new ArrayList();
         
+     // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
+    		UserVO userState =new UserVO();
+    		userState.setUserId(strUserId);
+    		userState.setLoginYn("N");
+    		userState.setIp(strIp);
+    		userState.setConnectIp(sClientIP);
+    		userSvc.regiLoginYnUpdate(userState);
+            
+            //작업이력
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
+    		
         	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
@@ -484,7 +525,7 @@ public class AnalysisController {
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
-        	//로그인 상태처리		
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
     		UserVO userState =new UserVO();
     		userState.setUserId(strUserId);
     		userState.setLoginYn("N");
@@ -567,12 +608,31 @@ public class AnalysisController {
 
         ModelAndView mv = new ModelAndView();
         
-        // 사용자 세션정보
+     // 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
+    		UserVO userState =new UserVO();
+    		userState.setUserId(strUserId);
+    		userState.setLoginYn("N");
+    		userState.setIp(strIp);
+    		userState.setConnectIp(sClientIP);
+    		userSvc.regiLoginYnUpdate(userState);
+            
+            //작업이력
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
+    		
         	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
@@ -613,6 +673,11 @@ public class AnalysisController {
         // totalCount 조회
         String totalCount = String.valueOf(gmroiSvc.getGmroiCnt(gmroiConVO));
         mv.addObject("totalCount", totalCount);
+        
+       // total gmroi 조회
+        GmroiVO totalGmroiVO = new GmroiVO();
+        totalGmroiVO = gmroiSvc.getGmroiTotalCnt(gmroiConVO);
+        mv.addObject("totalGmroiVO", totalGmroiVO );
 
         mv.setViewName("/analysis/gmroiPageList");
         
@@ -637,12 +702,31 @@ public class AnalysisController {
 
    		ModelAndView mv = new ModelAndView();
    		
-   	 // 사용자 세션정보
+   	   // 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
+    		UserVO userState =new UserVO();
+    		userState.setUserId(strUserId);
+    		userState.setLoginYn("N");
+    		userState.setIp(strIp);
+    		userState.setConnectIp(sClientIP);
+    		userSvc.regiLoginYnUpdate(userState);
+            
+            //작업이력
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
+    		
         	mv.setViewName("/addys/loginForm");
        		return mv;
 		}

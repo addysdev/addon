@@ -1,7 +1,6 @@
 package com.offact.framework.view;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Map;
@@ -19,27 +18,38 @@ public class CustomFileDownLoadView extends AbstractView{
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		
-		byte[] bytes = (byte[])model.get("bytes");
-		String fileName = (String)model.get("fileName");
-		if(bytes.length > 0) {
-			
-			// byte --> InputStream 타입으로 변환
-			InputStream is = new ByteArrayInputStream(bytes);
-			
-			String contentType = URLConnection.guessContentTypeFromStream(is);
-			logger.debug("contentType: " + contentType);
-			fileName = URLEncoder.encode(fileName, "UTF-8");
-			response.setContentType(contentType);
-			response.setContentLength((int)bytes.length);
-			response.setHeader("Content-Disposition", "attachment; filename=\""+fileName+"\";");
-			response.setHeader("Content-Transfer-Encoding", "binary");
-			
-			ServletOutputStream os = response.getOutputStream();
-			
-			FileCopyUtils.copy(is, os);
-			
-			os.flush();
-		}
-	}
-	
+			File file = (File)model.get("downloadFile");
+			        
+	        response.setContentType(getContentType());
+	        response.setContentLength((int)file.length());
+	        
+	        String userAgent = request.getHeader("User-Agent");
+	        boolean ie = userAgent.indexOf("MSIE") > -1;
+	        String fileName = null;
+	        
+	        if(ie) {
+	            fileName = URLEncoder.encode(file.getName(), "utf-8");
+	        } else {
+	            fileName = new String(file.getName().getBytes("utf-8"), "iso-8859-1");
+	        }
+	        
+	        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\";");
+	        response.setHeader("Content-Transfer-Encoding", "binary");
+	        
+	        OutputStream out = response.getOutputStream();
+	        FileInputStream fis = null;
+	        
+	        try {
+	            fis = new FileInputStream(file);
+	            FileCopyUtils.copy(fis, out);
+	        } finally {
+	            if(fis != null) {
+	                try {
+	                    fis.close();
+	                } catch(IOException ioe) {}
+	            }
+	        }
+	        out.flush();
+	    }
+
 }

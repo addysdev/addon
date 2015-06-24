@@ -23,12 +23,30 @@ public class WorkHistoryVO extends AbstractVO {
 	private String workCode;
 	private String workCodeName;
 	
+    private String description;
+    private String companyName;
+	
+	private String workKey1;
+	private String workKey2;
+	private String workKey3;
+	
+	private String searchKey1;
+	private String searchKey2;
+	private String searchKey3;
+	
 	private String con_groupId;
 	private String con_userId;
 	private String con_workCategory;
 	private String con_workCode;
 	private String searchGubun;
 	private String searchValue;
+	
+	private String searchKey1Gubun;
+	private String searchKey1Value;
+	private String searchKey2Gubun;
+	private String searchKey2Value;
+	private String searchKey3Gubun;
+	private String searchKey3Value;
 	
 	private String start_workDate;
 	private String end_workDate;
@@ -198,6 +216,90 @@ public class WorkHistoryVO extends AbstractVO {
 	}
 	public void setEnd_workDate(String end_workDate) {
 		this.end_workDate = end_workDate;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getWorkKey1() {
+		return workKey1;
+	}
+	public void setWorkKey1(String workKey1) {
+		this.workKey1 = workKey1;
+	}
+	public String getWorkKey2() {
+		return workKey2;
+	}
+	public void setWorkKey2(String workKey2) {
+		this.workKey2 = workKey2;
+	}
+	public String getWorkKey3() {
+		return workKey3;
+	}
+	public void setWorkKey3(String workKey3) {
+		this.workKey3 = workKey3;
+	}
+	public String getSearchKey1() {
+		return searchKey1;
+	}
+	public void setSearchKey1(String searchKey1) {
+		this.searchKey1 = searchKey1;
+	}
+	public String getSearchKey2() {
+		return searchKey2;
+	}
+	public void setSearchKey2(String searchKey2) {
+		this.searchKey2 = searchKey2;
+	}
+	public String getSearchKey3() {
+		return searchKey3;
+	}
+	public void setSearchKey3(String searchKey3) {
+		this.searchKey3 = searchKey3;
+	}
+	public String getSearchKey1Gubun() {
+		return searchKey1Gubun;
+	}
+	public void setSearchKey1Gubun(String searchKey1Gubun) {
+		this.searchKey1Gubun = searchKey1Gubun;
+	}
+	public String getSearchKey1Value() {
+		return searchKey1Value;
+	}
+	public void setSearchKey1Value(String searchKey1Value) {
+		this.searchKey1Value = searchKey1Value;
+	}
+	public String getSearchKey2Gubun() {
+		return searchKey2Gubun;
+	}
+	public void setSearchKey2Gubun(String searchKey2Gubun) {
+		this.searchKey2Gubun = searchKey2Gubun;
+	}
+	public String getSearchKey2Value() {
+		return searchKey2Value;
+	}
+	public void setSearchKey2Value(String searchKey2Value) {
+		this.searchKey2Value = searchKey2Value;
+	}
+	public String getSearchKey3Gubun() {
+		return searchKey3Gubun;
+	}
+	public void setSearchKey3Gubun(String searchKey3Gubun) {
+		this.searchKey3Gubun = searchKey3Gubun;
+	}
+	public String getSearchKey3Value() {
+		return searchKey3Value;
+	}
+	public void setSearchKey3Value(String searchKey3Value) {
+		this.searchKey3Value = searchKey3Value;
+	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 
 }

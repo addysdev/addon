@@ -22,6 +22,17 @@ public class WorkVO extends AbstractVO {
 	private String workCategoryName;
 	private String workCode;
 	private String workCodeName;
+	
+	private String description;
+	
+	private String workKey1;
+	private String workKey2;
+	private String workKey3;
+	
+	private String searchKey1;
+	private String searchKey2;
+	private String searchKey3;
+	
 	public String getUserId() {
 		return userId;
 	}
@@ -102,6 +113,48 @@ public class WorkVO extends AbstractVO {
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	public String getWorkKey1() {
+		return workKey1;
+	}
+	public void setWorkKey1(String workKey1) {
+		this.workKey1 = workKey1;
+	}
+	public String getWorkKey2() {
+		return workKey2;
+	}
+	public void setWorkKey2(String workKey2) {
+		this.workKey2 = workKey2;
+	}
+	public String getWorkKey3() {
+		return workKey3;
+	}
+	public void setWorkKey3(String workKey3) {
+		this.workKey3 = workKey3;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getSearchKey1() {
+		return searchKey1;
+	}
+	public void setSearchKey1(String searchKey1) {
+		this.searchKey1 = searchKey1;
+	}
+	public String getSearchKey2() {
+		return searchKey2;
+	}
+	public void setSearchKey2(String searchKey2) {
+		this.searchKey2 = searchKey2;
+	}
+	public String getSearchKey3() {
+		return searchKey3;
+	}
+	public void setSearchKey3(String searchKey3) {
+		this.searchKey3 = searchKey3;
 	}
 
 }

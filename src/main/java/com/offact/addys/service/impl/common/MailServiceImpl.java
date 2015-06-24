@@ -53,6 +53,7 @@ public class MailServiceImpl implements MailService {
 
             }
             messageHelper.setTo(toArrayResult);
+            //messageHelper.setBcc(bcc);
             messageHelper.setFrom(mail.getFromEmail(), mail.getSubject());
             messageHelper.setText(mail.getMsg(), true);
 

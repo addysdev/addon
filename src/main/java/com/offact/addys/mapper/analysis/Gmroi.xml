@@ -29,14 +29,14 @@
 <select id="getGmroiPageList"  resultMap="gmroiVO" parameterType="com.offact.addys.vo.analysis.GmroiVO" >
 Select T4.productCode,
        T5.productName,
-       T4.avgStockCnt,
-       T4.avgStockAmt,
-       T4.totalSaleCnt,
-       T4.totalSaleAmt,
-       T4.profitSaleAmt,
-       T4.avgSaleRate,
-       T4.stockCycleRate,
-       T4.gmroiRate
+       ifnull(T4.avgStockCnt,0) as avgStockCnt,
+       ifnull(T4.avgStockAmt,0) as avgStockAmt,
+       ifnull(T4.totalSaleCnt,0) as totalSaleCnt,
+       ifnull(T4.totalSaleAmt,0) as totalSaleAmt,
+       ifnull( T4.profitSaleAmt,0) as profitSaleAmt,
+       ifnull(T4.avgSaleRate,0) as avgSaleRate,
+       ifnull(T4.stockCycleRate,0) as stockCycleRate,
+       ifnull(T4.gmroiRate,0) as gmroiRate
 From (       
       Select T1.productCode,
              floor(T3.stockCnt/2) as avgStockCnt,
@@ -50,27 +50,29 @@ From (
       from adStockMaster T1
       Left Join (
                   Select productCode,
+                         groupId,
                          sum(salesCnt) as salesCnt,
-                         sum(salesPrice) as salesPrice,
-                         sum(salesPrice-productPrice) as profitPrice
+                         sum(salesPrice*salesCnt) as salesPrice,
+                         sum((salesPrice-productPrice)*salesCnt) as profitPrice
                          from adSalesDetail 
-                  Where salesDate between #{start_saleDate} And #{end_saleDate} 
+                  Where salesDate between date_add(#{start_saleDate}, interval 1 day)  And date_add(#{end_saleDate}, interval 1 day) 
                   <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
           				 And groupId=#{con_groupId}
            		  </if>
-                  group by productCode
-                  ) T2 On T1.productCode=T2.productCode       
+                  group by productCode ,groupId
+                  ) T2 On T1.productCode=T2.productCode And T1.groupId = T2.groupId         
       Left Join (
                   Select productCode,
+                         groupId,
                          sum(stockCnt) as stockCnt,
-                         sum(productPrice) as productPrice
+                         sum(stockCnt*productPrice) as productPrice
                          from adStockDetail 
                   Where stockDate in(#{start_saleDate},#{end_saleDate}) 
                   <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
           				 And groupId=#{con_groupId}
            		  </if>
-                  group by productCode
-                ) T3 On T1.productCode = T3.productCode 
+                  group by productCode ,groupId
+                ) T3 On T1.productCode = T3.productCode And T1.groupId = T3.groupId
       Where 1=1
        		<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
          		  And T1.groupId=#{con_groupId} 
@@ -115,14 +117,14 @@ SELECT count(*) AS TOT_COUNT
  FROM (
        Select T4.productCode,
        T5.productName,
-       T4.avgStockCnt,
-       T4.avgStockAmt,
-       T4.totalSaleCnt,
-       T4.totalSaleAmt,
-       T4.profitSaleAmt,
-       T4.avgSaleRate,
-       T4.stockCycleRate,
-       T4.gmroiRate
+       ifnull(T4.avgStockCnt,0) as avgStockCnt,
+       ifnull(T4.avgStockAmt,0) as avgStockAmt,
+       ifnull(T4.totalSaleCnt,0) as totalSaleCnt,
+       ifnull(T4.totalSaleAmt,0) as totalSaleAmt,
+       ifnull( T4.profitSaleAmt,0) as profitSaleAmt,
+       ifnull(T4.avgSaleRate,0) as avgSaleRate,
+       ifnull(T4.stockCycleRate,0) as stockCycleRate,
+       ifnull(T4.gmroiRate,0) as gmroiRate
 From (       
       Select T1.productCode,
              floor(T3.stockCnt/2) as avgStockCnt,
@@ -136,27 +138,29 @@ From (
       from adStockMaster T1
       Left Join (
                   Select productCode,
+                         groupId,
                          sum(salesCnt) as salesCnt,
-                         sum(salesPrice) as salesPrice,
-                         sum(salesPrice-productPrice) as profitPrice
+                         sum(salesPrice*salesCnt) as salesPrice,
+                         sum((salesPrice-productPrice)*salesCnt) as profitPrice
                          from adSalesDetail 
-                  Where salesDate between #{start_saleDate} And #{end_saleDate} 
+                  Where salesDate between date_add(#{start_saleDate}, interval 1 day)  And date_add(#{end_saleDate}, interval 1 day) 
                   <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
           				 And groupId=#{con_groupId}
            		  </if>
-                  group by productCode
-                  ) T2 On T1.productCode=T2.productCode       
+                  group by productCode ,groupId
+                  ) T2 On T1.productCode=T2.productCode And T1.groupId = T2.groupId       
       Left Join (
                   Select productCode,
+                         groupId,
                          sum(stockCnt) as stockCnt,
-                         sum(productPrice) as productPrice
+                         sum(stockCnt*productPrice) as productPrice
                          from adStockDetail 
                   Where stockDate in(#{start_saleDate},#{end_saleDate}) 
                   <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
           				 And groupId=#{con_groupId}
            		  </if>
-                  group by productCode
-                ) T3 On T1.productCode = T3.productCode 
+                  group by productCode ,groupId
+                ) T3 On T1.productCode = T3.productCode And T1.groupId = T3.groupId
       Where 1=1
        		<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
          		 And T1.groupId=#{con_groupId} 
@@ -196,17 +200,94 @@ From (
 ) as TOT
 </select>
 
+<select id="getGmroiTotalCnt" resultMap="gmroiVO" parameterType="com.offact.addys.vo.analysis.GmroiVO" >
+Select
+             floor(T4.t_stockCnt/2) as avgStockCnt,
+             floor(T4.t_productPrice/2) as avgStockAmt,
+             T4.t_saleCnt as totalSaleCnt,
+             T4.t_salePrice as totalSaleAmt,
+             T4.t_profitPrice as profitSaleAmt,
+             (floor((T4.t_profitPrice/T4.t_salePrice)*10000)*0.01) as avgSaleRate,
+             (floor((T4.t_salePrice/floor(T4.t_productPrice/2))*100)*0.01) as stockCycleRate,
+             (round((T4.t_profitPrice/floor(T4.t_productPrice/2))*10000)*0.01) as gmroiRate
+From (       
+      Select Sum(ifnull(T3.stockCnt,0)) as t_stockCnt,
+             Sum(ifnull(T3.productPrice,0)) as t_productPrice,
+             Sum(ifnull(T2.salesCnt,0)) as t_saleCnt,
+             Sum(ifnull(T2.salesPrice,0)) as t_salePrice,
+             Sum(ifnull(T2.profitPrice,0)) as t_profitPrice
+      from adStockMaster T1
+      Left Join (
+                  Select productCode,
+                         groupId,
+                         sum(salesCnt) as salesCnt,
+                         sum(salesPrice*salesCnt) as salesPrice,
+                         sum((salesPrice-productPrice)*salesCnt) as profitPrice
+                         from adSalesDetail 
+                   Where salesDate between date_add(#{start_saleDate}, interval 1 day)  And date_add(#{end_saleDate}, interval 1 day) 
+                   <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+          				 And groupId=#{con_groupId}
+           		  </if>
+                  group by productCode ,groupId
+                  ) T2 On T1.productCode=T2.productCode  And T1.groupId = T2.groupId     
+      Left Join (
+                  Select productCode,
+                         groupId,
+                         sum(stockCnt) as stockCnt,
+                         sum(stockCnt*productPrice) as productPrice
+                         from adStockDetail 
+                  Where stockDate in(#{start_saleDate},#{end_saleDate}) 
+                  <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+          				 And groupId=#{con_groupId}
+           		  </if>
+                  group by productCode  ,groupId
+                ) T3 On T1.productCode = T3.productCode  And T1.groupId = T3.groupId
+       Left Join adProductMaster T5 On T1.productCode = T5.productCode
+      Where 1=1
+     		<if test="start_gmroi != null and start_gmroi != '' and end_gmroi != null and end_gmroi != '' " >
+          			And T4.gmroiRate between ${start_gmroi} and ${end_gmroi}
+           	</if>
+           	<if test="start_gmroi != null and start_gmroi != '' and end_gmroi == '' " >
+          			And T4.gmroiRate <![CDATA[>=]]> ${start_gmroi} 
+           	</if>
+           	<if test="start_gmroi == '' and end_gmroi != null and end_gmroi != '' " >
+          			And T4.gmroiRate <![CDATA[<=]]> ${end_gmroi}
+           	</if> 
+           	<if test="con_group1Name != null and con_group1Name != '' " >
+          			And T5.group1Name LIKE CONCAT('%', #{con_group1Name}, '%')
+           	</if>
+            <if test="con_group2Name != null and con_group2Name != '' " >
+          			And T5.group2Name LIKE CONCAT('%', #{con_group2Name}, '%')
+           	</if>
+           	<if test="con_group3Name != null and con_group3Name != '' " >
+          			And T5.group3Name LIKE CONCAT('%', #{con_group3Name}, '%')
+           	</if>
+            <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           			AND T5.productName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           			AND T5.productCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if> 		 
+      ) as T4
+  
+     
+</select>
+
 <select id="getGmroiList"  resultMap="gmroiVO" parameterType="com.offact.addys.vo.analysis.GmroiVO" >
 Select T4.productCode,
        T5.productName,
-       T4.avgStockCnt,
-       T4.avgStockAmt,
-       T4.totalSaleCnt,
-       T4.totalSaleAmt,
-       T4.profitSaleAmt,
-       T4.avgSaleRate,
-       T4.stockCycleRate,
-       T4.gmroiRate
+       ifnull(T4.avgStockCnt,0) as avgStockCnt,
+       ifnull(T4.avgStockAmt,0) as avgStockAmt,
+       ifnull(T4.totalSaleCnt,0) as totalSaleCnt,
+       ifnull(T4.totalSaleAmt,0) as totalSaleAmt,
+       ifnull( T4.profitSaleAmt,0) as profitSaleAmt,
+       ifnull(T4.avgSaleRate,0) as avgSaleRate,
+       ifnull(T4.stockCycleRate,0) as stockCycleRate,
+       ifnull(T4.gmroiRate,0) as gmroiRate
 From (       
       Select T1.productCode,
              floor(T3.stockCnt/2) as avgStockCnt,
@@ -220,27 +301,29 @@ From (
       from adStockMaster T1
       Left Join (
                   Select productCode,
+                         groupId,
                          sum(salesCnt) as salesCnt,
-                         sum(salesPrice) as salesPrice,
-                         sum(salesPrice-productPrice) as profitPrice
+                         sum(salesPrice*salesCnt) as salesPrice,
+                         sum((salesPrice-productPrice)*salesCnt) as profitPrice
                          from adSalesDetail 
-                  Where salesDate between #{start_saleDate} And #{end_saleDate} 
+                  Where salesDate between date_add(#{start_saleDate}, interval 1 day)  And date_add(#{end_saleDate}, interval 1 day) 
                   <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
           				 And groupId=#{con_groupId}
            		  </if>
-                  group by productCode
-                  ) T2 On T1.productCode=T2.productCode       
+                  group by productCode ,groupId
+                  ) T2 On T1.productCode=T2.productCode And T1.groupId = T2.groupId      
       Left Join (
                   Select productCode,
+                         groupId,
                          sum(stockCnt) as stockCnt,
-                         sum(productPrice) as productPrice
+                         sum(stockCnt*productPrice) as productPrice
                          from adStockDetail 
                   Where stockDate in(#{start_saleDate},#{end_saleDate}) 
                   <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
           				 And groupId=#{con_groupId}
            		  </if>
-                  group by productCode
-                ) T3 On T1.productCode = T3.productCode 
+                  group by productCode ,groupId
+                ) T3 On T1.productCode = T3.productCode And T1.groupId = T3.groupId
       Where 1=1
        		<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
          		  And T1.groupId=#{con_groupId} 
@@ -248,8 +331,14 @@ From (
       ) as T4
       Left Join adProductMaster T5 On T4.productCode = T5.productCode
       Where 1=1
-            <if test="start_gmroi != null and start_gmroi != '' " >
+            <if test="start_gmroi != null and start_gmroi != '' and end_gmroi != null and end_gmroi != '' " >
           			And T4.gmroiRate between ${start_gmroi} and ${end_gmroi}
+           	</if>
+           	<if test="start_gmroi != null and start_gmroi != '' and end_gmroi == '' " >
+          			And T4.gmroiRate <![CDATA[>=]]> ${start_gmroi} 
+           	</if>
+           	<if test="start_gmroi == '' and end_gmroi != null and end_gmroi != '' " >
+          			And T4.gmroiRate <![CDATA[<=]]> ${end_gmroi}
            	</if>
             <if test="con_group1Name != null and con_group1Name != '' " >
           			And T5.group1Name LIKE CONCAT('%', #{con_group1Name}, '%')

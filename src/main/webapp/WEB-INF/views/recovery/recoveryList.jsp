@@ -89,14 +89,14 @@
 
     }
 
-    function fcRecovery_receive(recoveryCode){
+    function fcRecovery_receive(recoveryCode,groupId){
     	
     	 if (confirm('발신된 회수건을 수신확인 상태로 처리하시겠습니까?')){ 
 
  	 		$.ajax({
  		       type: "POST",
  		       async:false,
- 		          url:  "<%= request.getContextPath() %>/recovery/receiveprocess?recoveryCode="+recoveryCode,
+ 		          url:  "<%= request.getContextPath() %>/recovery/receiveprocess?recoveryCode="+recoveryCode+"&groupId="+groupId,
  		           success: function(result) {
  		
  		        	resultMsg(result);
@@ -176,7 +176,7 @@
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.recoveryResultPrice}"/></td>
                  <td class='text-center'>
                  <c:if test="${recoveryVO.recoveryState=='02' && strAuth!='03'}">
-                 <button type="button" id="receivebtn" class="btn btn-xs btn-success" onClick="fcRecovery_receive('${recoveryVO.recoveryCode}');">수신</button>
+                 <button type="button" id="receivebtn" class="btn btn-xs btn-success" onClick="fcRecovery_receive('${recoveryVO.recoveryCode}','${recoveryVO.groupId}');">수신</button>
                  </c:if>
                  </td>
               </tr>

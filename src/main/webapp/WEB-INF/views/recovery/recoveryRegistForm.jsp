@@ -111,7 +111,7 @@ function fcRcovery_regist(){
 		return;
 	}
 	
-	alert(rfrm.recoveryClosingDate_view.value);
+	//alert(rfrm.recoveryClosingDate_view.value);
 	rfrm.recoveryClosingDate.value=rfrm.recoveryClosingDate_view.value;
 	
 	//alert(arrCheckGroupId);

@@ -22,7 +22,49 @@
 </SCRIPT>
 
      <form:form commandName="gmroiVO" name="gmroiPageListForm" method="post" action="" >
-      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> total : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /> </span></p>       
+      <p><table   class="table table-bordered tbl_type" >
+	     <colgroup>
+	      <col width="100px" >
+	      <col width="100px" >
+	      <col width="100px" >
+	      <col width="100px">
+	      <col width="100px" >
+	      <col width="100px" >
+	      <col width="100px" >
+	      <col width="100px">
+	      <col width="100px" >
+	      <col width="100px" >
+	      <col width="100px" >
+	      <col width="100px" >
+	      <col width="100px" >
+	      <col width="100px">
+	      <col width="100px" >
+	      <col width="100px" >
+	     </colgroup>
+	     <tr>
+	     	<td class='text-center' style="background-color:#E6F3FF">전체건수</td>
+	     	<td class='text-right'><a href="javascript:stateSearch('')"><span style="color:red">
+	          <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" />
+	          </span></a></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">재고수량</td>
+	     	<td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalGmroiVO.avgStockCnt}" /></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">재고금액</td>
+	     	<td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalGmroiVO.avgStockAmt}" /></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">매출수량</td>
+	     	<td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalGmroiVO.totalSaleCnt}" /></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">매출금액</td>
+	     	<td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalGmroiVO.totalSaleAmt}" /></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">이익금액</td>
+	     	<td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalGmroiVO.profitSaleAmt}" /></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">총이익율</td>
+	     	<td class='text-right'>${totalGmroiVO.avgSaleRate}</td>
+	     	<td class='text-center' style="background-color:#E6F3FF">회전율</td>
+	     	<td class='text-right'>${totalGmroiVO.stockCycleRate}</td>
+	     	<td class='text-center' style="background-color:#E6F3FF">GMROI</td>
+	     	<td class='text-right'>${totalGmroiVO.gmroiRate}</td>
+	     </tr>
+     </table>
+      </p>       
 	  <table class="table table-bordered">
 	  	<colgroup>
 	     <col width="10%" />

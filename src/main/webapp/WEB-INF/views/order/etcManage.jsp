@@ -90,7 +90,9 @@ function fcEtc_add(){
 	  <form:form commandName="commentVO" id="etcForm" name="etcForm" method="post" action="" >
 	  <input type="hidden" name="orderCode"          id="orderCode"         value="${orderCode}"  />
 	  <input type="hidden" name="productCode"          id="productCode"         value="${productCode}"  />
+	  <input type="hidden" name="companyCode"          id="companyCode"         value="${companyCode}"  />
 	  <input type="hidden" name="commentCategory"          id="commentCategory"         value="${category}"  />
+	  <input type="hidden" name="title"          id="title"         value="${etc}"  />
 	  <br>
 	  <table class="table table-bordered" >
 	 	<tr>
@@ -101,7 +103,7 @@ function fcEtc_add(){
           <th class='text-center' style="background-color:#E6F3FF" >추가 비고</th>
           <th>
           <div class="form-inline">
-          <input type="text" class="form-control" id="comment" style="width:547px"  name="comment" style='ime-mode:active;' maxlength="200" value="" placeholder="비고"  />
+          <input type="text" class="form-control" id="comment" style="width:520px"  name="comment" style='ime-mode:active;' maxlength="200" value="" placeholder="비고"  />
           <button id="etcaddbtn" type="button" class="btn btn-info" onClick="fcEtc_add()" >추가</button>
     	  </div> 
           </th>     

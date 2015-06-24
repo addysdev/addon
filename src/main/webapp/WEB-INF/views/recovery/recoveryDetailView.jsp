@@ -31,8 +31,9 @@ function fcRecovery_print(recoveryCode){
 	var h=800;
 	var s=950;
 	var frm = document.recoveryDetailListForm;
+	var groupId='${recoveryConVO.groupId}';
 	var groupname=encodeURIComponent('${recoveryConVO.groupName}');
-	var url="<%= request.getContextPath() %>/recovery/recoverycodeprint?recoveryCode="+recoveryCode+"&groupName="+groupname;
+	var url="<%= request.getContextPath() %>/recovery/recoverycodeprint?recoveryCode="+recoveryCode+"&groupId="+groupId+"&groupName="+groupname;
 
    // tmt_winLaunch(url, 'printObj', 'printObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
 	 frm.action =url; 
@@ -380,7 +381,7 @@ function fcRecovery_complete(){
     }
 	
  // 메모 페이지 리스트 Layup
-    function fcMemo_detail(orderCode,memo) {
+    function fcMemo_detail(orderCode,memo,groupId) {
     	
     	//$('#targetEtcView').attr('title',productName);
     	var url='<%= request.getContextPath() %>/order/memomanage';
@@ -397,7 +398,7 @@ function fcRecovery_complete(){
             open:function(){
                 //팝업 가져올 url
               //  $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode+'&productNaem='+encodeURIComponent(productName));
-                $(this).load(url+'?orderCode='+orderCode+'&category=05'+'&memo='+encodeURIComponent(memo));
+                $(this).load(url+'?orderCode='+orderCode+'&category=05'+'&companyCode='+groupId+'&memo='+encodeURIComponent(memo));
                
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#memoManage").dialog('close');
@@ -476,7 +477,7 @@ function totalCheck(){
 
     }
 //품목 상세 페이지 리스트 Layup
-function  fcEtc_detail(orderCode,productCode,productName,etc,idx) {
+function  fcEtc_detail(orderCode,productCode,productName,etc,idx,groupId) {
 	
 
 	if(document.recoveryDetailListForm.seqs.length==undefined){
@@ -497,7 +498,7 @@ function  fcEtc_detail(orderCode,productCode,productName,etc,idx) {
         open:function(){
             //팝업 가져올 url
           //  $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode+'&productNaem='+encodeURIComponent(productName));
-            $(this).load(url+'?orderCode='+orderCode+'&category=06'+'&idx='+idx+'&productCode='+productCode+'&productName='+encodeURIComponent(productName)+'&etc='+encodeURIComponent(etc));
+            $(this).load(url+'?orderCode='+orderCode+'&category=06'+'&idx='+idx+'&companyCode='+groupId+'&productCode='+productCode+'&productName='+encodeURIComponent(productName)+'&etc='+encodeURIComponent(etc));
            
             $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                 $("#etcManage").dialog('close');
@@ -721,7 +722,7 @@ function fcResult_cal(){
       	</sapn>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">메모&nbsp;(<span id="memoCnt" style="color:blue">${recoveryConVO.memoCnt}</span>)
-          <button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcMemo_detail('${recoveryConVO.recoveryCode}','${recoveryConVO.memo}')" >관리</button></th>
+          <button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcMemo_detail('${recoveryConVO.recoveryCode}','${recoveryConVO.memo}','${recoveryConVO.groupId}')" >관리</button></th>
           <th colspan='6' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  value="${recoveryConVO.memo}" placeholder="메모" disabled /></th>
       	</tr>
 	  </table>
@@ -854,7 +855,7 @@ function fcResult_cal(){
 						<td class='text-center' id="etcAdd" name="etcAdd" style="background-color:#FEE2B4;color:blue"><c:if test="${recoveryConVO.recoveryState!='01'}"><img id="etcbtn" onClick="fcEtc_detail('${recoveryVO.recoveryCode}','${recoveryVO.productCode}','${recoveryVO.productName}','${recoveryVO.etc}','${status.count}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${recoveryVO.etcCnt}</span>)</c:if></td>
                     </c:when>
 					<c:otherwise>
-						<td class='text-center' id="etcAdd" name="etcAdd" ><c:if test="${recoveryConVO.recoveryState!='01'}"><img id="etcbtn" onClick="fcEtc_detail('${recoveryVO.recoveryCode}','${recoveryVO.productCode}','${recoveryVO.productName}','${recoveryVO.etc}','${status.count}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${recoveryVO.etcCnt}</span>)</c:if></td>
+						<td class='text-center' id="etcAdd" name="etcAdd" ><c:if test="${recoveryConVO.recoveryState!='01'}"><img id="etcbtn" onClick="fcEtc_detail('${recoveryVO.recoveryCode}','${recoveryVO.productCode}','${recoveryVO.productName}','${recoveryVO.etc}','${status.count}','${recoveryVO.groupId}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="비고">(<span id="etcCnt">${recoveryVO.etcCnt}</span>)</c:if></td>
                 	</c:otherwise>
 				</c:choose>
 				

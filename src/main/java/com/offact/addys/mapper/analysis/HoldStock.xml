@@ -17,6 +17,7 @@
   <result column="holdUserName"                property="holdUserName"  />
   <result column="recomendCnt"                property="recomendCnt"  />
   <result column="recomendPrice"                property="recomendPrice"  />
+  <result column="calPrice"                property="calPrice"  />
   <result column="resultRate"                property="resultRate"  />
 </resultMap>
 
@@ -31,18 +32,21 @@
        		T4.avgcnt as saleAvg,
        		${con_applyDateCnt} as con_applyDateCnt,
        		T4.holdcnt as recomendCnt,
-       		T4.resultRate
+       		T4.resultRate,
+       		T4.resultCon
  		From (
       Select T3.groupId,
              T3.productCode,
              T3.applyDateCnt,
-             T3.holdStock,
+             ifnull(T3.holdStock,0) as holdStock,
              T3.updateDateTime,
-             T3.avgcnt,
-             T3.holdcnt,
-             Case When (T3.holdStock-T3.holdcnt) <![CDATA[>]]> 0 Then -round(((T3.holdStock-T3.holdcnt)/T3.holdStock)*100) /*감소*/
-                  When (T3.holdStock-T3.holdcnt) <![CDATA[<]]> 0 Then round(((T3.holdcnt-T3.holdStock)/T3.holdStock)*100) /*증가*/
-                  Else 0 End resultRate
+             ifnull(T3.avgcnt,0) as avgcnt,
+             ifnull(T3.holdcnt,0) as holdcnt,
+             Case When (ifnull(T3.holdStock,0)-ifnull(T3.holdcnt,0)) <![CDATA[>]]> 0 Then -round(((ifnull(T3.holdStock,0)-ifnull(T3.holdcnt,0))/ifnull(T3.holdStock,0))*100) /*감소*/
+                  When (ifnull(T3.holdStock,0)-ifnull(T3.holdcnt,0)) <![CDATA[<]]> 0 Then round(((ifnull(T3.holdStock,0)-ifnull(T3.holdcnt,0))/ifnull(T3.holdStock,0))*100) /*증가*/
+                  Else 0 End resultRate,
+             Case When (ifnull(T3.holdStock,0)-ifnull(T3.holdcnt,0)) <![CDATA[<>]]> 0 Then 'Y' 
+                  Else 'N' End resultCon
        From (
             Select T1.groupId,
                    T1.productCode, 
@@ -54,8 +58,8 @@
             From adStockMaster T1
             Left Join ( Select productCode,
                                groupId ,
-                               avgcnt,
-                               (avgcnt*${con_applyDateCnt}) as holdcnt
+                               ifnull(avgcnt,0) as avgcnt,
+                               (ifnull(avgcnt,0)*${con_applyDateCnt}) as holdcnt
                           from (
                                 Select productCode,
                                        groupId ,
@@ -64,16 +68,16 @@
                                         Select productCode,
                                                groupId ,
                                                count(productCode) as cnt,
-                                               sum(salesCnt) as total,
-                                               max(salesCnt) as maxcnt 
-                                              ,min(salesCnt) as mincnt
+                                               sum(ifnull(salesCnt,0)) as total,
+                                               max(ifnull(salesCnt,0)) as maxcnt 
+                                              ,min(ifnull(salesCnt,0)) as mincnt
                                           from adSalesDetail 
                                           Where salesDate between #{start_saleDate} And #{end_saleDate}
                                           group by productCode,groupId
                                   ) as A1
                            ) as A2
                         ) as T2 On T1.productCode=T2.productCode And T1.groupId=T2.groupId
-              Where T2.holdcnt <![CDATA[>]]> 0
+              Where 1=1 /* AND T2.holdcnt <![CDATA[>]]>  0 */
               		<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
           				 AND T1.groupId = #{con_groupId}
            			</if>
@@ -81,7 +85,16 @@
   ) as T4 
   Left Join ofGroup T5 On T4.groupId=T5.groupId
   Left Join adProductMaster T6 On T4.productCode = T6.productCode
-  Where T4.resultRate <![CDATA[<>]]>  0
+  Where T4.resultCon = 'Y'
+           <if test="con_group1Name != null and con_group1Name != '' " >
+          			And T6.group1Name LIKE CONCAT('%', #{con_group1Name}, '%')
+           	</if>
+            <if test="con_group2Name != null and con_group2Name != '' " >
+          			And T6.group2Name LIKE CONCAT('%', #{con_group2Name}, '%')
+           	</if>
+           	<if test="con_group3Name != null and con_group3Name != '' " >
+          			And T6.group3Name LIKE CONCAT('%', #{con_group3Name}, '%')
+           	</if>
   		   <if test="searchValue != null and searchValue != ''" >
              <choose>
                <when test="searchGubun.equals('01')">
@@ -98,7 +111,7 @@
 <select id="getHoldStockCnt" resultType="int">
 SELECT count(*) AS TOT_COUNT
  FROM (
-       Select T4.groupId,
+     Select T4.groupId,
        		T5.groupName,
        		T4.productCode,
        		T6.productName,
@@ -108,18 +121,21 @@ SELECT count(*) AS TOT_COUNT
        		T4.avgcnt as saleAvg,
        		${con_applyDateCnt} as con_applyDateCnt,
        		T4.holdcnt as recomendCnt,
-       		T4.resultRate
+       		T4.resultRate,
+       		T4.resultCon
  		From (
-  			 Select T3.groupId,
+      Select T3.groupId,
              T3.productCode,
              T3.applyDateCnt,
-             T3.holdStock,
+             ifnull(T3.holdStock,0) as holdStock,
              T3.updateDateTime,
-             T3.avgcnt,
-             T3.holdcnt,
-             Case When (T3.holdStock-T3.holdcnt) <![CDATA[>]]> 0 Then -round(((T3.holdStock-T3.holdcnt)/T3.holdStock)*100) /*감소*/
-                  When (T3.holdStock-T3.holdcnt) <![CDATA[<]]> 0 Then round(((T3.holdcnt-T3.holdStock)/T3.holdStock)*100) /*증가*/
-                  Else 0 End resultRate
+             ifnull(T3.avgcnt,0) as avgcnt,
+             ifnull(T3.holdcnt,0) as holdcnt,
+             Case When (ifnull(T3.holdStock,0)-ifnull(T3.holdcnt,0)) <![CDATA[>]]> 0 Then -round(((ifnull(T3.holdStock,0)-ifnull(T3.holdcnt,0))/ifnull(T3.holdStock,0))*100) /*감소*/
+                  When (ifnull(T3.holdStock,0)-ifnull(T3.holdcnt,0)) <![CDATA[<]]> 0 Then round(((ifnull(T3.holdStock,0)-ifnull(T3.holdcnt,0))/ifnull(T3.holdStock,0))*100) /*증가*/
+                  Else 0 End resultRate,
+             Case When (ifnull(T3.holdStock,0)-ifnull(T3.holdcnt,0)) <![CDATA[<>]]> 0 Then 'Y' 
+                  Else 'N' End resultCon
        From (
             Select T1.groupId,
                    T1.productCode, 
@@ -131,8 +147,8 @@ SELECT count(*) AS TOT_COUNT
             From adStockMaster T1
             Left Join ( Select productCode,
                                groupId ,
-                               avgcnt,
-                               (avgcnt*${con_applyDateCnt}) as holdcnt
+                               ifnull(avgcnt,0) as avgcnt,
+                               (ifnull(avgcnt,0)*${con_applyDateCnt}) as holdcnt
                           from (
                                 Select productCode,
                                        groupId ,
@@ -141,24 +157,33 @@ SELECT count(*) AS TOT_COUNT
                                         Select productCode,
                                                groupId ,
                                                count(productCode) as cnt,
-                                               sum(salesCnt) as total,
-                                               max(salesCnt) as maxcnt 
-                                              ,min(salesCnt) as mincnt
+                                               sum(ifnull(salesCnt,0)) as total,
+                                               max(ifnull(salesCnt,0)) as maxcnt 
+                                              ,min(ifnull(salesCnt,0)) as mincnt
                                           from adSalesDetail 
                                           Where salesDate between #{start_saleDate} And #{end_saleDate}
                                           group by productCode,groupId
                                   ) as A1
                            ) as A2
                         ) as T2 On T1.productCode=T2.productCode And T1.groupId=T2.groupId
-              Where T2.holdcnt <![CDATA[>]]>0
+              Where 1=1 /* AND T2.holdcnt <![CDATA[>]]>  0 */
               		<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
           				 AND T1.groupId = #{con_groupId}
            			</if>
         ) as T3
-  ) as T4 
+  ) as T4
   Left Join ofGroup T5 On T4.groupId=T5.groupId
   Left Join adProductMaster T6 On T4.productCode = T6.productCode
-  Where T4.resultRate <![CDATA[<>]]> 0
+  Where T4.resultCon = 'Y'
+            <if test="con_group1Name != null and con_group1Name != '' " >
+          			And T6.group1Name LIKE CONCAT('%', #{con_group1Name}, '%')
+           	</if>
+            <if test="con_group2Name != null and con_group2Name != '' " >
+          			And T6.group2Name LIKE CONCAT('%', #{con_group2Name}, '%')
+           	</if>
+           	<if test="con_group3Name != null and con_group3Name != '' " >
+          			And T6.group3Name LIKE CONCAT('%', #{con_group3Name}, '%')
+           	</if>
   		   <if test="searchValue != null and searchValue != ''" >
              <choose>
                <when test="searchGubun.equals('01')">
@@ -176,7 +201,8 @@ SELECT count(*) AS TOT_COUNT
 <select id="getTotalHoldPrice" resultMap="holdStockVO" parameterType="com.offact.addys.vo.analysis.HoldStockVO" >
 
 	 Select  ifnull(Sum(T4.productPrice*T4.holdStock),0) As holdStockPrice,
-             ifnull(Sum(T4.productPrice*T4.holdcnt),0) As recomendPrice
+             ifnull(Sum(T4.productPrice*T4.holdcnt),0) As recomendPrice,
+             (ifnull(Sum(T4.productPrice*T4.holdcnt),0)-ifnull(Sum(T4.productPrice*T4.holdStock),0)) as calPrice
       From (
             Select T1.groupId,
                    T1.productCode, 
@@ -206,7 +232,7 @@ SELECT count(*) AS TOT_COUNT
                            ) as A2
                         ) as T2 On T1.productCode=T2.productCode And T1.groupId=T2.groupId
               Left Join adProductMaster T3 On T1.productCode = T3.productCode
-              Where T2.holdcnt <![CDATA[>]]>  0
+              Where 1=1 /* AND T2.holdcnt <![CDATA[>]]>  0 */
                     <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
           				 AND T1.groupId = #{con_groupId}
            			</if>
@@ -229,13 +255,15 @@ SELECT count(*) AS TOT_COUNT
       Select T3.groupId,
              T3.productCode,
              T3.applyDateCnt,
-             T3.holdStock,
+             ifnull(T3.holdStock,0) as holdStock,
              T3.updateDateTime,
-             T3.avgcnt,
-             T3.holdcnt,
-             Case When (T3.holdStock-T3.holdcnt) <![CDATA[>]]> 0 Then -round(((T3.holdStock-T3.holdcnt)/T3.holdStock)*100) /*감소*/
-                  When (T3.holdStock-T3.holdcnt) <![CDATA[<]]> 0 Then round(((T3.holdcnt-T3.holdStock)/T3.holdStock)*100) /*증가*/
-                  Else 0 End resultRate
+             ifnull(T3.avgcnt,0) as avgcnt,
+             ifnull(T3.holdcnt,0) as holdcnt,
+             Case When (ifnull(T3.holdStock,0)-ifnull(T3.holdcnt,0)) <![CDATA[>]]> 0 Then -round(((ifnull(T3.holdStock,0)-ifnull(T3.holdcnt,0))/ifnull(T3.holdStock,0))*100) /*감소*/
+                  When (ifnull(T3.holdStock,0)-ifnull(T3.holdcnt,0)) <![CDATA[<]]> 0 Then round(((ifnull(T3.holdStock,0)-ifnull(T3.holdcnt,0))/ifnull(T3.holdStock,0))*100) /*증가*/
+                  Else 0 End resultRate,
+             Case When (ifnull(T3.holdStock,0)-ifnull(T3.holdcnt,0)) <![CDATA[<>]]> 0 Then 'Y' 
+                  Else 'N' End resultCon
        From (
             Select T1.groupId,
                    T1.productCode, 
@@ -247,8 +275,8 @@ SELECT count(*) AS TOT_COUNT
             From adStockMaster T1
             Left Join ( Select productCode,
                                groupId ,
-                               avgcnt,
-                               (avgcnt*${con_applyDateCnt}) as holdcnt
+                               ifnull(avgcnt,0) as avgcnt,
+                               (ifnull(avgcnt,0)*${con_applyDateCnt}) as holdcnt
                           from (
                                 Select productCode,
                                        groupId ,
@@ -257,16 +285,16 @@ SELECT count(*) AS TOT_COUNT
                                         Select productCode,
                                                groupId ,
                                                count(productCode) as cnt,
-                                               sum(salesCnt) as total,
-                                               max(salesCnt) as maxcnt 
-                                              ,min(salesCnt) as mincnt
+                                               sum(ifnull(salesCnt,0)) as total,
+                                               max(ifnull(salesCnt,0)) as maxcnt 
+                                              ,min(ifnull(salesCnt,0)) as mincnt
                                           from adSalesDetail 
                                           Where salesDate between #{start_saleDate} And #{end_saleDate}
                                           group by productCode,groupId
                                   ) as A1
                            ) as A2
                         ) as T2 On T1.productCode=T2.productCode And T1.groupId=T2.groupId
-              Where T2.holdcnt <![CDATA[>]]> 0
+              Where 1=1 /* AND T2.holdcnt <![CDATA[>]]>  0 */
               		<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
           				 AND T1.groupId = #{con_groupId}
            			</if>
@@ -274,7 +302,16 @@ SELECT count(*) AS TOT_COUNT
   ) as T4 
   Left Join ofGroup T5 On T4.groupId=T5.groupId
   Left Join adProductMaster T6 On T4.productCode = T6.productCode
-  Where T4.resultRate <![CDATA[<>]]>  0
+  Where T4.resultCon = 'Y'
+            <if test="con_group1Name != null and con_group1Name != '' " >
+          			And T6.group1Name LIKE CONCAT('%', #{con_group1Name}, '%')
+           	</if>
+            <if test="con_group2Name != null and con_group2Name != '' " >
+          			And T6.group2Name LIKE CONCAT('%', #{con_group2Name}, '%')
+           	</if>
+           	<if test="con_group3Name != null and con_group3Name != '' " >
+          			And T6.group3Name LIKE CONCAT('%', #{con_group3Name}, '%')
+           	</if>
   		   <if test="searchValue != null and searchValue != ''" >
              <choose>
                <when test="searchGubun.equals('01')">

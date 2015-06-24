@@ -19,7 +19,7 @@ import com.offact.addys.vo.analysis.GmroiVO;
 public interface GmroiService {
     
     /**
-     * 보유재고 추천 조회
+     * gmroi 조회
      * 
      * @return
      * @throws BizException
@@ -27,7 +27,7 @@ public interface GmroiService {
     public List<GmroiVO> getGmroiPageList(GmroiVO gmroi) throws BizException;
 
     /**
-     * 보유재고 추천 갯수
+     * gmroi 갯수
      * 
      * @return
      * @throws BizException
@@ -35,11 +35,18 @@ public interface GmroiService {
     public int getGmroiCnt(GmroiVO gmroi) throws BizException;
 
     /**
-     * 보유재고 추천 조회(Excel)
+     * gmroi조회(Excel)
      * 
      * @return
      * @throws BizException
      */
     public List<GmroiVO> getGmroiList(GmroiVO gmroi) throws BizException;
+    /**
+     * gmroi total 갯수
+     * 
+     * @return
+     * @throws BizException
+     */
+    public GmroiVO getGmroiTotalCnt(GmroiVO gmroi) throws BizException;
 
 }

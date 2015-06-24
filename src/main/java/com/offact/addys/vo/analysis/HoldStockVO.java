@@ -13,6 +13,13 @@ public class HoldStockVO extends AbstractVO {
 	private String userName;
 	private String applyDateCnt;
 	
+	private String group1;
+	private String group1Name;
+	private String group2;
+	private String group2Name;
+	private String group3;
+	private String group3Name;
+	
 	private String productCode;
 	private String productName;
 	private String holdStockCnt;
@@ -25,11 +32,17 @@ public class HoldStockVO extends AbstractVO {
 	private String recomendCnt;
 	private String recomendPrice;
 	private String resultRate;
+	
+	private String calPrice;
 
 	private String start_saleDate;
 	private String end_saleDate;
 	private String con_groupId;
 	private String con_applyDateCnt;
+	
+	private String con_group1Name;
+	private String con_group2Name;
+	private String con_group3Name;
 	
     private String searchGubun;
     private String searchValue;
@@ -210,6 +223,66 @@ public class HoldStockVO extends AbstractVO {
 	}
 	public void setSaleAvg(String saleAvg) {
 		this.saleAvg = saleAvg;
+	}
+	public String getCalPrice() {
+		return calPrice;
+	}
+	public void setCalPrice(String calPrice) {
+		this.calPrice = calPrice;
+	}
+	public String getGroup1() {
+		return group1;
+	}
+	public void setGroup1(String group1) {
+		this.group1 = group1;
+	}
+	public String getGroup1Name() {
+		return group1Name;
+	}
+	public void setGroup1Name(String group1Name) {
+		this.group1Name = group1Name;
+	}
+	public String getGroup2() {
+		return group2;
+	}
+	public void setGroup2(String group2) {
+		this.group2 = group2;
+	}
+	public String getGroup2Name() {
+		return group2Name;
+	}
+	public void setGroup2Name(String group2Name) {
+		this.group2Name = group2Name;
+	}
+	public String getGroup3() {
+		return group3;
+	}
+	public void setGroup3(String group3) {
+		this.group3 = group3;
+	}
+	public String getGroup3Name() {
+		return group3Name;
+	}
+	public void setGroup3Name(String group3Name) {
+		this.group3Name = group3Name;
+	}
+	public String getCon_group1Name() {
+		return con_group1Name;
+	}
+	public void setCon_group1Name(String con_group1Name) {
+		this.con_group1Name = con_group1Name;
+	}
+	public String getCon_group2Name() {
+		return con_group2Name;
+	}
+	public void setCon_group2Name(String con_group2Name) {
+		this.con_group2Name = con_group2Name;
+	}
+	public String getCon_group3Name() {
+		return con_group3Name;
+	}
+	public void setCon_group3Name(String con_group3Name) {
+		this.con_group3Name = con_group3Name;
 	}
     
 }

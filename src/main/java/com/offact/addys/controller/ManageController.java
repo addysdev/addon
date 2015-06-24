@@ -117,7 +117,7 @@ public class ManageController {
 
         ModelAndView mv = new ModelAndView();
         
-    	// 사용자 세션정보
+     // 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
@@ -126,7 +126,7 @@ public class ManageController {
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
-        	//로그인 상태처리		
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
     		UserVO userState =new UserVO();
     		userState.setUserId(strUserId);
     		userState.setLoginYn("N");
@@ -135,15 +135,16 @@ public class ManageController {
     		userSvc.regiLoginYnUpdate(userState);
             
             //작업이력
-    		WorkVO work = new WorkVO();
-    		work.setWorkUserId(strUserId);
-    		work.setWorkCategory("CM");
-    		work.setWorkCode("CM004");
-    		commonSvc.regiHistoryInsert(work);
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
     		
         	mv.setViewName("/addys/loginForm");
        		return mv;
-     	}
+		}
         
         UserManageVO userConVO = new UserManageVO();
         
@@ -191,7 +192,7 @@ public class ManageController {
 
         ModelAndView mv = new ModelAndView();
         
-    	// 사용자 세션정보
+     // 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
@@ -200,7 +201,7 @@ public class ManageController {
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
-        	//로그인 상태처리		
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
     		UserVO userState =new UserVO();
     		userState.setUserId(strUserId);
     		userState.setLoginYn("N");
@@ -209,15 +210,16 @@ public class ManageController {
     		userSvc.regiLoginYnUpdate(userState);
             
             //작업이력
-    		WorkVO work = new WorkVO();
-    		work.setWorkUserId(strUserId);
-    		work.setWorkCategory("CM");
-    		work.setWorkCode("CM004");
-    		commonSvc.regiHistoryInsert(work);
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
     		
         	mv.setViewName("/addys/loginForm");
        		return mv;
-     	}
+		}
         
         List<UserManageVO> userList = null;
         UserManageVO userDetail = null;
@@ -278,7 +280,7 @@ public class ManageController {
 		
 		UserManageVO userVO = new UserManageVO();
 		
-    	// 사용자 세션정보
+		// 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
@@ -287,7 +289,7 @@ public class ManageController {
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
-        	//로그인 상태처리		
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
     		UserVO userState =new UserVO();
     		userState.setUserId(strUserId);
     		userState.setLoginYn("N");
@@ -296,15 +298,16 @@ public class ManageController {
     		userSvc.regiLoginYnUpdate(userState);
             
             //작업이력
-    		WorkVO work = new WorkVO();
-    		work.setWorkUserId(strUserId);
-    		work.setWorkCategory("CM");
-    		work.setWorkCode("CM004");
-    		commonSvc.regiHistoryInsert(work);
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
     		
         	mv.setViewName("/addys/loginForm");
        		return mv;
-     	}
+		}
 		
 		userVO.setCreateUserId(strUserId);
 		mv.addObject("userVO", userVO);
@@ -390,7 +393,7 @@ public class ManageController {
 		
 		UserManageVO userVO = new UserManageVO();
 		
-    	// 사용자 세션정보
+		// 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
@@ -399,7 +402,7 @@ public class ManageController {
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
-        	//로그인 상태처리		
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
     		UserVO userState =new UserVO();
     		userState.setUserId(strUserId);
     		userState.setLoginYn("N");
@@ -408,15 +411,17 @@ public class ManageController {
     		userSvc.regiLoginYnUpdate(userState);
             
             //작업이력
-    		WorkVO work = new WorkVO();
-    		work.setWorkUserId(strUserId);
-    		work.setWorkCategory("CM");
-    		work.setWorkCode("CM004");
-    		commonSvc.regiHistoryInsert(work);
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
     		
         	mv.setViewName("/addys/loginForm");
        		return mv;
-     	}
+		}
+        
         userVO = userManageSvc.getUserDetail(userId);
 		
 		userVO.setUpdateUserId(strUserId);
@@ -587,7 +592,7 @@ public class ManageController {
       
       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
       	
-      	//로그인 상태처리		
+      	strIp = request.getRemoteAddr(); //로그인 상태처리		
   		UserVO userState =new UserVO();
   		userState.setUserId(strUserId);
   		userState.setLoginYn("N");
@@ -596,16 +601,16 @@ public class ManageController {
   		userSvc.regiLoginYnUpdate(userState);
           
           //작업이력
-  		WorkVO work = new WorkVO();
-  		work.setWorkUserId(strUserId);
-  		work.setWorkCategory("CM");
-  		work.setWorkCode("CM004");
-  		commonSvc.regiHistoryInsert(work);
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
   		
       	mv.setViewName("/addys/loginForm");
      		return mv;
-   	}
-
+		}
       ResourceBundle rb = ResourceBundle.getBundle("config");
       String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
       
@@ -777,7 +782,7 @@ public class ManageController {
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
-        	//로그인 상태처리		
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
     		UserVO userState =new UserVO();
     		userState.setUserId(strUserId);
     		userState.setLoginYn("N");
@@ -786,15 +791,16 @@ public class ManageController {
     		userSvc.regiLoginYnUpdate(userState);
             
             //작업이력
-    		WorkVO work = new WorkVO();
-    		work.setWorkUserId(strUserId);
-    		work.setWorkCategory("CM");
-    		work.setWorkCode("CM004");
-    		commonSvc.regiHistoryInsert(work);
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
     		
         	mv.setViewName("/addys/loginForm");
        		return mv;
-     	}
+		}
         
         CompanyManageVO companyConVO = new CompanyManageVO();
         
@@ -835,7 +841,7 @@ public class ManageController {
 		logger.info("["+logid+"] Controller start : companyConVO" + companyConVO);
 
         ModelAndView mv = new ModelAndView();
-        // 사용자 세션정보
+     // 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
@@ -844,7 +850,7 @@ public class ManageController {
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
-        	//로그인 상태처리		
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
     		UserVO userState =new UserVO();
     		userState.setUserId(strUserId);
     		userState.setLoginYn("N");
@@ -853,15 +859,16 @@ public class ManageController {
     		userSvc.regiLoginYnUpdate(userState);
             
             //작업이력
-    		WorkVO work = new WorkVO();
-    		work.setWorkUserId(strUserId);
-    		work.setWorkCategory("CM");
-    		work.setWorkCode("CM004");
-    		commonSvc.regiHistoryInsert(work);
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
     		
         	mv.setViewName("/addys/loginForm");
        		return mv;
-     	}
+		}
         
         List<CompanyManageVO> companyList = null;
 
@@ -1123,7 +1130,7 @@ public class ManageController {
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
-        	//로그인 상태처리		
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
     		UserVO userState =new UserVO();
     		userState.setUserId(strUserId);
     		userState.setLoginYn("N");
@@ -1132,15 +1139,16 @@ public class ManageController {
     		userSvc.regiLoginYnUpdate(userState);
             
             //작업이력
-    		WorkVO work = new WorkVO();
-    		work.setWorkUserId(strUserId);
-    		work.setWorkCategory("CM");
-    		work.setWorkCode("CM004");
-    		commonSvc.regiHistoryInsert(work);
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
     		
         	mv.setViewName("/addys/loginForm");
        		return mv;
-     	}
+		}
         
         CompanyManageVO companyConVO = new CompanyManageVO();
         
@@ -1181,7 +1189,7 @@ public class ManageController {
 		logger.info("["+logid+"] Controller start : companyConVO" + companyConVO);
 
         ModelAndView mv = new ModelAndView();
-        // 사용자 세션정보
+     // 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
@@ -1190,7 +1198,7 @@ public class ManageController {
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
-        	//로그인 상태처리		
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
     		UserVO userState =new UserVO();
     		userState.setUserId(strUserId);
     		userState.setLoginYn("N");
@@ -1199,15 +1207,16 @@ public class ManageController {
     		userSvc.regiLoginYnUpdate(userState);
             
             //작업이력
-    		WorkVO work = new WorkVO();
-    		work.setWorkUserId(strUserId);
-    		work.setWorkCategory("CM");
-    		work.setWorkCode("CM004");
-    		commonSvc.regiHistoryInsert(work);
+	 		WorkVO work = new WorkVO();
+	 		work.setWorkUserId(strUserId);
+	 		work.setWorkIp(strIp);
+	 		work.setWorkCategory("CM");
+	 		work.setWorkCode("CM004");
+	 		commonSvc.regiHistoryInsert(work);
     		
         	mv.setViewName("/addys/loginForm");
        		return mv;
-     	}
+		}
         
         List<CompanyManageVO> companyList = null;
 
