@@ -37,9 +37,16 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.offact.addys.service.common.UserService;
+import com.offact.addys.vo.common.CodeVO;
+import com.offact.addys.vo.common.GroupVO;
+import com.offact.addys.vo.common.UserVO;
+import com.offact.addys.vo.common.WorkVO;
+import com.offact.addys.vo.order.TargetVO;
 import com.offact.framework.constants.CodeConstant;
 import com.offact.framework.exception.BizException;
 import com.offact.framework.jsonrpc.JSONRpcService;
+import com.offact.framework.util.StringUtil;
 
 /**
  * Handles requests for the application home page.
@@ -61,6 +68,9 @@ public class HomeController {
 		
 		return logid;
 	}
+	
+	@Autowired
+	private UserService userSvc;
 	
 	@Value("#{config['offact.host.url']}")
 	private String host_url;
@@ -123,6 +133,173 @@ public class HomeController {
 		mv.setViewName("common/gmroiClc");
 		return mv;
 	}
+	
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 * @throws BizException
+	 */
+	@RequestMapping(value = "/offactloginform", method = RequestMethod.GET)
+	public ModelAndView offactLoginForm(HttpServletRequest request,
+                                 HttpServletResponse response) throws BizException 
+	{
+		
+		logger.info("offactLoginForm");
+		
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("common/offactLoginForm");
+		return mv;
+	}
+	
+	/**
+	 * Login 처리
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/offact/login")
+	public ModelAndView offactLogin(HttpServletRequest request,
+			                       HttpServletResponse response) throws Exception
+	{
+		
+		//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start");
+		
+		ModelAndView  mv = new ModelAndView();
+
+		String strUserId = StringUtil.nvl(request.getParameter("id"));
+		String strUserPw = StringUtil.nvl(request.getParameter("pwd"));
+		
+		logger.info(">>>> userId :"+strUserId);
+		logger.info(">>>> userPw :"+strUserPw);
+		
+		
+		String strMainUrl = "";
+		
+		// # 2. 넘겨받은 아이디로 데이터베이스를 조회하여 사용자가 있는지를 체크한다.
+		UserVO userChkVo = new UserVO();
+		userChkVo.setUserId(strUserId);
+		userChkVo.setInPassword(strUserPw);
+		UserVO userChk = userSvc.getUser(userChkVo);		
+
+		String strUserName = "";
+		String strGroupId = "";
+		String strGroupName = "";
+		String strAuthId = "";
+		String strAuth = "";
+		String strAuthName = "";
+		String strExcelAuth = "";
+		String strPassword = "";
+		String strOfficePhone = "";
+		String strOfficePhoneFormat = "";
+		String strMobliePhone = "";
+		String strMobliePhoneFormat = "";
+		String strEmail = "";
+		String strIp = "";
+		
+		String ip = request.getRemoteAddr(); 
+		logger.info(">>>> RemoteAddr :"+ip);
+
+		strIp = ip;//Client 외부IP or G/W
+		
+		logger.info(">>>> [strIp] :"+strIp);
+	
+		if(userChk != null)
+		{
+			//패스워드 체크
+			if(!userChk.getPassword().equals(userChk.getInPassword())){
+				
+				logger.info(">>> 비밀번호 오류");
+				strMainUrl = "common/offactLoginFail";
+				
+				mv.addObject("userId", strUserId);
+				
+				mv.setViewName(strMainUrl);
+				
+				//log Controller execute time end
+		      	long t2 = System.currentTimeMillis();
+		      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+		      	
+				return mv;
+				
+			}
+			
+			strUserId= userChk.getUserId();
+			strUserName = userChk.getUserName();
+			strGroupId = userChk.getGroupId();
+			strGroupName = userChk.getGroupName();
+			strAuthId = userChk.getAuthId();
+			strAuthName = userChk.getAuthName();
+			strExcelAuth = userChk.getExcelAuth();
+			strPassword = userChk.getPassword();
+			strOfficePhone = userChk.getOfficePhone();
+			strOfficePhoneFormat = userChk.getOfficePhoneFormat();
+			strMobliePhone = userChk.getMobliePhone();
+			strMobliePhoneFormat = userChk.getMobliePhoneFormat();
+			strEmail = userChk.getEmail();
+			strAuth =userChk.getAuth();
+
+			// # 3. Session 객체에 셋팅
+			
+			HttpSession session = request.getSession(false);
+			
+			if(session != null)
+			{
+				session.invalidate();
+			}
+				
+				session = request.getSession(true);
+				session.setAttribute("strUserId", strUserId);
+				session.setAttribute("strUserName", strUserName);
+				session.setAttribute("strGroupId", strGroupId);
+				session.setAttribute("strGroupName", strGroupName);
+				session.setAttribute("strAuthId", strAuthId);
+				session.setAttribute("strAuthName", strAuthName);
+				session.setAttribute("strExcelAuth", strExcelAuth);
+				session.setAttribute("strPassword", strPassword);
+				session.setAttribute("strOfficePhone", strOfficePhone);
+				session.setAttribute("strOfficePhoneFormat", strOfficePhoneFormat);
+				session.setAttribute("strMobliePhone", strMobliePhone);
+				session.setAttribute("strMobliePhoneFormat", strMobliePhoneFormat);
+				session.setAttribute("strEmail", strEmail);
+				session.setAttribute("strIp", strIp);
+				session.setAttribute("strAuth", strAuth);
+				
+				//로그인 상태처리		
+				
+				userChk.setUserId(strUserId);
+				userChk.setLoginYn("Y");
+				userChk.setIp(strIp);
+				
+				try{
+					userSvc.regiLoginYnUpdate(userChk);
+				}catch(Exception e){
+					logger.debug("[Error]USER SQL lock 오류");
+				}
+		        
+				mv.addObject("userId", strUserId);
+
+				strMainUrl = "common/offactDev";
+				
+			} else {//app 상요자 정보가 없는경우
+	
+				logger.info(">>> 상담App 사용자 정보 없음");
+				strMainUrl = "common/offactLoginFail";
+			}
+			
+			mv.addObject("userId", strUserId);
+			
+			mv.setViewName(strMainUrl);
+			
+			//log Controller execute time end
+	      	long t2 = System.currentTimeMillis();
+	      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	      	
+			return mv;
+		}
 	
 	/**
 	 * Simply selects the home view to render by returning its name.

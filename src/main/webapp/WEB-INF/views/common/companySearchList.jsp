@@ -7,7 +7,7 @@
         commonDim(true);
         $.ajax({
             type: "POST",
-            url:  "<%= request.getContextPath() %>/master/companysearchlist",
+            url:  "<%= request.getContextPath() %>/manage/companysearchlist",
               data:dataParam,
             success: function(result) {
                    commonDim(false);
