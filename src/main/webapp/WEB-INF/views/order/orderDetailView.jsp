@@ -839,8 +839,8 @@ function totalTargetAmt(){
 	 </div>
 	 
      <form:form commandName="orderListVO" id="orderDetailListForm" name="orderDetailListForm" method="post" action="" >
-     <input type="hidden" name="orderCode" value="${orderVO.orderCode}" >
-     <input type="hidden" name="companyCode" value="${orderVO.companyCode}" >
+     <!-- <input type="hidden" name="orderCode" value="${orderVO.orderCode}" >
+     <input type="hidden" name="companyCode" value="${orderVO.companyCode}" > -->
      <table style="width:460px" class="table table-bordered tbl_type" >
 	     <colgroup>
 	      <col width="80px" >

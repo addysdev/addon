@@ -1,5 +1,7 @@
 package com.offact.addys.controller;
 
+import gui.ava.html.image.generator.HtmlImageGenerator;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.BufferedReader;
@@ -8,9 +10,11 @@ import java.io.InputStreamReader;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -26,6 +30,25 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.tool.*;
+import com.itextpdf.tool.xml.XMLWorker;
+import com.itextpdf.tool.xml.XMLWorkerFontProvider;
+import com.itextpdf.tool.xml.XMLWorkerHelper;
+import com.itextpdf.tool.xml.css.CssFile;
+import com.itextpdf.tool.xml.css.StyleAttrCSSResolver;
+import com.itextpdf.tool.xml.html.CssAppliers;
+import com.itextpdf.tool.xml.html.CssAppliersImpl;
+import com.itextpdf.tool.xml.html.Tags;
+import com.itextpdf.tool.xml.parser.XMLParser;
+import com.itextpdf.tool.xml.pipeline.css.CSSResolver;
+import com.itextpdf.tool.xml.pipeline.css.CssResolverPipeline;
+import com.itextpdf.tool.xml.pipeline.end.PdfWriterPipeline;
+import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
+import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
+import com.itextpdf.*;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -651,12 +674,13 @@ public class OrderController {
      * @param locale
      * @return
      * @throws BizException
+     * @throws DocumentException 
      */
     @RequestMapping(value = "/order/orderprocess", method = RequestMethod.POST)
     public @ResponseBody
     String orderProcess(@ModelAttribute("targetVO") TargetVO targetVO, 
     		          HttpServletRequest request, 
-    		          HttpServletResponse response) throws BizException
+    		          HttpServletResponse response) throws BizException, DocumentException
     {
     	//log Controller execute time start
 		String logid=logid();
@@ -766,9 +790,14 @@ public class OrderController {
 	   //이메일 주문서에 담기위한 데이타 선별값 END
 
 		ResourceBundle rb = ResourceBundle.getBundle("config");
+		
+		String hostUrl = rb.getString("offact.host.url");
+		
 	    String uploadFilePath = rb.getString("offact.upload.path") + "html/";
 	    String szFileName = uploadFilePath+orderCode+".html";                    // 파일 이름
+	    String pdfFileName = uploadFilePath+"[PDF]"+orderCode+".html";                    // PDF용 파일 이름
         String szContent = "";
+        String pdfszContent = "";
         
         String orderDates[]=targetVO.getOrderDate().split("-");
         String deliveryDates[]=targetVO.getDeliveryDate().split("-"); 
@@ -784,6 +813,7 @@ public class OrderController {
 	        szContent += "<head>";
 	        szContent += "<title>상품주문서</title>";
 	        szContent += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />";
+	       
 	        szContent += "<style type='text/css'>"; 
 	        szContent += "<!--";
 	        szContent += "td {";
@@ -802,12 +832,11 @@ public class OrderController {
 	        szContent += "}";
 			szContent += "-->";
 			szContent += "</style>";
+			
 			szContent += "</head>";
 
-			szContent += "<body>";
-			szContent += "<div align='center'></div>";
-
-			szContent += "<div align='left'>";
+			szContent += "<body style='font-family: MalgunGothic;'>";
+			szContent += "<div align='center'>";
 			
 			int num=0;
 			int totalnum=targetEailList.size();
@@ -821,18 +850,16 @@ public class OrderController {
 			
 			for(int x=0; x<=pagenum; x++){
 			
-				szContent += "<table width='612' border='0' align='center' cellpadding='0' cellspacing='0'>";
-				szContent += "<tr>"; 
-				szContent += "<td width='516' valign='top'>";
+	
 				szContent += "<table width='722' height='900' border='0' align='center' cellpadding='1' cellspacing='1' bgcolor='#000000'>";
 				szContent += "<tr bgcolor='#FFFFFF'>"; 
-				szContent += "<td height='55' colspan='12' align='center'><span class='style1'>상 품 주 문 서</span></td>";
+				szContent += "<td height='55' colspan='12' align='center'><span class='style1' >상 품 주 문 서</span></td>";
 				szContent += "</tr>";
 				szContent += "<tr bgcolor='#FFFFFF'>";
-				szContent += " <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>수<br>신</td>";
+				szContent += " <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>수<br></br>신</td>";
 				szContent += " <td width='80' align='center'>&nbsp;회사명</td>";
 				szContent += " <td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryName()+"</td>";
-				szContent += " <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>발<br>신</td>";
+				szContent += " <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>발<br></br>신</td>";
 				szContent += " <td width='80' align='center' >&nbsp;회사명</td>";
 				szContent += " <td colspan='3' align='center'>&nbsp;"+targetVO.getOrderName()+"</td>";
 				szContent += "</tr>";
@@ -937,7 +964,7 @@ public class OrderController {
 						szContent += "<td align='center' height='27'>"+numcnt+"</td>";
 						szContent += "<td colspan='9' align='left'>&nbsp;"+targetDetaiList.getProductName()+"</td>";
 						szContent += "<td align='center'>"+targetDetaiList.getOrderCnt()+"</td>";
-						szContent += "<td  align='left'>&nbsp;"+targetDetaiList.getEtc()+"</td>";
+						szContent += "<td align='left'>&nbsp;"+targetDetaiList.getEtc()+"</td>";
 						szContent += "</tr>";
 
 					}
@@ -947,18 +974,266 @@ public class OrderController {
 				}
 			
 				szContent += "</table>";
-				szContent += "<br><br><br><br>";
+				szContent += "<br></br><br></br><br></br><br></br>";
 			}
 
 			szContent += "</div>";
 			szContent += "</body>";
 			szContent += " </html>";
-			szContent += "</html>";
-			szContent += "</html>";
 	        
 	        out.write(szContent.getBytes());                        // 파일에 쓰기
 	        out.close();                                            // 파일 쓰기 스트림 닫기
+       
+	        // PDF 변환1
+	        // step 1
+
+	        File pdffile = new File(pdfFileName);                        // 파일 생성
+	        OutputStream pdfout = new FileOutputStream(pdffile);            // 파일에 문자를 적을 스트림 생성
+
+	        pdfszContent += "<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN'>";
+	        pdfszContent += "<html>";
+	        pdfszContent += "<head>";
+	        pdfszContent += "<title>상품주문서</title>";
+	        pdfszContent += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />";
+	        pdfszContent += "</head>";
+
+	        pdfszContent += "<body style='font-family: MalgunGothic;'>";
+	        pdfszContent += "<div align='center'>";
 			
+			int pdfnum=0;
+			int pdftotalnum=targetEailList.size();
+			int pdfetcnum=0;
+			int pdfmaxlist=25;
+			int pdfresultlist=pdftotalnum;
+			int pdfremovecnt=0;
+			int pdfnumcnt=0;
+
+			int pdfpagenum = Math.floorDiv(pdftotalnum, pdfmaxlist);
+			
+			for(int pdfx=0; pdfx<=pdfpagenum; pdfx++){
+			
+	
+				pdfszContent += "<table width='722' height='900' border='0.5' align='center' cellpadding='1' cellspacing='1' bgcolor='#000000'>";
+				pdfszContent += "<tr bgcolor='#FFFFFF'>"; 
+				pdfszContent += "<td height='55' colspan='12' align='center'><span style='font-size:30px:font-weight: bold;'>상 품 주 문 서</span></td>";
+				pdfszContent += "</tr>";
+				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += " <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>수<br></br>신</td>";
+				pdfszContent += " <td width='80' align='center'>&nbsp;회사명</td>";
+				pdfszContent += " <td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryName()+"</td>";
+				pdfszContent += " <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>발<br></br>신</td>";
+				pdfszContent += " <td width='80' align='center' >&nbsp;회사명</td>";
+				pdfszContent += " <td colspan='3' align='center'>&nbsp;"+targetVO.getOrderName()+"</td>";
+				pdfszContent += "</tr>";
+				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<td rowspan='4' align='center' >담당자</td>";
+				pdfszContent += "<td colspan='5' align='left'>&nbsp;성명:"+targetVO.getDeliveryCharge()+"</td>";
+				pdfszContent += "<td rowspan='4' align='center' >담당자</td>";
+				pdfszContent += "<td colspan='3' align='left'>&nbsp;성명:"+targetVO.getOrderCharge()+"</td>";
+				pdfszContent += "</tr>";
+				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<td colspan='5' align='left'>&nbsp;핸드폰:"+targetVO.getMobilePhone()+"</td>";
+				pdfszContent += "<td colspan='3' align='left'>&nbsp;핸드폰:"+targetVO.getOrderMobilePhone()+"</td>";
+				pdfszContent += "</tr>";
+				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<td colspan='5' align='left'>&nbsp;TEL:"+targetVO.getTelNumber()+"<br></br>/&nbsp;FAX:"+targetVO.getFaxNumber()+"</td>";
+				pdfszContent += "<td colspan='3' align='left'>&nbsp;TEL:"+targetVO.getOrderTelNumber()+"&nbsp;/&nbsp;FAX:"+targetVO.getOrderFaxNumber()+"</td>";
+				pdfszContent += "</tr>";
+				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<td colspan='5' align='left'>&nbsp;email:"+targetVO.getEmail()+"</td>";
+				pdfszContent += "<td colspan='3' align='left'>&nbsp;email:"+targetVO.getOrderEmail()+"</td>";
+				pdfszContent += "</tr>";
+				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<td align='center' >발주일자</td>";
+				pdfszContent += "<td width='35' align='center'><div align='right'>"+orderDates[0]+"년 </div></td>";
+				pdfszContent += "<td width='25' align='center'>&nbsp;"+orderDates[1]+"</td>";
+				pdfszContent += "<td width='25' align='center'>월</td>";
+				pdfszContent += "<td width='25' align='center'>&nbsp;"+orderDates[2]+"</td>";
+				pdfszContent += "<td width='25' align='center'>일</td>";
+				pdfszContent += "<td rowspan='2' align='center' >배송주소</td>";
+				pdfszContent += "<td rowspan='2' colspan='3' align='left'>&nbsp;"+targetVO.getOrderAddress()+"</td>";
+				pdfszContent += "</tr>";
+	            pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<td align='center' >납품일자</td>";
+				pdfszContent += "<td align='center'><div align='right'>"+deliveryDates[0]+"년 </div></td>";
+				pdfszContent += "<td align='center'>&nbsp;"+deliveryDates[1]+"</td>";
+				pdfszContent += "<td align='center'>월</td>";
+				pdfszContent += "<td align='center'>&nbsp;"+deliveryDates[2]+"</td>";
+				pdfszContent += "<td align='center'>일</td>";
+				pdfszContent += "</tr>";
+	            pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<td align='center'>&nbsp;납품방법</td>";
+				pdfszContent += "<td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryMethod()+"</td>";
+				pdfszContent += "<td align='center'>&nbsp;결제방법</td>";
+				pdfszContent += "<td colspan='3' align='center'>&nbsp;"+targetVO.getPayMethod()+"</td>";
+				pdfszContent += "</tr>";
+	
+				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<td colspan='2' align='center' >메모</td>";
+				pdfszContent += "<td colspan='10' align='left'>&nbsp;"+targetVO.getMemo()+"</td>";
+				pdfszContent += "</tr>";
+				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<td colspan='12' align='center' height='27'><div align='left'>&nbsp;1.아래와 같이 발주합니다.</div></td>";
+				pdfszContent += "</tr>";
+				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<td width='30' align='center' height='27'>번 호</td>";
+				pdfszContent += "<td colspan='9' align='center'>상 품 명</td>";
+				pdfszContent += "<td width='40' align='center'>수량</td>";
+				pdfszContent += "<td width='180' align='center'>비 고</td>";
+				pdfszContent += "</tr>";
+				
+				if(pdfresultlist<=pdfmaxlist){
+					
+					pdfetcnum=pdfmaxlist-pdfresultlist;
+					
+					for(int pdfi=0;pdfi<pdfresultlist;pdfi++){
+						pdfnum++;
+						TargetVO targetDetaiList = new TargetVO();
+						targetDetaiList=targetEailList.get(pdfnum-1);
+						
+						pdfnumcnt++;
+	
+				        pdfszContent += "<tr bgcolor='#FFFFFF'>";
+						pdfszContent += "<td align='center' height='27'>"+pdfnumcnt+"</td>";
+						pdfszContent += "<td colspan='9' align='left'>&nbsp;"+targetDetaiList.getProductName()+"</td>";
+						pdfszContent += "<td align='center'>"+targetDetaiList.getOrderCnt()+"</td>";
+						pdfszContent += "<td  align='left'>&nbsp;"+targetDetaiList.getEtc()+"</td>";
+						pdfszContent += "</tr>";
+				
+					}
+	
+					for(int pdfy=0;pdfy<pdfetcnum;pdfy++){
+						
+						pdfszContent += "<tr bgcolor='#FFFFFF'>";
+						pdfszContent += "<td align='center' height='27'>&nbsp;</td>";
+						pdfszContent += "<td colspan='9' align='center'>&nbsp;</td>";
+						pdfszContent += "<td align='center'>&nbsp;</td>";
+						pdfszContent += "<td  align='center'>&nbsp;</td>";
+						pdfszContent += "</tr>";
+				
+					}
+				
+				}else if(pdfresultlist>pdfmaxlist){
+					
+					for(int pdfz=0;pdfz<pdfmaxlist;pdfz++){
+						pdfnum++;
+						TargetVO targetDetaiList = new TargetVO();
+						targetDetaiList=targetEailList.get(pdfnum-1);
+						
+						pdfnumcnt++;
+							
+						pdfszContent += "<tr bgcolor='#FFFFFF'>";
+						pdfszContent += "<td align='center' height='27'>"+pdfnumcnt+"</td>";
+						pdfszContent += "<td colspan='9' align='left'>&nbsp;"+targetDetaiList.getProductName()+"</td>";
+						pdfszContent += "<td align='center'>"+targetDetaiList.getOrderCnt()+"</td>";
+						pdfszContent += "<td align='left'>&nbsp;"+targetDetaiList.getEtc()+"</td>";
+						pdfszContent += "</tr>";
+
+					}
+					
+					pdfresultlist=pdfresultlist-pdfmaxlist;
+					
+				}
+			
+				pdfszContent += "</table>";
+				pdfszContent += "<br></br>";
+			}
+
+			pdfszContent += "</div>";
+			pdfszContent += "</body>";
+			pdfszContent += " </html>";
+	        
+			pdfout.write(pdfszContent.getBytes());                        // 파일에 쓰기
+			pdfout.close();                           
+	  
+	        Document document_pdf = new Document(PageSize.A4, 50, 50, 50, 50); // 용지 및 여백 설정
+		        
+		    try{
+		        // step 2
+		        PdfWriter writer = PdfWriter.getInstance(document_pdf, new FileOutputStream(uploadFilePath+orderCode+".pdf"));
+		        // step 3
+		        document_pdf.open();
+		        // step 4
+		        XMLWorkerHelper.getInstance().parseXHtml(writer, document_pdf,
+		                new FileInputStream(pdfFileName)); 
+		        //step 5
+		        document_pdf.close();
+		        logger.debug("PDF Created! :");
+		        
+		        
+	        }catch(Exception e){
+	        	//step 5
+	        	document_pdf.close();
+	            logger.info("["+logid+"] pdf convert error : "+e);    
+	        }
+	               
+	        // PDF 변환2(폰트 및 CSS적용)
+		    /* 
+	        Document document = new Document(PageSize.A4, 50, 50, 50, 50); // 용지 및 여백 설정
+	             
+	        // PdfWriter 생성
+	        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(uploadFilePath+orderCode+".pdf")); // 바로 다운로드.
+	        //PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+	        writer.setInitialLeading(12.5f);
+	         
+	        // 파일 다운로드 설정
+	        response.setContentType("application/pdf");
+	        response.setHeader("Content-Transper-Encoding", "binary");
+	        response.setHeader("Content-Disposition", "inline; filename=" + orderCode + ".pdf");
+	         
+	        // Document 오픈
+	        document.open();
+	        XMLWorkerHelper helper = XMLWorkerHelper.getInstance();
+	             
+	        // CSS
+	        CSSResolver cssResolver = new StyleAttrCSSResolver();
+	        CssFile cssFile = helper.getCSS(new FileInputStream(uploadFilePath+"/css/pdf.css"));
+	        cssResolver.addCss(cssFile);
+	             
+	        // HTML, 폰트 설정
+	        XMLWorkerFontProvider fontProvider = new XMLWorkerFontProvider(XMLWorkerFontProvider.DONTLOOKFORFONTS);
+	        fontProvider.register(uploadFilePath+"/font/H2MKPB.TTF", "MalgunGothic"); // MalgunGothic은 alias,
+	        CssAppliers cssAppliers = new CssAppliersImpl(fontProvider);
+	         
+	        HtmlPipelineContext htmlContext = new HtmlPipelineContext(cssAppliers);
+	        htmlContext.setTagFactory(Tags.getHtmlTagProcessorFactory());
+	         
+	        // Pipelines
+	        PdfWriterPipeline pdf = new PdfWriterPipeline(document, writer);
+	        HtmlPipeline html = new HtmlPipeline(htmlContext, pdf);
+	        CssResolverPipeline css = new CssResolverPipeline(cssResolver, html);
+	         
+	        XMLWorker worker = new XMLWorker(css, true);
+	        XMLParser xmlParser = new XMLParser(worker, Charset.forName("UTF-8"));
+	           
+	        xmlParser.parse(new FileInputStream(szFileName));
+	         
+	        document.close();
+	        writer.close();
+	     
+	        */ 
+	        // 폰트 설정에서 별칭으로 줬던 "MalgunGothic"을 html 안에 폰트로 지정한다.
+	       //String htmlStr = "<html><head><body style='font-family: MalgunGothic;'>"
+	       //             + "<p>PDF 안에 들어갈 내용입니다.</p>"
+	       //             + "<h3>한글, English, 漢字.</h3>"
+	       //         + "</body></head></html>";
+	         
+	       //  StringReader strReader = new StringReader(htmlStr);
+	       //  xmlParser.parse(strReader);
+	        
+	
+            /////image변환//////////////////////////////////////////////////////////////////////////////////////
+	        
+		    /*
+	        HtmlImageGenerator imageGenerator = new HtmlImageGenerator();
+	        //imageGenerator.loadHtml(htmlStr);
+	        imageGenerator.loadUrl(hostUrl+"/addon/order/orderdownload?orderCode="+orderCode);
+	        imageGenerator.saveAsImage(uploadFilePath+orderCode+".png");
+	        imageGenerator.saveAsHtmlWithMap(orderCode+".html", orderCode+".png");
+	        */
+	        
+	        ///////////////////////////////////////////////////////////////////////////////////////////////////        
+	        
 			EmailVO mail = new EmailVO();
 			
 			List<String> toEmails= new ArrayList();
