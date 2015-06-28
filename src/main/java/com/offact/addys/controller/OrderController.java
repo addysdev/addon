@@ -1044,7 +1044,7 @@ public class OrderController {
 	
 				pdfszContent += "<table width='722' height='900' border='0.5' align='center' cellpadding='1' cellspacing='1' bgcolor='#000000'>";
 				pdfszContent += "<tr bgcolor='#FFFFFF'>"; 
-				pdfszContent += "<td height='55' colspan='12' align='center'><span style='font-size:30px:font-weight: bold;'>상 품 주 문 서</span></td>";
+				pdfszContent += "<td height='55' colspan='12' align='center'><h3>상 품 주 문 서</h3></td>";
 				pdfszContent += "</tr>";
 				pdfszContent += "<tr bgcolor='#FFFFFF'>";
 				pdfszContent += " <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>수<br></br>신</td>";
@@ -1179,7 +1179,7 @@ public class OrderController {
 
 		    try{
 		        // step 2
-		        PdfWriter writer = PdfWriter.getInstance(document_pdf, new FileOutputStream(uploadFilePath+orderCode+".pdf"));
+		        PdfWriter writer = PdfWriter.getInstance(document_pdf, new FileOutputStream(uploadFilePath+"[TEST]"+orderCode+".pdf"));
 		        // step 3
 		        document_pdf.open();
 		        // step 4
@@ -1197,8 +1197,8 @@ public class OrderController {
 	        }
 	               
 	        // PDF 변환2(폰트 및 CSS적용)
-		    /* 
-	        Document document = new Document(PageSize.A4, 50, 50, 50, 50); // 용지 및 여백 설정
+		    
+	        Document document = new Document(PageSize.A4, 10, 10, 10, 10); // 용지 및 여백 설정
 	             
 	        // PdfWriter 생성
 	        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(uploadFilePath+orderCode+".pdf")); // 바로 다운로드.
@@ -1221,7 +1221,7 @@ public class OrderController {
 	             
 	        // HTML, 폰트 설정
 	        XMLWorkerFontProvider fontProvider = new XMLWorkerFontProvider(XMLWorkerFontProvider.DONTLOOKFORFONTS);
-	        fontProvider.register(uploadFilePath+"/font/H2MKPB.TTF", "MalgunGothic"); // MalgunGothic은 alias,
+	        fontProvider.register(uploadFilePath+"/font/HYHWPEQ.TTF", "MalgunGothic"); // MalgunGothic은 alias,
 	        CssAppliers cssAppliers = new CssAppliersImpl(fontProvider);
 	         
 	        HtmlPipelineContext htmlContext = new HtmlPipelineContext(cssAppliers);
@@ -1235,12 +1235,12 @@ public class OrderController {
 	        XMLWorker worker = new XMLWorker(css, true);
 	        XMLParser xmlParser = new XMLParser(worker, Charset.forName("UTF-8"));
 	           
-	        xmlParser.parse(new FileInputStream(szFileName));
+	        xmlParser.parse(new FileInputStream(pdfFileName));
 	         
 	        document.close();
 	        writer.close();
 	     
-	        */ 
+	        
 	        // 폰트 설정에서 별칭으로 줬던 "MalgunGothic"을 html 안에 폰트로 지정한다.
 	       //String htmlStr = "<html><head><body style='font-family: MalgunGothic;'>"
 	       //             + "<p>PDF 안에 들어갈 내용입니다.</p>"
@@ -1271,9 +1271,19 @@ public class OrderController {
 			
 			toEmails.add(targetVO.getEmail());
 			attcheFileName.add(orderCode+".html");
-			attcheFileName.add(orderCode+".pdf");
 			files.add(file);
-			files.add(pdffile);
+			
+			/*
+			attcheFileName.add(orderCode+".pdf");
+			String pdfConvertFileName = uploadFilePath+orderCode+".pdf";                    // PDF 파일 이름
+			File pdfConvertFile = new File(pdfConvertFileName);                        // 파일 생성
+			files.add(pdfConvertFile);
+			
+			attcheFileName.add("[TEST]"+orderCode+".pdf");
+			String testpdfConvertFileName = uploadFilePath+"[TEST]"+orderCode+".pdf";                    // PDF 파일 이름
+			File testpdfConvertFile = new File(testpdfConvertFileName);                        // 파일 생성
+			files.add(testpdfConvertFile);
+			*/
 			
 			mail.setToEmails(toEmails);
 			mail.setAttcheFileName(attcheFileName);
