@@ -83,6 +83,7 @@ public class TargetServiceImpl implements TargetService {
 		    	targetDetailVo.setStockDate(StringUtil.nvl(r_data[9],""));
 		    	targetDetailVo.setVatRate(StringUtil.nvl(r_data[10],""));
 		    	targetDetailVo.setEtc(StringUtil.nvl(r_data[11],""));
+		    	targetDetailVo.setMinusCnt(StringUtil.nvl(r_data[12],""));
 		    	targetDetailVo.setCreateUserId(targetVo.getDeferUserId());
 		    	
 	            retVal=this.commonDao.insert("Target.insertDeferDetail", targetDetailVo);
@@ -154,6 +155,7 @@ public class TargetServiceImpl implements TargetService {
 					targetDetailVo.setStockDate(StringUtil.nvl(r_data[9],""));
 					targetDetailVo.setVatRate(StringUtil.nvl(r_data[10],""));
 			    	targetDetailVo.setEtc(StringUtil.nvl(r_data[11],""));
+			    	targetDetailVo.setMinusCnt(StringUtil.nvl(r_data[14],""));
 					targetDetailVo.setCreateUserId(targetVo.getOrderUserId());
 					targetDetailVo.setOrderCheck(StringUtil.nvl(r_data[13],"true"));
 					

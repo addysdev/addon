@@ -57,6 +57,7 @@ public class MailServiceImpl implements MailService {
             messageHelper.setFrom(mail.getFromEmail(), mail.getSubject());
             messageHelper.setText(mail.getMsg(), true);
 
+            logger.debug("mail.getFile().size() : "+mail.getFile().size());
             // 여러개의 파일첨부시
             if(mail.getFile()!=null){
 

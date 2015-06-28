@@ -232,7 +232,7 @@ function fcOrder_process(){
 			frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
    			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
    			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
-   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.group1Name[i].value)+'|'+fillSpace(frm.orderCheck[i].checked);
+   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.group1Name[i].value)+'|'+fillSpace(frm.orderCheck[i].checked)+'|'+fillSpace(frm.minusCnt[i].value);
 
    		}
    	}else{
@@ -240,7 +240,7 @@ function fcOrder_process(){
 			frm.seqs.value=fillSpace(frm.productCode.value)+
 			'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
 			'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
-			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.group1Name.value)+'|'+fillSpace(frm.orderCheck.checked);
+			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.group1Name.value)+'|'+fillSpace(frm.orderCheck.checked)+'|'+fillSpace(frm.minusCnt.value);
 
 
    	}
@@ -293,7 +293,7 @@ function fcDefer_reason(reason){
    					frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
            			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
            			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
-           			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value);
+           			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.minusCnt[i].value);
      
            		}
            	}else{
@@ -301,7 +301,7 @@ function fcDefer_reason(reason){
    				frm.seqs.value=fillSpace(frm.productCode.value)+
        			'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
        			'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
-       			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value);
+       			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.minusCnt.value);
 
 
            	}
@@ -445,9 +445,10 @@ function fcDefer_reason(reason){
  	    
  		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
  		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
+ 		var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt[index-1].value))));
 		var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt[index-1].value))));
 
-		var orderCnt=(orderCntRaw-addCnt);
+		var orderCnt=(orderCntRaw-minusCnt-addCnt);
 
 		if(orderCntRaw<orderCnt || 0>orderCnt){
 			alert('발주수량 추가는 보유재고범위를 넘을수 없습니다.');
@@ -467,9 +468,10 @@ function fcDefer_reason(reason){
  	    
  		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
  		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
+ 		var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt.value))));
 		var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt.value))));
 
-		var orderCnt=(orderCntRaw-addCnt);
+		var orderCnt=(orderCntRaw-minusCnt-addCnt);
 
 		if(orderCntRaw<orderCnt || 0>orderCnt){
 			alert('발주수량 추가는 보유재고범위를 넘을수 없습니다.');
@@ -504,9 +506,10 @@ function fcDefer_reason(reason){
     	    
     		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
     		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
+    		var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt[index-1].value))));
 			var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt[index-1].value))));
 
-			var orderCnt=(orderCntRaw+lossCnt);
+			var orderCnt=(orderCntRaw-minusCnt+lossCnt);
 	
 			if(holdStock<orderCnt){
 				alert('발주수량은 보유재고수량을 넘을수 없습니다.');
@@ -525,9 +528,10 @@ function fcDefer_reason(reason){
     	    
     		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
     		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
+    		var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt.value))));
 			var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt.value))));
 
-			var orderCnt=(orderCntRaw+lossCnt);
+			var orderCnt=(orderCntRaw-minusCnt+lossCnt);
 	
 			if(holdStock<orderCnt){
 				alert('발주수량은 보유재고수량을 넘을수 없습니다.');
@@ -544,7 +548,65 @@ function fcDefer_reason(reason){
 		
     	totalOrderAmt();
     }
-    
+	/*
+	  * 수량감소
+	  */ 
+		function fcMinus_Cnt(index){
+	    	
+			var frm=document.targetDetailListForm;
+		 	var amtCnt = frm.productPrice.length;
+		 	
+			if(amtCnt==undefined){
+				amtCnt=1;
+			}
+		 	
+		 	if(amtCnt > 1){
+		 		
+		 		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
+		 		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
+				var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt[index-1].value))));
+				var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt[index-1].value))));
+				var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt[index-1].value))));
+
+				var orderCnt=(orderCntRaw-minusCnt-addCnt+lossCnt);
+
+				if(orderCntRaw<orderCnt || 0>orderCnt){
+					alert('발주수량 추가는 보유재고범위를 넘을수 없습니다.');
+					frm.orderCnt[index-1].value=orderCntRaw;
+					document.all('orderCntView')[index-1].innerText=orderCntRaw;
+					frm.minusCnt[index-1].value=0;
+					return;
+				}else{
+					frm.orderCnt[index-1].value=orderCnt;
+					document.all('orderCntView')[index-1].innerText=orderCnt;
+				}
+
+
+		 	}else{
+		 		
+		 		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
+		 		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
+				var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt.value))));
+				var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt.value))));
+				var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt.value))));
+
+				var orderCnt=(orderCntRaw-minusCnt-addCnt+lossCnt);
+
+				if(orderCntRaw<orderCnt || 0>orderCnt){
+					alert('발주수량 추가는 보유재고범위를 넘을수 없습니다.');
+					frm.orderCnt.value=orderCntRaw;
+					document.all('orderCntView').innerText=orderCntRaw;
+					frm.minusCnt.value=0;
+					return;
+				}else{
+					frm.orderCnt.value=orderCnt;
+					document.all('orderCntView').innerText=orderCnt;
+				}
+
+		 	}
+
+		 	totalOrderAmt();
+	    }
 	//체크박스 전체선택
     function fcDefer_checkAll(){
 		
@@ -766,11 +828,12 @@ function fcDefer_reason(reason){
  		<colgroup>
 	      <col width="50px" >
 	      <col width="80px" >
-	      <col width="320px">
+	      <col width="270px">
 	      <col width="50px">
 	      <col width="50px">
 	      <col width="50px">
 	      <col width="70px">
+	      <col width="50px">
 	      <col width="50px">
 	      <col width="70px">
 	      <col width="*">
@@ -784,7 +847,8 @@ function fcDefer_reason(reason){
 	          <th rowspan='2' class='text-center'>품목코드</th>
 	          <th rowspan='2' class='text-center'>상품명</th>
 	          <th colspan='3' class='text-center'>재고</th>
-	          <th colspan='4' class='text-center'>발주</th>
+	          <th colspan='3' class='text-center'>발주</th>
+	          <th colspan='2' class='text-center'>loss</th>
 	      	</tr>
 	      	<tr style="background-color:#E6F3FF">
 	          <th class='text-center' >안전</th>
@@ -792,8 +856,9 @@ function fcDefer_reason(reason){
 	          <th class='text-center' >전산</th>
 	          <th class='text-center' >기준단가</th>
 	          <th class='text-center' >수량</th>
-	          <th class='text-center' >loss(+)</th>
-	          <th class='text-center' >loss(-)</th>
+	          <th class='text-center' >(-)</th>
+	          <th class='text-center' >(+)</th>
+	          <th class='text-center' >(-)</th>
 	        </tr>
 	    </thead>
 	  </table>
@@ -804,11 +869,12 @@ function fcDefer_reason(reason){
 	      <colgroup>
 	      <col width="49px" >
 	      <col width="80px" >
-	      <col width="320px">
+	      <col width="270px">
 	      <col width="50px">
 	      <col width="50px">
 	      <col width="50px">
 	      <col width="70px">
+	      <col width="50px">
 	      <col width="50px">
 	      <col width="70px">
 	      <col width="*">
@@ -850,16 +916,17 @@ function fcDefer_reason(reason){
                  <input type="hidden" id="orderCnt" name="orderCnt" value="${targetVO.orderCnt}" >
                  <input type="hidden" id="orderCntRaw" name="orderCntRaw" value="${targetVO.orderCnt}" >
                  <input type="hidden" id="vatRate" name="vatRate" value="${targetVO.vatRate}" >
-                 <td class='text-right'><input style="width:45px;text-align:right" type="text" class="form-control" id="addCnt" name="addCnt" maxlength="2" numberOnly onKeyup="fcAdd_Cnt('${status.count}')" value="0"></td>
+                 <td class='text-right' ><input style="width:40px;text-align:right" type="text" class="form-control" id="minusCnt" name="minusCnt" maxlength="2" numberOnly onKeyup="fcMinus_Cnt('${status.count}')" value="0"></td>
+                 <td class='text-right' ><input style="width:45px;text-align:right" type="text" class="form-control" id="addCnt" name="addCnt" maxlength="2" numberOnly onKeyup="fcAdd_Cnt('${status.count}')" value="0"></td>
                  <td class='text-right' ><input style="width:45px;text-align:right" type="text" class="form-control" id="lossCnt" name="lossCnt" maxlength="2" numberOnly onKeyup="fcLoss_Cnt('${status.count}')" value="0"></td>
                  <tr>
-	             	<td colspan='10' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  maxlength="50"  value="" placeholder="비고" /></td>
+	             	<td colspan='11' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  maxlength="50"  value="" placeholder="비고" /></td>
 	             </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty targetDetailList}">
            <tr>
-           	<td colspan='10' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='11' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>

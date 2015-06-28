@@ -58,6 +58,7 @@
   <result column="deferCheck"        property="deferCheck"  />
   <result column="addCnt"        property="addCnt"  />
   <result column="lossCnt"        property="lossCnt"  />
+  <result column="minusCnt"        property="minusCnt"  />
   <result column="group1Name"        property="group1Name"  />
   <result column="deferCnt"        property="deferCnt"  />
   <result column="targetCnt"        property="targetCnt"  />
@@ -735,6 +736,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
             	,holdStock
             	,lossCnt
             	,addCnt
+            	,minusCnt
             	,memo
             	,createUserId
             	,createDateTime
@@ -753,6 +755,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 	  			, #{holdStock}
 	  			, #{lossCnt}
 	  			, #{addCnt}
+	  			, #{minusCnt}
 	  			, #{memo}
 	  			, #{createUserId}
 	  			, now()
@@ -774,6 +777,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
             					,holdStock  = #{holdStock}
             					,lossCnt  = #{lossCnt}
             					,addCnt  = #{addCnt}
+            					,minusCnt  = #{minusCnt}
             					,memo  = #{memo}
             					,updateUserId  = #{createUserId}
             					,updateDateTime  = now()
@@ -913,6 +917,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
             	,holdStock
             	,lossCnt
             	,addCnt
+            	,minusCnt
             	,memo
             	,createUserId
             	,createDateTime
@@ -936,6 +941,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 	  			, #{holdStock}
 	  			, #{lossCnt}
 	  			, #{addCnt}
+	  			, #{minusCnt}
 	  			, #{memo}
 	  			, #{createUserId}
 	  			, now()
@@ -957,6 +963,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
             					,holdStock  = #{holdStock}
             					,lossCnt  = #{lossCnt}
             					,addCnt  = #{addCnt}
+            					,minusCnt  = #{minusCnt}
             					,memo  = #{memo}
             					,updateUserId  = #{createUserId}
             					,updateDateTime  = now()
@@ -1011,6 +1018,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
            T1.orderCnt as orderCnt,
            T1.addCnt,
            T1.lossCnt,
+           T1.minusCnt,
            T1.etc,
            T1.deferCheck,
            case When T1.safeStock >= T1.stockCnt Then 0 Else 1 End stockOrder

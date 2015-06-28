@@ -583,18 +583,16 @@ public class OrderController {
 		    	targetDetailVo.setOrderCheck(StringUtil.nvl(r_data[13],"false"));
 				
 		        targetExcelList.add(targetDetailVo);
+		      //  targetExcelList.add(targetDetailVo);
+		      //  targetExcelList.add(targetDetailVo);
+		      //  targetExcelList.add(targetDetailVo);
+		      //  targetExcelList.add(targetDetailVo);
+		      //  targetExcelList.add(targetDetailVo);
+		      //  targetExcelList.add(targetDetailVo);
+		      //  targetExcelList.add(targetDetailVo);
 	        
 	        }
-	      /* 
-	       * targetExcelList.add(targetDetailVo);
-	        targetExcelList.add(targetDetailVo);
-	        targetExcelList.add(targetDetailVo);
-	        targetExcelList.add(targetDetailVo);
-	        targetExcelList.add(targetDetailVo);
-	        targetExcelList.add(targetDetailVo);
-	        targetExcelList.add(targetDetailVo);
-	        */
-		
+
 		}
 
 		String orderDate=targetVO.getOrderDate(); 
@@ -783,6 +781,9 @@ public class OrderController {
 		    	targetDetailVo.setOrderCheck(StringUtil.nvl(r_data[13],"false"));
 				
 		    	targetEailList.add(targetDetailVo);
+		    	//targetEailList.add(targetDetailVo);
+		    	//targetEailList.add(targetDetailVo);
+		    	//targetEailList.add(targetDetailVo);
 	        
 	        }
 
@@ -974,7 +975,8 @@ public class OrderController {
 				}
 			
 				szContent += "</table>";
-				szContent += "<br></br><br></br><br></br><br></br>";
+				//szContent += "<br></br><br></br><br></br><br></br>";
+				szContent += "<br></br>";
 			}
 
 			szContent += "</div>";
@@ -995,6 +997,33 @@ public class OrderController {
 	        pdfszContent += "<head>";
 	        pdfszContent += "<title>상품주문서</title>";
 	        pdfszContent += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />";
+	        /*
+	        pdfszContent += "<style type='text/css'>"; 
+	        pdfszContent += "<!--";
+	        pdfszContent += ".party_tbl_new {";
+	        pdfszContent += "border-top:1px solid #bbbbbb;";
+	        pdfszContent += "}";
+	        pdfszContent += ".party_tbl_new tr td {";
+	        pdfszContent += "font-family: '굴림';";
+	        pdfszContent += "font-size: 12px;";
+	        pdfszContent += "color: #666666;";
+	        pdfszContent += "text-align: center;";
+	        pdfszContent += "border-bottom:1px solid #bbbbbb; border-left:1px solid #bbbbbb;";
+	        pdfszContent += "}";
+	        pdfszContent += ".party_tbl_new tr th {";
+	        pdfszContent += "font-family: '굴림';";
+	        pdfszContent += "font-size: 12px;";
+	        pdfszContent += "color: #333333;";
+	        pdfszContent += "font-weight: bold;";
+	        pdfszContent += "text-align: center;";
+	        pdfszContent += "border-bottom:1px solid #bbbbbb; border-left:1px solid #bbbbbb; background-color: #f3f3f3;";
+	        pdfszContent += "}";
+	        pdfszContent += ".border_last{";
+	        pdfszContent += "border-right:1px solid #bbbbbb; ";
+	        pdfszContent += "}";
+	        pdfszContent += "-->";
+	        pdfszContent += "</style>";
+	        */
 	        pdfszContent += "</head>";
 
 	        pdfszContent += "<body style='font-family: MalgunGothic;'>";
@@ -1146,8 +1175,8 @@ public class OrderController {
 			pdfout.write(pdfszContent.getBytes());                        // 파일에 쓰기
 			pdfout.close();                           
 	  
-	        Document document_pdf = new Document(PageSize.A4, 50, 50, 50, 50); // 용지 및 여백 설정
-		        
+	        Document document_pdf = new Document(PageSize.A4, 10, 10, 10, 10); // 용지 및 여백 설정
+
 		    try{
 		        // step 2
 		        PdfWriter writer = PdfWriter.getInstance(document_pdf, new FileOutputStream(uploadFilePath+orderCode+".pdf"));
@@ -1242,7 +1271,9 @@ public class OrderController {
 			
 			toEmails.add(targetVO.getEmail());
 			attcheFileName.add(orderCode+".html");
+			attcheFileName.add(orderCode+".pdf");
 			files.add(file);
+			files.add(pdffile);
 			
 			mail.setToEmails(toEmails);
 			mail.setAttcheFileName(attcheFileName);

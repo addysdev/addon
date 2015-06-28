@@ -74,6 +74,7 @@ public class TargetVO extends AbstractVO {
 	
 	private String addCnt;
 	private String lossCnt;
+	private String minusCnt;
 	private String deferCheck;
 	
 	private String safeOrderCnt;
@@ -603,6 +604,12 @@ public class TargetVO extends AbstractVO {
 	}
 	public void setOrderCheck(String orderCheck) {
 		this.orderCheck = orderCheck;
+	}
+	public String getMinusCnt() {
+		return minusCnt;
+	}
+	public void setMinusCnt(String minusCnt) {
+		this.minusCnt = minusCnt;
 	}
     
 }
