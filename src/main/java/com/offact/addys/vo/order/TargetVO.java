@@ -18,6 +18,7 @@ public class TargetVO extends AbstractVO {
 	private String emailKey;
 	private String mobilePhone;
 	private String email;
+	private String email_cc;
 	private String telNumber;
 	private String faxNumber;
 	private String orderDate;
@@ -610,6 +611,12 @@ public class TargetVO extends AbstractVO {
 	}
 	public void setMinusCnt(String minusCnt) {
 		this.minusCnt = minusCnt;
+	}
+	public String getEmail_cc() {
+		return email_cc;
+	}
+	public void setEmail_cc(String email_cc) {
+		this.email_cc = email_cc;
 	}
     
 }

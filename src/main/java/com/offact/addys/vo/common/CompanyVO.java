@@ -17,6 +17,7 @@ public class CompanyVO extends AbstractVO {
 	private String faxNumber;
 	private String mobilePhone;
 	private String email;
+	private String email_cc;
 	private String chargeName;
 	
 	private String groupName;
@@ -90,6 +91,12 @@ public class CompanyVO extends AbstractVO {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	public String getEmail_cc() {
+		return email_cc;
+	}
+	public void setEmail_cc(String email_cc) {
+		this.email_cc = email_cc;
 	}
 
    

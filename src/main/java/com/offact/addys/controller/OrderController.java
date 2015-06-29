@@ -114,6 +114,9 @@ public class OrderController {
 		return logid;
 	}
 	
+    @Value("#{config['offact.host.url']}")
+    private String hostUrl;
+    
     @Value("#{config['offact.mail.orderfromemail']}")
     private String orderfromemail;
     
@@ -417,6 +420,7 @@ public class OrderController {
         targetVO.setFaxNumber(companyVO.getFaxNumber());
         targetVO.setTelNumber(companyVO.getCompanyPhone());
         targetVO.setEmail(companyVO.getEmail());
+        targetVO.setEmail_cc(companyVO.getEmail_cc());
         targetVO.setDeliveryDate(strDeliveryDay);
         
         targetVO.setOrderAddress(orderAddress);
@@ -650,7 +654,13 @@ public class OrderController {
         String orderCode=request.getParameter("orderCode");
     	
         ResourceBundle rb = ResourceBundle.getBundle("config");
-	    String uploadFilePath = rb.getString("offact.upload.path") + "html/";
+	    String orderFilePath = rb.getString("offact.upload.path") + "order/";
+	    
+	    int dateFolderbeginIndex=orderCode.length()-9;
+	    int dateFolderendIndex=orderCode.length()-3;
+
+	    String uploadFilePath = orderFilePath + orderCode.substring(dateFolderbeginIndex, dateFolderendIndex)+"/";
+	    
 	    String szFileName = uploadFilePath+orderCode+".html";                    // 파일 이름
 	    
 	    logger.info("filedownload szFileName :"+szFileName);
@@ -794,7 +804,11 @@ public class OrderController {
 		
 		String hostUrl = rb.getString("offact.host.url");
 		
-	    String uploadFilePath = rb.getString("offact.upload.path") + "html/";
+		String orderfilePath =rb.getString("offact.upload.path") + "order/";
+	    String uploadFilePath = orderfilePath+strToday+"/";
+	    
+	    boolean check=setDirectory(uploadFilePath);
+	    
 	    String szFileName = uploadFilePath+orderCode+".html";                    // 파일 이름
 	    String pdfFileName = uploadFilePath+"[PDF]"+orderCode+".html";                    // PDF용 파일 이름
         String szContent = "";
@@ -802,6 +816,8 @@ public class OrderController {
         
         String orderDates[]=targetVO.getOrderDate().split("-");
         String deliveryDates[]=targetVO.getDeliveryDate().split("-"); 
+        
+    	String [] getToMails=targetVO.getEmail().split(";");
         
 		try{//메일전송 발주처리
             /* 파일을 생성해서 내용 쓰기 */
@@ -813,23 +829,19 @@ public class OrderController {
 	        szContent += "<html>";
 	        szContent += "<head>";
 	        szContent += "<title>상품주문서</title>";
-	        szContent += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />";
-	       
+	        szContent += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />";  
 	        szContent += "<style type='text/css'>"; 
 	        szContent += "<!--";
-	        szContent += "td {";
-	        szContent += "font-family: '돋움', '굴림', 'Seoul';";
-	        szContent += "font-size: 11px";
-	        szContent += "	line-height: 30px;";
+	        szContent += " table {";
+	        szContent += "border-collapse: collapse;";
+	        szContent += "}";
+	        szContent += "table, th, td {";
+	        szContent += "border: 1px solid black;";
 	        szContent += "}";
 			szContent += ".style1 {";
 		    szContent += "	font-size: 30px;";
 			szContent += "	font-weight: bold;";
 			szContent += "	font-family: '돋움체', '굴림체', Seoul;";
-	        szContent += "}";
-			szContent += ".style5 {";
-			szContent += "	font-size: 24px;";
-			szContent += "font-weight: bold;";
 	        szContent += "}";
 			szContent += "-->";
 			szContent += "</style>";
@@ -842,21 +854,27 @@ public class OrderController {
 			int num=0;
 			int totalnum=targetEailList.size();
 			int etcnum=0;
-			int maxlist=25;
+			int maxlist=21;
 			int resultlist=totalnum;
 			int removecnt=0;
 			int numcnt=0;
 
 			int pagenum = Math.floorDiv(totalnum, maxlist);
 			
+			int pageCal = totalnum%maxlist;
+			
+			if(pageCal==0){
+				pagenum=pagenum-1;
+			}
+			
 			for(int x=0; x<=pagenum; x++){
 			
 	
-				szContent += "<table width='722' height='900' border='0' align='center' cellpadding='1' cellspacing='1' bgcolor='#000000'>";
-				szContent += "<tr bgcolor='#FFFFFF'>"; 
+				szContent += "<table width='722' height='900' border='0' align='center' cellpadding='1' cellspacing='1'>";
+				szContent += "<tr>"; 
 				szContent += "<td height='55' colspan='12' align='center'><span class='style1' >상 품 주 문 서</span></td>";
 				szContent += "</tr>";
-				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<tr>";
 				szContent += " <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>수<br></br>신</td>";
 				szContent += " <td width='80' align='center'>&nbsp;회사명</td>";
 				szContent += " <td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryName()+"</td>";
@@ -864,25 +882,25 @@ public class OrderController {
 				szContent += " <td width='80' align='center' >&nbsp;회사명</td>";
 				szContent += " <td colspan='3' align='center'>&nbsp;"+targetVO.getOrderName()+"</td>";
 				szContent += "</tr>";
-				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<tr>";
 				szContent += "<td rowspan='4' align='center' >담당자</td>";
 				szContent += "<td colspan='5' align='left'>&nbsp;성명:"+targetVO.getDeliveryCharge()+"</td>";
 				szContent += "<td rowspan='4' align='center' >담당자</td>";
 				szContent += "<td colspan='3' align='left'>&nbsp;성명:"+targetVO.getOrderCharge()+"</td>";
 				szContent += "</tr>";
-				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<tr>";
 				szContent += "<td colspan='5' align='left'>&nbsp;핸드폰:"+targetVO.getMobilePhone()+"</td>";
 				szContent += "<td colspan='3' align='left'>&nbsp;핸드폰:"+targetVO.getOrderMobilePhone()+"</td>";
 				szContent += "</tr>";
-				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<tr>";
 				szContent += "<td colspan='5' align='left'>&nbsp;TEL:"+targetVO.getTelNumber()+"&nbsp;/&nbsp;FAX:"+targetVO.getFaxNumber()+"</td>";
 				szContent += "<td colspan='3' align='left'>&nbsp;TEL:"+targetVO.getOrderTelNumber()+"&nbsp;/&nbsp;FAX:"+targetVO.getOrderFaxNumber()+"</td>";
 				szContent += "</tr>";
-				szContent += "<tr bgcolor='#FFFFFF'>";
-				szContent += "<td colspan='5' align='left'>&nbsp;email:"+targetVO.getEmail()+"</td>";
+				szContent += "<tr>";
+				szContent += "<td colspan='5' align='left'>&nbsp;email:"+getToMails[0]+"</td>";
 				szContent += "<td colspan='3' align='left'>&nbsp;email:"+targetVO.getOrderEmail()+"</td>";
 				szContent += "</tr>";
-				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<tr>";
 				szContent += "<td align='center' >발주일자</td>";
 				szContent += "<td width='35' align='center'><div align='right'>"+orderDates[0]+"년 </div></td>";
 				szContent += "<td width='25' align='center'>&nbsp;"+orderDates[1]+"</td>";
@@ -892,7 +910,7 @@ public class OrderController {
 				szContent += "<td rowspan='2' align='center' >배송주소</td>";
 				szContent += "<td rowspan='2' colspan='3' align='left'>&nbsp;"+targetVO.getOrderAddress()+"</td>";
 				szContent += "</tr>";
-	            szContent += "<tr bgcolor='#FFFFFF'>";
+	            szContent += "<tr>";
 				szContent += "<td align='center' >납품일자</td>";
 				szContent += "<td align='center'><div align='right'>"+deliveryDates[0]+"년 </div></td>";
 				szContent += "<td align='center'>&nbsp;"+deliveryDates[1]+"</td>";
@@ -900,21 +918,21 @@ public class OrderController {
 				szContent += "<td align='center'>&nbsp;"+deliveryDates[2]+"</td>";
 				szContent += "<td align='center'>일</td>";
 				szContent += "</tr>";
-	            szContent += "<tr bgcolor='#FFFFFF'>";
+	            szContent += "<tr>";
 				szContent += "<td align='center'>&nbsp;납품방법</td>";
 				szContent += "<td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryMethod()+"</td>";
 				szContent += "<td align='center'>&nbsp;결제방법</td>";
 				szContent += "<td colspan='3' align='center'>&nbsp;"+targetVO.getPayMethod()+"</td>";
 				szContent += "</tr>";
 	
-				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<tr>";
 				szContent += "<td colspan='2' align='center' >메모</td>";
 				szContent += "<td colspan='10' align='left'>&nbsp;"+targetVO.getMemo()+"</td>";
 				szContent += "</tr>";
-				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<tr>";
 				szContent += "<td colspan='12' align='center' height='27'><div align='left'>&nbsp;1.아래와 같이 발주합니다.</div></td>";
 				szContent += "</tr>";
-				szContent += "<tr bgcolor='#FFFFFF'>";
+				szContent += "<tr>";
 				szContent += "<td width='30' align='center' height='27'>번 호</td>";
 				szContent += "<td colspan='9' align='center'>상 품 명</td>";
 				szContent += "<td width='40' align='center'>수량</td>";
@@ -932,7 +950,7 @@ public class OrderController {
 						
 						numcnt++;
 	
-				        szContent += "<tr bgcolor='#FFFFFF'>";
+				        szContent += "<tr>";
 						szContent += "<td align='center' height='27'>"+numcnt+"</td>";
 						szContent += "<td colspan='9' align='left'>&nbsp;"+targetDetaiList.getProductName()+"</td>";
 						szContent += "<td align='center'>"+targetDetaiList.getOrderCnt()+"</td>";
@@ -943,7 +961,7 @@ public class OrderController {
 	
 					for(int y=0;y<etcnum;y++){
 						
-						szContent += "<tr bgcolor='#FFFFFF'>";
+						szContent += "<tr>";
 						szContent += "<td align='center' height='27'>&nbsp;</td>";
 						szContent += "<td colspan='9' align='center'>&nbsp;</td>";
 						szContent += "<td align='center'>&nbsp;</td>";
@@ -961,7 +979,7 @@ public class OrderController {
 						
 						numcnt++;
 							
-						szContent += "<tr bgcolor='#FFFFFF'>";
+						szContent += "<tr>";
 						szContent += "<td align='center' height='27'>"+numcnt+"</td>";
 						szContent += "<td colspan='9' align='left'>&nbsp;"+targetDetaiList.getProductName()+"</td>";
 						szContent += "<td align='center'>"+targetDetaiList.getOrderCnt()+"</td>";
@@ -975,8 +993,8 @@ public class OrderController {
 				}
 			
 				szContent += "</table>";
-				//szContent += "<br></br><br></br><br></br><br></br>";
-				szContent += "<br></br>";
+				szContent += "<br></br><br></br><br></br><br></br>";
+				//szContent += "<br></br>";
 			}
 
 			szContent += "</div>";
@@ -986,8 +1004,7 @@ public class OrderController {
 	        out.write(szContent.getBytes());                        // 파일에 쓰기
 	        out.close();                                            // 파일 쓰기 스트림 닫기
        
-	        // PDF 변환1
-	        // step 1
+            //추가 주문서 레이아웃(PDF or JSP용)
 
 	        File pdffile = new File(pdfFileName);                        // 파일 생성
 	        OutputStream pdfout = new FileOutputStream(pdffile);            // 파일에 문자를 적을 스트림 생성
@@ -997,6 +1014,20 @@ public class OrderController {
 	        pdfszContent += "<head>";
 	        pdfszContent += "<title>상품주문서</title>";
 	        pdfszContent += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />";
+	        
+	        pdfszContent += "<style type='text/css'>"; 
+	        pdfszContent += " table {";
+	        pdfszContent += "border-collapse: collapse;";
+	        pdfszContent += "}";
+	        pdfszContent += "table, th, td {";
+	        pdfszContent += "border: 1px solid black;";
+	        pdfszContent += "}";
+	        pdfszContent += ".style1 {";
+	        pdfszContent += "	font-size: 30px;";
+	        pdfszContent += "	font-weight: bold;";
+	        pdfszContent += "	font-family: '돋움체', '굴림체', Seoul;";
+	        pdfszContent += "}";
+	        pdfszContent += "</style>";
 	        /*
 	        pdfszContent += "<style type='text/css'>"; 
 	        pdfszContent += "<!--";
@@ -1032,21 +1063,27 @@ public class OrderController {
 			int pdfnum=0;
 			int pdftotalnum=targetEailList.size();
 			int pdfetcnum=0;
-			int pdfmaxlist=25;
+			int pdfmaxlist=21;
 			int pdfresultlist=pdftotalnum;
 			int pdfremovecnt=0;
 			int pdfnumcnt=0;
 
 			int pdfpagenum = Math.floorDiv(pdftotalnum, pdfmaxlist);
 			
+			int pdfpageCal = pdftotalnum%pdfmaxlist;
+			
+			if(pdfpageCal==0){
+				pdfpagenum=pdfpagenum-1;
+			}
+			
 			for(int pdfx=0; pdfx<=pdfpagenum; pdfx++){
 			
 	
-				pdfszContent += "<table width='722' height='900' border='0.5' align='center' cellpadding='1' cellspacing='1' bgcolor='#000000'>";
-				pdfszContent += "<tr bgcolor='#FFFFFF'>"; 
-				pdfszContent += "<td height='55' colspan='12' align='center'><h3>상 품 주 문 서</h3></td>";
+				pdfszContent += "<table width='722' height='900' align='center' cellpadding='1' cellspacing='1'>";
+				pdfszContent += "<tr>"; 
+				pdfszContent += "<td height='55' colspan='12' align='center'><span class='style1' >상 품 주 문 서</span></td>";
 				pdfszContent += "</tr>";
-				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<tr>";
 				pdfszContent += " <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>수<br></br>신</td>";
 				pdfszContent += " <td width='80' align='center'>&nbsp;회사명</td>";
 				pdfszContent += " <td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryName()+"</td>";
@@ -1054,25 +1091,25 @@ public class OrderController {
 				pdfszContent += " <td width='80' align='center' >&nbsp;회사명</td>";
 				pdfszContent += " <td colspan='3' align='center'>&nbsp;"+targetVO.getOrderName()+"</td>";
 				pdfszContent += "</tr>";
-				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<tr>";
 				pdfszContent += "<td rowspan='4' align='center' >담당자</td>";
 				pdfszContent += "<td colspan='5' align='left'>&nbsp;성명:"+targetVO.getDeliveryCharge()+"</td>";
 				pdfszContent += "<td rowspan='4' align='center' >담당자</td>";
 				pdfszContent += "<td colspan='3' align='left'>&nbsp;성명:"+targetVO.getOrderCharge()+"</td>";
 				pdfszContent += "</tr>";
-				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<tr>";
 				pdfszContent += "<td colspan='5' align='left'>&nbsp;핸드폰:"+targetVO.getMobilePhone()+"</td>";
 				pdfszContent += "<td colspan='3' align='left'>&nbsp;핸드폰:"+targetVO.getOrderMobilePhone()+"</td>";
 				pdfszContent += "</tr>";
-				pdfszContent += "<tr bgcolor='#FFFFFF'>";
-				pdfszContent += "<td colspan='5' align='left'>&nbsp;TEL:"+targetVO.getTelNumber()+"<br></br>/&nbsp;FAX:"+targetVO.getFaxNumber()+"</td>";
+				pdfszContent += "<tr>";
+				pdfszContent += "<td colspan='5' align='left'>&nbsp;TEL:"+targetVO.getTelNumber()+"&nbsp;/&nbsp;FAX:"+targetVO.getFaxNumber()+"</td>";
 				pdfszContent += "<td colspan='3' align='left'>&nbsp;TEL:"+targetVO.getOrderTelNumber()+"&nbsp;/&nbsp;FAX:"+targetVO.getOrderFaxNumber()+"</td>";
 				pdfszContent += "</tr>";
-				pdfszContent += "<tr bgcolor='#FFFFFF'>";
-				pdfszContent += "<td colspan='5' align='left'>&nbsp;email:"+targetVO.getEmail()+"</td>";
+				pdfszContent += "<tr>";
+				pdfszContent += "<td colspan='5' align='left'>&nbsp;email:"+getToMails[0]+"</td>";
 				pdfszContent += "<td colspan='3' align='left'>&nbsp;email:"+targetVO.getOrderEmail()+"</td>";
 				pdfszContent += "</tr>";
-				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<tr>";
 				pdfszContent += "<td align='center' >발주일자</td>";
 				pdfszContent += "<td width='35' align='center'><div align='right'>"+orderDates[0]+"년 </div></td>";
 				pdfszContent += "<td width='25' align='center'>&nbsp;"+orderDates[1]+"</td>";
@@ -1082,7 +1119,7 @@ public class OrderController {
 				pdfszContent += "<td rowspan='2' align='center' >배송주소</td>";
 				pdfszContent += "<td rowspan='2' colspan='3' align='left'>&nbsp;"+targetVO.getOrderAddress()+"</td>";
 				pdfszContent += "</tr>";
-	            pdfszContent += "<tr bgcolor='#FFFFFF'>";
+	            pdfszContent += "<tr>";
 				pdfszContent += "<td align='center' >납품일자</td>";
 				pdfszContent += "<td align='center'><div align='right'>"+deliveryDates[0]+"년 </div></td>";
 				pdfszContent += "<td align='center'>&nbsp;"+deliveryDates[1]+"</td>";
@@ -1090,21 +1127,21 @@ public class OrderController {
 				pdfszContent += "<td align='center'>&nbsp;"+deliveryDates[2]+"</td>";
 				pdfszContent += "<td align='center'>일</td>";
 				pdfszContent += "</tr>";
-	            pdfszContent += "<tr bgcolor='#FFFFFF'>";
+	            pdfszContent += "<tr>";
 				pdfszContent += "<td align='center'>&nbsp;납품방법</td>";
 				pdfszContent += "<td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryMethod()+"</td>";
 				pdfszContent += "<td align='center'>&nbsp;결제방법</td>";
 				pdfszContent += "<td colspan='3' align='center'>&nbsp;"+targetVO.getPayMethod()+"</td>";
 				pdfszContent += "</tr>";
 	
-				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<tr>";
 				pdfszContent += "<td colspan='2' align='center' >메모</td>";
 				pdfszContent += "<td colspan='10' align='left'>&nbsp;"+targetVO.getMemo()+"</td>";
 				pdfszContent += "</tr>";
-				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<tr>";
 				pdfszContent += "<td colspan='12' align='center' height='27'><div align='left'>&nbsp;1.아래와 같이 발주합니다.</div></td>";
 				pdfszContent += "</tr>";
-				pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				pdfszContent += "<tr>";
 				pdfszContent += "<td width='30' align='center' height='27'>번 호</td>";
 				pdfszContent += "<td colspan='9' align='center'>상 품 명</td>";
 				pdfszContent += "<td width='40' align='center'>수량</td>";
@@ -1122,22 +1159,22 @@ public class OrderController {
 						
 						pdfnumcnt++;
 	
-				        pdfszContent += "<tr bgcolor='#FFFFFF'>";
+				        pdfszContent += "<tr>";
 						pdfszContent += "<td align='center' height='27'>"+pdfnumcnt+"</td>";
 						pdfszContent += "<td colspan='9' align='left'>&nbsp;"+targetDetaiList.getProductName()+"</td>";
 						pdfszContent += "<td align='center'>"+targetDetaiList.getOrderCnt()+"</td>";
-						pdfszContent += "<td  align='left'>&nbsp;"+targetDetaiList.getEtc()+"</td>";
+						pdfszContent += "<td align='left'>&nbsp;"+targetDetaiList.getEtc()+"</td>";
 						pdfszContent += "</tr>";
 				
 					}
 	
 					for(int pdfy=0;pdfy<pdfetcnum;pdfy++){
 						
-						pdfszContent += "<tr bgcolor='#FFFFFF'>";
+						pdfszContent += "<tr>";
 						pdfszContent += "<td align='center' height='27'>&nbsp;</td>";
 						pdfszContent += "<td colspan='9' align='center'>&nbsp;</td>";
 						pdfszContent += "<td align='center'>&nbsp;</td>";
-						pdfszContent += "<td  align='center'>&nbsp;</td>";
+						pdfszContent += "<td align='center'>&nbsp;</td>";
 						pdfszContent += "</tr>";
 				
 					}
@@ -1151,7 +1188,7 @@ public class OrderController {
 						
 						pdfnumcnt++;
 							
-						pdfszContent += "<tr bgcolor='#FFFFFF'>";
+						pdfszContent += "<tr>";
 						pdfszContent += "<td align='center' height='27'>"+pdfnumcnt+"</td>";
 						pdfszContent += "<td colspan='9' align='left'>&nbsp;"+targetDetaiList.getProductName()+"</td>";
 						pdfszContent += "<td align='center'>"+targetDetaiList.getOrderCnt()+"</td>";
@@ -1165,7 +1202,7 @@ public class OrderController {
 				}
 			
 				pdfszContent += "</table>";
-				pdfszContent += "<br></br>";
+				pdfszContent += "<br></br><br></br><br></br><br></br>";
 			}
 
 			pdfszContent += "</div>";
@@ -1175,6 +1212,9 @@ public class OrderController {
 			pdfout.write(pdfszContent.getBytes());                        // 파일에 쓰기
 			pdfout.close();                           
 	  
+	        // PDF 변환1 (linux서버에서 한글변환문제 있음)
+			/*
+	        // step 1
 	        Document document_pdf = new Document(PageSize.A4, 10, 10, 10, 10); // 용지 및 여백 설정
 
 		    try{
@@ -1195,10 +1235,11 @@ public class OrderController {
 	        	document_pdf.close();
 	            logger.info("["+logid+"] pdf convert error : "+e);    
 	        }
-	               
+	        */   
+			
 	        // PDF 변환2(폰트 및 CSS적용)
 		    
-	        Document document = new Document(PageSize.A4, 10, 10, 10, 10); // 용지 및 여백 설정
+	        Document document = new Document(PageSize.A4, 0, 0, 0, 0); // 용지 및 여백 설정
 	             
 	        // PdfWriter 생성
 	        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(uploadFilePath+orderCode+".pdf")); // 바로 다운로드.
@@ -1216,12 +1257,12 @@ public class OrderController {
 	             
 	        // CSS
 	        CSSResolver cssResolver = new StyleAttrCSSResolver();
-	        CssFile cssFile = helper.getCSS(new FileInputStream(uploadFilePath+"/css/pdf.css"));
+	        CssFile cssFile = helper.getCSS(new FileInputStream(orderfilePath+"/css/pdf.css"));
 	        cssResolver.addCss(cssFile);
 	             
 	        // HTML, 폰트 설정
 	        XMLWorkerFontProvider fontProvider = new XMLWorkerFontProvider(XMLWorkerFontProvider.DONTLOOKFORFONTS);
-	        fontProvider.register(uploadFilePath+"/font/HYHWPEQ.TTF", "MalgunGothic"); // MalgunGothic은 alias,
+	        fontProvider.register(orderfilePath+"/font/H2MKPB.TTF", "MalgunGothic"); // MalgunGothic은 alias,
 	        CssAppliers cssAppliers = new CssAppliersImpl(fontProvider);
 	         
 	        HtmlPipelineContext htmlContext = new HtmlPipelineContext(cssAppliers);
@@ -1239,9 +1280,8 @@ public class OrderController {
 	         
 	        document.close();
 	        writer.close();
-	     
-	        
-	        // 폰트 설정에서 별칭으로 줬던 "MalgunGothic"을 html 안에 폰트로 지정한다.
+
+	       // 폰트 설정에서 별칭으로 줬던 "MalgunGothic"을 html 안에 폰트로 지정한다.
 	       //String htmlStr = "<html><head><body style='font-family: MalgunGothic;'>"
 	       //             + "<p>PDF 안에 들어갈 내용입니다.</p>"
 	       //             + "<h3>한글, English, 漢字.</h3>"
@@ -1268,11 +1308,15 @@ public class OrderController {
 			List<String> toEmails= new ArrayList();
 			List<String> attcheFileName= new ArrayList();
 			List<File> files = new ArrayList();
-			
-			toEmails.add(targetVO.getEmail());
+
+			for(int m=0;m<getToMails.length;m++){	
+				toEmails.add(getToMails[m]);	
+			}
+
 			attcheFileName.add(orderCode+".html");
 			files.add(file);
 			
+			//추가 파일 첨부
 			/*
 			attcheFileName.add(orderCode+".pdf");
 			String pdfConvertFileName = uploadFilePath+orderCode+".pdf";                    // PDF 파일 이름
@@ -1290,8 +1334,10 @@ public class OrderController {
 			mail.setFile(files);
 
 			mail.setFromEmail(orderfromemail);
-			mail.setMsg("애디스("+targetVO.getGroupName()+")지점 상품주문서 메일입니다.<br>"+targetVO.getDeliveryDate()+"까지 납품 부탁드립니다.<br><br><br><br>[연락처  정보]<br><br>(담당자)  "+targetVO.getOrderCharge()+"<br>(Tel)  "+
-			targetVO.getOrderTelNumber()+"<br>(핸드폰)  "+targetVO.getOrderMobilePhone()+"<br>(E-Mail)  "+targetVO.getOrderEmail()+"<br>(FAX)  "+targetVO.getOrderFaxNumber());
+			mail.setMsg("애디스("+targetVO.getGroupName()+")지점 상품주문서 메일입니다.<br>"+targetVO.getDeliveryDate()+"까지 납품 부탁드립니다.<br><br><br>*첨부파일이 정상적으로 확인이 안되실 경우 아래 링크로 다시한번 다운로드 부탁드립니다.<br><a href='"+hostUrl+"/addon/order/orderdownload?orderCode="+orderCode+"' >[발주서 다운로드]</a><br><br>[연락처  정보]<br><br>(담당자)  "+targetVO.getOrderCharge()+"<br>(Tel)  "+
+			targetVO.getOrderTelNumber()+"<br>(핸드폰)  "+targetVO.getOrderMobilePhone()+"<br>(E-Mail)  "+targetVO.getOrderEmail()+"<br>(FAX)  "+targetVO.getOrderFaxNumber()+"<br><br><br>"+pdfszContent);
+			
+			
 			mail.setSubject("애디스 다이렉트 발주서");
 	
 			try{
@@ -2915,12 +2961,20 @@ public class OrderController {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
         Date currentTime = new Date();
         String strToday = simpleDateFormat.format(currentTime);
+ 
+	    ResourceBundle rb = ResourceBundle.getBundle("config");
+	    String orderFilePath = rb.getString("offact.upload.path") + "order/";
+	    
+	    int dateFolderbeginIndex=orderVO.getOrderCode().length()-9;
+	    int dateFolderendIndex=orderVO.getOrderCode().length()-3;
 
-		ResourceBundle rb = ResourceBundle.getBundle("config");
-	    String uploadFilePath = rb.getString("offact.upload.path") + "html/";
+	    String uploadFilePath = orderFilePath + orderVO.getOrderCode().substring(dateFolderbeginIndex, dateFolderendIndex)+"/";
+	    
 	    String szFileName = uploadFilePath+orderVO.getOrderCode()+".html";                    // 파일 이름
-        
+
 	    String orderDates[]=orderVO.getOrderDate().split("-");
+	    
+		String [] getToMails=orderVO.getEmail().split(";");
 	    
 		try{//메일전송 발주처리
             /* 파일을 생성해서 내용 쓰기 */
@@ -2936,8 +2990,11 @@ public class OrderController {
 			List<String> attcheFileName= new ArrayList();
 			List<File> files = new ArrayList();
 			
-			toEmails.add(orderVO.getEmail());
-			attcheFileName.add("[re]order_"+orderDates[0]+orderDates[1]+orderDates[2]+".html");
+			for(int m=0;m<getToMails.length;m++){	
+				toEmails.add(getToMails[m]);	
+			}
+			
+			attcheFileName.add("[reSend]"+orderVO.getOrderCode()+".html");
 			
 			files.add(file);
 			
@@ -2946,8 +3003,10 @@ public class OrderController {
 			mail.setFile(files);
 			
 			mail.setFromEmail(orderfromemail);
-			mail.setMsg("[재전송]애디스("+orderVO.getGroupName()+")지점 상품주문서 메일입니다.<br>"+orderVO.getDeliveryDate()+"까지 납품 부탁드립니다.<br><br><br><br>[연락처  정보]<br><br>(담당자)  "+orderVO.getOrderCharge()+"<br>(Tel)  "+
+			mail.setMsg("애디스("+orderVO.getOrderName()+")지점 상품주문서 메일입니다.<br>"+orderVO.getDeliveryDate()+"까지 납품 부탁드립니다.<br><br><br>*첨부파일이 정상적으로 확인이 안되실 경우 아래 링크로 다시한번 다운로드 부탁드립니다.<br><a href='"+hostUrl+"/addon/order/orderdownload?orderCode="+orderVO.getOrderCode()+"' >[발주서 다운로드]</a><br><br>[연락처  정보]<br><br>(담당자)  "+orderVO.getOrderCharge()+"<br>(Tel)  "+
 			orderVO.getOrderTelNumber()+"<br>(핸드폰)  "+orderVO.getOrderMobilePhone()+"<br>(E-Mail)  "+orderVO.getOrderEmail()+"<br>(FAX)  "+orderVO.getOrderFaxNumber());
+					
+			
 			mail.setSubject("애디스 다이렉트 발주서");
 	
 			try{
@@ -3390,4 +3449,16 @@ public class OrderController {
       	
         return mv;
     }
+    
+	/**
+	 * 업로드 디렉토리 세팅
+	 */
+	private static boolean setDirectory( String directory) {
+		File wantedDirectory = new File(directory);
+		if (wantedDirectory.isDirectory())
+			return true;
+	    
+		return wantedDirectory.mkdirs();
+	}
+	
 }

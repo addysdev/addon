@@ -11,6 +11,7 @@
   <result column="faxNumber"            property="faxNumber"  />
   <result column="mobilePhone"           property="mobilePhone"  />
   <result column="email"            property="email"  />
+  <result column="email_cc"            property="email_cc"  />
   <result column="chargeName"         property="chargeName"  />
   <result column="createUserId"        property="createUserId"  />
   <result column="createUserName"        property="createUserName"  />
@@ -31,6 +32,7 @@
 			  ,T1.faxNumber
 			  ,T1.mobilePhone
 			  ,T1.email
+			  ,T1.email_cc
 			  ,T1.chargeName
 			  ,T1.createUserId
 			  ,T2.userName as createUserName
@@ -92,6 +94,7 @@
             	,faxNumber
            		,mobilePhone
             	,email
+            	,email_cc
             	,chargeName
             	,createUserId
             	,createDateTime
@@ -105,6 +108,7 @@
 	  			, #{faxNumber}
 	  			, #{mobilePhone}
 	  		    , #{email}
+	  		    , #{email_cc}
 	  		    , #{chargeName}
 	  			, #{createUserId}
 	  			, now()

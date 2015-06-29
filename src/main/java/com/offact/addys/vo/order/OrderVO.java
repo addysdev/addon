@@ -18,6 +18,7 @@ public class OrderVO extends AbstractVO {
 	private String emailKey;
 	private String mobilePhone;
 	private String email;
+	private String email_cc;
 	private String telNumber;
 	private String faxNumber;
 	private String orderDate;
@@ -677,6 +678,12 @@ public class OrderVO extends AbstractVO {
 	}
 	public void setOrderPriceView(String orderPriceView) {
 		this.orderPriceView = orderPriceView;
+	}
+	public String getEmail_cc() {
+		return email_cc;
+	}
+	public void setEmail_cc(String email_cc) {
+		this.email_cc = email_cc;
 	}
 
 }

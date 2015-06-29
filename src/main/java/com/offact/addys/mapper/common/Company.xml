@@ -11,6 +11,7 @@
   <result column="faxNumber"            property="faxNumber"  />
   <result column="mobilePhone"           property="mobilePhone"  />
   <result column="email"            property="email"  />
+  <result column="email_cc"            property="email_cc"  />
   <result column="chargeName"         property="chargeName"  />
 </resultMap>
 
@@ -23,6 +24,7 @@
 				  	  ,faxNumber
 					  ,mobilePhone
 					  ,email
+					  ,email_cc
 					  ,chargeName
 				  From adCompany 
 				  Where companyCode = #{companyCode} And deletedYn='N'
@@ -37,6 +39,7 @@
 				  	  ,faxNumber
 					  ,mobilePhone
 					  ,email
+					  ,email_cc
 					  ,chargeName
 				  From adCompany 
 				  Where deletedYn='N'

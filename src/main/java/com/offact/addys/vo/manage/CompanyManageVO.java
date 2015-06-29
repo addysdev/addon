@@ -17,6 +17,7 @@ public class CompanyManageVO extends AbstractVO {
 	private String faxNumber;
 	private String mobilePhone;
 	private String email;
+	private String email_cc;
 	private String chargeName;
 
 	private String createUserId;
@@ -207,6 +208,12 @@ public class CompanyManageVO extends AbstractVO {
 	}
 	public void setGroupId(String groupId) {
 		this.groupId = groupId;
+	}
+	public String getEmail_cc() {
+		return email_cc;
+	}
+	public void setEmail_cc(String email_cc) {
+		this.email_cc = email_cc;
 	}
    
 }

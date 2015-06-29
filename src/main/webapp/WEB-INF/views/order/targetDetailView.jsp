@@ -692,6 +692,11 @@ function fcDefer_reason(reason){
 
         totalOrderAmt();
     }
+	function fcEmail_cc(cc){
+		
+		alert(cc);
+		
+	}
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -743,8 +748,9 @@ function fcDefer_reason(reason){
           <th class='text-center'><input type="text" class="form-control" id="orderMobilePhone"  maxlength="14"  name="orderMobilePhone"  value="${targetVO.orderMobilePhone}"  placeholder="핸드폰"/></th>
       	</tr>
       	<tr>
-          <th class='text-center' style="background-color:#E6F3FF">e-mail</th>
-          <th class='text-center'><input type="text" class="form-control" id="email" name="email"  maxlength="30"  value="${targetVO.email}" placeholder="e-mail" /></th>
+          <th class='text-center' style="background-color:#E6F3FF">e-mail<a href="javascript:fcEmail_cc('${targetVO.email_cc}');"><span style='color:blue'>[cc]</span></a>
+          </th>
+          <th class='text-center'><input type="text" class="form-control" id="email" name="email"  maxlength="500"  value="${targetVO.email}" placeholder="e-mail" /></th>
           <th class='text-center' style="background-color:#E6F3FF">e-mail</th>
           <th class='text-center'><input type="text" class="form-control" id="orderEmail" name="orderEmail"  maxlength="30"  value="${targetVO.orderEmail}" placeholder="e-mail" /></th>
       	</tr>
@@ -889,7 +895,7 @@ function fcDefer_reason(reason){
 	                <c:when test="${targetVO.stockCnt<0}">
 						<tr id="select_tr_${targetVO.productCode}" style="background-color:#F0B3AC">
 					</c:when>
-		    		<c:when test="${targetVO.stockCnt<=targetVO.safeStock}">
+		    		<c:when test="${Integer.parseInt(targetVO.stockCnt)<=Integer.parseInt(targetVO.safeStock)}">
 						<tr id="select_tr_${targetVO.productCode}" style="background-color:#FEE2B4;color:red">
 					</c:when>
 					<c:otherwise>

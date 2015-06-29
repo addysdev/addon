@@ -751,6 +751,7 @@ function totalTargetAmt(){
 	   <input type="hidden" name="orderCharge"               id="orderCharge"            value="${orderVO.orderCharge}" />
 	   <input type="hidden" name="deliveryCharge"               id="deliveryCharge"            value="${orderVO.deliveryCharge}" />
 	   <input type="hidden" name="orderName"               id="orderName"            value="${orderVO.orderName}" />
+	   <input type="hidden" name="deliveryDate"               id="deliveryDate"            value="${orderVO.deliveryDate}" />
 	      <div style="position:absolute; left:30px" >
 	      <c:if test="${orderVO.orderState=='03'}"><button id="deferbtn" type="button" class="btn btn-primary" onClick="fcDefer_reasonpop('R')" >보류</button></c:if>
 	      <!--  >button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button-->
@@ -816,7 +817,7 @@ function totalTargetAmt(){
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF">납품일자</th>
           <th class='text-center'>
-          <input  disabled type="text" class="form-control" id="deliveryDate" name="deliveryDate"  value="${orderVO.deliveryDate}" placeholder="SMS" />
+          <input  disabled type="text" class="form-control"  value="${orderVO.deliveryDate}" placeholder="" />
           </th>
       	</tr>
       	<tr>
