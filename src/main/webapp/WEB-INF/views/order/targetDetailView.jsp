@@ -692,11 +692,41 @@ function fcDefer_reason(reason){
 
         totalOrderAmt();
     }
-	function fcEmail_cc(cc){
-		
-		alert(cc);
+	function fcEmail_ccAdd(email_cc){
+		 
+		document.targetDetailForm.email_cc.value=email_cc;
 		
 	}
+	function fcEmail_cc(){
+
+		var mail_cc=document.targetDetailForm.email_cc.value;
+
+    	var url='<%= request.getContextPath() %>/order/mailcc?cc='+mail_cc;
+
+    	$('#ccDialog').dialog({
+            resizable : false, //사이즈 변경 불가능
+            draggable : true, //드래그 불가능
+            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+            width : 300,
+            height : 200,
+            modal : true, //주위를 어둡게
+
+            open:function(){
+                //팝업 가져올 url
+              //  $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode+'&productNaem='+encodeURIComponent(productName));
+                $(this).load(url);
+               
+                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+                    $("#ccDialog").dialog('close');
+
+                    });
+            }
+            ,close:function(){
+            	$('#ccDialog').empty();
+            }
+        });
+    };
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -712,6 +742,7 @@ function fcDefer_reason(reason){
 	   <input type="hidden" name="con_groupId"               id="con_groupId"            value="${targetVO.con_groupId}" />
 	   <input type="hidden" name="companyCode"               id="companyCode"            value="${targetVO.companyCode}" />
 	   <input type="hidden" name="safeOrderCnt"               id="safeOrderCnt"            value="${targetVO.safeOrderCnt}" />
+	   <input type="hidden" name="email_cc"               id="email_cc"            value="${targetVO.email_cc}" />
 	      <!--  >h4><strong><font style="color:#428bca">발주방법 : </font></strong>
 	          <input type="checkbox" id="emailCheck" name="emailCheck" value="" title="선택" checked disabled />e-mail
 	          <input type="checkbox" id="smsCheck" name="smsCheck" value="" title="선택" disabled />sms
@@ -748,7 +779,7 @@ function fcDefer_reason(reason){
           <th class='text-center'><input type="text" class="form-control" id="orderMobilePhone"  maxlength="14"  name="orderMobilePhone"  value="${targetVO.orderMobilePhone}"  placeholder="핸드폰"/></th>
       	</tr>
       	<tr>
-          <th class='text-center' style="background-color:#E6F3FF">e-mail<a href="javascript:fcEmail_cc('${targetVO.email_cc}');"><span style='color:blue'>[cc]</span></a>
+          <th class='text-center' style="background-color:#E6F3FF">e-mail<a href="javascript:fcEmail_cc();"><span style='color:blue'>[cc]</span></a>
           </th>
           <th class='text-center'><input type="text" class="form-control" id="email" name="email"  maxlength="500"  value="${targetVO.email}" placeholder="e-mail" /></th>
           <th class='text-center' style="background-color:#E6F3FF">e-mail</th>

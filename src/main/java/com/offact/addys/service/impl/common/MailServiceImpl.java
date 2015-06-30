@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.offact.framework.db.SqlSessionCommonDao;
 import com.offact.framework.exception.BizException;
+import com.offact.framework.util.StringUtil;
 import com.offact.addys.service.common.MailService;
 import com.offact.addys.vo.common.EmailVO;
 
@@ -52,8 +53,31 @@ public class MailServiceImpl implements MailService {
             	toArrayResult[i] =  mail.getToEmails().get(i);
 
             }
+            
+            // 참조 수신인 다수
+            String[] toArrayCcResult = new String[mail.getToEmail_Ccs().size()];
+            
+            logger.debug("mail.getToEmail_Ccs().size() : "+mail.getToEmail_Ccs().size());
+            
+            if(mail.getToEmail_Ccs().size()>0 ){
+            	
+                logger.debug("mail.getToEmail_Ccs().get(0) : "+mail.getToEmail_Ccs().get(0));
+            	
+            	if(!StringUtil.nvl(mail.getToEmail_Ccs().get(0),"").equals("")){
+            		 
+            		for(int j=0; j<mail.getToEmail_Ccs().size(); j++){
+
+                     	toArrayCcResult[j] =  mail.getToEmail_Ccs().get(j);
+                     	
+                    	logger.debug("toArrayCcResult["+j+"] : "+toArrayCcResult[j]);
+
+                     }
+            		
+            		messageHelper.setBcc(toArrayCcResult);
+            	}
+            }
+            
             messageHelper.setTo(toArrayResult);
-            //messageHelper.setBcc(bcc);
             messageHelper.setFrom(mail.getFromEmail(), mail.getSubject());
             messageHelper.setText(mail.getMsg(), true);
 

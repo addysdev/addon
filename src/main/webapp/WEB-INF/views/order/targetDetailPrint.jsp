@@ -13,12 +13,13 @@ TargetVO targetVO = (TargetVO)request.getAttribute("targetVO");
 <script>
 window.print();
 </script>
+                <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		        <html>
 		        <head>
-		        <title>상품주문서</title>
+		        <title>(주)애디스다이렉트</title>
+		        <meta http-equiv="X-UA-Compatible" content="IE=edge">
 		        <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-		        
-		         <style type='text/css'> 
+		        <style type='text/css'> 
 		        <!--
 				table {
 				    border-collapse: collapse;
@@ -32,16 +33,19 @@ window.print();
 					font-weight: bold;
 					font-family: '돋움체', '굴림체', Seoul;
 		        }
+				body {color : #000000; background : #FFFFFF; font-family : 굴림,"Times New Roman"; font-size : 12pt;}
 				
+				@page{  size:auto; margin : 10mm;  }
+				
+				h1 {page-break-before: always;}
+
 				-->
 				</style>
 				
 				</head>
 
 				<body>
-				<div align='center'></div>
-
-				<div align='left'>
+				<div align='center'>
 				<%
 				
 		    	String [] getToMails=targetVO.getEmail().split(";");
@@ -49,7 +53,7 @@ window.print();
 				int num=0;
 				int totalnum=targetLsit.size();
 				int etcnum=0;
-				int maxlist=21;
+				int maxlist=22;
 				int resultlist=totalnum;
 				int removecnt=0;
 				int numcnt=0;
@@ -65,8 +69,12 @@ window.print();
 				}
 				
 				for(int x=0; x<=pagenum; x++){
-				
-				 %>
+					if(x!=0){
+				 %>		
+					<h1></h1>
+				<%
+					}
+				%>
 				<table width='722' height='900' align='center' >
 				<tr > 
 				<td height='55' colspan='12' align='center'><span class='style1'>상 품 주 문 서</span></td>
@@ -196,11 +204,9 @@ window.print();
 				
 				%>
 				</table>
-				<br></br><br></br><br></br><br></br>
 			<%
 			}
 			%>
-				</div>
-
-			</body>
-		</html>
+			</div>
+		</body>
+	</html>

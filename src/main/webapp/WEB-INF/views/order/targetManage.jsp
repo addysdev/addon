@@ -92,6 +92,8 @@
   <div id="deferDialog"  title="보류사유를 입력하세요"></div>
   <!-- //발주 상세처리화면 -->
   
+   <div id="ccDialog"  title="mail 참조추가"></div>
+  
   <div id="deferReasonList"  title="보류사유"></div>
 </div>
 <br>

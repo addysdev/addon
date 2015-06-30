@@ -818,6 +818,7 @@ public class OrderController {
         String deliveryDates[]=targetVO.getDeliveryDate().split("-"); 
         
     	String [] getToMails=targetVO.getEmail().split(";");
+    	String [] getToMail_Ccs=targetVO.getEmail_cc().split(";");
         
 		try{//메일전송 발주처리
             /* 파일을 생성해서 내용 쓰기 */
@@ -825,10 +826,11 @@ public class OrderController {
 	        File file = new File(szFileName);                        // 파일 생성
 	        OutputStream out = new FileOutputStream(file);            // 파일에 문자를 적을 스트림 생성
 
-            szContent += "<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN'>";
-	        szContent += "<html>";
+	        szContent += "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>";
+		    szContent += "<html>";
 	        szContent += "<head>";
-	        szContent += "<title>상품주문서</title>";
+	        szContent += "<title>(주)애디스다이렉트</title>";
+	        szContent += "<meta http-equiv='X-UA-Compatible' content='IE=edge' />";  
 	        szContent += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />";  
 	        szContent += "<style type='text/css'>"; 
 	        szContent += "<!--";
@@ -843,18 +845,21 @@ public class OrderController {
 			szContent += "	font-weight: bold;";
 			szContent += "	font-family: '돋움체', '굴림체', Seoul;";
 	        szContent += "}";
+	        szContent += "body {color : #000000; background : #FFFFFF; font-family : 굴림,'Times New Roman'; font-size : 12pt;}";
+	        szContent += "@page{  size:auto; margin : 10mm;  }";
+	        szContent += "h1 {page-break-before: always;}";
 			szContent += "-->";
 			szContent += "</style>";
 			
 			szContent += "</head>";
 
-			szContent += "<body style='font-family: MalgunGothic;'>";
+			szContent += "<body>";
 			szContent += "<div align='center'>";
 			
 			int num=0;
 			int totalnum=targetEailList.size();
 			int etcnum=0;
-			int maxlist=21;
+			int maxlist=22;
 			int resultlist=totalnum;
 			int removecnt=0;
 			int numcnt=0;
@@ -869,8 +874,11 @@ public class OrderController {
 			
 			for(int x=0; x<=pagenum; x++){
 			
+				if(x!=0){
+					szContent += "<h1></h1>";
+				}
 	
-				szContent += "<table width='722' height='900' border='0' align='center' cellpadding='1' cellspacing='1'>";
+				szContent += "<table width='722' height='900'>";
 				szContent += "<tr>"; 
 				szContent += "<td height='55' colspan='12' align='center'><span class='style1' >상 품 주 문 서</span></td>";
 				szContent += "</tr>";
@@ -993,13 +1001,11 @@ public class OrderController {
 				}
 			
 				szContent += "</table>";
-				szContent += "<br></br><br></br><br></br><br></br>";
-				//szContent += "<br></br>";
 			}
 
 			szContent += "</div>";
 			szContent += "</body>";
-			szContent += " </html>";
+			szContent += "</html>";
 	        
 	        out.write(szContent.getBytes());                        // 파일에 쓰기
 	        out.close();                                            // 파일 쓰기 스트림 닫기
@@ -1009,12 +1015,12 @@ public class OrderController {
 	        File pdffile = new File(pdfFileName);                        // 파일 생성
 	        OutputStream pdfout = new FileOutputStream(pdffile);            // 파일에 문자를 적을 스트림 생성
 
-	        pdfszContent += "<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN'>";
+	        pdfszContent += "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>";
 	        pdfszContent += "<html>";
 	        pdfszContent += "<head>";
-	        pdfszContent += "<title>상품주문서</title>";
-	        pdfszContent += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />";
-	        
+	        pdfszContent += "<title>(주)애디스다이렉트</title>";
+	        pdfszContent += "<meta http-equiv='X-UA-Compatible' content='IE=edge' />";  
+	        pdfszContent += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />";  
 	        pdfszContent += "<style type='text/css'>"; 
 	        pdfszContent += " table {";
 	        pdfszContent += "border-collapse: collapse;";
@@ -1027,43 +1033,20 @@ public class OrderController {
 	        pdfszContent += "	font-weight: bold;";
 	        pdfszContent += "	font-family: '돋움체', '굴림체', Seoul;";
 	        pdfszContent += "}";
+	        pdfszContent += "body {color : #000000; background : #FFFFFF; font-family : MalgunGothic, 굴림,'Times New Roman'; font-size : 12pt;}";
+	        pdfszContent += "@page{  size:auto; margin : 10mm;  }";
+	        pdfszContent += "h1 {page-break-before: always;}";
 	        pdfszContent += "</style>";
-	        /*
-	        pdfszContent += "<style type='text/css'>"; 
-	        pdfszContent += "<!--";
-	        pdfszContent += ".party_tbl_new {";
-	        pdfszContent += "border-top:1px solid #bbbbbb;";
-	        pdfszContent += "}";
-	        pdfszContent += ".party_tbl_new tr td {";
-	        pdfszContent += "font-family: '굴림';";
-	        pdfszContent += "font-size: 12px;";
-	        pdfszContent += "color: #666666;";
-	        pdfszContent += "text-align: center;";
-	        pdfszContent += "border-bottom:1px solid #bbbbbb; border-left:1px solid #bbbbbb;";
-	        pdfszContent += "}";
-	        pdfszContent += ".party_tbl_new tr th {";
-	        pdfszContent += "font-family: '굴림';";
-	        pdfszContent += "font-size: 12px;";
-	        pdfszContent += "color: #333333;";
-	        pdfszContent += "font-weight: bold;";
-	        pdfszContent += "text-align: center;";
-	        pdfszContent += "border-bottom:1px solid #bbbbbb; border-left:1px solid #bbbbbb; background-color: #f3f3f3;";
-	        pdfszContent += "}";
-	        pdfszContent += ".border_last{";
-	        pdfszContent += "border-right:1px solid #bbbbbb; ";
-	        pdfszContent += "}";
-	        pdfszContent += "-->";
-	        pdfszContent += "</style>";
-	        */
 	        pdfszContent += "</head>";
 
-	        pdfszContent += "<body style='font-family: MalgunGothic;'>";
+	       // pdfszContent += "<body style='font-family: MalgunGothic;'>";
+	        pdfszContent += "<body>";
 	        pdfszContent += "<div align='center'>";
 			
 			int pdfnum=0;
 			int pdftotalnum=targetEailList.size();
 			int pdfetcnum=0;
-			int pdfmaxlist=21;
+			int pdfmaxlist=22;
 			int pdfresultlist=pdftotalnum;
 			int pdfremovecnt=0;
 			int pdfnumcnt=0;
@@ -1078,8 +1061,11 @@ public class OrderController {
 			
 			for(int pdfx=0; pdfx<=pdfpagenum; pdfx++){
 			
+				if(pdfx!=0){
+					pdfszContent += "<h1></h1>";
+				}
 	
-				pdfszContent += "<table width='722' height='900' align='center' cellpadding='1' cellspacing='1'>";
+				pdfszContent += "<table width='722' height='900'>";
 				pdfszContent += "<tr>"; 
 				pdfszContent += "<td height='55' colspan='12' align='center'><span class='style1' >상 품 주 문 서</span></td>";
 				pdfszContent += "</tr>";
@@ -1202,9 +1188,8 @@ public class OrderController {
 				}
 			
 				pdfszContent += "</table>";
-				pdfszContent += "<br></br><br></br><br></br><br></br>";
+				pdfszContent += "<br></br><br></br>";
 			}
-
 			pdfszContent += "</div>";
 			pdfszContent += "</body>";
 			pdfszContent += " </html>";
@@ -1293,24 +1278,29 @@ public class OrderController {
 	
             /////image변환//////////////////////////////////////////////////////////////////////////////////////
 	        
-		    /*
+		    
 	        HtmlImageGenerator imageGenerator = new HtmlImageGenerator();
-	        //imageGenerator.loadHtml(htmlStr);
+	        //imageGenerator.loadHtml(pdfszContent);
 	        imageGenerator.loadUrl(hostUrl+"/addon/order/orderdownload?orderCode="+orderCode);
 	        imageGenerator.saveAsImage(uploadFilePath+orderCode+".png");
 	        imageGenerator.saveAsHtmlWithMap(orderCode+".html", orderCode+".png");
-	        */
+	        
 	        
 	        ///////////////////////////////////////////////////////////////////////////////////////////////////        
 	        
 			EmailVO mail = new EmailVO();
 			
 			List<String> toEmails= new ArrayList();
+			List<String> toEmail_Ccs= new ArrayList();
 			List<String> attcheFileName= new ArrayList();
 			List<File> files = new ArrayList();
 
 			for(int m=0;m<getToMails.length;m++){	
 				toEmails.add(getToMails[m]);	
+			}
+			
+			for(int c=0;c<getToMail_Ccs.length;c++){	
+				toEmail_Ccs.add(getToMail_Ccs[c]);	
 			}
 
 			attcheFileName.add(orderCode+".html");
@@ -1330,6 +1320,7 @@ public class OrderController {
 			*/
 			
 			mail.setToEmails(toEmails);
+			mail.setToEmail_Ccs(toEmail_Ccs);
 			mail.setAttcheFileName(attcheFileName);
 			mail.setFile(files);
 
@@ -3442,6 +3433,69 @@ public class OrderController {
         mv.addObject("totalFMsg", totalFMsg);
         
         mv.setViewName("/order/barCodeCheckResult");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller deferReason end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    
+    /**
+     * 메모관리
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/mailcc")
+    public ModelAndView mailCc(HttpServletRequest request, 
+    		                       HttpServletResponse response,
+    		                       String cc) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller deferReason start cc:"+cc);
+
+        ModelAndView mv = new ModelAndView();
+        
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));    
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); 
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	        //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   	    work.setWorkIp(strIp);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
+       		return mv;
+		}
+        
+        mv.addObject("cc", cc);
+        mv.setViewName("/order/mailCc");
         
        //log Controller execute time end
       	long t2 = System.currentTimeMillis();

@@ -17,6 +17,7 @@ public class EmailVO extends AbstractVO {
 	 String msg;
 	 
 	 List<String> toEmails;
+	 List<String> toEmail_Ccs;
 	 List<String> attcheFileName;
 	 List<File> file;
 
@@ -65,7 +66,14 @@ public class EmailVO extends AbstractVO {
 	 public static long getSerialversionuid() {
 	  return serialVersionUID;
 	 }
-	 @Override
+	 
+	 public List<String> getToEmail_Ccs() {
+		return toEmail_Ccs;
+	}
+	public void setToEmail_Ccs(List<String> toEmail_Ccs) {
+		this.toEmail_Ccs = toEmail_Ccs;
+	}
+	@Override
 	 public String toString() {
 	  return "EmailVO [toEmail=" + toEmail + ", subject=" + subject
 	    + ", msg=" + msg + "]";
