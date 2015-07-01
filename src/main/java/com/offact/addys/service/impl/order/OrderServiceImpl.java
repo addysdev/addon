@@ -128,6 +128,7 @@ public class OrderServiceImpl implements OrderService {
 	
 	    	this.commonDao.insert("Order.deferReasonInsert", orderVo);
 	    	retVal=this.commonDao.update("Order.updateDefer", orderVo);
+	    	retVal=this.commonDao.update("Order.updateDeferCancel", orderVo);
 	
 	    }catch(Exception e){
 	    	

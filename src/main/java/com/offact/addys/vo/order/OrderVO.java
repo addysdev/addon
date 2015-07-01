@@ -103,6 +103,9 @@ public class OrderVO extends AbstractVO {
 	private String orderResultPriceView;
 	private String orderVatRate;
 	
+	private String priceOrder;
+	private String cntOrder;
+	
 	//최종 합계가격
 	private String supplyPrice;
 	private String vat;
@@ -684,6 +687,18 @@ public class OrderVO extends AbstractVO {
 	}
 	public void setEmail_cc(String email_cc) {
 		this.email_cc = email_cc;
+	}
+	public String getPriceOrder() {
+		return priceOrder;
+	}
+	public void setPriceOrder(String priceOrder) {
+		this.priceOrder = priceOrder;
+	}
+	public String getCntOrder() {
+		return cntOrder;
+	}
+	public void setCntOrder(String cntOrder) {
+		this.cntOrder = cntOrder;
 	}
 
 }

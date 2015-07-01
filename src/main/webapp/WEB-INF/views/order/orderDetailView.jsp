@@ -753,18 +753,18 @@ function totalTargetAmt(){
 	   <input type="hidden" name="orderName"               id="orderName"            value="${orderVO.orderName}" />
 	   <input type="hidden" name="deliveryDate"               id="deliveryDate"            value="${orderVO.deliveryDate}" />
 	      <div style="position:absolute; left:30px" >
-	      <c:if test="${orderVO.orderState=='03'}"><button id="deferbtn" type="button" class="btn btn-primary" onClick="fcDefer_reasonpop('R')" >보류</button></c:if>
+	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='06'}"><button id="deferbtn" type="button" class="btn btn-primary" onClick="fcDefer_reasonpop('R')" >보류</button></c:if>
 	      <!--  >button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button-->
 	      <c:if test="${orderVO.orderState=='04'}"><button id="defercancelbtn"  type="button" class="btn btn-danger" onClick="fcDefer_reasonpop('D')" >보류폐기</button></c:if>
 	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" class="btn btn-info" onClick="fcDefer_list('${orderVO.orderCode}')">보류사유</button></c:if>
-	      <c:if test="${orderVO.orderState=='03'}"><button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcOrder_complete()">검수완료</button></c:if>
-	      <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-default" onClick="goOrderExcel()">엑셀변환(구매입력)</button></c:if>
-	      <c:if test="${orderVO.orderState=='03'}"><button type="button" class="btn btn-success" onClick="fcOrderDetail_print('${orderVO.orderCode}')">인쇄</button></c:if>
+	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcOrder_complete()">검수완료</button></c:if>
+	      <c:if test="${orderVO.orderState=='06' && strAuth!= '03'}"><button type="button" class="btn btn-default" onClick="goOrderExcel()">엑셀변환(구매입력)</button></c:if>
+	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" class="btn btn-success" onClick="fcOrderDetail_print('${orderVO.orderCode}')">인쇄</button></c:if>
           </div>
           <div style="position:absolute; right:30px" >
           <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-warning" onClick="fcOrder_cancel()">취소</button></c:if>
           <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-primary" onClick="fcOrder_reMail()">재송부</button></c:if>
-          <c:if test="${orderVO.orderState=='06'}"><button type="button" class="btn btn-primary" onClick="fcOrder_buy()">등록완료</button></c:if>
+          <c:if test="${orderVO.orderState=='06' && strAuth!= '03'}"><button type="button" class="btn btn-primary" onClick="fcOrder_buy()">등록완료</button></c:if>
           </div>
           </tr>
           <br><br>
@@ -845,9 +845,9 @@ function totalTargetAmt(){
      <table style="width:460px" class="table table-bordered tbl_type" >
 	     <colgroup>
 	      <col width="80px" >
-	      <col width="50px" >
+	      <col width="70px" >
 	      <col width="80px" >
-	      <col width="50px">
+	      <col width="70px">
 	      <col width="100px">
 	      <col width="100px">
 	      <col width="100px">
@@ -869,7 +869,7 @@ function totalTargetAmt(){
 	     	<td class='text-right'><span id="totalOrderCnt" style="color:red"></span></td>
 	     	<td style="background-color:#E6F3FF">검수 합계금액</td>
 	     	<td class='text-right'><span id="totalOrderAmt" style="color:red"></span></td>	
-	     	<c:if test="${orderVO.orderState=='03'}"><td>&nbsp;<button type="button" class="btn btn-xs btn-info" onClick="fcBarCode_check()" >바코드 검수</button></td></c:if>
+	     	<c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><td>&nbsp;<button type="button" class="btn btn-xs btn-info" onClick="fcBarCode_check()" >바코드 검수</button></td></c:if>
 	     </tr>
      </table>
        <div class="thead">
@@ -932,7 +932,14 @@ function totalTargetAmt(){
 	        <c:if test="${!empty orderDetailList}">
              <c:forEach items="${orderDetailList}" var="orderVO" varStatus="status">
              	 <input type="hidden" id="seqs" name="seqs" >
-	             <tr id="barCodeCheckColor" >
+             	  <c:choose>
+	                <c:when test="${orderVO.priceOrder==0 || orderVO.cntOrder==0  }">
+						<tr id="barCodeCheckColor" style="background-color:#FEE2B4;color:red" >
+					</c:when>
+					<c:otherwise>
+						<tr id="barCodeCheckColor" >
+					</c:otherwise>
+				</c:choose>
 				 <input type="hidden" name="productCode" value="${orderVO.productCode}">
 				 <input type="hidden" name="barCode" value="${orderVO.barCode}">
 				 <input type="hidden" name="productName" value="${orderVO.productName}">

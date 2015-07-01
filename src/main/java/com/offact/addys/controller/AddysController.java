@@ -156,6 +156,8 @@ public class AddysController {
 		
 		ModelAndView  mv = new ModelAndView();
 
+		String workCode="CM001";
+		
 		String strUserId = StringUtil.nvl(request.getParameter("id"));
 		String strUserPw = StringUtil.nvl(request.getParameter("pwd"));
 		String sClientIP = StringUtil.nvl(request.getParameter("sClientIP"));
@@ -253,10 +255,19 @@ public class AddysController {
 				
 				logger.info(">>> 비밀번호 오류");
 				strMainUrl = "addys/loginFail";
+				workCode="CM006";
 				
 				mv.addObject("userId", strUserId);
 				
 				mv.setViewName(strMainUrl);
+				
+				//작업이력
+				WorkVO work = new WorkVO();
+				work.setWorkUserId(strUserId);
+				work.setWorkIp(strIp);
+				work.setWorkCategory("CM");
+				work.setWorkCode(workCode);
+				commonSvc.regiHistoryInsert(work);
 				
 				//log Controller execute time end
 		      	long t2 = System.currentTimeMillis();
@@ -348,6 +359,7 @@ public class AddysController {
 	
 				logger.info(">>> 상담App 사용자 정보 없음");
 				strMainUrl = "addys/loginFail";
+				workCode="CM005";
 			}
 			
 		    //작업이력
@@ -355,7 +367,7 @@ public class AddysController {
 			work.setWorkUserId(strUserId);
 			work.setWorkIp(strIp);
 			work.setWorkCategory("CM");
-			work.setWorkCode("CM001");
+			work.setWorkCode(workCode);
 			commonSvc.regiHistoryInsert(work);
 		
 			mv.addObject("userId", strUserId);

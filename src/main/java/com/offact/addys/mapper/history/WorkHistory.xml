@@ -62,6 +62,9 @@
                <when test="searchGubun.equals('02')">
            AND T1.workUserId  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
+               <when test="searchGubun.equals('03')">
+           AND T1.workKey1  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
              </choose>
            </if>
            <if test="searchKey1Value != null and searchKey1Value != ''" >
@@ -103,6 +106,9 @@
                </when>
                <when test="searchGubun.equals('02')">
            AND T1.workUserId  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+           		<when test="searchGubun.equals('03')">
+           AND T1.workKey1  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
              </choose>
            </if>

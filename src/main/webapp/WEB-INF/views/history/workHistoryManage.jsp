@@ -211,6 +211,7 @@
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
                 	<option value="01" >사용자명</option>
                     <option value="02" >사용자Id</option>
+                    <option value="03" >작업코드</option>
            		</select>
 				<label class="sr-only" for="searchValue"> 조회값 </label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${workConVO.searchKey1Value}" onkeypress="javascript:return checkKey(event);"/>

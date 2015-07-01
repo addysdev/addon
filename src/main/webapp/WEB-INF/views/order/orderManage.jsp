@@ -178,6 +178,7 @@
                     <option value="03" >업체코드</option>
                     <option value="06" >품목명</option>
            			<option value="05" >품목코드</option>
+           			<option value="07" >발주번호</option>
                 </select>
 				<label class="sr-only" for="searchValue"> 조회값 :</label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${orderConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>

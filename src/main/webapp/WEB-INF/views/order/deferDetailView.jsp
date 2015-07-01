@@ -700,9 +700,9 @@ function fcDefer_modify(reason){
        <table style="width:460px" class="table table-bordered tbl_type" >
 	     <colgroup>
 	      <col width="80px" >
-	      <col width="50px" >
+	      <col width="70px" >
 	      <col width="80px" >
-	      <col width="50px">
+	      <col width="70px">
 	      <col width="100px">
 	      <col width="100px">
 	     </colgroup>

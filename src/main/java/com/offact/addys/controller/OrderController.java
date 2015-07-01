@@ -1326,7 +1326,7 @@ public class OrderController {
 
 			mail.setFromEmail(orderfromemail);
 			mail.setMsg("애디스("+targetVO.getGroupName()+")지점 상품주문서 메일입니다.<br>"+targetVO.getDeliveryDate()+"까지 납품 부탁드립니다.<br><br><br>*첨부파일이 정상적으로 확인이 안되실 경우 아래 링크로 다시한번 다운로드 부탁드립니다.<br><a href='"+hostUrl+"/addon/order/orderdownload?orderCode="+orderCode+"' >[발주서 다운로드]</a><br><br>[연락처  정보]<br><br>(담당자)  "+targetVO.getOrderCharge()+"<br>(Tel)  "+
-			targetVO.getOrderTelNumber()+"<br>(핸드폰)  "+targetVO.getOrderMobilePhone()+"<br>(E-Mail)  "+targetVO.getOrderEmail()+"<br>(FAX)  "+targetVO.getOrderFaxNumber()+"<br><br><br>"+pdfszContent);
+			targetVO.getOrderTelNumber()+"<br>(핸드폰)  "+targetVO.getOrderMobilePhone()+"<br>(E-Mail)  "+targetVO.getOrderEmail()+"<br>(FAX)  "+targetVO.getOrderFaxNumber());
 			
 			
 			mail.setSubject("애디스 다이렉트 발주서");

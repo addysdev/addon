@@ -70,12 +70,34 @@
     }
 </SCRIPT>
      <form:form commandName="orderVO" name="orderPageListForm" method="post" action="" >
-      <p><span style="color:#FF9900"> <span class="glyphicon glyphicon-asterisk"></span> 전체건수 : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" /></span> 
-      <span style="color:blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[검수대기] :</font> <a href="javascript:stateSearch('03')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.waitCnt}" /></a>
-      &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[검수보류] :</font> <a href="javascript:stateSearch('04')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.deferCnt}" /></a>    
-	  &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[검수완료] :</font> <a href="javascript:stateSearch('06')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.completeCnt}" /></a>     
-	  &nbsp;&nbsp;&nbsp;&nbsp;<font style="color:#FF9900">[등록완료] :</font> <a href="javascript:stateSearch('07')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.registCnt}" /></a>
-	  </span></p>       
+	  <table style="width:630px" class="table table-bordered tbl_type" >
+	     <colgroup>
+	      <col width="80px" >
+	      <col width="50px" >
+	      <col width="80px" >
+	      <col width="50px">
+	      <col width="80px" >
+	      <col width="50px" >
+	      <col width="80px" >
+	      <col width="50px">
+	      <col width="80px" >
+	      <col width="50px">
+	     </colgroup>
+	     <tr>
+	     	<td class='text-center' style="background-color:#E6F3FF">전체건수</td>
+	     	<td class='text-right'><a href="javascript:stateSearch('')"><span style="color:red">
+	          <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" />
+	          </span></a></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">검수대기</td>
+	     	<td class='text-right'><a href="javascript:stateSearch('03')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.waitCnt}" /></a></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">검수보류</td>
+	     	<td class='text-right'><a href="javascript:stateSearch('04')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.deferCnt}" /></a></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">검수완료</td>
+	     	<td class='text-right'><a href="javascript:stateSearch('06')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.completeCnt}" /></a></td>
+	     	<td class='text-center' style="background-color:#E6F3FF">등록완료</td>
+	     	<td class='text-right'><a href="javascript:stateSearch('07')"><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${stateVO.registCnt}" /></a></td>
+	     </tr>
+     </table>     
 	  <table class="table table-bordered">
 	    <thead>
 	      <tr style="background-color:#E6F3FF">

@@ -43,10 +43,10 @@ window.print();
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/utils.js"></script>
 	<script>
 function totalTargetAmt(){
-    
+    	
     	var frm=document.orderDetailListForm;
     	var amtCnt = frm.productCode.length;
-
+    	
     	if(amtCnt==undefined){
     		amtCnt=1;
     	}
@@ -70,7 +70,6 @@ function totalTargetAmt(){
 	    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
 	    		vatamt=vatamt+sum_vatAmt;
 	    		totalcnt=totalcnt+orderCnt;
-	
 	    	}
 	    	
     	}else{
@@ -89,7 +88,7 @@ function totalTargetAmt(){
     	}
 
     	  totalamt=supplyamt+vatamt;
-
+    	  
     	  document.all('totalTargetCnt').innerText=' '+addCommaStr(''+totalcnt)+' 건';
     	  document.all('totalTargetAmt').innerText=' '+addCommaStr(''+totalamt)+' 원 ';// [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
     }
@@ -106,6 +105,7 @@ function totalTargetAmt(){
     	var vatamt=0;
     	var totalamt=0;
     	var totalcnt=0;
+    	var totalprodcnt=0;
     	
     	if(amtCnt > 1){
     		
@@ -122,7 +122,11 @@ function totalTargetAmt(){
 	    		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
 	    		vatamt=vatamt+sum_vatAmt;
 	    		totalcnt=totalcnt+orderCnt;
-	
+	    		
+	    		//if(orderCnt>0){
+		    		totalprodcnt++;
+	    		//}
+
 	    		document.all('orderTotalPriceView')[i].innerText=addCommaStr(''+(productPrice*orderCnt));
 	
 	    	}
@@ -140,12 +144,17 @@ function totalTargetAmt(){
     		var sum_vatAmt=Math.floor(+vatAmt)*orderCnt;
     		vatamt=vatamt+sum_vatAmt;
     		totalcnt=totalcnt+orderCnt;
+    		
+    		//if(orderCnt>0){
+	    		totalprodcnt++;
+    		//}
 
     		document.all('orderTotalPriceView').innerText=addCommaStr(''+(productPrice*orderCnt));
     	}
 
     	  totalamt=supplyamt+vatamt;
     	
+    	  document.all('totalProdCnt').innerText=' '+addCommaStr(''+totalprodcnt)+' 건';
     	  document.all('totalOrderCnt').innerText=' '+addCommaStr(''+totalcnt)+' 건';
     	  document.all('totalOrderAmt').innerText=' '+addCommaStr(''+totalamt)+' 원';//  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
     }
@@ -226,19 +235,36 @@ function totalTargetAmt(){
 	  </form:form>
 	 </div>
 	 <form:form commandName="orderListVO" id="orderDetailListForm" name="orderDetailListForm" method="post" action="" >
-      <p> <span class="glyphicon glyphicon-asterisk"></span> 
-          <span style="color:blue"> [품목건수] : <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderDetailList.size()}" /> 건   [발주 수량] </span>
-          <span id="totalTargetCnt" style="color:gray">
-          </span><span style="color:blue"> [발주 합계금액]</span>
-          <span id="totalTargetAmt" style="color:gray">
-          </span>  
-      <p><span class="glyphicon glyphicon-asterisk"></span>
-          <span style="color:blue">[검수 수량] </span>
-          <span id="totalOrderCnt" style="color:red"></span> 
-          <span style="color:blue"> [검수 합계금액] :</span>
-          <span id="totalOrderAmt" style="color:red">
-        </span>
-      </p> 
+      <table style="width:460px" class="table table-bordered tbl_type" >
+	     <colgroup>
+	      <col width="80px" >
+	      <col width="70px" >
+	      <col width="80px" >
+	      <col width="70px">
+	      <col width="100px">
+	      <col width="100px">
+	      <col width="100px">
+	     </colgroup>
+	     <tr>
+	     	<td style="background-color:#E6F3FF">발주 건수</td>
+	     	<td class='text-right'><span style="color:gray">
+	          <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderDetailList.size()}" /> 건  
+	          </span></td>
+	     	<td style="background-color:#E6F3FF">발주 수량</td>
+	     	<td class='text-right'><span id="totalTargetCnt" style="color:gray"></span></td>
+	     	<td style="background-color:#E6F3FF">발주 합계금액</td>
+	     	<td class='text-right'><span id="totalTargetAmt" style="color:gray"></span></td>
+	     </tr>
+	     <tr>
+	        <td style="background-color:#E6F3FF">검수 건수</td>
+	     	<td class='text-right'><span id="totalProdCnt" style="color:red"></span></td>
+	     	<td style="background-color:#E6F3FF">검수 수량</td>
+	     	<td class='text-right'><span id="totalOrderCnt" style="color:red"></span></td>
+	     	<td style="background-color:#E6F3FF">검수 합계금액</td>
+	     	<td class='text-right'><span id="totalOrderAmt" style="color:red"></span></td>	
+	     	<c:if test="${orderVO.orderState=='03'}"><td>&nbsp;<button type="button" class="btn btn-xs btn-info" onClick="fcBarCode_check()" >바코드 검수</button></td></c:if>
+	     </tr>
+     </table> 
 	  <table class="table table-bordered" >
       	<tr style="background-color:#E6F3FF">
           <th rowspan='2' class='text-center' >검수<br>

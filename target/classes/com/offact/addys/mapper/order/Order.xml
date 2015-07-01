@@ -76,6 +76,8 @@
   <result column="registCnt"        property="registCnt"  />
   <result column="deliveryName"        property="deliveryName"  />
   <result column="orderName"        property="orderName"  />
+  <result column="priceOrder"        property="priceOrder"  />
+  <result column="cntOrder"        property="cntOrder"  />
 </resultMap>
 
 <select id="getOrderPageList"  resultMap="orderVO" parameterType="com.offact.addys.vo.order.OrderVO" >
@@ -138,6 +140,9 @@
                <when test="searchGubun.equals('06')">
            			AND T7.productName  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
+                <when test="searchGubun.equals('07')">
+           			AND T1.orderCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
              </choose>
            </if>
            And T2.orderState not in ( '01','02')
@@ -151,6 +156,7 @@
            TEMP.groupName,
            TEMP.companyCode,
            TEMP.companyName
+    order by TEMP.orderDateTime desc , TEMP.groupId asc
 	LIMIT ${page_limit_val1} , ${page_limit_val2}
 		
 </select>
@@ -193,6 +199,9 @@
                		</when>
                		<when test="searchGubun.equals('06')">
            				AND T7.productName  LIKE CONCAT('%', #{searchValue}, '%')
+               		</when>
+               		<when test="searchGubun.equals('07')">
+           				AND T1.orderCode  LIKE CONCAT('%', #{searchValue}, '%')
                		</when>
              	</choose>
            		</if>
@@ -299,6 +308,8 @@ SELECT sum(TOT.waitCnt) AS waitCnt,
            T1.deferCheck,
            T1.orderCheck,
            T2.orderState,
+           case When T1.orderPrice = T1.orderResultPrice Then 1 Else 0 End priceOrder ,
+           case When T1.orderCnt = T1.orderResultCnt Then 1 Else 0 End cntOrder ,
            case When T1.safeStock > T1.stockCnt Then 0 Else 1 End stockOrder
   From adOrderDetail T1
        Left Join adOrder T2 On T1.orderCode=T2.orderCode
@@ -306,7 +317,11 @@ SELECT sum(TOT.waitCnt) AS waitCnt,
        Left Join adCompany T4 On T2.companyCode = T4.companyCode
        Left Join adProductMaster T5 On T1.productCode = T5.productCode
   Where T1.orderCode = #{orderCode}
-    Order by (case When T1.safeStock >= T1.stockCnt Then 0 Else 1 End ), T1.productCode ASC
+    Order by 
+    (case When T1.orderPrice = T1.orderResultPrice Then 1 Else 0 End ) ASC ,
+    (case When T1.orderCnt = T1.orderResultCnt Then 1 Else 0 End ) ASC ,
+    (case When T1.safeStock >= T1.stockCnt Then 0 Else 1 End ) ASC, 
+    T1.productCode ASC
 </select>
 
 <insert id="deferReasonInsert"  parameterType="com.offact.addys.vo.order.OrderVO" >
@@ -334,6 +349,19 @@ SELECT sum(TOT.waitCnt) AS waitCnt,
 				orderState = #{orderState}
             	,deferUserId = #{deferUserId}
             	,deferDateTime = now()
+		where orderCode = #{orderCode}
+		                        
+</update>
+
+<update id="updateDeferCancel"  parameterType="com.offact.addys.vo.order.OrderVO" >
+		update adOrderDetail 
+			set
+				orderResultPrice = orderPrice
+            	,orderResultCnt = orderCnt
+            	,orderVatRate = vatRate
+            	,orderCheck = 'N'
+            	,updateUserId = #{deferUserId}
+            	,updateDateTime = now()
 		where orderCode = #{orderCode}
 		                        
 </update>

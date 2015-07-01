@@ -7,7 +7,7 @@
 <head>
 <title>바코드 검수</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <style>
 	/* 서브타이틀 영역 (.sub_title) */
 	.sub_title { margin-bottom:20px; width:100%; height:43px; border-bottom:1px solid #ccc; }

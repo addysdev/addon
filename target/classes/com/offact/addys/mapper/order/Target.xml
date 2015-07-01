@@ -220,6 +220,7 @@
 			  Group By T1.groupID,
 			           T1.companyCode,
 			           T1.orderState
+			  Order by safeOrderCnt desc , groupID asc
 			  LIMIT ${page_limit_val1} , ${page_limit_val2}
 		
 </select>
