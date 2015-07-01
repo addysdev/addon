@@ -321,6 +321,7 @@ SELECT sum(TOT.waitCnt) AS waitCnt,
     (case When T1.orderPrice = T1.orderResultPrice Then 1 Else 0 End ) ASC ,
     (case When T1.orderCnt = T1.orderResultCnt Then 1 Else 0 End ) ASC ,
     (case When T1.safeStock >= T1.stockCnt Then 0 Else 1 End ) ASC, 
+    (select count(T6.idx) from adComment T6 Where T1.orderCode = T6.orderCode  And T1.productCode=T6.productCode And T6.commentCategory='04') DESC,
     T1.productCode ASC
 </select>
 
