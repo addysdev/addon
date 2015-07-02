@@ -122,6 +122,7 @@
 		                        faxNumber = #{faxNumber},
 		                        mobilePhone = #{mobilePhone},
 		                        email = #{email},
+		                        email_cc = #{email_cc},
 		                        chargeName = #{chargeName},
 		                        updateUserId = #{updateUserId},
 		                        updateDateTime =now(),

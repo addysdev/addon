@@ -673,33 +673,49 @@ public class ManageController {
              String[] cellItemTmp = new String[TOTAL_CELLS]; 
              for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
 	            myCell = row.getCell(cellcnt); 
-	            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
-	            	cellItemTmp[cellcnt] = String.valueOf(myCell.getNumericCellValue()); 
-	            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
-	            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
-	            }else{//그외 cell type
-	            	cellItemTmp[cellcnt] = ""; 
+	            
+	            if(myCell!=null){
+	            	
+		            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
+
+		            	String rawCell = String.valueOf(myCell.getNumericCellValue()); 
+		            	int endChoice = rawCell.lastIndexOf("E");
+		            	if(endChoice>0){
+		            		rawCell= rawCell.substring(0, endChoice);
+		            		rawCell= rawCell.replace(".", "");
+		            	}
+		            	cellItemTmp[cellcnt]=rawCell;
+	    	
+		            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
+		            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
+		            }else{//그외 cell type
+		            	cellItemTmp[cellcnt] = ""; 
+		            }
+		            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
+		            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
+	            }else{
+	            	
+	            	cellItemTmp[cellcnt]="";
+	            	
 	            }
-	            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
-	            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
 	         }
          
-	         if(cellItemTmp[0] != ""){
+	         if(cellItemTmp.length>1 && cellItemTmp[1] != ""){
 		        	 
-		        	 userManageVO.setUserName(cellItemTmp[1]); 
-		        	 userManageVO.setUserId(cellItemTmp[2]);
-		        	 userManageVO.setMobliePhone(cellItemTmp[3]);
-		        	 userManageVO.setGroupId(cellItemTmp[4]);
-		        	 userManageVO.setDeletedYn(cellItemTmp[5]); 
-		        	 userManageVO.setPassword(cellItemTmp[6]); 
-	       
-		             userManageVO.setCreateUserId(strUserId);
-		 	         userManageVO.setUpdateUserId(strUserId);
+	        	 if(cellItemTmp.length>1){ userManageVO.setUserName(cellItemTmp[1]);}
+	        	 if(cellItemTmp.length>2){ userManageVO.setUserId(cellItemTmp[2]);}
+	        	 if(cellItemTmp.length>3){ userManageVO.setMobliePhone(cellItemTmp[3]);}
+	        	 if(cellItemTmp.length>4){ userManageVO.setGroupId(cellItemTmp[4]);}
+	        	 if(cellItemTmp.length>5){ userManageVO.setDeletedYn(cellItemTmp[5]);}
+	        	 if(cellItemTmp.length>6){ userManageVO.setPassword(cellItemTmp[6]);}
 
-		             userUploadList.add(userManageVO);
-			         }
+	             userManageVO.setCreateUserId(strUserId);
+		 	     userManageVO.setUpdateUserId(strUserId);
+
+		 	     userUploadList.add(userManageVO);
+			 }
 		     	
-		       }
+		    }
            }catch (Exception e){
   
         	   e.printStackTrace();
@@ -1011,36 +1027,46 @@ public class ManageController {
                  String[] cellItemTmp = new String[TOTAL_CELLS]; 
 	   	         
                  for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
+                	 
 	   	            myCell = row.getCell(cellcnt); 
-	   	            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
-	   	            	
-	   	            	String rawCell = String.valueOf(myCell.getNumericCellValue());
-		            	int endChoice = rawCell.lastIndexOf("E");
-		            	if(endChoice>0){
-		            		rawCell= rawCell.substring(0, endChoice);
-			            	rawCell= rawCell.replace(".", "");
-		            	}
-		            	cellItemTmp[cellcnt]=rawCell;
-		            	
-	   	            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
-	   	            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
-	   	            }else{//그외 cell type
-	   	            	cellItemTmp[cellcnt] = ""; 
-	   	            }
-	   	            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
-	   	            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
+	   	            
+	   	            if(myCell!=null){
+                		
+		   	            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
+		   	            	
+		   	            	String rawCell = String.valueOf(myCell.getNumericCellValue());
+			            	int endChoice = rawCell.lastIndexOf("E");
+			            	if(endChoice>0){
+			            		rawCell= rawCell.substring(0, endChoice);
+				            	rawCell= rawCell.replace(".", "");
+			            	}
+			            	cellItemTmp[cellcnt]=rawCell;
+			            	
+		   	            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
+		   	            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
+		   	            }else{//그외 cell type
+		   	            	cellItemTmp[cellcnt] = ""; 
+		   	            }
+		   	            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
+		   	            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
+                	}else{
+                		
+                		cellItemTmp[cellcnt] = "";
+
+                	}
 	   	         }
    	         
-   	         if(cellItemTmp[0] != ""){
+   	         if(cellItemTmp.length>0 && cellItemTmp[0] != ""){
    	        	 
-   	        	 companyManageVO.setCompanyCode(cellItemTmp[0]); 
-   	        	 companyManageVO.setCompanyName(cellItemTmp[1]);
-   	        	 companyManageVO.setChargeName(cellItemTmp[2]);
-   	        	 companyManageVO.setMobilePhone(cellItemTmp[3]); 
-   	        	 companyManageVO.setCompanyPhone(cellItemTmp[4]); 
-   	        	 companyManageVO.setFaxNumber(cellItemTmp[5]); 
-   	        	 companyManageVO.setEmail(cellItemTmp[6]); 
-
+   	        	 if(cellItemTmp.length>0){ companyManageVO.setCompanyCode(cellItemTmp[0]);}
+   	        	 if(cellItemTmp.length>1){ companyManageVO.setCompanyName(cellItemTmp[1]);}
+   	        	 if(cellItemTmp.length>2){ companyManageVO.setChargeName(cellItemTmp[2]);}
+   	        	 if(cellItemTmp.length>3){ companyManageVO.setMobilePhone(cellItemTmp[3]);}
+   	        	 if(cellItemTmp.length>4){ companyManageVO.setCompanyPhone(cellItemTmp[4]);}
+   	        	 if(cellItemTmp.length>5){ companyManageVO.setFaxNumber(cellItemTmp[5]);}
+   	        	 if(cellItemTmp.length>6){ companyManageVO.setEmail(cellItemTmp[6]);}
+   	        	 if(cellItemTmp.length>7){ companyManageVO.setEmail_cc(cellItemTmp[7]);}
+   	        	
    	        	 companyManageVO.setCreateUserId(strUserId);
    	        	 companyManageVO.setUpdateUserId(strUserId);
    	        	 companyManageVO.setDeletedYn("N");

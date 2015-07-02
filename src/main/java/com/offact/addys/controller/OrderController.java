@@ -859,7 +859,7 @@ public class OrderController {
 			int num=0;
 			int totalnum=targetEailList.size();
 			int etcnum=0;
-			int maxlist=22;
+			int maxlist=20;
 			int resultlist=totalnum;
 			int removecnt=0;
 			int numcnt=0;
@@ -884,10 +884,10 @@ public class OrderController {
 				szContent += "</tr>";
 				szContent += "<tr>";
 				szContent += " <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>수<br></br>신</td>";
-				szContent += " <td width='80' align='center'>&nbsp;회사명</td>";
+				szContent += " <td width='90' align='center'>&nbsp;회사명</td>";
 				szContent += " <td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryName()+"</td>";
 				szContent += " <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>발<br></br>신</td>";
-				szContent += " <td width='80' align='center' >&nbsp;회사명</td>";
+				szContent += " <td width='90' align='center' >&nbsp;회사명</td>";
 				szContent += " <td colspan='3' align='center'>&nbsp;"+targetVO.getOrderName()+"</td>";
 				szContent += "</tr>";
 				szContent += "<tr>";
@@ -1011,7 +1011,7 @@ public class OrderController {
 	        out.close();                                            // 파일 쓰기 스트림 닫기
        
             //추가 주문서 레이아웃(PDF or JSP용)
-
+/*
 	        File pdffile = new File(pdfFileName);                        // 파일 생성
 	        OutputStream pdfout = new FileOutputStream(pdffile);            // 파일에 문자를 적을 스트림 생성
 
@@ -1046,7 +1046,7 @@ public class OrderController {
 			int pdfnum=0;
 			int pdftotalnum=targetEailList.size();
 			int pdfetcnum=0;
-			int pdfmaxlist=22;
+			int pdfmaxlist=20;
 			int pdfresultlist=pdftotalnum;
 			int pdfremovecnt=0;
 			int pdfnumcnt=0;
@@ -1071,10 +1071,10 @@ public class OrderController {
 				pdfszContent += "</tr>";
 				pdfszContent += "<tr>";
 				pdfszContent += " <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>수<br></br>신</td>";
-				pdfszContent += " <td width='80' align='center'>&nbsp;회사명</td>";
+				pdfszContent += " <td width='90' align='center'>&nbsp;회사명</td>";
 				pdfszContent += " <td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryName()+"</td>";
 				pdfszContent += " <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>발<br></br>신</td>";
-				pdfszContent += " <td width='80' align='center' >&nbsp;회사명</td>";
+				pdfszContent += " <td width='90' align='center' >&nbsp;회사명</td>";
 				pdfszContent += " <td colspan='3' align='center'>&nbsp;"+targetVO.getOrderName()+"</td>";
 				pdfszContent += "</tr>";
 				pdfszContent += "<tr>";
@@ -1196,7 +1196,7 @@ public class OrderController {
 	        
 			pdfout.write(pdfszContent.getBytes());                        // 파일에 쓰기
 			pdfout.close();                           
-	  
+*/	  
 	        // PDF 변환1 (linux서버에서 한글변환문제 있음)
 			/*
 	        // step 1
@@ -1223,7 +1223,7 @@ public class OrderController {
 	        */   
 			
 	        // PDF 변환2(폰트 및 CSS적용)
-		    
+/*		    
 	        Document document = new Document(PageSize.A4, 0, 0, 0, 0); // 용지 및 여백 설정
 	             
 	        // PdfWriter 생성
@@ -1287,7 +1287,7 @@ public class OrderController {
 	        
 	        
 	        ///////////////////////////////////////////////////////////////////////////////////////////////////        
-	        
+	*/		        
 			EmailVO mail = new EmailVO();
 			
 			List<String> toEmails= new ArrayList();
@@ -1305,7 +1305,7 @@ public class OrderController {
 
 			attcheFileName.add(orderCode+".html");
 			files.add(file);
-			
+	
 			//추가 파일 첨부
 			/*
 			attcheFileName.add(orderCode+".pdf");

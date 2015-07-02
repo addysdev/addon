@@ -120,15 +120,15 @@
       <input type="hidden" ip="groupId" name="groupId" value="" >
       <input type="hidden" ip="con_applyDateCnt" name="con_applyDateCnt" value="" >
       <input type="hidden" ip="recomendCnt" name="recomendCnt" value="" >
-      <p><table   class="table table-bordered tbl_type" >
+      <p><table style="width:880px" class="table table-bordered tbl_type" >
 	     <colgroup>
+	      <col width="90px" >
 	      <col width="100px" >
-	      <col width="100px" >
-	      <col width="100px" >
+	      <col width="150px" >
 	      <col width="100px">
+	      <col width="180px" >
 	      <col width="100px" >
-	      <col width="100px" >
-	      <col width="100px" >
+	      <col width="150px" >
 	      <col width="100px">
 	     </colgroup>
 	     <tr>

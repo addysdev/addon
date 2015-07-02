@@ -316,6 +316,8 @@ public class MasterController {
      logger.info("["+logid+"] Controller start : fileVO" + fileVO);
    			
      ModelAndView mv = new ModelAndView();
+     
+     String fname="";
 
   // 사용자 세션정보
      HttpSession session = request.getSession();
@@ -323,6 +325,11 @@ public class MasterController {
      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
      String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
      String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+     
+   //오늘 날짜
+     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+     Date currentTime = new Date();
+     String strToday = simpleDateFormat.format(currentTime);
      
      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
      	
@@ -347,7 +354,7 @@ public class MasterController {
 		}
 
      ResourceBundle rb = ResourceBundle.getBundle("config");
-     String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
+     String uploadFilePath = rb.getString("offact.upload.path") + "excel/productmaster/"+strToday+"/";
      
      this.logger.debug("파일정보:" + fileName + extension);
      this.logger.debug("file:" + fileVO);
@@ -370,7 +377,9 @@ public class MasterController {
        {
          for (MultipartFile multipartFile : files)
          {
-           orgFileName = multipartFile.getOriginalFilename();
+           orgFileName = t1 +"."+ extension;
+           boolean check=setDirectory(uploadFilePath);
+           
            String filePath = uploadFilePath;
 
            File file = new File(filePath + orgFileName);
@@ -380,7 +389,7 @@ public class MasterController {
     
        }
 
-       String fname = uploadFilePath + orgFileName;
+       fname = uploadFilePath + orgFileName;
 
        FileInputStream fileInput = null;
 
@@ -408,69 +417,83 @@ public class MasterController {
 	             XSSFRow row = sheet.getRow(rowcnt);
 
 	             //cell type 구분하여 담기  
-             String[] cellItemTmp = new String[TOTAL_CELLS]; 
-	         for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
-	            myCell = row.getCell(cellcnt); 
-	            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
-	            	String rawCell = String.valueOf(myCell.getNumericCellValue());
-	            	int endChoice = rawCell.lastIndexOf("E");
-	            	if(endChoice>0){
-	            		rawCell= rawCell.substring(0, endChoice);
-		            	rawCell= rawCell.replace(".", "");
-	            	}
-	            	cellItemTmp[cellcnt]=rawCell;
-	            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
-	            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
-	            }else{//그외 cell type
-	            	cellItemTmp[cellcnt] = ""; 
-	            }
-	            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
-	            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
-	         }
+	             String[] cellItemTmp = new String[TOTAL_CELLS]; 
+		         for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
+		            myCell = row.getCell(cellcnt); 
+		            
+		            if(myCell!=null){
+			            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
+			            	String rawCell = String.valueOf(myCell.getNumericCellValue());
+			            	int endChoice = rawCell.lastIndexOf("E");
+			            	if(endChoice>0){
+			            		rawCell= rawCell.substring(0, endChoice);
+				            	rawCell= rawCell.replace(".", "");
+			            	}
+			            	cellItemTmp[cellcnt]=rawCell;
+			            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
+			            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
+			            }else{//그외 cell type
+			            	cellItemTmp[cellcnt] = ""; 
+			            }
+			            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
+			            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
+		            }else{
+		            	
+		            	cellItemTmp[cellcnt] = "";
+		            }
+		         }
 	         
-	         if(cellItemTmp[0] != ""){
-	        	 
-	        	 productMasterVO.setProductCode(cellItemTmp[0]); 
-            	 productMasterVO.setBarCode(cellItemTmp[1]);
-            	 productMasterVO.setProductName(cellItemTmp[2]);
-            	 productMasterVO.setProductPrice(cellItemTmp[3]); 
-            	 productMasterVO.setVatRate(cellItemTmp[4]); 
-            	 productMasterVO.setCompanyCode(cellItemTmp[5]); 
-            	 productMasterVO.setGroup1(cellItemTmp[6]); 
-            	 productMasterVO.setGroup1Name(cellItemTmp[7]);
-            	 productMasterVO.setGroup2(cellItemTmp[8]);
-            	 productMasterVO.setGroup2Name(cellItemTmp[9]); 
-            	 productMasterVO.setGroup3(cellItemTmp[10]);
-            	 productMasterVO.setGroup3Name(cellItemTmp[11]); 
-
-	             productMasterVO.setCreateUserId(strUserId);
-	             productMasterVO.setUpdateUserId(strUserId);
-	             productMasterVO.setDeletedYn("N");
-		
-		             excelUploadList.add(productMasterVO);
+		         if(cellItemTmp.length>0 && cellItemTmp[0] != ""){
+		        	 
+		        	 if(cellItemTmp.length>0){ productMasterVO.setProductCode(cellItemTmp[0]);}
+		        	 if(cellItemTmp.length>1){ productMasterVO.setBarCode(cellItemTmp[1]);}
+		        	 if(cellItemTmp.length>2){ productMasterVO.setProductName(cellItemTmp[2]);}
+		        	 if(cellItemTmp.length>3){ productMasterVO.setProductPrice(cellItemTmp[3]);}
+		        	 if(cellItemTmp.length>4){ productMasterVO.setVatRate(cellItemTmp[4]);}
+		        	 if(cellItemTmp.length>5){ productMasterVO.setCompanyCode(cellItemTmp[5]);}
+		        	 if(cellItemTmp.length>6){ productMasterVO.setGroup1(cellItemTmp[6]);}
+		        	 if(cellItemTmp.length>7){ productMasterVO.setGroup1Name(cellItemTmp[7]);}
+		        	 if(cellItemTmp.length>8){ productMasterVO.setGroup2(cellItemTmp[8]);}
+		        	 if(cellItemTmp.length>9){ productMasterVO.setGroup2Name(cellItemTmp[9]);}
+		        	 if(cellItemTmp.length>10){ productMasterVO.setGroup3(cellItemTmp[10]);}
+		        	 if(cellItemTmp.length>11){ productMasterVO.setGroup3Name(cellItemTmp[11]);}
+	
+		             productMasterVO.setCreateUserId(strUserId);
+		             productMasterVO.setUpdateUserId(strUserId);
+		             productMasterVO.setDeletedYn("N");
+			
+			         excelUploadList.add(productMasterVO);
 		         }
 		     	
 		       }
            }catch (Exception e){
   
    	    	  excelInfo = excelInfo+"[error] : "+e.getMessage();
-    	  ProductMasterVO productMasterVO = new ProductMasterVO();
-    	  productMasterVO.setErrMsg(excelInfo);
-    	 
-    	  this.logger.info("["+logid+"] Controller getErrMsg : "+productMasterVO.getErrMsg());
-         
-    	  rtnErrorList.add(productMasterVO);
-
-          mv.addObject("rtnErrorList", rtnErrorList);
-          mv.addObject("rtnSuccessList", rtnSuccessList);
-
-          mv.setViewName("/master/uploadResult");
-          
-          //log Controller execute time end
-          long t2 = System.currentTimeMillis();
-          logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
-  	 	
-          return mv;
+	    	  ProductMasterVO productMasterVO = new ProductMasterVO();
+	    	  productMasterVO.setErrMsg(excelInfo);
+	    	 
+	    	  this.logger.info("["+logid+"] Controller getErrMsg : "+productMasterVO.getErrMsg());
+	         
+	    	  rtnErrorList.add(productMasterVO);
+	
+	          mv.addObject("rtnErrorList", rtnErrorList);
+	          mv.addObject("rtnSuccessList", rtnSuccessList);
+	
+	          mv.setViewName("/master/uploadResult");
+	          
+	          //작업이력
+	    	  WorkVO work = new WorkVO();
+	    	  work.setWorkUserId(strUserId);
+	    	  work.setWorkCategory("PD");
+	    	  work.setWorkCode("PD005");
+	    	  work.setWorkKey3(fname);
+	    	  commonSvc.regiHistoryInsert(work);
+	          
+	          //log Controller execute time end
+	          long t2 = System.currentTimeMillis();
+	          logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	  	 	
+	          return mv;
     	   
        	}
      }
@@ -496,6 +519,7 @@ public class MasterController {
 	  work.setWorkUserId(strUserId);
 	  work.setWorkCategory("PD");
 	  work.setWorkCode("PD001");
+	  work.setWorkKey3(fname);
 	  commonSvc.regiHistoryInsert(work);
 	 
      //log Controller execute time end
@@ -635,12 +659,20 @@ public class MasterController {
 	  			
 	    ModelAndView mv = new ModelAndView();
 	    
+	    String fname ="";
+	    
 	 // 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
         String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
+      //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
@@ -663,9 +695,17 @@ public class MasterController {
         	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
+        
+        String excelPath="";
+        
+        if("hold".equals(importType)){
+        	excelPath="excel/holdmaster/";
+        }else{
+        	excelPath="excel/safemaster/";
+        }
 	
 	    ResourceBundle rb = ResourceBundle.getBundle("config");
-	    String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
+	    String uploadFilePath = rb.getString("offact.upload.path") + excelPath+strToday+"/";
 	    
 	    this.logger.debug("파일정보:" + fileName + extension);
 	    this.logger.debug("file:" + fileVO);
@@ -688,7 +728,9 @@ public class MasterController {
 	      {
 	        for (MultipartFile multipartFile : files)
 	        {
-	          orgFileName = multipartFile.getOriginalFilename();
+	          orgFileName = t1 +"."+ extension;
+	          boolean check=setDirectory(uploadFilePath);
+	          
 	          String filePath = uploadFilePath;
 	
 	          File file = new File(filePath + orgFileName);
@@ -698,7 +740,7 @@ public class MasterController {
 	   
 	      }
 	
-	      String fname = uploadFilePath + orgFileName;
+	      fname = uploadFilePath + orgFileName;
 	
 	      FileInputStream fileInput = null;
 	
@@ -758,23 +800,28 @@ public class MasterController {
 	              	  String excelStock="";
 	        		  
 	        		  //품목코드담기
-	        		  productCodeCell = row.getCell(0); 
-		              if(productCodeCell.getCellType()==0){ //cell type 이 숫자인경우
-		          
-		            	 String rawCell = String.valueOf(productCodeCell.getNumericCellValue());
-		            	 int endChoice = rawCell.lastIndexOf("E");
-		            	 if(endChoice>0){
-		            		rawCell= rawCell.substring(0, endChoice);
-			            	rawCell= rawCell.replace(".", "");
-		            	 }
-		            	 excelProductCode=rawCell;
-		            	 
-		              }else if(productCodeCell.getCellType()==1){ //cell type 이 일반/문자 인경우
-		            	 excelProductCode=productCodeCell.getStringCellValue();
-		              }else{//그외 cell type
-		            	stockMasterResultVO.setProductCode(""); 
-		            	excelProductCode="";
-		              }
+	        		  productCodeCell = row.getCell(0);
+	        		  
+	        		  if(productCodeCell!=null){
+			              if(productCodeCell.getCellType()==0){ //cell type 이 숫자인경우
+			          
+			            	 String rawCell = String.valueOf(productCodeCell.getNumericCellValue());
+			            	 int endChoice = rawCell.lastIndexOf("E");
+			            	 if(endChoice>0){
+			            		rawCell= rawCell.substring(0, endChoice);
+				            	rawCell= rawCell.replace(".", "");
+			            	 }
+			            	 excelProductCode=rawCell;
+			            	 
+			              }else if(productCodeCell.getCellType()==1){ //cell type 이 일반/문자 인경우
+			            	 excelProductCode=productCodeCell.getStringCellValue();
+			              }else{//그외 cell type
+			            	stockMasterResultVO.setProductCode(""); 
+			            	excelProductCode="";
+			              }
+	        		  }else{
+	        			  excelProductCode="";
+	        		  }
 	        		  
 		              //그룹아이디 담기
 	        		  stockGroupVO= (StockMasterVO)stockGroupList.get(groupcnt);
@@ -782,17 +829,22 @@ public class MasterController {
 	        		  
 	        		  //재고 담기
 	        		  safeStockCell = row.getCell(MASTER_RE_START++); 
-		              if(safeStockCell.getCellType()==0){ //cell type 이 숫자인경우
-		            	  excelStock=String.valueOf(safeStockCell.getNumericCellValue());
-		              }else if(safeStockCell.getCellType()==1){ //cell type 이 일반/문자 인경우
-		            	  excelStock=String.valueOf(safeStockCell.getStringCellValue());
-		              }else{//그외 cell type
-		            	  excelStock="";
-		              }
-		              
-		              stockMasterResultVO.setProductCode(excelProductCode);
-	      		      stockMasterResultVO.setGroupId(excelGroupId);
-	      		      
+	        		  
+	        		  if(safeStockCell!=null){
+			              if(safeStockCell.getCellType()==0){ //cell type 이 숫자인경우
+			            	  excelStock=String.valueOf(safeStockCell.getNumericCellValue());
+			              }else if(safeStockCell.getCellType()==1){ //cell type 이 일반/문자 인경우
+			            	  excelStock=String.valueOf(safeStockCell.getStringCellValue());
+			              }else{//그외 cell type
+			            	  excelStock="";
+			              }
+	        		  }else{
+	        			  excelStock="";
+	        		  }
+			          
+	        		  stockMasterResultVO.setProductCode(excelProductCode);
+			          stockMasterResultVO.setGroupId(excelGroupId);
+	
 	      		      if("hold".equals(importType)){
 	      		    	  stockMasterResultVO.setHoldStock(excelStock);
 	      		      }else{
@@ -824,6 +876,19 @@ public class MasterController {
 	  	          mv.addObject("rtnSuccessList", rtnSuccessList);
 	
 	  	          mv.setViewName("/master/uploadResult");
+	  	          
+	  		     //작업이력
+	  	          WorkVO work = new WorkVO();
+	  		    
+	  		      if("hold".equals(importType)){
+	  		    	  work.setWorkCode("PD007");
+	  		      }else{
+	  		    	  work.setWorkCode("PD006");
+	  		      }
+	  			  work.setWorkUserId(strUserId);
+	  			  work.setWorkCategory("PD");
+	  			  work.setWorkKey3(fname);
+	  			  commonSvc.regiHistoryInsert(work);
 	  	    	 
 	  	          //log Controller execute time end
 	  	          long t2 = System.currentTimeMillis();
@@ -844,11 +909,11 @@ public class MasterController {
 	     if("hold".equals(importType)){
 	    	 this.logger.info("보유재고 DB Insert");
 	    	 rtmMap = this.stockMasterSvc.holdRegiExcelUpload(stockMasterListResult);
-	    	 work.setWorkCode("PD002");
+	    	 work.setWorkCode("PD003");
 	     }else{
 	    	 this.logger.info("안전재고 DB Insert");
 	    	 rtmMap = this.stockMasterSvc.safeRegiExcelUpload(stockMasterListResult);
-	    	 work.setWorkCode("PD003");
+	    	 work.setWorkCode("PD002");
 	     }
 	
 	     rtnErrorList = (List)rtmMap.get("rtnErrorList");
@@ -868,8 +933,8 @@ public class MasterController {
 
 		 work.setWorkUserId(strUserId);
 		 work.setWorkCategory("PD");
-		 
-		  commonSvc.regiHistoryInsert(work);
+		 work.setWorkKey3(fname);
+		 commonSvc.regiHistoryInsert(work);
 	
 	    //log Controller execute time end
 	     long t2 = System.currentTimeMillis();
@@ -1306,13 +1371,15 @@ public class MasterController {
    			
      ModelAndView mv = new ModelAndView();
      
+     String fname ="";
+     
   // 사용자 세션정보
      HttpSession session = request.getSession();
      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
      String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
      String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
-     
+
      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
      	
      	strIp = request.getRemoteAddr(); //로그인 상태처리		
@@ -1334,9 +1401,11 @@ public class MasterController {
      	mv.setViewName("/addys/loginForm");
     		return mv;
 		}
+     
+     String excelPath="excel/stock/"+upload_groupId+"/"+upload_stockDate+"/";
 
      ResourceBundle rb = ResourceBundle.getBundle("config");
-     String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
+     String uploadFilePath = rb.getString("offact.upload.path") + excelPath;
      
      this.logger.debug("파일정보:" + fileName + extension);
      this.logger.debug("file:" + fileVO);
@@ -1367,6 +1436,13 @@ public class MasterController {
          for (MultipartFile multipartFile : files)
          {
            orgFileName = multipartFile.getOriginalFilename();
+           
+           this.logger.debug("orgFileName 1 :" + orgFileName);
+           orgFileName = t1 +"."+ extension;
+           this.logger.debug("orgFileName 2 :" + orgFileName);
+        		   
+           boolean check=setDirectory(uploadFilePath);
+           
            String filePath = uploadFilePath;
 
            File file = new File(filePath + orgFileName);
@@ -1376,7 +1452,7 @@ public class MasterController {
     
        }
 
-       String fname = uploadFilePath + orgFileName;
+       fname = uploadFilePath + orgFileName;
 
        FileInputStream fileInput = null;
 
@@ -1407,32 +1483,38 @@ public class MasterController {
 	             String[] cellItemTmp = new String[TOTAL_CELLS]; 
 	             for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
 		            myCell = row.getCell(cellcnt); 
-		            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
-
-		            	String rawCell = String.valueOf(myCell.getNumericCellValue()); 
-		            	int endChoice = rawCell.lastIndexOf("E");
-		            	if(endChoice>0){
-		            		rawCell= rawCell.substring(0, endChoice);
-		            		rawCell= rawCell.replace(".", "");
-		            	}
-		            	cellItemTmp[cellcnt]=rawCell;
+		            
+		            if(myCell!=null){
 		            	
-		            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
-		            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
-		            }else{//그외 cell type
-		            	cellItemTmp[cellcnt] = ""; 
+			            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
+	
+			            	String rawCell = String.valueOf(myCell.getNumericCellValue()); 
+			            	int endChoice = rawCell.lastIndexOf("E");
+			            	if(endChoice>0){
+			            		rawCell= rawCell.substring(0, endChoice);
+			            		rawCell= rawCell.replace(".", "");
+			            	}
+			            	cellItemTmp[cellcnt]=rawCell;
+			            	
+			            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
+			            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
+			            }else{//그외 cell type
+			            	cellItemTmp[cellcnt] = ""; 
+			            }
+			            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
+			            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
+		            }else{
+		            	cellItemTmp[cellcnt] = "";
 		            }
-		            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
-		            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
 		         }
 	         
-		         if(cellItemTmp[0] != ""){
+		         if(cellItemTmp.length>0 && cellItemTmp[0] != ""){
 		        	 
-		        	 stockVO.setProductCode(cellItemTmp[0]); 
-		        	 stockVO.setStockCnt(cellItemTmp[3]);
-		        	 stockVO.setProductPrice(cellItemTmp[4]);
-		        	 stockVO.setStockPrice(cellItemTmp[5]);
-	
+		        	 if(cellItemTmp.length>0){ stockVO.setProductCode(cellItemTmp[0]);}
+		        	 if(cellItemTmp.length>3){ stockVO.setStockCnt(cellItemTmp[3]);}
+		        	 if(cellItemTmp.length>4){ stockVO.setProductPrice(cellItemTmp[4]);}
+		        	 if(cellItemTmp.length>5){ stockVO.setStockPrice(cellItemTmp[5]);}
+
 		        	 stockVO.setLastUserId(strUserId);
 		        	 stockVO.setStockDate(stockDate);
 		        	 stockVO.setGroupId(upload_groupId);
@@ -1458,6 +1540,14 @@ public class MasterController {
 	          mv.addObject("errorMsgList", errorMsgList);
 
 	          mv.setViewName("/master/uploadResult");
+	          
+		        //작업이력
+		     	 WorkVO work = new WorkVO();
+		     	 work.setWorkUserId(strUserId);
+		     	 work.setWorkCategory("ST");
+		     	 work.setWorkCode("ST002");
+		     	 work.setWorkKey3(fname);
+		     	 commonSvc.regiHistoryInsert(work);
     	 
 	          //log Controller execute time end
 	          long t2 = System.currentTimeMillis();
@@ -1489,6 +1579,7 @@ public class MasterController {
 	 work.setWorkUserId(strUserId);
 	 work.setWorkCategory("ST");
 	 work.setWorkCode("ST001");
+	 work.setWorkKey3(fname);
 	 commonSvc.regiHistoryInsert(work);
 
      //log Controller execute time end
@@ -1893,6 +1984,7 @@ public class MasterController {
   			
     ModelAndView mv = new ModelAndView();
 
+    String fname ="";
 
  // 사용자 세션정보
     HttpSession session = request.getSession();
@@ -1900,6 +1992,11 @@ public class MasterController {
     String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
     String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
     String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+    
+    //오늘 날짜
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+    Date currentTime = new Date();
+    String strToday = simpleDateFormat.format(currentTime);
     
     if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
     	
@@ -1923,9 +2020,11 @@ public class MasterController {
    		return mv;
 	}
 
+    String excelPath="excel/sales/"+upload_groupId+"/"+upload_salesDate+"/";
+
     ResourceBundle rb = ResourceBundle.getBundle("config");
-    String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
-    
+    String uploadFilePath = rb.getString("offact.upload.path") + excelPath;
+
     this.logger.debug("파일정보:" + fileName + extension);
     this.logger.debug("file:" + fileVO);
 
@@ -1955,6 +2054,12 @@ public class MasterController {
         for (MultipartFile multipartFile : files)
         {
           orgFileName = multipartFile.getOriginalFilename();
+          this.logger.debug("orgFileName 1 :" + orgFileName);
+          orgFileName = t1 +"."+ extension;
+          this.logger.debug("orgFileName 2 :" + orgFileName);
+       		   
+          boolean check=setDirectory(uploadFilePath);
+
           String filePath = uploadFilePath;
 
           File file = new File(filePath + orgFileName);
@@ -1964,7 +2069,7 @@ public class MasterController {
    
       }
 
-      String fname = uploadFilePath + orgFileName;
+      fname = uploadFilePath + orgFileName;
 
       FileInputStream fileInput = null;
 
@@ -1995,34 +2100,40 @@ public class MasterController {
              String[] cellItemTmp = new String[TOTAL_CELLS]; 
              for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
 	            myCell = row.getCell(cellcnt); 
-	            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
-
-	            	String rawCell = String.valueOf(myCell.getNumericCellValue()); 
-	            	int endChoice = rawCell.lastIndexOf("E");
-	            	if(endChoice>0){
-	            		rawCell= rawCell.substring(0, endChoice);
-	            		rawCell= rawCell.replace(".", "");
-	            	}
-	            	cellItemTmp[cellcnt]=rawCell;
-    	
-	            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
-	            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
-	            }else{//그외 cell type
+	            
+	            if(myCell!=null){
+	          
+		            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
+	
+		            	String rawCell = String.valueOf(myCell.getNumericCellValue()); 
+		            	int endChoice = rawCell.lastIndexOf("E");
+		            	if(endChoice>0){
+		            		rawCell= rawCell.substring(0, endChoice);
+		            		rawCell= rawCell.replace(".", "");
+		            	}
+		            	cellItemTmp[cellcnt]=rawCell;
+	    	
+		            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
+		            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
+		            }else{//그외 cell type
+		            	cellItemTmp[cellcnt] = ""; 
+		            }
+		            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
+		            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
+	            }else{
 	            	cellItemTmp[cellcnt] = ""; 
 	            }
-	            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
-	            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
 	         }
          
-	         if(cellItemTmp[0] != ""){
+	         if(cellItemTmp.length>0 && cellItemTmp[0] != ""){
 	        	 
-	        	 salesVO.setProductCode(cellItemTmp[1]); 
-	        	 salesVO.setSalesCnt(cellItemTmp[4]);
-	        	 salesVO.setProductPrice(cellItemTmp[5]);
-	        	 salesVO.setSupplyPrice(cellItemTmp[6]);
-	        	 salesVO.setVat(cellItemTmp[7]);
-	        	 salesVO.setSalesPrice(cellItemTmp[8]);
-
+	        	 if(cellItemTmp.length>1){ salesVO.setProductCode(cellItemTmp[1]);}
+	        	 if(cellItemTmp.length>4){ salesVO.setSalesCnt(cellItemTmp[4]);}
+	        	 if(cellItemTmp.length>5){ salesVO.setProductPrice(cellItemTmp[5]);}
+	        	 if(cellItemTmp.length>6){ salesVO.setSupplyPrice(cellItemTmp[6]);}
+	        	 if(cellItemTmp.length>7){ salesVO.setVat(cellItemTmp[7]);}
+	        	 if(cellItemTmp.length>8){ salesVO.setSalesPrice(cellItemTmp[8]);}
+	        	 
 	        	 salesVO.setUpdateUserId(strUserId);
 	        	 salesVO.setSalesDate(salesDate);
 	        	 salesVO.setGroupId(upload_groupId);
@@ -2054,7 +2165,8 @@ public class MasterController {
      	  WorkVO work = new WorkVO();
      	  work.setWorkUserId(strUserId);
      	  work.setWorkCategory("SA");
-     	  work.setWorkCode("SA001");
+     	  work.setWorkCode("SA002");
+     	  work.setWorkKey3(fname);
      	  commonSvc.regiHistoryInsert(work);
    	 
           //log Controller execute time end
@@ -2082,6 +2194,14 @@ public class MasterController {
     mv.addObject("errorMsgList", errorMsgList);
       
     mv.setViewName("/master/uploadResult");
+    
+    //작업이력
+	  WorkVO work = new WorkVO();
+	  work.setWorkUserId(strUserId);
+	  work.setWorkCategory("SA");
+	  work.setWorkCode("SA001");
+	  work.setWorkKey3(fname);
+	  commonSvc.regiHistoryInsert(work);
 
     //log Controller execute time end
     long t2 = System.currentTimeMillis();
@@ -2772,26 +2892,34 @@ public class MasterController {
 		             String[] cellItemTmp = new String[TOTAL_CELLS]; 
 		             for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
 			            myCell = row.getCell(cellcnt); 
-			            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
-
-			            	String rawCell = String.valueOf(myCell.getNumericCellValue()); 
-			            	int endChoice = rawCell.lastIndexOf("E");
-			            	if(endChoice>0){
-			            		rawCell= rawCell.substring(0, endChoice);
-			            		rawCell= rawCell.replace(".", "");
-			            	}
-			            	cellItemTmp[cellcnt]=rawCell;
-		    	
-			            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
-			            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
-			            }else{//그외 cell type
-			            	cellItemTmp[cellcnt] = ""; 
+			            
+			            if(myCell!=null){
+			            	
+				            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
+	
+				            	String rawCell = String.valueOf(myCell.getNumericCellValue()); 
+				            	int endChoice = rawCell.lastIndexOf("E");
+				            	if(endChoice>0){
+				            		rawCell= rawCell.substring(0, endChoice);
+				            		rawCell= rawCell.replace(".", "");
+				            	}
+				            	cellItemTmp[cellcnt]=rawCell;
+			    	
+				            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
+				            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
+				            }else{//그외 cell type
+				            	cellItemTmp[cellcnt] = ""; 
+				            }
+				            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
+				            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
+			            }else{
+			            	
+			            	cellItemTmp[cellcnt]="";
+			            	
 			            }
-			            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
-			            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
 			         }
 		         
-			         if(cellItemTmp[0] != ""){
+			         if(cellItemTmp.length>0 && cellItemTmp[0] != ""){
 			        	 
 			        	 companyVO.setCompanyCode(cellItemTmp[0]); 
 				
@@ -3068,4 +3196,15 @@ public class MasterController {
  		
  		return mv;
  	}
+  
+  /**
+	 * 업로드 디렉토리 세팅
+	 */
+	private static boolean setDirectory( String directory) {
+		File wantedDirectory = new File(directory);
+		if (wantedDirectory.isDirectory())
+			return true;
+	    
+		return wantedDirectory.mkdirs();
+	}
 }

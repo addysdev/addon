@@ -33,6 +33,7 @@
             <th class='text-center'>전화번호</th>
             <th class='text-center'>FAX</th>
             <th class='text-center'>발주e-mail</th>
+            <th class='text-center'>참조e-mail</th>
 	      </tr>
 	    </thead>
 	    <tbody>
@@ -46,12 +47,13 @@
                  <td class='text-center'><c:out value="${companyManageVO.companyPhone}"></c:out></td>
                  <td class='text-center'><c:out value="${companyManageVO.faxNumber}"></c:out></td>
                  <td class='text-center'><c:out value="${companyManageVO.email}"></c:out></td>
+                 <td class='text-center'><c:out value="${companyManageVO.email_cc}"></c:out></td>
               </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty companyList}">
            <tr>
-           	<td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='8' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>

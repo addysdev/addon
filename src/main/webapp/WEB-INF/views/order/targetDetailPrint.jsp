@@ -53,7 +53,7 @@ window.print();
 				int num=0;
 				int totalnum=targetLsit.size();
 				int etcnum=0;
-				int maxlist=22;
+				int maxlist=20;
 				int resultlist=totalnum;
 				int removecnt=0;
 				int numcnt=0;
@@ -81,10 +81,10 @@ window.print();
 				</tr>
 				<tr >
 				 <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>수<br>신</td>
-				 <td width='80' align='center' >&nbsp;회사명</td>
+				 <td width='90' align='center' >&nbsp;회사명</td>
 				 <td colspan='5' align='center'>&nbsp;${targetVO.deliveryName}</td>
 				 <td width='30' rowspan='8' align='center' style='background-color:#E4E4E4'>발<br>신</td>
-				 <td width='80' align='center'>&nbsp;회사명</td>
+				 <td width='90' align='center'>&nbsp;회사명</td>
 				 <td colspan='3' align='center'>&nbsp;${targetVO.orderName}</td>
 				</tr>
 				<tr >
