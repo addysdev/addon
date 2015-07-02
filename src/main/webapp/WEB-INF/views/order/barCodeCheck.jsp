@@ -259,9 +259,9 @@ function tmt_winLaunch(theURL,winName,targetName,features) {
 		<table class="table table-bordered tbl_type" >
 	     <colgroup>
 	      <col width="70px" >
-	      <col width="50px" >
+	      <col width="60px" >
 	      <col width="70px" >
-	      <col width="50px" >
+	      <col width="60px" >
 	     </colgroup>
 	     <tr>
 	     	<td style="background-color:#E6F3FF" class='text-center'>검수대상</td>

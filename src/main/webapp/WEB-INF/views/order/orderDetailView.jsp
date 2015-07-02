@@ -653,7 +653,7 @@ function totalTargetAmt(){
 	    	var url='<%= request.getContextPath() %>/order/barcodecheck?orderCnt='+encodeURIComponent(orderCnt);
 
 			var h=510;
-			var s=250;
+			var s=280;
 
 		    tmt_winLaunch(url, 'barcodeObj', 'barcodeObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=no,scrollbars=yes');
 	
