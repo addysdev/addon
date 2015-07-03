@@ -124,9 +124,9 @@ window.print();
 				<td align='center'>일</td>
 				</tr>
                 <tr >
-				<td align='center'>&nbsp;납품방법</td>
+				<td align='center'>납품방법</td>
 				<td colspan='5' align='center'>&nbsp;${targetVO.deliveryMethod}</td>
-				<td align='center'>&nbsp;결제방법</td>
+				<td align='center'>결제방법</td>
 				<td colspan='3' align='center'>&nbsp;${targetVO.payMethod}</td>
 				</tr>
 

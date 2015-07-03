@@ -113,6 +113,32 @@
    	
        }
     }
+    
+    // 페이지 이동
+    function goOrderByPageList(orderByName,orderBySort) {
+        
+    	document.holdStockConForm.orderByName.value = orderByName;
+        document.holdStockConForm.orderBySort.value = orderBySort;
+        
+        var dataParam = $("#holdStockConForm").serialize();
+        commonDim(true);
+        $.ajax({
+            type: "POST",
+            url:  "<%= request.getContextPath() %>/analysis/holdstockpagelist",
+              data:dataParam,
+            success: function(result) {
+                   commonDim(false);
+                   $("#holdStockPageList").html(result);
+                   document.holdStockConForm.orderByName.value = '';
+                   document.holdStockConForm.orderBySort.value = '';
+            },
+            error:function(){
+                commonDim(false);
+                document.holdStockConForm.orderByName.value = '';
+                document.holdStockConForm.orderBySort.value = '';
+            }
+        });
+    }
 </SCRIPT>
 
      <form:form commandName="holdStockVO" name="holdStockPageListForm" id="holdStockPageListForm" method="post" action="" >
@@ -147,8 +173,8 @@
       </p>     
 	  <table class="table table-bordered">
 	  	<colgroup>
-	     <col width="10%" />
-         <col width="10%" />
+	     <col width="7%" />
+         <col width="7%" />
          <col width="*" />
          <col width="7%" />
          <col width="7%" />
@@ -156,7 +182,7 @@
          <col width="7%" />
          <col width="7%" />
          <col width="7%" />
-         <col width="7%" />
+         <col width="5%" />
          <col width="5%" />
         </colgroup>
 	    <thead>
@@ -166,7 +192,7 @@
             <th rowspan="2" class='text-center'>품목명</th>
             <th colspan="3" class='text-center'>보유재고</th>
             <th colspan="3" class='text-center'>추천 보유재고</th>
-            <th rowspan="2" class='text-center'>증감율</th>
+            <th rowspan="2" class='text-center'><a href="javascript:goOrderByPageList('resultRate','desc')">▲</a>증감율<a href="javascript:goOrderByPageList('resultRate','asc')">▼</a></th>
             <th rowspan="2" class='text-center'>업데이트
             <c:if test="${strAuth!='03'}">
   				<br><button type="button" class="btn btn-xs btn-primary" onClick="fcRecomend_pageupdates()">페이지 업데이트</button>
@@ -174,12 +200,12 @@
             </th>
 	      </tr>
 	      <tr style="background-color:#E6F3FF">
-	        <th class='text-center'>적용(보유)일수</th>
-            <th class='text-center'>보유재고</th>
+	        <th class='text-center'><a href="javascript:goOrderByPageList('applyDateCnt','desc')">▲</a>적용(보유)일수<a href="javascript:goOrderByPageList('applyDateCnt','asc')">▼</a></th>
+            <th class='text-center'><a href="javascript:goOrderByPageList('holdStockCnt','desc')">▲</a>보유재고<a href="javascript:goOrderByPageList('holdStockCnt','asc')">▼</a></th>
             <th class='text-center'>보유재고 업데이트일시</th>
-            <th class='text-center'>평균매출수량</th>
+            <th class='text-center'><a href="javascript:goOrderByPageList('saleAvg','desc')">▲</a>평균매출수량<a href="javascript:goOrderByPageList('saleAvg','asc')">▼</a></th>
             <th class='text-center'>적용(보유)일수</th>
-            <th class='text-center'>추천 보유재고</th>
+            <th class='text-center'><a href="javascript:goOrderByPageList('recomendCnt','desc')">▲</a>추천 보유재고<a href="javascript:goOrderByPageList('recomendCnt','asc')">▼</a></th>
 	      </tr>
 	    </thead>
 	    <tbody>

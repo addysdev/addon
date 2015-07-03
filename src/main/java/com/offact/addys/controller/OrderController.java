@@ -927,9 +927,9 @@ public class OrderController {
 				szContent += "<td align='center'>일</td>";
 				szContent += "</tr>";
 	            szContent += "<tr>";
-				szContent += "<td align='center'>&nbsp;납품방법</td>";
+				szContent += "<td align='center'>납품방법</td>";
 				szContent += "<td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryMethod()+"</td>";
-				szContent += "<td align='center'>&nbsp;결제방법</td>";
+				szContent += "<td align='center'>결제방법</td>";
 				szContent += "<td colspan='3' align='center'>&nbsp;"+targetVO.getPayMethod()+"</td>";
 				szContent += "</tr>";
 	
@@ -1114,9 +1114,9 @@ public class OrderController {
 				pdfszContent += "<td align='center'>일</td>";
 				pdfszContent += "</tr>";
 	            pdfszContent += "<tr>";
-				pdfszContent += "<td align='center'>&nbsp;납품방법</td>";
+				pdfszContent += "<td align='center'>납품방법</td>";
 				pdfszContent += "<td colspan='5' align='center'>&nbsp;"+targetVO.getDeliveryMethod()+"</td>";
-				pdfszContent += "<td align='center'>&nbsp;결제방법</td>";
+				pdfszContent += "<td align='center'>결제방법</td>";
 				pdfszContent += "<td colspan='3' align='center'>&nbsp;"+targetVO.getPayMethod()+"</td>";
 				pdfszContent += "</tr>";
 	

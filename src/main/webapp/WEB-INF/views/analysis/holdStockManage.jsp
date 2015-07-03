@@ -155,6 +155,8 @@
         <input type="hidden" name="curPage"             id="curPage"            value="1" />
         <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
+        <input type="hidden" name="orderByName"         id="orderByName"         value=""  />
+        <input type="hidden" name="orderBySort"         id="orderBySort"         value=""  />
         <fieldset>
         	<div class="form-group">
         	   <label for="start_saleDate end_saleDate">보유재고 평균(매출)기간 :</label>

@@ -32,7 +32,7 @@
        		T4.avgcnt as saleAvg,
        		${con_applyDateCnt} as con_applyDateCnt,
        		T4.holdcnt as recomendCnt,
-       		T4.resultRate,
+       		ifnull(T4.resultRate,0) as resultRate,
        		T4.resultCon
  		From (
       Select T3.groupId,
@@ -59,15 +59,16 @@
             Left Join ( Select productCode,
                                groupId ,
                                ifnull(avgcnt,0) as avgcnt,
-                               (ifnull(avgcnt,0)*${con_applyDateCnt}) as holdcnt
+                               ceil(ifnull(avgcnt,0)*${con_applyDateCnt}) as holdcnt
                           from (
                                 Select productCode,
                                        groupId ,
-                                       case when cnt>2 then round((total-maxcnt-mincnt)/cnt) else round(total/cnt) end avgcnt 
+                                       case when prodCnt>2 then truncate((total-maxcnt-mincnt)/cnt,2) else truncate(total/cnt,2) end avgcnt 
                                   from (
                                         Select productCode,
                                                groupId ,
-                                               count(productCode) as cnt,
+                                               count(productCode) as prodCnt,
+                                               TIMESTAMPDIFF(DAY,#{start_saleDate},#{end_saleDate})+1 as cnt,
                                                sum(ifnull(salesCnt,0)) as total,
                                                max(ifnull(salesCnt,0)) as maxcnt 
                                               ,min(ifnull(salesCnt,0)) as mincnt
@@ -104,7 +105,10 @@
            			AND T4.productCode  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
              </choose>
-           </if>     
+           </if>
+           <if test="orderByName != null and orderByName != ''" >
+             Order By ${orderByName} ${orderBySort}
+           </if>          
  LIMIT ${page_limit_val1} , ${page_limit_val2}
 </select>
 
@@ -121,7 +125,7 @@ SELECT count(*) AS TOT_COUNT
        		T4.avgcnt as saleAvg,
        		${con_applyDateCnt} as con_applyDateCnt,
        		T4.holdcnt as recomendCnt,
-       		T4.resultRate,
+       		ifnull(T4.resultRate,0) as resultRate,
        		T4.resultCon
  		From (
       Select T3.groupId,
@@ -148,15 +152,16 @@ SELECT count(*) AS TOT_COUNT
             Left Join ( Select productCode,
                                groupId ,
                                ifnull(avgcnt,0) as avgcnt,
-                               (ifnull(avgcnt,0)*${con_applyDateCnt}) as holdcnt
+                               ceil(ifnull(avgcnt,0)*${con_applyDateCnt}) as holdcnt
                           from (
                                 Select productCode,
                                        groupId ,
-                                       case when cnt>2 then round((total-maxcnt-mincnt)/cnt) else round(total/cnt) end avgcnt 
+                                       case when prodCnt>2 then truncate((total-maxcnt-mincnt)/cnt,2) else truncate(total/cnt,2) end avgcnt 
                                   from (
                                         Select productCode,
                                                groupId ,
-                                               count(productCode) as cnt,
+                                               count(productCode) as prodCnt,
+                                               TIMESTAMPDIFF(DAY,#{start_saleDate},#{end_saleDate})+1 as cnt,
                                                sum(ifnull(salesCnt,0)) as total,
                                                max(ifnull(salesCnt,0)) as maxcnt 
                                               ,min(ifnull(salesCnt,0)) as mincnt
@@ -193,7 +198,10 @@ SELECT count(*) AS TOT_COUNT
            			AND T4.productCode  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
              </choose>
-           </if>     			
+           </if> 
+           <if test="orderByName != null and orderByName != ''" >
+             Order By ${orderByName} ${orderBySort}
+           </if>      			
 ) as TOT
 </select>
 
@@ -213,18 +221,19 @@ SELECT count(*) AS TOT_COUNT
             Left Join ( Select productCode,
                                groupId ,
                                avgcnt,
-                               (avgcnt*${con_applyDateCnt}) as holdcnt
+                               ceil(ifnull(avgcnt,0)*${con_applyDateCnt}) as holdcnt
                           from (
-                                Select productCode,
+                                 Select productCode,
                                        groupId ,
-                                       case when cnt>2 then round((total-maxcnt-mincnt)/cnt) else round(total/cnt) end avgcnt 
+                                       case when prodCnt>2 then truncate((total-maxcnt-mincnt)/cnt,2) else truncate(total/cnt,2) end avgcnt 
                                   from (
                                         Select productCode,
                                                groupId ,
-                                               count(productCode) as cnt,
-                                               sum(salesCnt) as total,
-                                               max(salesCnt) as maxcnt 
-                                              ,min(salesCnt) as mincnt
+                                               count(productCode) as prodCnt,
+                                               TIMESTAMPDIFF(DAY,#{start_saleDate},#{end_saleDate})+1 as cnt,
+                                               sum(ifnull(salesCnt,0)) as total,
+                                               max(ifnull(salesCnt,0)) as maxcnt 
+                                              ,min(ifnull(salesCnt,0)) as mincnt
                                           from adSalesDetail 
                                           Where salesDate between #{start_saleDate} And #{end_saleDate}
                                           group by productCode,groupId
@@ -232,10 +241,30 @@ SELECT count(*) AS TOT_COUNT
                            ) as A2
                         ) as T2 On T1.productCode=T2.productCode And T1.groupId=T2.groupId
               Left Join adProductMaster T3 On T1.productCode = T3.productCode
+              Left Join ofGroup T5 On T1.groupId=T5.groupId
               Where 1=1 /* AND T2.holdcnt <![CDATA[>]]>  0 */
                     <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
           				 AND T1.groupId = #{con_groupId}
            			</if>
+           			<if test="con_group1Name != null and con_group1Name != '' " >
+          				And T3.group1Name LIKE CONCAT('%', #{con_group1Name}, '%')
+           			</if>
+            		<if test="con_group2Name != null and con_group2Name != '' " >
+          				And T3.group2Name LIKE CONCAT('%', #{con_group2Name}, '%')
+           			</if>
+           			<if test="con_group3Name != null and con_group3Name != '' " >
+          				And T3.group3Name LIKE CONCAT('%', #{con_group3Name}, '%')
+           			</if>
+           			<if test="searchValue != null and searchValue != ''" >
+            		 <choose>
+               			<when test="searchGubun.equals('01')">
+           					AND T3.productName  LIKE CONCAT('%', #{searchValue}, '%')
+               			</when>
+               			<when test="searchGubun.equals('02')">
+           					AND T1.productCode  LIKE CONCAT('%', #{searchValue}, '%')
+               			</when>
+             		</choose>
+           			</if>     
               ) As T4
 </select>
 
@@ -250,7 +279,7 @@ SELECT count(*) AS TOT_COUNT
        		T4.avgcnt as saleAvg,
        		${con_applyDateCnt} as con_applyDateCnt,
        		T4.holdcnt as recomendCnt,
-       		T4.resultRate
+       		ifnull(T4.resultRate,0) as resultRate
  		From (
       Select T3.groupId,
              T3.productCode,
@@ -276,15 +305,16 @@ SELECT count(*) AS TOT_COUNT
             Left Join ( Select productCode,
                                groupId ,
                                ifnull(avgcnt,0) as avgcnt,
-                               (ifnull(avgcnt,0)*${con_applyDateCnt}) as holdcnt
+                               ceil(ifnull(avgcnt,0)*${con_applyDateCnt}) as holdcnt
                           from (
-                                Select productCode,
+                                 Select productCode,
                                        groupId ,
-                                       case when cnt>2 then round((total-maxcnt-mincnt)/cnt) else round(total/cnt) end avgcnt 
+                                       case when prodCnt>2 then truncate((total-maxcnt-mincnt)/cnt,2) else truncate(total/cnt,2) end avgcnt 
                                   from (
                                         Select productCode,
                                                groupId ,
-                                               count(productCode) as cnt,
+                                               count(productCode) as prodCnt,
+                                               TIMESTAMPDIFF(DAY,#{start_saleDate},#{end_saleDate})+1 as cnt,
                                                sum(ifnull(salesCnt,0)) as total,
                                                max(ifnull(salesCnt,0)) as maxcnt 
                                               ,min(ifnull(salesCnt,0)) as mincnt

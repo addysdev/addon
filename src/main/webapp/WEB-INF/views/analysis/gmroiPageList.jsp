@@ -19,6 +19,33 @@
             }
         });
     }
+ // 
+    function goOrderByPageList(orderByName,orderBySort) {
+        
+    	document.gmroiConForm.orderByName.value = orderByName;
+        document.gmroiConForm.orderBySort.value = orderBySort;
+        
+        var dataParam = $("#gmroiConForm").serialize();
+        commonDim(true);
+        $.ajax({
+            type: "POST",
+            url:  "<%= request.getContextPath() %>/analysis/gmroipagelist",
+              data:dataParam,
+            success: function(result) {
+                   commonDim(false);
+                   $("#gmroiPageList").html(result);
+                   
+                   document.gmroiConForm.orderByName.value = '';
+                   document.gmroiConForm.orderBySort.value = '';
+            },
+            error:function(){
+                commonDim(false);
+                
+                document.gmroiConForm.orderByName.value = '';
+                document.gmroiConForm.orderBySort.value = '';
+            }
+        });
+    }
 </SCRIPT>
 
      <form:form commandName="gmroiVO" name="gmroiPageListForm" method="post" action="" >
@@ -84,16 +111,16 @@
             <th rowspan="2" class='text-center'>품목명</th>
             <th colspan="2" class='text-center'>재고</th>
             <th colspan="4" class='text-center'>매출</th>
-            <th rowspan="2" class='text-center'>재고금액<br>회전율</th>
-            <th rowspan="2" class='text-center'>GMROI</th>
+            <th rowspan="2" class='text-center'>재고금액<br><a href="javascript:goOrderByPageList('stockCycleRate','desc')">▲</a>회전율<a href="javascript:goOrderByPageList('stockCycleRate','asc')">▼</a></th>
+            <th rowspan="2" class='text-center'><a href="javascript:goOrderByPageList('gmroiRate','desc')">▲</a>GMROI<a href="javascript:goOrderByPageList('gmroiRate','asc')">▼</a></th>
 	      </tr>
 	      <tr style="background-color:#E6F3FF">
-	        <th class='text-center'>평균 재고수량</th>
-            <th class='text-center'>평균 재고금액</th>
-            <th class='text-center'>총 매출수량</th>
-            <th class='text-center'>총 매출금액</th>
-            <th class='text-center'>총 이익금액</th>
-            <th class='text-center'>총 이익율</th>
+	        <th class='text-center'><a href="javascript:goOrderByPageList('avgStockCnt','desc')">▲</a>평균 재고수량<a href="javascript:goOrderByPageList('avgStockCnt','asc')">▼</a></th>
+            <th class='text-center'><a href="javascript:goOrderByPageList('avgStockAmt','desc')">▲</a>평균 재고금액<a href="javascript:goOrderByPageList('avgStockAmt','asc')">▼</a></th>
+            <th class='text-center'><a href="javascript:goOrderByPageList('totalSaleCnt','desc')">▲</a>총 매출수량<a href="javascript:goOrderByPageList('totalSaleCnt','asc')">▼</a></th>
+            <th class='text-center'><a href="javascript:goOrderByPageList('totalSaleAmt','desc')">▲</a>총 매출금액<a href="javascript:goOrderByPageList('totalSaleAmt','asc')">▼</a></th>
+            <th class='text-center'><a href="javascript:goOrderByPageList('profitSaleAmt','desc')">▲</a>총 이익금액<a href="javascript:goOrderByPageList('profitSaleAmt','asc')">▼</a></th>
+            <th class='text-center'><a href="javascript:goOrderByPageList('avgSaleRate','desc')">▲</a>총 이익율<a href="javascript:goOrderByPageList('avgSaleRate','asc')">▼</a></th>
 	      </tr>
 	    </thead>
 	    <tbody>

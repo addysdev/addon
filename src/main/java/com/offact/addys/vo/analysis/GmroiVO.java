@@ -47,6 +47,9 @@ public class GmroiVO extends AbstractVO {
 	
     private String searchGubun;
     private String searchValue;
+    
+	private String orderByName;
+	private String orderBySort;
 	
 	private String errMsg;
 	
@@ -291,6 +294,17 @@ public class GmroiVO extends AbstractVO {
 	public void setPage_limit_val2(String page_limit_val2) {
 		this.page_limit_val2 = page_limit_val2;
 	}
-    
+	public String getOrderByName() {
+		return orderByName;
+	}
+	public void setOrderByName(String orderByName) {
+		this.orderByName = orderByName;
+	}
+	public String getOrderBySort() {
+		return orderBySort;
+	}
+	public void setOrderBySort(String orderBySort) {
+		this.orderBySort = orderBySort;
+	}
 	
 }

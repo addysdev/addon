@@ -108,7 +108,10 @@ From (
                </when>
              </choose>
            </if> 
-      group by T4.productCode     
+      group by T4.productCode   
+      <if test="orderByName != null and orderByName != ''" >
+         Order By ${orderByName} ${orderBySort}
+      </if>    
  LIMIT ${page_limit_val1} , ${page_limit_val2}
 </select>
 
@@ -196,7 +199,10 @@ From (
                </when>
              </choose>
            </if> 
-       group by T4.productCode 
+       group by T4.productCode
+      <if test="orderByName != null and orderByName != ''" >
+         Order By ${orderByName} ${orderBySort}
+      </if>    
 ) as TOT
 </select>
 

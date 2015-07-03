@@ -44,6 +44,9 @@ public class HoldStockVO extends AbstractVO {
 	private String con_group2Name;
 	private String con_group3Name;
 	
+	private String orderByName;
+	private String orderBySort;
+	
     private String searchGubun;
     private String searchValue;
 	
@@ -283,6 +286,18 @@ public class HoldStockVO extends AbstractVO {
 	}
 	public void setCon_group3Name(String con_group3Name) {
 		this.con_group3Name = con_group3Name;
+	}
+	public String getOrderByName() {
+		return orderByName;
+	}
+	public void setOrderByName(String orderByName) {
+		this.orderByName = orderByName;
+	}
+	public String getOrderBySort() {
+		return orderBySort;
+	}
+	public void setOrderBySort(String orderBySort) {
+		this.orderBySort = orderBySort;
 	}
     
 }
