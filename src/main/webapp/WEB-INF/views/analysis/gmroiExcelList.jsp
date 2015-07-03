@@ -63,11 +63,11 @@
 	objCell = objRow.createCell((short)6);
 	objCell.setCellValue("총이익금액)");
 	objCell = objRow.createCell((short)7);
-	objCell.setCellValue("총이익율");
+	objCell.setCellValue("총이익율(%)");
 	objCell = objRow.createCell((short)8);
-	objCell.setCellValue("재고금액회전율");
+	objCell.setCellValue("재고금액회전율(회전)");
 	objCell = objRow.createCell((short)9);
-	objCell.setCellValue("GMROI");
+	objCell.setCellValue("GMROI(%)");
 	
 	//----------------------------------------------------------------------------------------
 	//길이 설정

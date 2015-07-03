@@ -129,7 +129,7 @@
              <tr id="select_tr_${gmroiVO.productCode}">
                  <td class='text-center'><c:out value="${gmroiVO.productCode}"></c:out></td>
                  <td><c:out value="${gmroiVO.productName}"></c:out></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${gmroiVO.avgStockCnt}"/></td>
+                 <td class='text-right'><c:out value="${gmroiVO.avgStockCnt}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${gmroiVO.avgStockAmt}"/>&nbsp;원</td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${gmroiVO.totalSaleCnt}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${gmroiVO.totalSaleAmt}"/>&nbsp;원</td>
