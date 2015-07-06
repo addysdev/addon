@@ -88,6 +88,7 @@ public class RecoveryVO extends AbstractVO {
 	private String checkCnt;
 	
 	private String authId;
+	private String auth;
 	private String smsNo;
 	
 	private String deliveryMethod;
@@ -596,6 +597,12 @@ public class RecoveryVO extends AbstractVO {
 	}
 	public void setSmsNo(String smsNo) {
 		this.smsNo = smsNo;
+	}
+	public String getAuth() {
+		return auth;
+	}
+	public void setAuth(String auth) {
+		this.auth = auth;
 	}
     
 }

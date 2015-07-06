@@ -152,7 +152,8 @@
         <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
         <input type="hidden" name="con_groupId"          id="con_groupId"         value="${collectConVO.groupId}"  />
-        <input type="hidden" name="authId"          id="authId"         value="${strAuth}"  />
+        <input type="hidden" name="authId"          id="authId"         value="${strAuthId}"  />
+        <input type="hidden" name="auth"          id="auth"         value="${strAuth}"  />
         <fieldset>
         	<div class="form-group">
         		<label for="start_recoveryDate end_recoveryDate">회수요청일자 :</label>

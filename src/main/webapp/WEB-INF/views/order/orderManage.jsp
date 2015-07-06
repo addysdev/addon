@@ -150,7 +150,7 @@
 			    <!-- 달력이미지 끝 -->
 	            <br><br>
 	            <c:choose>
-	    		<c:when test="${strAuth == '03'}">
+	    		<c:when test="${strAuth == '03' && strAuthId!='AD001'}">
 					<input type="hidden" id="con_groupId" name="con_groupId" value="${orderConVO.groupId}">
 					</c:when>
 					<c:otherwise>

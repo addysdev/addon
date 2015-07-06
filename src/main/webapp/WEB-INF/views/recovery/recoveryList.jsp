@@ -52,16 +52,18 @@
     
     function stateCheck(){
 
-    	if('${strAuth}' != '03'){
+    	if('${strAuth}' != '03' || '${strAuthId}' =='AD001'){
     		
     		var frm=document.recoveryPageListForm;
    
-    		if(frm.totalCnt.value==frm.waitCnt.value){
-    			document.all('rcancelbtn').disabled=false;
-    			$('#rcancelbtn').attr("style","display:inline");
-    		}else{
-    			document.all('rcancelbtn').disabled=true;
-    			$('#rcancelbtn').attr("style","display:none");
+    		if('${strAuth}' != '03'){
+	    		if(frm.totalCnt.value==frm.waitCnt.value){
+	    			document.all('rcancelbtn').disabled=false;
+	    			$('#rcancelbtn').attr("style","display:inline");
+	    		}else{
+	    			document.all('rcancelbtn').disabled=true;
+	    			$('#rcancelbtn').attr("style","display:none");
+	    		}
     		}
     		
     		if(frm.totalCnt.value==frm.checkCnt.value){
@@ -116,7 +118,7 @@
 </SCRIPT>
      <form:form commandName="recoveryVO" name="recoveryPageListForm" method="post" action="" >
       <input type="hidden" name="collectCode" id="collectCode" value="${recoveryConVO.collectCode}">
-      <c:if test="${strAuth != '03'}">
+      <c:if test="${strAuth != '03' || strAuthId=='AD001'}">
       <br>
 	  <table style="width:530px" class="table table-bordered tbl_type" >
 	     <colgroup>
@@ -175,7 +177,7 @@
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.recoveryResultCnt}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${recoveryVO.recoveryResultPrice}"/></td>
                  <td class='text-center'>
-                 <c:if test="${recoveryVO.recoveryState=='02' && strAuth!='03'}">
+                 <c:if test="${recoveryVO.recoveryState=='02' && (strAuth!='03' || strAuthId=='AD001')}">
                  <button type="button" id="receivebtn" class="btn btn-xs btn-success" onClick="fcRecovery_receive('${recoveryVO.recoveryCode}','${recoveryVO.groupId}');">수신</button>
                  </c:if>
                  </td>

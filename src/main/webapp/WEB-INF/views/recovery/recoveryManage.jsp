@@ -180,10 +180,12 @@
         <input type="hidden" name="rowCount"            id="rowCount"           value="10"/>
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
         <input type="hidden" name="collectCode"          id="collectCode"         value="${recoveryConVO.collectCode}"  />
+        <input type="hidden" name="authId"          id="authId"         value="${strAuthId}"  />
+        <input type="hidden" name="auth"          id="auth"         value="${strAuth}"  />
         <fieldset>
         	<div class="form-group">
 	            <c:choose>
-	    		<c:when test="${strAuth == '03'}">
+	    		<c:when test="${strAuth == '03' && strAuthId!='AD001'}">
 					<input type="hidden" id="con_groupId" name="con_groupId" value="${recoveryConVO.groupId}">
 					<input type="hidden" id="con_recoveryState" name="con_recoveryState" value="${recoveryConVO.con_recoveryState}">
 					</c:when>
@@ -207,7 +209,9 @@
 						 <!-- >button type="button" class="btn" onClick="">excel</button -->
 						</div>
 						<div style="position:absolute; right:30px" >
+						    <c:if test="${strAuth != '03'}">
 			        	 	<button id="rcancelbtn" name="rcancelbtn" type="button" class="btn btn-danger" onClick="fcRecovery_cancel('${recoveryConVO.collectCode}')">회수취소</button>
+			        	 	</c:if>
 			        	 	<button id="rexportbutton" name="rexportbutton" type="button" class="btn btn-default" onClick="fcRecovery_excel('${recoveryConVO.collectCode}')">엑셀변환(창고이동)</button>
 			        	 	<c:if test="${recoveryConVO.collectState=='01'}">
 			        	 	<button id="transbutton" name="transbutton" type="button" class="btn btn-success" onClick="fcRecovery_transstate('${recoveryConVO.collectCode}','02') ">업체발송</button>		        	 	
@@ -228,6 +232,9 @@
 </div>
 <script>
 //alert('${recoveryConVO.con_recoveryState}');
+
+//alert('${recoveryConVO.collectState}');
+
 document.recoveryConForm.con_recoveryState.value='${recoveryConVO.con_recoveryState}';
 //alert(document.recoveryConForm.con_groupId.value);
 fcRecovery_listSearch();

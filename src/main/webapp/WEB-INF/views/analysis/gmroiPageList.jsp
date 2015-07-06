@@ -74,7 +74,7 @@
 	          <f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalCount}" />
 	          </span></a></td>
 	     	<td class='text-center' style="background-color:#E6F3FF">재고수량</td>
-	     	<td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalGmroiVO.avgStockCnt}" /></td>
+	     	<td class='text-right'><c:out value="${totalGmroiVO.avgStockCnt}"></c:out></td>
 	     	<td class='text-center' style="background-color:#E6F3FF">재고금액</td>
 	     	<td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${totalGmroiVO.avgStockAmt}" /></td>
 	     	<td class='text-center' style="background-color:#E6F3FF">매출수량</td>

@@ -86,7 +86,7 @@
                  Left Join ofCode T3 On T1.collectState = T3.codeId and T3.codegroupId = 'RE01'
            Where T1.deletedYn='N'
                  AND T1.collectDateTime between concat(#{start_recoveryDate},' 00:00:00') and concat(#{end_recoveryDate},' 23:59:59')
-             <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000' and authId == '03'" >
+             <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000' and  auth== '03'and authId!='AD001'" >
            		AND T2.groupId = #{con_groupId}
              </if>
              <if test="con_collectState != null and con_collectState != ''" >
@@ -135,7 +135,7 @@
                  				 Left Join ofCode T3 On T1.collectState = T3.codeId and T3.codegroupId = 'RE01'
           			 Where T1.deletedYn='N'
                  		   AND T1.collectDateTime between concat(#{start_recoveryDate},' 00:00:00') and concat(#{end_recoveryDate},' 23:59:59')
-           			    <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000' and authId == '03'" >
+           			    <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000' and auth== '03'and authId!='AD001' " >
            				   AND T2.groupId = #{con_groupId}
             		   </if>             	
              		   <if test="con_collectState != null and con_collectState != ''" >
@@ -172,6 +172,9 @@
                  		 Case When recoveryState = '04' Then 1 Else 0 End checkCnt
             	   From adRecovery 
           		   Where collectCode= #{collectCode}
+          		       <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000' and auth== '03'and authId!='AD001' " >
+           				   AND groupId = #{con_groupId}
+            		   </if>    
            		) As T1
    		Group by 	T1.collectCode
 		
@@ -205,7 +208,7 @@ From (
          Left Join adProductMaster T5 On T0.productCode = T5.productCode
    Where T2.deletedYn='N'
          AND T1.collectCode = #{collectCode}
-           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000' and auth== '03'and authId!='AD001' " >
            		AND T1.groupId = #{con_groupId}
            </if>
            <if test="con_recoveryState != null and con_recoveryState != ''" >
