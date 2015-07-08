@@ -150,6 +150,39 @@ public class HomeController {
 		mv.setViewName("common/offactLoginForm");
 		return mv;
 	}
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 * @throws BizException
+	 */
+	@RequestMapping(value = "/offactdev", method = RequestMethod.GET)
+	public ModelAndView offactDev(HttpServletRequest request,
+                                 HttpServletResponse response) throws BizException 
+	{
+		
+		logger.info("offactDev");
+		
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("common/offactDev");
+		return mv;
+	}
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 * @throws BizException
+	 */
+	@RequestMapping(value = "/offactmap", method = RequestMethod.GET)
+	public ModelAndView offactMap(HttpServletRequest request,
+                                 HttpServletResponse response) throws BizException 
+	{
+		
+		logger.info("offactMap");
+		
+		ModelAndView mv = new ModelAndView();
+		
+		mv.setViewName("common/offactMap");
+		return mv;
+	}
+	
 	
 	/**
 	 * Login 처리
