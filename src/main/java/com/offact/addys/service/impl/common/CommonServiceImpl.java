@@ -140,5 +140,26 @@ public class CommonServiceImpl implements CommonService {
 	    return retVal;
 	    
   }
+   @Override
+   public UserVO getEncPassword(UserVO user)
+   	    throws BizException
+	{
 
+	   UserVO userVo=new UserVO();
+	   
+	    try{
+	
+	    	userVo=this.commonDao.selectOne("User.getEncPassword", user);
+	
+	    }catch(Exception e){
+	    	
+	    	e.printStackTrace();
+	    	e.printStackTrace();
+	    	throw new BizException(e.getMessage());
+
+	    }
+	
+	    return userVo;
+	    
+  }
 }

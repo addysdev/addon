@@ -33,8 +33,8 @@
 		        <th class='text-center'>no</th>
 	            <th class='text-center'>작성자</th>
 	            <th class='text-center'>작성일시</th>
-	            <th class='text-center'>보류구분</th>
-	            <th class='text-center'>보류사유</th>
+	            <th class='text-center'>구분</th>
+	            <th class='text-center'>사유</th>
 		      </tr>
 		    </thead>
 		  </table>

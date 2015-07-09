@@ -96,9 +96,9 @@
 	      <tr style="background-color:#E6F3FF">
 	        <th rowspan="2" class='text-center'>no</th>
 	        <th rowspan="2" class='text-center'>작업일시</th>
+	        <th rowspan="2" class='text-center'>지점명</th>
 	        <th rowspan="2" class='text-center'>작업자</th>
-            <th rowspan="2" class='text-center'>작업ID</th>
-	        <th rowspan="2" class='text-center'>작업구분</th>
+            <th rowspan="2" class='text-center'>작업구분</th>
             <th rowspan="2" class='text-center'>작업명</th>
             <th colspan="4" class='text-center'>작업상세</th>
 	      </tr>
@@ -115,8 +115,8 @@
              <tr id="select_tr_${workHistoryVO.idx}">
                <td class='text-center'><c:out value="${workList.size()-(status.count-1)}"></c:out></td>
                <td class='text-center'><c:out value="${workHistoryVO.workDateTime}"></c:out></td> 
+               <td class='text-center'><c:out value="${workHistoryVO.workGroupName}"></c:out></td>
                <td class='text-center'><c:out value="${workHistoryVO.workUserName}"></c:out></td>
-               <td class='text-center'><c:out value="${workHistoryVO.workUserId}"></c:out></td>
                <td class='text-center'><c:out value="${workHistoryVO.workCategoryName}"></c:out></td>
                <td class='text-center'><c:out value="${workHistoryVO.workCodeName}"></c:out></td>
                <td class='text-center'><c:out value="${workHistoryVO.workKey1}"></c:out></td>

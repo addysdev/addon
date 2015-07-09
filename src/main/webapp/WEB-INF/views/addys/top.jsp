@@ -20,6 +20,8 @@
 	String strEmail= (String)session.getAttribute("strEmail");
 	String strIp= (String)session.getAttribute("strIp");
 	String strAuth= (String)session.getAttribute("strAuth");
+	String pwdChangeDateTime= ((String)session.getAttribute("pwdChangeDateTime")).replaceAll("-", "");
+	String pwCycleDate= ((String)session.getAttribute("pwCycleDate")).replaceAll("-", "");
 	
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -146,7 +148,7 @@
 	            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
 	            width : 400,
-	            height : 230,
+	            height : 380,
 	            modal : true, //주위를 어둡게
 
 	            open:function(){
@@ -244,9 +246,9 @@
 					</a> 
 			          <ul class="dropdown-menu" role="menu">
 			            <li><a href="<%= request.getContextPath() %>/history/smshistorymanage">SMS 전송이력</a></li>
-			            <c:if test="${strAuth == '01'}">
+			           <!--   <c:if test="${strAuth == '01'}"> -->
 			            <li><a href="<%= request.getContextPath() %>/history/workhistorymanage">업무 처리이력</a></li>
-			            </c:if>             
+			           <!-- </c:if>     -->        
 		          	</ul>
 			        </li>
 			        </c:if>
@@ -295,4 +297,10 @@
 if('${strUserId}'==null || '${strUserId}'=='null' ){
 	goLogout();
 }
+
+if('<%=pwCycleDate %>'>'<%=pwdChangeDateTime %>'){
+	goMyInfo('<%=strUserId %>');
+}
+
+
 </script>

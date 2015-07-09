@@ -25,6 +25,10 @@
   <result column="updateDateTime"      property="updateDateTime"  />
   <result column="useYn"               property="useYn"  />
   <result column="deletedYn"           property="deletedYn"  />
+  <result column="curPwd"              property="curPwd"  />
+  <result column="encPwd"              property="encPwd"  />
+  <result column="pwdChangeDateTime"   property="pwdChangeDateTime"  />
+  <result column="pwCycleDate"   property="pwCycleDate"  />
 </resultMap>
 
 <select id="getUser" resultMap="UserVO" parameterType="com.offact.addys.vo.common.UserVO" >
@@ -52,6 +56,8 @@
 					  ,T1.updateDateTime As UpdateDateTime
 					  ,T1.useYn
 					  ,T1.deletedYn
+					  ,DATE_FORMAT(T1.pwdChangeDateTime, '%Y-%m-%d') as pwdChangeDateTime
+					  ,date_add(DATE_FORMAT(now(), '%Y-%m-%d'), interval (Select T4.codeId from ofCode T4 where T4.codeGroupId='PW01') month) as pwCycleDate
 				  From ofUser T1 
 					   Left Join ofGroup T2 On T1.groupId=T2.groupId
 					   Left Join ofGroup T3 On T1.authId=T3.groupId
@@ -84,5 +90,9 @@
   				,loginDateTime = now()
  		Where userId = #{userId}
 </update>
+
+<select id="getEncPassword" resultMap="UserVO" parameterType="com.offact.addys.vo.common.UserVO" >
+			Select PASSWORD(#{curPwd}) as encPwd
+</select>
  
 </mapper>

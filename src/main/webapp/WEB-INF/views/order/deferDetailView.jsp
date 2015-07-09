@@ -506,9 +506,9 @@ function fcDefer_modify(reason){
 		
     	$("input:checkbox[id='deferCheck']").prop("checked", $("#deferCheckAll").is(":checked"));
     }
-    function fcDefer_reasonpop(){
-    	//$('#targetEtcView').attr('title',productName);
-    	var url='<%= request.getContextPath() %>/order/deferreason';
+    function fcDefer_reasonpop(deferType){
+    	
+    	var url='<%= request.getContextPath() %>/order/deferreason?deferType='+deferType;
 
     	$('#deferDialog').dialog({
             resizable : false, //사이즈 변경 불가능
@@ -605,7 +605,7 @@ function fcDefer_modify(reason){
 	      <tr>
 	      <div style="position:absolute; left:30px" >
 	      <!-- >button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button -->
-	      <button id="defercancelbtn"  type="button" class="btn btn-danger" onClick="fcDefer_reasonpop()" >보류폐기</button>
+	      <button id="defercancelbtn"  type="button" class="btn btn-danger" onClick="fcDefer_reasonpop('R')" >보류폐기</button>
 	      <button id="deferlistbtn"  type="button" class="btn btn-info" onClick="fcDefer_list('${targetVO.orderCode}')">보류사유</button>
 	      <!--button type="button" class="btn btn-success" onClick="fcTargetDetail_print()">인쇄</button-->
           </div >

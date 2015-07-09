@@ -199,7 +199,7 @@
     <!-- //보류 상세화면 -->
     <div id="etcManage"  title="비고"></div>
 </div>
-<div id="deferDialog"  title="보류사유를 입력하세요"></div>
+<div id="deferDialog"  title="처리사유를 입력하세요"></div>
 <div id="deferReasonList"  title="보류사유"></div>
 <div id="barCodeDialog"  title="바코드 검수"></div>
 <br>

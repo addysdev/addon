@@ -89,7 +89,7 @@
   <div id="targetDetailView"  title="발주 상세처리화면"></div>
   <!-- //발주 상세처리화면 -->
     <!-- 발주 상세처리화면-->
-  <div id="deferDialog"  title="보류사유를 입력하세요"></div>
+  <div id="deferDialog"  title="처리사유를 입력하세요"></div>
   <!-- //발주 상세처리화면 -->
   
    <div id="ccDialog"  title="mail 참조추가"></div>

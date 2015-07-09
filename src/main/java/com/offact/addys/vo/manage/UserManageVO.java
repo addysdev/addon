@@ -40,6 +40,8 @@ public class UserManageVO extends AbstractVO {
     
     private String pw_modifyYn;
     private String smsYn;
+    
+    private String pwdChangeDateTime;
 
     // /** for paging */
     private String totalCount       = "0";
@@ -269,6 +271,12 @@ public class UserManageVO extends AbstractVO {
 	}
 	public void setUpdateUserName(String updateUserName) {
 		this.updateUserName = updateUserName;
+	}
+	public String getPwdChangeDateTime() {
+		return pwdChangeDateTime;
+	}
+	public void setPwdChangeDateTime(String pwdChangeDateTime) {
+		this.pwdChangeDateTime = pwdChangeDateTime;
 	}
    
 }

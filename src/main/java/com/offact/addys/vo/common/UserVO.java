@@ -33,6 +33,12 @@ public class UserVO extends AbstractVO {
 	private String loginDateTime;
 	private String connectIp;
 	
+	private String curPwd;
+	private String encPwd;
+	
+	private String pwdChangeDateTime;
+	private String pwCycleDate;
+	
 	public String getUserId() {
 		return userId;
 	}
@@ -183,5 +189,29 @@ public class UserVO extends AbstractVO {
 	public void setConnectIp(String connectIp) {
 		this.connectIp = connectIp;
 	}
-	
+	public String getCurPwd() {
+		return curPwd;
+	}
+	public void setCurPwd(String curPwd) {
+		this.curPwd = curPwd;
+	}
+	public String getEncPwd() {
+		return encPwd;
+	}
+	public void setEncPwd(String encPwd) {
+		this.encPwd = encPwd;
+	}
+	public String getPwdChangeDateTime() {
+		return pwdChangeDateTime;
+	}
+	public void setPwdChangeDateTime(String pwdChangeDateTime) {
+		this.pwdChangeDateTime = pwdChangeDateTime;
+	}
+	public String getPwCycleDate() {
+		return pwCycleDate;
+	}
+	public void setPwCycleDate(String pwCycleDate) {
+		this.pwCycleDate = pwCycleDate;
+	}
+
 }

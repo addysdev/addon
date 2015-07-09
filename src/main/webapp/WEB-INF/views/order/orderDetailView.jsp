@@ -171,10 +171,17 @@ function fcOrderDetail_print(orderCode){
         });
     };
     
-    function fcOrder_cancel(){
+    function fcOrder_cancel(reason){
     	
+    	if(reason==''){
+    		alert('발주 취소사유를 입력하세요!');
+    		return;
+    	}
+
     	 if (confirm('발주 내용을 취소 하시겠습니까?\n취소하 실 경우 모든 발주내용은 발주대기 상태에 포함됩니다.')){ 
         	 
+    	   document.orderDetailForm.deferReason.value=reason;
+    		 
            var paramString = $("#orderDetailForm").serialize();
         	 
 	 		$.ajax({
@@ -185,7 +192,7 @@ function fcOrderDetail_print(orderCode){
 	          success: function(result) {
 	
 	        	resultMsg(result);
-				
+	        	$('#deferDialog').dialog('close');
 				$('#orderDetailView').dialog('close');
 				fcOrder_listSearch();
 					
@@ -193,6 +200,7 @@ function fcOrderDetail_print(orderCode){
 	          error:function(){
 	          
 	          alert('취소 처리 호출오류!');
+	          $('#deferDialog').dialog('close');
 			  $('#orderDetailView').dialog('close');
 			  fcOrder_listSearch();
 	          }
@@ -532,11 +540,16 @@ function totalTargetAmt(){
       	
           }
   	}	
-    function fcOrder_reMail(){
+    function fcOrder_reMail(reason){
     	
+    	if(reason==''){
+    		alert('재송부사유를 입력하세요!');
+    		return;
+    	}
 
 	            if (confirm('발주서를 재송부 하시겠습니까?')){ 
-	            	
+	            
+	            document.orderDetailForm.deferReason.value=reason;	
 	            var paramString = $("#orderDetailForm").serialize();
 
 			  		$.ajax({
@@ -547,11 +560,13 @@ function totalTargetAmt(){
 				          success: function(result) {
 			
 				        	resultMsg(result);
+				        	 $('#deferDialog').dialog('close');
 	
 				          },
 				          error:function(){
 				          
 				          alert('재송부 처리 호출오류!');
+				          $('#deferDialog').dialog('close');
 				       
 				          }
 				    });
@@ -762,8 +777,8 @@ function totalTargetAmt(){
 	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" class="btn btn-success" onClick="fcOrderDetail_print('${orderVO.orderCode}')">인쇄</button></c:if>
           </div>
           <div style="position:absolute; right:30px" >
-          <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-warning" onClick="fcOrder_cancel()">취소</button></c:if>
-          <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-primary" onClick="fcOrder_reMail()">재송부</button></c:if>
+          <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-warning" onClick="fcDefer_reasonpop('C')">취소</button></c:if>
+          <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-primary" onClick="fcDefer_reasonpop('S')">재송부</button></c:if>
           <c:if test="${orderVO.orderState=='06' && (strAuth!= '03' || strAuthId=='AD001')}"><button type="button" class="btn btn-primary" onClick="fcOrder_buy()">등록완료</button></c:if>
           </div>
           </tr>

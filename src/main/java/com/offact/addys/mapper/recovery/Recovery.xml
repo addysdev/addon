@@ -222,7 +222,7 @@ From (
          	T6.collectDateTime,
          	T6.groupId,
          	T6.groupName
-		
+   Order by T6.groupId asc	
 </select>
 
 
@@ -357,7 +357,10 @@ From (
                         					 ) As A1
 									  ) As I2 On T1.productCode = I2.productCode And T2.groupID = I2.groupID /*재고기준일*/
     Where T3.deletedYn='N' And T1.recoveryCode = #{recoveryCode}
-    Order by T1.productCode asc
+    Order by (select count(idx) from adComment T7 Where T1.recoveryCode = T7.orderCode  And T1.productCode=T7.productCode And T7.commentCategory='06') desc,
+    T1.stockCnt desc,
+    T1.productCode asc
+    
 </select>
 
 <update id="updateRecovery"  parameterType="com.offact.addys.vo.recovery.RecoveryVO" >

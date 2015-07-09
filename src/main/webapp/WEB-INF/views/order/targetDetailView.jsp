@@ -99,7 +99,12 @@ function tmt_winLaunch(theURL,winName,targetName,features) {
 /*
  * print 화면 POPUP
  */
-function fcTargetDetail_print(){
+function fcTargetDetail_print(reason){
+	
+	if(reason==''){
+		alert('인쇄사유를 입력하세요!');
+		return;
+	}
 	
 	var h=800;
 	var s=950;
@@ -124,6 +129,10 @@ function fcTargetDetail_print(){
 
 
 	   	}
+	   	
+	   	 document.targetDetailForm.deferReason.value=reason;
+	   	 
+	     $('#deferDialog').dialog('close');
 
 		 var url="<%= request.getContextPath() %>/order/targetdetailprint"+'?'+$("#targetDetailForm").serialize();
 	
@@ -612,9 +621,9 @@ function fcDefer_reason(reason){
 		
     	$("input:checkbox[id='deferCheck']").prop("checked", $("#deferCheckAll").is(":checked"));
     }
-    function fcDefer_reasonpop(){
-    	//$('#targetEtcView').attr('title',productName);
-    	var url='<%= request.getContextPath() %>/order/deferreason';
+    function fcDefer_reasonpop(deferType){
+
+    	var url='<%= request.getContextPath() %>/order/deferreason?deferType='+deferType;
 
     	$('#deferDialog').dialog({
             resizable : false, //사이즈 변경 불가능
@@ -749,8 +758,8 @@ function fcDefer_reason(reason){
 	      </h4-->
 	      <tr>
 	      <div style="position:absolute; left:30px" > 
-	      <button id="deferbtn" type="button" class="btn btn-primary" onClick="fcDefer_reasonpop()" >보류</button>
-	      <button type="button" class="btn btn-success" onClick="fcTargetDetail_print()">인쇄</button>
+	      <button id="deferbtn" type="button" class="btn btn-primary" onClick="fcDefer_reasonpop('R')" >보류</button>
+	      <button type="button" class="btn btn-success" onClick="fcDefer_reasonpop('P')">인쇄</button>
           </div >
           <div style="position:absolute; right:30px" > 
           <button type="button" class="btn btn-primary" onClick="fcOrder_process()">발주</button>

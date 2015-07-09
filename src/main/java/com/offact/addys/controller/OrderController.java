@@ -563,7 +563,24 @@ public class OrderController {
 	    
 		logger.info("["+logid+"] @@@@@@@@ : orderList.length" + orderList.length);
 		
-	    
+        try{//01.처리사유
+        	
+        	CommentVO commentVO =new CommentVO();
+
+        	commentVO.setOrderCode(""+t1);
+        	commentVO.setCommentUserId(strUserId);
+        	commentVO.setCommentCategory("07");
+        	commentVO.setComment(targetVO.getDeferReason());
+    	    
+        	int dbResult=commonSvc.regiCommentInsert(commentVO);
+
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+	    }
+
 	    for(int i=0;i<orderList.length;i++){
 	
 	        r_data = StringUtil.getTokens(orderList[i], "|");
@@ -616,12 +633,13 @@ public class OrderController {
         mv.addObject("deliveryDates3", deliveryDates[2]);
    		
    		mv.setViewName("/order/targetDetailPrint");
-   		
+  
         //작업이력
 		WorkVO work = new WorkVO();
 		work.setWorkUserId(strUserId);
 		work.setWorkCategory("OD");
 		work.setWorkCode("OD003");
+		work.setWorkKey1(""+t1);
 		work.setSearchKey1(targetVO.getCompanyCode());
 		commonSvc.regiHistoryInsert(work);
    		
@@ -2055,6 +2073,24 @@ public class OrderController {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
         Date currentTime = new Date();
         String strToday = simpleDateFormat.format(currentTime);
+        
+        try{//01.처리사유
+        	
+        	CommentVO commentVO =new CommentVO();
+
+        	commentVO.setOrderCode(orderVO.getOrderCode());
+        	commentVO.setCommentUserId(strUserId);
+        	commentVO.setCommentCategory("08");
+        	commentVO.setComment(orderVO.getDeferReason());
+    	    
+        	int dbResult=commonSvc.regiCommentInsert(commentVO);
+
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+	    }
 
 	    orderVO.setDeletedYn("Y");
 	    orderVO.setDeletedUserId(strUserId);
@@ -2952,6 +2988,25 @@ public class OrderController {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
         Date currentTime = new Date();
         String strToday = simpleDateFormat.format(currentTime);
+        
+        try{//01.처리사유
+        	
+        	CommentVO commentVO =new CommentVO();
+
+        	commentVO.setOrderCode(orderVO.getOrderCode());
+        	commentVO.setCommentUserId(strUserId);
+        	commentVO.setCommentCategory("09");
+        	commentVO.setComment(orderVO.getDeferReason());
+    	    
+        	int dbResult=commonSvc.regiCommentInsert(commentVO);
+
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	        String errMsg = e.getMessage();
+	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+	    }
+        
  
 	    ResourceBundle rb = ResourceBundle.getBundle("config");
 	    String orderFilePath = rb.getString("offact.upload.path") + "order/";
@@ -2966,6 +3021,7 @@ public class OrderController {
 	    String orderDates[]=orderVO.getOrderDate().split("-");
 	    
 		String [] getToMails=orderVO.getEmail().split(";");
+		String [] getToMail_Ccs=null;
 	    
 		try{//메일전송 발주처리
             /* 파일을 생성해서 내용 쓰기 */
@@ -2978,18 +3034,24 @@ public class OrderController {
 			EmailVO mail = new EmailVO();
 			
 			List<String> toEmails= new ArrayList();
+			List<String> toEmail_Ccs= new ArrayList();
 			List<String> attcheFileName= new ArrayList();
 			List<File> files = new ArrayList();
 			
 			for(int m=0;m<getToMails.length;m++){	
 				toEmails.add(getToMails[m]);	
 			}
-			
+			/*
+			for(int c=0;c<getToMail_Ccs.length;c++){	
+				toEmail_Ccs.add(getToMail_Ccs[c]);	
+			}
+			*/
 			attcheFileName.add("[reSend]"+orderVO.getOrderCode()+".html");
 			
 			files.add(file);
 			
 			mail.setToEmails(toEmails);
+			mail.setToEmail_Ccs(toEmail_Ccs);
 			mail.setAttcheFileName(attcheFileName);
 			mail.setFile(files);
 			

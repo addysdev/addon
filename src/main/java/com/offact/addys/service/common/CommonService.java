@@ -108,6 +108,14 @@ public interface CommonService {
      */
     public int regiHistoryInsert(WorkVO work)
     	    throws BizException;
-    
+    /**
+     * 업무이력저장
+     * 
+     * @param TargetVO
+     * @return
+     * @throws BizException
+     */
+    public UserVO getEncPassword(UserVO user)
+    	    throws BizException;
 
 }

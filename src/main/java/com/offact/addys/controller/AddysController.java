@@ -11,6 +11,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,6 +46,7 @@ import com.offact.addys.service.common.CommonService;
 import com.offact.addys.service.common.UserService;
 import com.offact.addys.service.manage.UserManageService;
 import com.offact.addys.vo.common.CodeVO;
+import com.offact.addys.vo.common.CommentVO;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.UserVO;
 import com.offact.addys.vo.common.WorkVO;
@@ -225,6 +227,8 @@ public class AddysController {
 		String strMobliePhoneFormat = "";
 		String strEmail = "";
 		String strIp = "";
+		String strPwdChangeDateTime = "";
+		String strPwCycleDate = "";
 		
 		strIp = ip;//Client 외부IP or G/W
 		
@@ -291,6 +295,8 @@ public class AddysController {
 			strMobliePhoneFormat = userChk.getMobliePhoneFormat();
 			strEmail = userChk.getEmail();
 			strAuth =userChk.getAuth();
+			strPwdChangeDateTime =userChk.getPwdChangeDateTime();
+			strPwCycleDate =userChk.getPwCycleDate();
 
 			// # 3. Session 객체에 셋팅
 			
@@ -318,6 +324,8 @@ public class AddysController {
 				session.setAttribute("strIp", strIp);
 				session.setAttribute("strAuth", strAuth);
 				session.setAttribute("sClientIP", sClientIP);
+				session.setAttribute("pwdChangeDateTime", strPwdChangeDateTime);
+				session.setAttribute("pwCycleDate", strPwCycleDate);
 				
 				//로그인 상태처리		
 				
@@ -414,6 +422,8 @@ public class AddysController {
         session.removeAttribute("strIp");
         session.removeAttribute("strAuth");
         session.removeAttribute("sClientIP");
+        session.removeAttribute("pwdChangeDateTime");
+        session.removeAttribute("pwCycleDate");
         
         //로그인 상태처리		
 		UserVO userState =new UserVO();
@@ -515,7 +525,31 @@ public class AddysController {
        	
 		return mv;
 	}
-	
+    /**
+	 * ajax test
+	 */
+	@RequestMapping("/common/passwordcheck")
+	public @ResponseBody
+	String passwordCheck(@RequestParam(value = "curPwd") String curPwd) 
+	{
+
+		logger.info("[pwd]" + curPwd);
+		
+		UserVO userVo =new UserVO();
+		userVo.setCurPwd(curPwd);
+
+		try{
+        	
+			userVo = commonSvc.getEncPassword(userVo);
+
+	    }catch(BizException e){
+	       	
+	    	e.printStackTrace();
+	    }
+
+		return ""+userVo.getEncPwd();
+
+	 }
 	/**
 	 * ajax test
 	 */
@@ -536,5 +570,13 @@ public class AddysController {
 		
 		return chkresult;
 
+	 }
+	
+	 private String getMonthAgoDate() {
+	        Calendar cal = Calendar.getInstance(Locale.getDefault());
+	        cal.add(Calendar.MONTH ,-1); // 한달전 날짜 가져오기
+	          java.util.Date monthago = cal.getTime();
+	           SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+	           return formatter.format(monthago);
 	 }
 }

@@ -26,6 +26,7 @@
   <result column="deletedYn"           property="deletedYn"  />
   <result column="userResult"          property="userResult"  />
   <result column="smsYn"               property="smsYn"  />
+  <result column="pwdChangeDateTime"   property="pwdChangeDateTime"  />
 </resultMap>
 
 <select id="getUserPageList"  resultMap="userListVO" parameterType="com.offact.addys.vo.manage.UserManageVO" >
@@ -214,6 +215,12 @@
 			  ,T1.useYn
 			  ,T1.deletedYn
 			  ,T1.smsYn
+			  ,Case When DATE_FORMAT(T1.pwdChangeDateTime, '%Y-%m-%d') ='1999-01-01' 
+			  		Then '<![CDATA[<font style="color:red">]]>초기 비밀번호를 변경하시기 바랍니다.<![CDATA[</font>]]>' 
+			        Else Case When DATE_FORMAT(T1.pwdChangeDateTime, '%Y-%m-%d') <![CDATA[<]]> date_add(DATE_FORMAT(now(), '%Y-%m-%d'), interval (Select T4.codeId from ofCode T4 where T4.codeGroupId='PW01') month)
+			                  Then concat('<![CDATA[<font style="color:red">]]>[',concat(DATE_FORMAT(T1.pwdChangeDateTime, '%Y-%m-%d'),']<![CDATA[<br>]]>비밀번호를 변경하시기 바랍니다.<![CDATA[</font>]]>')) 
+			                  Else DATE_FORMAT(T1.pwdChangeDateTime, '%Y-%m-%d') End 
+			        End pwdChangeDateTime
 	     From ofUser T1 
 			  Left Join ofGroup T2 On T1.groupId=T2.groupId
 			  Left Join ofGroup T3 On T1.authId=T3.groupId
