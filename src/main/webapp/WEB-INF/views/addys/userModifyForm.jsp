@@ -113,6 +113,7 @@
       <input type="hidden" id="updateUserId" name="updateUserId" value="${userVO.updateUserId}" >
       <input type="hidden" id="pw_modifyYn" name="pw_modifyYn" value="Y" >
 	    <div class="form-group">
+	        <br>
 	        <h4><strong><font style="color:#FF9900">※ 비밀번호는 한달주기로 변경 하시기 바랍니다.</font></strong></h4>
 	        <br>
 		    <table class="table table-bordered" >
