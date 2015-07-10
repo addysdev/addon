@@ -102,7 +102,9 @@
 		    
 	    	}
 		}
-		
+		function fcMofify_close(){
+			$('#passwordModify').dialog('close');
+		}
 	</script>
   </head>
   <body>
@@ -111,6 +113,8 @@
       <input type="hidden" id="updateUserId" name="updateUserId" value="${userVO.updateUserId}" >
       <input type="hidden" id="pw_modifyYn" name="pw_modifyYn" value="Y" >
 	    <div class="form-group">
+	        <h4><strong><font style="color:#FF9900">※ 비밀번호는 한달주기로 변경 하시기 바랍니다.</font></strong></h4>
+	        <br>
 		    <table class="table table-bordered" >
 		        <tr>
 		          <th class='text-center' width="150px" style="background-color:#E6F3FF" >비밀번호 변경일</th>
@@ -149,7 +153,8 @@
 		      	<input type="hidden" id="mobliePhone" name="mobliePhone" value="${userVO.mobliePhone}" ></th>
 		      	<input type="hidden" id="smsYn" name="smsYn" value="${userVO.smsYn}" ></th>
 			  </table>
-        	<td><button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_modify()">수정</button></td>
+        	<button type="button" class="btn btn-primary" onClick="javascript:fcUserManage_modify()">수정</button>
+        	<button type="button" class="btn btn-danger" onClick="fcMofify_close()">닫기</button>
 	    </div>
 	  </form:form>
 	</div>
