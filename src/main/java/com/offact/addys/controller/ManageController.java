@@ -482,9 +482,20 @@ public class ManageController {
 
 		int retVal=this.userManageSvc.userUpdateProc(userVO);
 		
+		String pw_modifyYn=	userVO.getPw_modifyYn();
+		
 		// 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
+      //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+        
+        if(pw_modifyYn.equals("Y")){
+        	session.setAttribute("pwdChangeDateTime", strToday);
+        }
         
 		//작업이력
 		WorkVO work = new WorkVO();

@@ -124,21 +124,10 @@
 
 <update id="userUpdatePwProc" parameterType="com.offact.addys.vo.manage.UserManageVO" >
         Update ofUser
-       		Set
-  				userId = #{userId}
-            	,userName = #{userName}
-            	,groupId  = #{groupId}
-            	,authId = #{authId}
-            	,excelAuth = #{excelAuth}
-            	,password = password(#{password})
-            	,email = #{email}
-           	 	,officePhone = #{officePhone}
-            	,mobliePhone = #{mobliePhone}
-            	,ip = #{ip}
-            	,auth = #{auth}
+       		Set password = password(#{password})
             	,updateUserId = #{updateUserId}
             	,updateDateTime = now()
-            	,smsYn = #{smsYn}
+            	,pwdChangeDateTime = now()
  		Where userId = #{userId}
 </update>
 
