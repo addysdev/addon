@@ -108,7 +108,8 @@
 					       I1.productCode,
 					       ifnull(I1.safeStock,0) as safeStock,/*안전재고수량*/
                            ifnull(I1.holdStock,0) as holdStock,/*보유재고수량*/
-                           ifnull(I2.stockCnt,0) as stockCnt,/*재고수량*/ 
+                           /*ifnull(I2.stockCnt,0) as stockCnt,*//*재고수량*/ 
+                           ifnull((Select A1.stockCnt From adStockDetail A1 Where A1.groupId=I1.groupId and A1.productCode=I1.productCode and I2.stockDate=A1.stockDate),0)  as stockCnt, /*재고수량*/ 
 						   ifnull(I2.stockDate,'1999-01-02') as stockChk,/*재고기준일*/
                		       /*ifnull(I3.deferDate,'1999-01-01') as deferChk,*//*보류기준일*/
 						   /*ifnull(I4.orderDate,'1999-01-01') as orderChk,*//*발주기준일*/
@@ -127,7 +128,11 @@
                                 End orderState /*최신발주상태*/
                                 
 					  From adStockMaster I1
-						   Left Join(
+					  		  Left Join ( Select groupId, max(stockDate) as stockDate 
+                       					  	From adStock
+                        			   		Group By groupID
+                		 			   	) As I2 On I1.groupId = I2.groupId /*재고기준일*/
+						 /*  Left Join(
 									 Select groupID,productCode,stockDate,
                      						(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
                 					 	From ( 
@@ -135,7 +140,7 @@
                        						  	From adStockDetail 
                         						Group By  groupID,productCode 
                         					 ) As A1
-									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID /*재고기준일*/
+									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID *//*재고기준일*/
 						/* Left Join(
 									 Select groupID,productCode,deferDate
                 					 	From ( 
@@ -268,7 +273,8 @@ From (
 					       I1.productCode,
 					       ifnull(I1.safeStock,0) as safeStock,/*안전재고수량*/
                            ifnull(I1.holdStock,0) as holdStock,/*보유재고수량*/
-                           ifnull(I2.stockCnt,0) as stockCnt,/*재고수량*/ 
+                           /*ifnull(I2.stockCnt,0) as stockCnt,*//*재고수량*/ 
+                           ifnull((Select A1.stockCnt From adStockDetail A1 Where A1.groupId=I1.groupId and A1.productCode=I1.productCode and I2.stockDate=A1.stockDate),0)  as stockCnt, /*재고수량*/  
 						   ifnull(I2.stockDate,'1999-01-02') as stockChk,/*재고기준일*/
                		       /*ifnull(I3.deferDate,'1999-01-01') as deferChk,*//*보류기준일*/
 						   /*ifnull(I4.orderDate,'1999-01-01') as orderChk,*//*발주기준일*/
@@ -287,7 +293,11 @@ From (
                                 End orderState /*최신발주상태*/
                                 
 					  From adStockMaster I1
-						   Left Join(
+					  		  Left Join ( Select groupId, max(stockDate) as stockDate 
+                       					  	From adStock
+                        			   		Group By groupID
+                		 			   	) As I2 On I1.groupId = I2.groupId /*재고기준일*/
+						 /*  Left Join(
 									 Select groupID,productCode,stockDate,
                      						(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
                 					 	From ( 
@@ -295,7 +305,7 @@ From (
                        						  	From adStockDetail 
                         						Group By  groupID,productCode 
                         					 ) As A1
-									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID /*재고기준일*/
+									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID *//*재고기준일*/
 						/* Left Join(
 									 Select groupID,productCode,deferDate
                 					 	From ( 
@@ -415,7 +425,8 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 					       I1.productCode,
 					       ifnull(I1.safeStock,0) as safeStock,/*안전재고수량*/
                            ifnull(I1.holdStock,0) as holdStock,/*보유재고수량*/
-                           ifnull(I2.stockCnt,0) as stockCnt,/*재고수량*/ 
+                           /*ifnull(I2.stockCnt,0) as stockCnt,*//*재고수량*/ 
+                           ifnull((Select A1.stockCnt From adStockDetail A1 Where A1.groupId=I1.groupId and A1.productCode=I1.productCode and I2.stockDate=A1.stockDate),0)  as stockCnt, /*재고수량*/ 
 						   ifnull(I2.stockDate,'1999-01-02') as stockChk,/*재고기준일*/
                		       /*ifnull(I3.deferDate,'1999-01-01') as deferChk,*//*보류기준일*/
 						   /*ifnull(I4.orderDate,'1999-01-01') as orderChk,*//*발주기준일*/
@@ -429,7 +440,11 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
                      	   		End orderState
                      	   		
 					  From adStockMaster I1
-						   Left Join(
+					  		  Left Join ( Select groupId, max(stockDate) as stockDate 
+                       					  	From adStock
+                        			   		Group By groupID
+                		 			   	) As I2 On I1.groupId = I2.groupId /*재고기준일*/
+						 /*  Left Join(
 									 Select groupID,productCode,stockDate,
                      						(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
                 					 	From ( 
@@ -437,7 +452,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
                        						  	From adStockDetail 
                         						Group By  groupID,productCode 
                         					 ) As A1
-									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID /*재고기준일*/
+									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID *//*재고기준일*/
 						/* Left Join(
 									 Select groupID,productCode,deferDate
                 					 	From ( 
@@ -534,7 +549,8 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 					       I1.productCode,
 					       ifnull(I1.safeStock,0) as safeStock,/*안전재고수량*/
                            ifnull(I1.holdStock,0) as holdStock,/*보유재고수량*/
-                           ifnull(I2.stockCnt,0) as stockCnt,/*재고수량*/ 
+                           /*ifnull(I2.stockCnt,0) as stockCnt,*//*재고수량*/ 
+                           ifnull((Select A1.stockCnt From adStockDetail A1 Where A1.groupId=I1.groupId and A1.productCode=I1.productCode and I2.stockDate=A1.stockDate),0)  as stockCnt, /*재고수량*/ 
 						   ifnull(I2.stockDate,'1999-01-02') as stockChk,/*재고기준일*/
                		       /*ifnull(I3.deferDate,'1999-01-01') as deferChk,*//*보류기준일*/
 						   /*ifnull(I4.orderDate,'1999-01-01') as orderChk,*//*발주기준일*/
@@ -542,7 +558,11 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
                            ifnull(I6.orderState,'01') as orderState,/*최신발주상태*/
 					       I6.orderCode/*최신발주코드*/
 					  From adStockMaster I1
-						   Left Join(
+					  		  Left Join ( Select groupId, max(stockDate) as stockDate 
+                       					  	From adStock
+                        			   		Group By groupID
+                		 			   	) As I2 On I1.groupId = I2.groupId /*재고기준일*/
+						 /*  Left Join(
 									 Select groupID,productCode,stockDate,
                      						(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
                 					 	From ( 
@@ -550,7 +570,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
                        						  	From adStockDetail 
                         						Group By  groupID,productCode 
                         					 ) As A1
-									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID /*재고기준일*/
+									  ) As I2 On I1.productCode = I2.productCode And I1.groupID = I2.groupID *//*재고기준일*/
 						/* Left Join(
 									 Select groupID,productCode,deferDate
                 					 	From ( 

@@ -102,6 +102,7 @@ From (
            		       </if>
                   group by productCode
                 ) T6 On T1.productCode = T6.productCode 
+      Where T1.deletedYn = 'N'
       group by T1.productCode
       ) as T4
       Where 1=1
@@ -218,6 +219,7 @@ From (
            		       </if>
                   group by productCode
                 ) T6 On T1.productCode = T6.productCode 
+      Where T1.deletedYn = 'N'
       group by T1.productCode
       ) as T4
       Where 1=1
@@ -322,7 +324,7 @@ From (
            		  </if>      
                   group by productCode
                 ) T6 On T1.productCode = T6.productCode 
-       Where 1=1
+       Where T1.deletedYn = 'N'
      		<if test="start_gmroi != null and start_gmroi != '' and end_gmroi != null and end_gmroi != '' " >
           			And T1.gmroiRate between ${start_gmroi} and ${end_gmroi}
            	</if>
@@ -431,6 +433,7 @@ From (
            		       </if>
                   group by productCode
                 ) T6 On T1.productCode = T6.productCode 
+      Where T1.deletedYn = 'N'          
       group by T1.productCode
       ) as T4
       Where 1=1

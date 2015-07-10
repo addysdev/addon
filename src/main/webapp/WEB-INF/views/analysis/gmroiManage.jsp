@@ -23,7 +23,7 @@
     /// key down function (엔터키가 입력되면 검색함수 호출)
     function checkKey(event){
         if(event.keyCode == 13){
-        	fcgmroi_listSearch('1');
+        	fcGmroi_listSearch('1');
             return false;
         } else{
             return true;
@@ -165,11 +165,11 @@
 				</c:choose>
         	    
         	    <label for="con_group1Name"> 그룹1 </label>
-				<input type="text" style="width:70px" class="form-control" id="con_group1Name" name="con_group1Name"  value="${gmroiConVO.con_group1Name}" />
+				<input type="text" style="width:70px" class="form-control" id="con_group1Name" name="con_group1Name"  value="${gmroiConVO.con_group1Name}" onkeypress="javascript:return checkKey(event);" />
 				<label for="con_group2Name"> 그룹2 </label>
-				<input type="text" style="width:70px" class="form-control" id="con_group2Name" name="con_group2Name"  value="${gmroiConVO.con_group2Name}" />
+				<input type="text" style="width:70px" class="form-control" id="con_group2Name" name="con_group2Name"  value="${gmroiConVO.con_group2Name}" onkeypress="javascript:return checkKey(event);" />
 				<label for="con_group3Name"> 그룹3 </label>
-				<input type="text" style="width:70px" class="form-control" id="con_group3Name" name="con_group3Name"  value="${gmroiConVO.con_group3Name}" />
+				<input type="text" style="width:70px" class="form-control" id="con_group3Name" name="con_group3Name"  value="${gmroiConVO.con_group3Name}" onkeypress="javascript:return checkKey(event);" />
 				
 				<label for="searchGubun"><h6><strong>검색조건 :</label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
