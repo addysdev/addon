@@ -773,7 +773,14 @@ function fcDefer_reason(reason){
           <th class='text-center'><input type="text" class="form-control" id="deliveryName"  maxlength="20"  name="deliveryName"  value="${targetVO.companyName}" placeholder="수신" /></th>
           <th rowspan='9' class='text-center'  style="background-color:#E6F3FF">발신</th>
           <th class='text-center' style="background-color:#E6F3FF">발신</th>
-          <th class='text-center'><input type="text" class="form-control" id="orderName"  maxlength="20"  name="orderName"  value="애디스 ${targetVO.groupName}" placeholder="발신"/></th>
+          <c:choose>
+    		<c:when test="${targetVO.groupName=='반디울산점'}">
+			     <th class='text-center'><input type="text" class="form-control" id="orderName"  maxlength="20"  name="orderName"  value="애디스  본사" placeholder="발신"/></th>   
+			</c:when>
+			<c:otherwise>
+				 <th class='text-center'><input type="text" class="form-control" id="orderName"  maxlength="20"  name="orderName"  value="애디스 ${targetVO.groupName}" placeholder="발신"/></th>
+			</c:otherwise>
+		  </c:choose>
       	</tr>
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF" >담당자</th>
@@ -839,8 +846,15 @@ function fcDefer_reason(reason){
       	</tr>
       	<tr>
           <th colspan='2' class='text-center' style="background-color:#E6F3FF">SMS내용</th>
-          <th colspan='4' class='text-center'><input type="text" class="form-control" id="sms" name="sms"  maxlength="50"  value="${targetVO.deliveryCharge}님 ADDYS ${targetVO.groupName}에서 발주서를 보냈습니다.당일처리 부탁드립니다." placeholder="SMS" /></th>
-      	</tr>
+	          <c:choose>
+	    		<c:when test="${targetVO.groupName=='반디울산점'}">
+				      <th colspan='4' class='text-center'><input type="text" class="form-control" id="sms" name="sms"  maxlength="50"  value="${targetVO.deliveryCharge}님 ADDYS 본사 에서 발주서를 보냈습니다.당일처리 부탁드립니다." placeholder="SMS" /></th>
+				</c:when>
+				<c:otherwise>
+					  <th colspan='4' class='text-center'><input type="text" class="form-control" id="sms" name="sms"  maxlength="50"  value="${targetVO.deliveryCharge}님 ADDYS ${targetVO.groupName}에서 발주서를 보냈습니다.당일처리 부탁드립니다." placeholder="SMS" /></th>
+				</c:otherwise>
+			  </c:choose>
+        	</tr>
       	<tr>
           <th colspan='2' class='text-center' style="background-color:#E6F3FF">메모</th>
           <th colspan='4' class='text-center'><input type="text" class="form-control" id="memo" name="memo"  maxlength="50"  value="" placeholder="메모" /></th>

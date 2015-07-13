@@ -140,7 +140,7 @@
             </c:if>
            <c:if test="${empty workList}">
            <tr>
-           	<td colspan='9' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='10' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>
