@@ -908,11 +908,11 @@ public class MasterController {
 	    
 	     if("hold".equals(importType)){
 	    	 this.logger.info("보유재고 DB Insert");
-	    	 rtmMap = this.stockMasterSvc.holdRegiExcelUpload(stockMasterListResult);
+	    	 rtmMap = this.stockMasterSvc.holdRegiExcelUpload(stockGroupList,stockMasterListResult);
 	    	 work.setWorkCode("PD003");
 	     }else{
 	    	 this.logger.info("안전재고 DB Insert");
-	    	 rtmMap = this.stockMasterSvc.safeRegiExcelUpload(stockMasterListResult);
+	    	 rtmMap = this.stockMasterSvc.safeRegiExcelUpload(stockGroupList,stockMasterListResult);
 	    	 work.setWorkCode("PD002");
 	     }
 	

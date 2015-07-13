@@ -38,7 +38,7 @@ public class StockMasterServiceImpl implements StockMasterService {
         return stockMaster;
     }
 
-    public Map<Object, Object> safeRegiExcelUpload(List<StockMasterVO> excelUploadList)
+    public Map<Object, Object> safeRegiExcelUpload(List<StockMasterVO> groupList,List<StockMasterVO> excelUploadList)
     	    throws BizException
     	  {
     	    Map rtnMap = new HashMap();
@@ -48,8 +48,15 @@ public class StockMasterServiceImpl implements StockMasterService {
     	    List rtnErrorList = new ArrayList();
     	    String errorMsgList ="";
     	    
-    	    deleteMap.put("updateUserId", "system");  //기존 데이타 삭제필드 업데이트
-    	    this.commonDao.update("StockMaster.stockDeleteAll", deleteMap);
+    	    for (int g=0;g<groupList.size();g++){
+    	    	 
+    	    	StockMasterVO groupInfo=(StockMasterVO)groupList.get(g);
+    	    	String groupId=groupInfo.getGroupId();
+        	    deleteMap.put("updateUserId", "system");  //기존 데이타 삭제필드 업데이트
+        	    deleteMap.put("groupId", groupId);
+        	    this.commonDao.update("StockMaster.stockDeleteAll", deleteMap);
+    	   
+    	    }
 
     	    int idx = 0;
 
@@ -86,7 +93,7 @@ public class StockMasterServiceImpl implements StockMasterService {
     	    return rtnMap;
     	  }
     
-    public Map<Object, Object> holdRegiExcelUpload(List<StockMasterVO> excelUploadList)
+    public Map<Object, Object> holdRegiExcelUpload(List<StockMasterVO> groupList,List<StockMasterVO> excelUploadList)
     	    throws BizException
     	  {
     	    Map rtnMap = new HashMap();
@@ -96,8 +103,15 @@ public class StockMasterServiceImpl implements StockMasterService {
     	    List rtnErrorList = new ArrayList();
     	    String errorMsgList ="";
     	    
-    	    deleteMap.put("updateUserId", "system");  //기존 데이타 삭제필드 업데이트
-    	    this.commonDao.update("StockMaster.stockDeleteAll", deleteMap);
+    	    for (int g=0;g<groupList.size();g++){
+   	    	 
+    	    	StockMasterVO groupInfo=(StockMasterVO)groupList.get(g);
+    	    	String groupId=groupInfo.getGroupId();
+        	    deleteMap.put("updateUserId", "system");  //기존 데이타 삭제필드 업데이트
+        	    deleteMap.put("groupId", groupId);
+        	    this.commonDao.update("StockMaster.stockDeleteAll", deleteMap);
+    	   
+    	    }
 
     	    int idx = 0;
 

@@ -30,7 +30,7 @@ public interface StockMasterService {
      * @return
      * @throws BizException
      */
-    public abstract Map safeRegiExcelUpload(List<StockMasterVO> paramList)
+    public abstract Map safeRegiExcelUpload(List<StockMasterVO> groupList,List<StockMasterVO> paramList)
     	    throws BizException;
     
     /**
@@ -40,7 +40,7 @@ public interface StockMasterService {
      * @return
      * @throws BizException
      */
-    public abstract Map holdRegiExcelUpload(List<StockMasterVO> paramList)
+    public abstract Map holdRegiExcelUpload(List<StockMasterVO> groupList,List<StockMasterVO> paramList)
     	    throws BizException;
     
     /**

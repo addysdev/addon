@@ -46,7 +46,8 @@
   				deletedYn = 'Y'
             	,updateUserId = #{updateUserId}
             	,updateDateTime = now()
- 		Where 1=1
+ 		Where 1=1 
+ 		      And groupId= #{groupId}
 </update>
 
 <insert id="insertExcelSafe"  parameterType="com.offact.addys.vo.master.StockMasterVO" >
