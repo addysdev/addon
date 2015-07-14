@@ -37,10 +37,10 @@
                 $(this).load(url+'?recoveryCode='+recoveryCode+'&groupId='+groupId+'&groupName='+encodeURIComponent(groupName)+
                 		'&recoveryState='+recoveryState);
                
-                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
-                    $("#recoveryDetailView").dialog('close');
+              //  $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+              //      $("#recoveryDetailView").dialog('close');
 
-                    });
+               //     });
             }
             ,close:function(){
          

@@ -176,9 +176,16 @@ function fcOrder_process(){
 		if(frm.email.value==''){
 			
 			alert('발주 대상 이메일 주소가 없습니다.');
+			frm.email.focus(1);
 			return;
 		}
-		
+
+		if(frm.orderEmail.value==''){
+			
+			alert('회신 가능한 이메일 주소가 없습니다.');
+			frm.orderEmail.focus(1);
+			return;
+		}
 		
 		var devoption="<spring:eval expression="@config['offact.dev.option']" />";
 		var devmails="<spring:eval expression="@config['offact.dev.mail']" />";

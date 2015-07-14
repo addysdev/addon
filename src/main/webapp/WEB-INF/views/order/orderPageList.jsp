@@ -36,10 +36,10 @@
                 //팝업 가져올 url
                 $(this).load(url+'?orderCode='+orderCode);
                
-                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
-                    $("#orderDetailView").dialog('close');
+              //  $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+              //      $("#orderDetailView").dialog('close');
 
-                    });
+              //      });
             }
             ,close:function(){
                 $('#orderDetailView').empty();

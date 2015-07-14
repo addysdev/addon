@@ -1343,7 +1343,7 @@ public class OrderController {
 			mail.setFile(files);
 
 			mail.setFromEmail(orderfromemail);
-			mail.setMsg("애디스("+targetVO.getGroupName()+")지점 상품주문서 메일입니다.<br>"+targetVO.getDeliveryDate()+"까지 납품 부탁드립니다.<br><br><br>*첨부파일이 정상적으로 확인이 안되실 경우 아래 링크로 다시한번 다운로드 부탁드립니다.<br><a href='"+hostUrl+"/addon/order/orderdownload?orderCode="+orderCode+"' >[발주서 다운로드]</a><br><br><font style='color:red'>*본 메일은 발주전용 메일입니다.회신시 아래 연락처 정보의 메일로 회신 부탁드립니다.</font><br><br>[연락처  정보]<br><br>(담당자)  "+targetVO.getOrderCharge()+"<br>(Tel)  "+
+			mail.setMsg(targetVO.getOrderName()+" 상품주문서 메일입니다.<br>"+targetVO.getDeliveryDate()+"까지 납품 부탁드립니다.<br><br><br>*첨부파일이 정상적으로 확인이 안되실 경우 아래 링크로 다시한번 다운로드 부탁드립니다.<br><a href='"+hostUrl+"/addon/order/orderdownload?orderCode="+orderCode+"' >[발주서 다운로드]</a><br><br><font style='color:red'>*본 메일은 발주전용 메일입니다.회신시 아래 연락처 정보의 메일로 회신 부탁드립니다.</font><br><br>[연락처  정보]<br><br>(담당자)  "+targetVO.getOrderCharge()+"<br>(Tel)  "+
 			targetVO.getOrderTelNumber()+"<br>(핸드폰)  "+targetVO.getOrderMobilePhone()+"<br>(E-Mail)  "+targetVO.getOrderEmail()+"<br>(FAX)  "+targetVO.getOrderFaxNumber());
 			
 			
@@ -3056,7 +3056,7 @@ public class OrderController {
 			mail.setFile(files);
 			
 			mail.setFromEmail(orderfromemail);
-			mail.setMsg("애디스("+orderVO.getOrderName()+")지점 상품주문서 메일입니다.<br>"+orderVO.getDeliveryDate()+"까지 납품 부탁드립니다.<br><br><br>*첨부파일이 정상적으로 확인이 안되실 경우 아래 링크로 다시한번 다운로드 부탁드립니다.<br><a href='"+hostUrl+"/addon/order/orderdownload?orderCode="+orderVO.getOrderCode()+"' >[발주서 다운로드]</a><br><br><font style='color:red'>*본 메일은 발주전용 메일입니다.회신시 아래 연락처 정보의 메일로 회신 부탁드립니다.</font><br><br>[연락처  정보]<br><br>(담당자)  "+orderVO.getOrderCharge()+"<br>(Tel)  "+
+			mail.setMsg(orderVO.getOrderName()+" 상품주문서 메일입니다.<br>"+orderVO.getDeliveryDate()+"까지 납품 부탁드립니다.<br><br><br>*첨부파일이 정상적으로 확인이 안되실 경우 아래 링크로 다시한번 다운로드 부탁드립니다.<br><a href='"+hostUrl+"/addon/order/orderdownload?orderCode="+orderVO.getOrderCode()+"' >[발주서 다운로드]</a><br><br><font style='color:red'>*본 메일은 발주전용 메일입니다.회신시 아래 연락처 정보의 메일로 회신 부탁드립니다.</font><br><br>[연락처  정보]<br><br>(담당자)  "+orderVO.getOrderCharge()+"<br>(Tel)  "+
 			orderVO.getOrderTelNumber()+"<br>(핸드폰)  "+orderVO.getOrderMobilePhone()+"<br>(E-Mail)  "+orderVO.getOrderEmail()+"<br>(FAX)  "+orderVO.getOrderFaxNumber());
 					
 			

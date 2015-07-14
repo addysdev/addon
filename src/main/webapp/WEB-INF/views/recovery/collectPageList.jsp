@@ -36,10 +36,10 @@
                 //팝업 가져올 url
                 $(this).load(url+'?collectCode='+collectCode+'&collectState='+collectState+'&state='+state+'&collectDateTime='+collectDateTime+'&recoveryClosingDate='+recoveryClosingDate+'&memo='+encodeURIComponent(memo));
                
-                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
-                    $("#recoveryManage").dialog('close');
+             //   $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+             //       $("#recoveryManage").dialog('close');
 
-                    });
+             //       });
             }
             ,close:function(){
          

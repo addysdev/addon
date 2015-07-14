@@ -51,10 +51,10 @@
                 		'&groupName='+encodeURIComponent(groupName)+'&companyCode='+companyCode+
                 		'&orderState='+orderState+'&productPrice='+productPrice+'&vat='+vat+'&orderPrice='+orderPrice+'&orderAddress='+encodeURIComponent(orderAddress));
                
-                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
-                    $("#targetDetailView").dialog('close');
+           //     $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+            //        $("#targetDetailView").dialog('close');
 
-                    });
+             //       });
             }
             ,close:function(){
                 $('#targetDetailView').empty();

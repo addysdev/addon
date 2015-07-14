@@ -30,6 +30,8 @@
 <title>addys</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Pragma" content="no-cache">
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Latest compiled and minified CSS-->
     <link rel="stylesheet" href="<%= request.getContextPath() %>/jquery-ui-1.11.4.custom/jquery-ui.css">
