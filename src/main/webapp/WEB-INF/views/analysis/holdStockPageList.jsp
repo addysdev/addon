@@ -227,7 +227,7 @@
                  <c:choose>
 		    		<c:when test="${strAuth!='03'}">
 						 <td class='text-right'><sapn style="color:red">
-                				<input style="width:60px;text-align:right;color:red" type="text" class="form-control" id="recomentCnt_List" name="recomentCnt_List" maxlength="3" numberOnly value="${holdStockVO.recomendCnt}">   
+                				<input style="width:60px;color:red" type="text" class="form-control" id="recomentCnt_List" name="recomentCnt_List" maxlength="3" numberOnly value="${holdStockVO.recomendCnt}">   
                			 </sapn></td>
 					</c:when>
 					<c:otherwise>

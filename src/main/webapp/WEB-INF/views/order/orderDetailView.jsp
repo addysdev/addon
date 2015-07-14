@@ -981,7 +981,7 @@ function totalTargetAmt(){
                  <td class='text-left'><c:out value="${orderVO.productName}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.orderCnt}"/></td>
                  <input type="hidden" name="orderCnt" value="${orderVO.orderCnt}">
-                 <td class='text-right'><input style="width:45px;text-align:right" type="text" class="form-control" id="orderResultCnt" name="orderResultCnt" maxlength="2" numberOnly  onKeyup="totalOrderAmt()" value="${orderVO.orderResultCnt}"></td>
+                 <td class='text-right'><input type="text" class="form-control" id="orderResultCnt" name="orderResultCnt" maxlength="2" numberOnly  onKeyup="totalOrderAmt()" value="${orderVO.orderResultCnt}"></td>
                  
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.orderPrice+orderVO.orderVatRate}" /></td>
                  <input type="hidden" name="orderPrice" value="${orderVO.orderPrice+orderVO.orderVatRate}">
@@ -989,10 +989,10 @@ function totalTargetAmt(){
                  
                 <c:choose>
 		    		<c:when test="${orderVO.orderCnt=='0'}">
-                		 <td class='text-right'><input style="width:75px;text-align:right" type="text" class="form-control" id="orderResultPrice" maxlength="9" numberOnly name="orderResultPrice" onKeyup="totalOrderAmt()" value="0"></td>
+                		 <td class='text-right'><input  type="text" class="form-control" id="orderResultPrice" maxlength="9" numberOnly name="orderResultPrice" onKeyup="totalOrderAmt()" value="0"></td>
                 	</c:when>
 					<c:otherwise>
-					     <td class='text-right'><input style="width:75px;text-align:right" type="text" class="form-control" id="orderResultPrice" maxlength="9" numberOnly name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderResultPriceView}"></td>
+					     <td class='text-right'><input  type="text" class="form-control" id="orderResultPrice" maxlength="9" numberOnly name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderResultPriceView}"></td>
                    </c:otherwise>
 				</c:choose>
                  <td class='text-right' id='orderTotalPriceView' name='orderTotalPriceView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="0"/></td>

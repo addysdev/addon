@@ -833,14 +833,14 @@ function fcResult_cal(){
                        </c:when>
 					<c:otherwise>
 					   <td class='text-center'>
-					   <input style="width:55px;text-align:right" type="text" class="form-control" id="recoveryCnt" name="recoveryCnt"  maxlength="3" numberOnly onKeyup="fcResult_cal()" value="${recoveryVO.recoveryCnt}">
+					   <input style="width:55px;" type="text" class="form-control" id="recoveryCnt" name="recoveryCnt"  maxlength="3" numberOnly onKeyup="fcResult_cal()" value="${recoveryVO.recoveryCnt}">
 					   </td>
                     </c:otherwise>
 				</c:choose>
                  <c:choose>
 		    		<c:when test="${(recoveryConVO.receiveCnt+recoveryConVO.checkCnt)==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"> 
 					    <td class='text-center'>
-					    <input style="width:55px;text-align:right" class="form-control" type="text" id="recoveryResultCnt" name="recoveryResultCnt" maxlength="3" numberOnly onKeyup="fcResult_cal()" value="${recoveryVO.recoveryResultCnt}">
+					    <input style="width:55px;" class="form-control" type="text" id="recoveryResultCnt" name="recoveryResultCnt" maxlength="3" numberOnly onKeyup="fcResult_cal()" value="${recoveryVO.recoveryResultCnt}">
 					    </td>
                     </c:when>
 					<c:otherwise>

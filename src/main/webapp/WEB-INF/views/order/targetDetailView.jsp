@@ -983,9 +983,9 @@ function fcDefer_reason(reason){
                  <input type="hidden" id="orderCnt" name="orderCnt" value="${targetVO.orderCnt}" >
                  <input type="hidden" id="orderCntRaw" name="orderCntRaw" value="${targetVO.orderCnt}" >
                  <input type="hidden" id="vatRate" name="vatRate" value="${targetVO.vatRate}" >
-                 <td class='text-right' ><input style="width:40px;text-align:right" type="text" class="form-control" id="minusCnt" name="minusCnt" maxlength="2" numberOnly onKeyup="fcMinus_Cnt('${status.count}')" value="0"></td>
-                 <td class='text-right' ><input style="width:45px;text-align:right" type="text" class="form-control" id="addCnt" name="addCnt" maxlength="2" numberOnly onKeyup="fcAdd_Cnt('${status.count}')" value="0"></td>
-                 <td class='text-right' ><input style="width:45px;text-align:right" type="text" class="form-control" id="lossCnt" name="lossCnt" maxlength="2" numberOnly onKeyup="fcLoss_Cnt('${status.count}')" value="0"></td>
+                 <td class='text-right' ><input style="width:40px;" type="text" class="form-control" id="minusCnt" name="minusCnt" maxlength="2" numberOnly onKeyup="fcMinus_Cnt('${status.count}')" value="0"></td>
+                 <td class='text-right' ><input style="width:45px;" type="text" class="form-control" id="addCnt" name="addCnt" maxlength="2" numberOnly onKeyup="fcAdd_Cnt('${status.count}')" value="0"></td>
+                 <td class='text-right' ><input style="width:45px;" type="text" class="form-control" id="lossCnt" name="lossCnt" maxlength="2" numberOnly onKeyup="fcLoss_Cnt('${status.count}')" value="0"></td>
                  <tr>
 	             	<td colspan='11' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  maxlength="50"  value="" placeholder="비고" /></td>
 	             </tr>

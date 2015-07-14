@@ -319,7 +319,7 @@ function totalTargetAmt(){
                  <input type="hidden" name="orderPrice" value="${orderVO.orderPrice+orderVO.orderVatRate}">
                  <input style="width:80px" type="hidden" class="form-control" id="orderVatRate" name="orderVatRate" onKeyup="totalOrderAmt()" value="0">
                  
-                 <td class='text-right'><input style="width:90px;text-align:right" disabled type="text" class="form-control" id="orderResultPrice" name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderResultPriceView}"></td>
+                 <td class='text-right'><input style="width:90px;" disabled type="text" class="form-control" id="orderResultPrice" name="orderResultPrice" onKeyup="totalOrderAmt()" value="${orderVO.orderResultPriceView}"></td>
                  <td class='text-right' id='orderTotalPriceView' name='orderTotalPriceView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="0"/></td>
                  <td class='text-right'>(${orderVO.etcCnt})</td>
                   <tr>
