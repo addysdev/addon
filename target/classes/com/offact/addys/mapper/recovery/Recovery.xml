@@ -359,7 +359,7 @@ From (
     Where T3.deletedYn='N' And T1.recoveryCode = #{recoveryCode}
     Order by (select count(idx) from adComment T7 Where T1.recoveryCode = T7.orderCode  And T1.productCode=T7.productCode And T7.commentCategory='06') desc,
     T1.stockCnt desc,
-    T1.productCode asc
+    T5.productName asc
     
 </select>
 

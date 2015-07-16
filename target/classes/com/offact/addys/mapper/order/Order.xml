@@ -105,7 +105,11 @@
            T4.companyName,
 	   	   (ifnull(T1.orderResultCnt,0)*ifnull(T1.orderResultPrice,0)) as supplyPrice,
            (ifnull(T1.orderResultCnt,0)*ifnull(T1.orderVatRate,0)) as vat,
+           <!--
            (ifnull(T1.orderResultCnt,0)*(ifnull(T1.orderResultPrice,0)+ifnull(T1.orderVatRate,0))) as totalOrderPrice
+           -->
+           Case When T2.orderState in ('03','05') Then (ifnull(T1.orderResultCnt,0)*(ifnull(T7.productPrice,0)+ifnull(T7.vatRate,0)))
+           Else (ifnull(T1.orderResultCnt,0)*(ifnull(T1.orderResultPrice,0)+ifnull(T1.orderVatRate,0))) End totalOrderPrice
   	From adOrderDetail T1
       	 Left Join adOrder T2 On T1.orderCode=T2.orderCode
        	 Left Join ofGroup T3 On T2.groupId =T3.groupId
@@ -293,10 +297,17 @@ SELECT sum(TOT.waitCnt) AS waitCnt,
 	   	   T1.safeStock,
 	   	   T1.holdStock,
 	   	   T5.productPrice,
+	   	   <!--
 	   	   T1.orderPrice,
 	   	   format(T1.orderPrice,0) as orderPriceView,
 	   	   T1.orderResultPrice,
 	   	   format(T1.orderResultPrice,0) as orderResultPriceView,
+	   	   -->
+	   	   T5.productPrice as orderPrice,
+	   	   format(T5.productPrice,0) as orderPriceView,
+	   	   Case When T2.orderState in ('03','05') Then T5.productPrice Else T1.orderResultPrice End orderResultPrice,
+	   	   Case When T2.orderState in ('03','05') Then format(T5.productPrice,0) Else format(T1.orderResultPrice,0) End orderResultPriceView,
+	   	   
            T5.vatRate,
            T1.orderVatRate,
            T1.orderCnt,
@@ -308,7 +319,11 @@ SELECT sum(TOT.waitCnt) AS waitCnt,
            T1.deferCheck,
            T1.orderCheck,
            T2.orderState,
+           <!--
            case When T1.orderPrice = T1.orderResultPrice Then 1 Else 0 End priceOrder ,
+           -->
+           case When T2.orderState not in ('03','05') And T5.productPrice = T1.orderResultPrice Then 1 Else 0 End priceOrder ,
+            
            case When T1.orderCnt = T1.orderResultCnt Then 1 Else 0 End cntOrder ,
            case When T1.safeStock > T1.stockCnt Then 0 Else 1 End stockOrder
   From adOrderDetail T1
@@ -318,11 +333,14 @@ SELECT sum(TOT.waitCnt) AS waitCnt,
        Left Join adProductMaster T5 On T1.productCode = T5.productCode
   Where T1.orderCode = #{orderCode}
     Order by 
+    <!--
     (case When T1.orderPrice = T1.orderResultPrice Then 1 Else 0 End ) ASC ,
+    -->
+    (case When T2.orderState not in ('03','05') And T5.productPrice = T1.orderResultPrice Then 1 Else 0 End ) ASC ,
     (case When T1.orderCnt = T1.orderResultCnt Then 1 Else 0 End ) ASC ,
     (case When T1.safeStock >= T1.stockCnt Then 0 Else 1 End ) ASC, 
     (select count(T6.idx) from adComment T6 Where T1.orderCode = T6.orderCode  And T1.productCode=T6.productCode And T6.commentCategory='04') DESC,
-    T1.productCode ASC
+    T5.productName ASC
 </select>
 
 <insert id="deferReasonInsert"  parameterType="com.offact.addys.vo.order.OrderVO" >
