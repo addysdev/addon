@@ -147,14 +147,26 @@ function barCodeCheck(){
 	if(amtCnt > 1){
 		
     	for(i=0;i<amtCnt;i++){
-    		frm.orderResultCnt[i].value=0;
-    		opener.document.all('barCodeCheckColor')[i].style.backgroundColor='#FEE2B4';
+    		//frm.orderResultCnt[i].value=0;
+    		if(frm.orderCnt[i].value==frm.orderResultCnt[i].value){
+    			frm.orderCheck[i].checked=true;
+    			opener.document.all('barCodeCheckColor')[i].style.backgroundColor='';
+    		}else{
+    			frm.orderCheck[i].checked=false;
+    			opener.document.all('barCodeCheckColor')[i].style.backgroundColor='#FEE2B4';
+    		}
     	}
     	
 	}else{
 		
-		frm.orderResultCnt.value=0;
-		opener.document.all('barCodeCheckColor').style.backgroundColor='#FEE2B4';
+		//frm.orderResultCnt.value=0;
+		if(frm.orderCnt.value==frm.orderResultCnt.value){
+			frm.orderCheck.checked=true;
+			opener.document.all('barCodeCheckColor').style.backgroundColor='';
+		}else{
+			frm.orderCheck.checked=false;
+			opener.document.all('barCodeCheckColor').style.backgroundColor='#FEE2B4';
+		}
 	}
 
 	for(x=0;x<barCodes.length;x++){
@@ -177,6 +189,7 @@ function barCodeCheck(){
 		    			opener.document.all('barCodeCheckColor')[i].style.backgroundColor='';
 	    			}else{
 	    				frm.orderCheck[i].checked=false;
+	    				opener.document.all('barCodeCheckColor')[i].style.backgroundColor='#FEE2B4';
 	    			}
 
 	    			sCnt++;
@@ -203,6 +216,7 @@ function barCodeCheck(){
 	    			opener.document.all('barCodeCheckColor').style.backgroundColor='';
     			}else{
     				frm.orderCheck.checked=false;
+    				opener.document.all('barCodeCheckColor').style.backgroundColor='#FEE2B4';
     			}
 				
     			sCnt++;

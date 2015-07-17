@@ -660,7 +660,7 @@ function totalTargetAmt(){
     	eval(winName+"=window.open('"+theURL+"','"+targetName+"','"+features+"')");
 
     }
-    function fcBarCode_check(){
+    function fcBarCode_check(orderstate){
     	
     	if (confirm('바코드 스캐너를 통해 검수수량을 자동입력 하시겠습니까?\n자동검수 처리시 스캐너 연동 및 환경이 정상적으로 설정 되어 있어야 합니다.')){ 
     	
@@ -697,27 +697,28 @@ function totalTargetAmt(){
 	            }
 	        });
 	    	*/
-	    	
-	    	var frm=document.orderDetailListForm;
-			var amtCnt = frm.productCode.length;
-			
-			if(amtCnt==undefined){
-				amtCnt=1;
-			}
-			
-			if(amtCnt > 1){
+	    	if(orderstate=='03'){
+		    	var frm=document.orderDetailListForm;
+				var amtCnt = frm.productCode.length;
 				
-		    	for(i=0;i<amtCnt;i++){
-		    		frm.orderResultCnt[i].value=0;
-		    	}
-		    	
-			}else{
+				if(amtCnt==undefined){
+					amtCnt=1;
+				}
 				
-				frm.orderResultCnt.value=0;
-			}
-			
-			totalOrderAmt(); 	
-	    	
+				if(amtCnt > 1){
+					
+			    	for(i=0;i<amtCnt;i++){
+			    		frm.orderResultCnt[i].value=0;
+			    	}
+			    	
+				}else{
+					
+					frm.orderResultCnt.value=0;
+				}
+				
+				totalOrderAmt(); 	
+	    	}
+	
     	}
     };
     
@@ -773,7 +774,7 @@ function totalTargetAmt(){
 	      <c:if test="${orderVO.orderState=='04'}"><button id="defercancelbtn"  type="button" class="btn btn-danger" onClick="fcDefer_reasonpop('D')" >보류폐기</button></c:if>
 	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" class="btn btn-info" onClick="fcDefer_list('${orderVO.orderCode}')">보류사유</button></c:if>
 	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcOrder_complete()">검수완료</button></c:if>
-	      <c:if test="${orderVO.orderState=='06' && (strAuth!= '03' || strAuthId=='AD001')}"><button type="button" class="btn btn-default" onClick="goOrderExcel()">엑셀변환(구매입력)</button></c:if>
+	      <c:if test="${(orderVO.orderState=='04' || orderVO.orderState=='06' ) && (strAuth!= '03' || strAuthId=='AD001')}"><button type="button" class="btn btn-default" onClick="goOrderExcel()">엑셀변환(구매입력)</button></c:if>
 	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" class="btn btn-success" onClick="fcOrderDetail_print('${orderVO.orderCode}')">인쇄</button></c:if>
           </div>
           <div style="position:absolute; right:30px" >
@@ -884,7 +885,7 @@ function totalTargetAmt(){
 	     	<td class='text-right'><span id="totalOrderCnt" style="color:red"></span></td>
 	     	<td style="background-color:#E6F3FF">검수 합계금액</td>
 	     	<td class='text-right'><span id="totalOrderAmt" style="color:red"></span></td>	
-	     	<c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><td>&nbsp;<button type="button" class="btn btn-xs btn-info" onClick="fcBarCode_check()" >바코드 검수</button></td></c:if>
+	     	<c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><td>&nbsp;<button type="button" class="btn btn-xs btn-info" onClick="fcBarCode_check('${orderVO.orderState}')" >바코드 검수</button></td></c:if>
 	     </tr>
      </table>
        <div class="thead">
