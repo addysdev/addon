@@ -392,114 +392,199 @@ function fcDefer_modify(reason){
     	  document.all('totalOrderCnt').innerText=' '+addCommaStr(''+totalcnt)+' 건';
      	  document.all('totalOrderAmt').innerText=' '+addCommaStr(''+totalamt)+' 원';//  [공급가] : '+addCommaStr(''+supplyamt)+' 원  [부가세] : '+addCommaStr(''+vatamt)+' 원';
     }
+    /*
+	  * 수량감소
+	  */ 
+		function fcMinus_Cnt(index){
+	    	
+			var frm=document.deferDetailListForm;
+		 	var amtCnt = frm.productPrice.length;
+		 	
+			if(amtCnt==undefined){
+				amtCnt=1;
+			}
+		 	
+		 	if(amtCnt > 1){
+		 		
+		 		frm.minusCnt[index-1].value=isnullStr(frm.minusCnt[index-1].value);
+		 
+		 		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
+		 		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
+				var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt[index-1].value))));
+				var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt[index-1].value))));
+				var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt[index-1].value))));
+
+				var orderCnt=(orderCntRaw-minusCnt-addCnt+lossCnt);
+
+				if(orderCntRaw<orderCnt || 0>orderCnt){
+					alert('발주수량 추가는 보유재고범위를 넘을수 없습니다.');
+					frm.orderCnt[index-1].value=orderCntRaw;
+					document.all('orderCntView')[index-1].innerText=orderCntRaw;
+					frm.minusCnt[index-1].value=0;
+					return;
+				}else{
+					frm.orderCnt[index-1].value=orderCnt;
+					document.all('orderCntView')[index-1].innerText=orderCnt;
+				}
+
+
+		 	}else{
+		 		
+		 		frm.minusCnt.value=isnullStr(frm.minusCnt.value);
+		 		
+		 		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
+		 		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
+				var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt.value))));
+				var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt.value))));
+				var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt.value))));
+
+				var orderCnt=(orderCntRaw-minusCnt-addCnt+lossCnt);
+
+				if(orderCntRaw<orderCnt || 0>orderCnt){
+					alert('발주수량 추가는 보유재고범위를 넘을수 없습니다.');
+					frm.orderCnt.value=orderCntRaw;
+					document.all('orderCntView').innerText=orderCntRaw;
+					frm.minusCnt.value=0;
+					return;
+				}else{
+					frm.orderCnt.value=orderCnt;
+					document.all('orderCntView').innerText=orderCnt;
+				}
+
+		 	}
+
+		 	totalOrderAmt();
+	    }
     
-    function fcAdd_Cnt(index){
-    	
-    	var frm=document.deferDetailListForm;
-    	var amtCnt = frm.productPrice.length;
-    	
-    	
-    	if(amtCnt > 1){
-    		
-    		frm.lossCnt[index-1].value=0;
-    	    
-    		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
-    		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
-			var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt[index-1].value))));
-
-			var orderCnt=(orderCntRaw-addCnt);
-	
-			if(orderCntRaw<orderCnt || 0>orderCnt){
-				alert('발주수량 추가는 보유재고범위를 넘을수 없습니다.');
-				frm.orderCnt[index-1].value=orderCntRaw;
-				document.all('orderCntView')[index-1].innerText=orderCntRaw;
-				frm.addCnt[index-1].value=0;
-				return;
-			}else{
-				frm.orderCnt[index-1].value=orderCnt;
-				document.all('orderCntView')[index-1].innerText=orderCnt;
+		/*
+		  * 재고증가
+		  */    
+		 function fcAdd_Cnt(index){
+		 	
+		 	var frm=document.deferDetailListForm;
+		 	var amtCnt = frm.productPrice.length;
+		 	
+			if(amtCnt==undefined){
+				amtCnt=1;
 			}
-			
+		 	
+		 	if(amtCnt > 1){
+		 		
+		 		frm.lossCnt[index-1].value=0;
+		 		
+		 		frm.addCnt[index-1].value=isnullStr(frm.addCnt[index-1].value);
+		 	    
+		 		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
+		 		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
+		 		var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt[index-1].value))));
+				var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt[index-1].value))));
 
-    	}else{
-    		
-			frm.lossCnt.value=0;
-    	    
-    		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
-    		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
-			var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt.value))));
-	
-			var orderCnt=(orderCntRaw-addCnt);
-		
-			if(orderCntRaw<orderCnt || 0>orderCnt){
-				alert('발주수량 추가는 보유재고범위를 넘을수 없습니다.');
-				frm.orderCnt.value=orderCntRaw;
-				document.all('orderCntView').innerText=orderCntRaw;
-				frm.addCnt.value=0;
-				return;
-			}else{
-				frm.orderCnt.value=orderCnt;
-				document.all('orderCntView').innerText=orderCnt;
-			}
-			
-    	}
-		
-    	
-    	totalOrderAmt();
-    }
- 
-	function fcLoss_Cnt(index){
-    	
-    	var frm=document.deferDetailListForm;
-    	var amtCnt = frm.productPrice.length;
-    	
-    	
-    	if(amtCnt > 1){
-    		
-    		frm.addCnt[index-1].value=0;
-    	    
-    		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
-    		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
-			var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt[index-1].value))));
+				var orderCnt=(orderCntRaw-minusCnt-addCnt);
 
-			var orderCnt=(orderCntRaw+lossCnt);
-	
-			if(holdStock<orderCnt){
-				alert('발주수량은 보유재고수량을 넘을수 없습니다.');
-				frm.orderCnt[index-1].value=orderCntRaw;
-				document.all('orderCntView')[index-1].innerText=orderCntRaw;
-				frm.lossCnt[index-1].value=0;
-				return;
-			}else{
-				frm.orderCnt[index-1].value=orderCnt;
-				document.all('orderCntView')[index-1].innerText=orderCnt;
-			}
+				if(orderCntRaw<orderCnt || 0>orderCnt){
+					alert('발주수량 추가는 보유재고범위를 넘을수 없습니다.');
+					frm.orderCnt[index-1].value=orderCntRaw;
+					document.all('orderCntView')[index-1].innerText=orderCntRaw;
+					frm.addCnt[index-1].value=0;
+					return;
+				}else{
+					frm.orderCnt[index-1].value=orderCnt;
+					document.all('orderCntView')[index-1].innerText=orderCnt;
+				}
 
-    	}else{
-    		
-			frm.addCnt.value=0;
-    	    
-    		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
-    		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
-			var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt.value))));
 
-			var orderCnt=(orderCntRaw+lossCnt);
-	
-			if(holdStock<orderCnt){
-				alert('발주수량은 보유재고수량을 넘을수 없습니다.');
-				frm.orderCnt.value=orderCntRaw;
-				document.all('orderCntView').innerText=orderCntRaw;
+		 	}else{
+		 		
 				frm.lossCnt.value=0;
-				return;
-			}else{
-				frm.orderCnt.value=orderCnt;
-				document.all('orderCntView').innerText=orderCnt;
-			}
+				
+				frm.addCnt.value=isnullStr(frm.addCnt.value);
+		 	    
+		 		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
+		 		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
+		 		var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt.value))));
+				var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt.value))));
+
+				var orderCnt=(orderCntRaw-minusCnt-addCnt);
+
+				if(orderCntRaw<orderCnt || 0>orderCnt){
+					alert('발주수량 추가는 보유재고범위를 넘을수 없습니다.');
+					frm.orderCnt.value=orderCntRaw;
+					document.all('orderCntView').innerText=orderCntRaw;
+					frm.addCnt.value=0;
+					return;
+				}else{
+					frm.orderCnt.value=orderCnt;
+					document.all('orderCntView').innerText=orderCnt;
+				}
+
+		 	}
+
+		 	totalOrderAmt();
+		 }
+		 /*
+		  * 재고감소
+		  */ 
+			function fcLoss_Cnt(index){
+		    	
+		    	var frm=document.deferDetailListForm;
+		    	var amtCnt = frm.productPrice.length;
+		    	
+		    	if(amtCnt==undefined){
+		    		amtCnt=1;
+		    	}
+		    	
+		    	if(amtCnt > 1){
+		    		
+		    		frm.addCnt[index-1].value=0;
+		    		
+		    		frm.lossCnt[index-1].value=isnullStr(frm.lossCnt[index-1].value);
+		    	    
+		    		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
+		    		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
+		    		var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt[index-1].value))));
+					var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt[index-1].value))));
+
+					var orderCnt=(orderCntRaw-minusCnt+lossCnt);
 			
-    	}
-		
-    	totalOrderAmt();
-    }
+					if(holdStock<orderCnt){
+						alert('발주수량은 보유재고수량을 넘을수 없습니다.');
+						frm.orderCnt[index-1].value=orderCntRaw;
+						document.all('orderCntView')[index-1].innerText=orderCntRaw;
+						frm.lossCnt[index-1].value=0;
+						return;
+					}else{
+						frm.orderCnt[index-1].value=orderCnt;
+						document.all('orderCntView')[index-1].innerText=orderCnt;
+					}
+
+		    	}else{
+		    		
+					frm.addCnt.value=0;
+					
+					frm.lossCnt.value=isnullStr(frm.lossCnt.value);
+		    	    
+		    		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
+		    		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
+		    		var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt.value))));
+					var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt.value))));
+
+					var orderCnt=(orderCntRaw-minusCnt+lossCnt);
+			
+					if(holdStock<orderCnt){
+						alert('발주수량은 보유재고수량을 넘을수 없습니다.');
+						frm.orderCnt.value=orderCntRaw;
+						document.all('orderCntView').innerText=orderCntRaw;
+						frm.lossCnt.value=0;
+						return;
+					}else{
+						frm.orderCnt.value=orderCnt;
+						document.all('orderCntView').innerText=orderCnt;
+					}
+					
+		    	}
+				
+		    	totalOrderAmt();
+		    }
     
 	//체크박스 전체선택
     function fcDefer_checkAll(){
