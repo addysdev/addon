@@ -55,14 +55,14 @@
      	if(amtCnt > 1){
      		
      		groupId=frm.groupId[index-1].value;
-     		safeStock=frm.safeStock[index-1].value;
-     		holdStock=frm.holdStock[index-1].value;
+     		safeStock=isnullStr(frm.safeStock[index-1].value);
+     		holdStock=isnullStr(frm.holdStock[index-1].value);
 
      	}else{
      		
      		groupId=frm.groupId.value;
-     		safeStock=frm.safeStock.value;
-     		holdStock=frm.holdStock.value;
+     		safeStock=isnullStr(frm.safeStock.value);
+     		holdStock=isnullStr(frm.holdStock.value);
 
      	}
      	

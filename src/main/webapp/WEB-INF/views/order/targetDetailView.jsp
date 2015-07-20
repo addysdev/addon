@@ -458,6 +458,8 @@ function fcDefer_reason(reason){
  	if(amtCnt > 1){
  		
  		frm.lossCnt[index-1].value=0;
+ 		
+ 		frm.addCnt[index-1].value=isnullStr(frm.addCnt[index-1].value);
  	    
  		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
  		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
@@ -481,6 +483,8 @@ function fcDefer_reason(reason){
  	}else{
  		
 		frm.lossCnt.value=0;
+		
+		frm.addCnt.value=isnullStr(frm.addCnt.value);
  	    
  		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
  		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
@@ -519,6 +523,8 @@ function fcDefer_reason(reason){
     	if(amtCnt > 1){
     		
     		frm.addCnt[index-1].value=0;
+    		
+    		frm.lossCnt[index-1].value=isnullStr(frm.lossCnt[index-1].value);
     	    
     		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
     		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
@@ -541,6 +547,8 @@ function fcDefer_reason(reason){
     	}else{
     		
 			frm.addCnt.value=0;
+			
+			frm.lossCnt.value=isnullStr(frm.lossCnt.value);
     	    
     		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
     		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
@@ -578,6 +586,8 @@ function fcDefer_reason(reason){
 		 	
 		 	if(amtCnt > 1){
 		 		
+		 		frm.minusCnt[index-1].value=isnullStr(frm.minusCnt[index-1].value);
+		 
 		 		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
 		 		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
 				var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt[index-1].value))));
@@ -599,6 +609,8 @@ function fcDefer_reason(reason){
 
 
 		 	}else{
+		 		
+		 		frm.minusCnt.value=isnullStr(frm.minusCnt.value);
 		 		
 		 		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
 		 		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));

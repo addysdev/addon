@@ -312,6 +312,9 @@ function totalTargetAmt(){
     		
 	    	for(i=0;i<amtCnt;i++){
 	    		
+	    		frm.orderResultPrice[i].value=isnullStr(frm.orderResultPrice[i].value);
+	    		frm.orderResultCnt[i].value=isnullStr(frm.orderResultCnt[i].value);
+	    		
 	    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultPrice[i].value))));
 	    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultCnt[i].value))));
 	    		var vatAmt=frm.orderVatRate[i].value;
@@ -333,6 +336,9 @@ function totalTargetAmt(){
 	    	}
 	    	
     	}else{
+    		
+    		frm.orderResultPrice.value=isnullStr(frm.orderResultPrice.value);
+    		frm.orderResultCnt.value=isnullStr(frm.orderResultCnt.value);
     		
     		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultPrice.value))));
     		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultCnt.value))));

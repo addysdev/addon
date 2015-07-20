@@ -552,6 +552,9 @@ function fcResult_cal(){
 	if(amtCnt>1){
     	for(i=0;i<amtCnt;i++){
     		
+    		frm.recoveryCnt[i].value=isnullStr(frm.recoveryCnt[i].value);
+    		frm.recoveryResultCnt[i].value=isnullStr(frm.recoveryResultCnt[i].value);
+    		
     		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice[i].value))));
     		var recoveryCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.recoveryCnt[i].value))));
     		var recoveryResultCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.recoveryResultCnt[i].value))));
@@ -570,6 +573,9 @@ function fcResult_cal(){
     	}
 	}else{
 
+		frm.recoveryCnt.value=isnullStr(frm.recoveryCnt.value);
+		frm.recoveryResultCnt.value=isnullStr(frm.recoveryResultCnt.value);
+		
 		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.productPrice.value))));
 		var recoveryCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.recoveryCnt.value))));
 		var recoveryResultCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.recoveryResultCnt.value))));
