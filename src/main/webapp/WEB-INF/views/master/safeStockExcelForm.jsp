@@ -28,12 +28,10 @@ function fcSafeStock_excelimport(){
     var gap = fileName.substring(pos + 1, ln);
     var gap1 = fileName.substring(ln+1);
 
-    if(gap1=="xls"){
-       url="<%= request.getContextPath() %>/master/stockemasterxcelimport?fileName="+gap+"&extension="+gap1+"&importType=safe";
-    }else if(gap1=="xlsx"){
+    if(gap1=="xlsx"){
        url="<%= request.getContextPath() %>/master/stockmasterexcelimport?fileName="+gap+"&extension="+gap1+"&importType=safe";
     }else{
-        alert("엑셀파일만 올려주세요");
+    	alert("Excel 통합문서(xlsx) 파일만 등록 부탁드립니다.");
         return;
     }
     commonDim(true,'300000');

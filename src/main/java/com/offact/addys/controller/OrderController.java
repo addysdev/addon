@@ -3227,6 +3227,7 @@ public class OrderController {
    		
    		String orderCode=request.getParameter("orderCode");
    		String companyCode=request.getParameter("companyCode");
+   		String transDate=request.getParameter("excelTransDate");
    		
       	// 사용자 세션정보
 	   	 HttpSession session = request.getSession();
@@ -3241,6 +3242,10 @@ public class OrderController {
         Date currentTime = new Date();
          
         String strToday = simpleDateFormat.format(currentTime);
+        
+        if(transDate.equals("")){
+        	transDate=strToday;
+        }
         
         if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
         	
@@ -3279,7 +3284,7 @@ public class OrderController {
 	    
 	        OrderVO orderDetailVo = new OrderVO();
 			
-	        orderDetailVo.setOrderDate(strToday);
+	        orderDetailVo.setOrderDate(transDate);
 	        orderDetailVo.setProductCode(StringUtil.nvl(r_data[0],""));
 	        orderDetailVo.setBarCode(StringUtil.nvl(r_data[1],""));
 	        orderDetailVo.setOrderResultPrice(StringUtil.nvl(r_data[2],""));
@@ -3371,7 +3376,73 @@ public class OrderController {
       	
         return mv;
     }
-    
+    /**
+     * 메모관리
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/ordercompleteinput")
+    public ModelAndView orderCompleteInput(HttpServletRequest request, 
+    		                       HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller orderCompleteInput start");
+
+        ModelAndView mv = new ModelAndView();
+        
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));    
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+         
+        String strToday = simpleDateFormat.format(currentTime);
+        
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); 
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	        //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   	    work.setWorkIp(strIp);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
+       		return mv;
+		}
+        
+        mv.addObject("strToday", strToday);
+        mv.setViewName("/order/orderCompleteInput");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller orderCompleteInput end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
     /**
      * 메모관리
      *

@@ -186,7 +186,7 @@
 	              <input style="width:45px;" type="text" class="form-control" id="holdStock" name="holdStock" maxlength="2" numberOnly value="${stockMasterVO.holdStock}">
 	              </td>
 	              <td>
-	              <button type="button" id="receivebtn" class="btn btn-xs btn-success" onClick="fcUpdate_stockCnt('${stockMasterVO.groupId}','${status.count}');">변경</button>
+	              <button type="button" id="receivebtn" class="btn btn-xs btn-success" onClick="fcUpdate_stockCnt('${status.count}');">변경</button>
 	              </td>
 	             </tr>
 	            </c:forEach>

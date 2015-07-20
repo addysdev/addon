@@ -67,6 +67,7 @@ encoding//src/main/webapp/WEB-INF/views/order/etcManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/mailCc.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/memoList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/memoManage.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/order/orderCompleteInput.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/orderDetailPrint.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/orderDetailView.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/orderExcelList.jsp=UTF-8

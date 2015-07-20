@@ -51,6 +51,8 @@ public class OrderVO extends AbstractVO {
 	private String orderState;
 	private String orderStateView;
 	
+	private String transDate;
+	
 	private String createUserId;
 	private String updateUserId;
 	
@@ -699,6 +701,12 @@ public class OrderVO extends AbstractVO {
 	}
 	public void setCntOrder(String cntOrder) {
 		this.cntOrder = cntOrder;
+	}
+	public String getTransDate() {
+		return transDate;
+	}
+	public void setTransDate(String transDate) {
+		this.transDate = transDate;
 	}
 
 }

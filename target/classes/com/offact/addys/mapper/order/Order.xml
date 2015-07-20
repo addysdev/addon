@@ -78,6 +78,7 @@
   <result column="orderName"        property="orderName"  />
   <result column="priceOrder"        property="priceOrder"  />
   <result column="cntOrder"        property="cntOrder"  />
+  <result column="transDate"        property="transDate"  />
 </resultMap>
 
 <select id="getOrderPageList"  resultMap="orderVO" parameterType="com.offact.addys.vo.order.OrderVO" >
@@ -274,7 +275,8 @@ SELECT sum(TOT.waitCnt) AS waitCnt,
          T1.groupId,
          T1.companyCode,
          T1.deliveryName,
-         T1.orderName
+         T1.orderName,
+         replace(T1.transDate,'-','') as transDate
   From adOrder as T1
        Left Join adComment T2 On T1.orderCode = T2.orderCode And T2.commentCategory='03'
   Where T1.orderCode = #{orderCode}
@@ -456,6 +458,7 @@ SELECT sum(TOT.waitCnt) AS waitCnt,
 				orderState = #{orderState}
             	,buyUserId = #{buyUserId}
             	,buyDateTime = now()
+            	,transDate = #{transDate}
 		where orderCode = #{orderCode}
 		                        
 </update>

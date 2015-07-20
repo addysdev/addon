@@ -482,7 +482,15 @@ function totalTargetAmt(){
         });
     };
  //검수완료   
- function fcOrder_complete(){
+ function fcOrder_complete(transDate){
+	 
+	 if(transDate==''){	 
+		 alert('거래 명세일자 를 선택 하시기 바랍니다.');
+		 return;
+	 }else{
+		 document.orderDetailForm.transDate.value=transDate;
+		 $("#completeDialog").dialog('close');
+	 }
 
   		 var arrCheckProductId = "";
            $('input:checkbox[name="orderCheck"]').each(function() {
@@ -579,6 +587,8 @@ function totalTargetAmt(){
     	
     	  var frm = document.orderDetailListForm;
     	  var ofrm = document.orderDetailForm;
+  
+    	  frm.excelTransDate.value = ofrm.transDate.value;
     	  
          	if(frm.seqs.length!=undefined){
          		for(i=0;i<frm.seqs.length;i++){
@@ -595,7 +605,6 @@ function totalTargetAmt(){
 
          	}
 
-        	var frm = document.orderDetailListForm;
         	frm.action = "<%=request.getContextPath()%>/order/orderexcellist";	
         	frm.method = "POST";
         	frm.submit();
@@ -651,6 +660,35 @@ function totalTargetAmt(){
             }
         });
     };
+    function fcOrder_complete_input(){
+    	//$('#targetEtcView').attr('title',productName);
+    	var url='<%= request.getContextPath() %>/order/ordercompleteinput';
+
+    	$('#completeDialog').dialog({
+            resizable : false, //사이즈 변경 불가능
+            draggable : true, //드래그 불가능
+            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+            width : 300,
+            height : 200,
+            modal : true, //주위를 어둡게
+
+            open:function(){
+                //팝업 가져올 url
+              //  $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode+'&productNaem='+encodeURIComponent(productName));
+                $(this).load(url);
+               
+                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+                    $("#completeDialog").dialog('close');
+
+                    });
+            }
+            ,close:function(){
+            	$('#completeDialog').empty();
+            }
+        });
+    };
+    
     /*
      * 화면 POPUP
      */
@@ -768,12 +806,13 @@ function totalTargetAmt(){
 	   <input type="hidden" name="deliveryCharge"               id="deliveryCharge"            value="${orderVO.deliveryCharge}" />
 	   <input type="hidden" name="orderName"               id="orderName"            value="${orderVO.orderName}" />
 	   <input type="hidden" name="deliveryDate"               id="deliveryDate"            value="${orderVO.deliveryDate}" />
+	   <input type="hidden" name="transDate"               id="transDate"            value="${orderVO.transDate}" />
 	      <div style="position:absolute; left:30px" >
 	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='06'}"><button id="deferbtn" type="button" class="btn btn-primary" onClick="fcDefer_reasonpop('R')" >보류</button></c:if>
 	      <!--  >button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button-->
 	      <c:if test="${orderVO.orderState=='04'}"><button id="defercancelbtn"  type="button" class="btn btn-danger" onClick="fcDefer_reasonpop('D')" >보류폐기</button></c:if>
 	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" class="btn btn-info" onClick="fcDefer_list('${orderVO.orderCode}')">보류사유</button></c:if>
-	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcOrder_complete()">검수완료</button></c:if>
+	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcOrder_complete_input()">검수완료</button></c:if>
 	      <c:if test="${(orderVO.orderState=='04' || orderVO.orderState=='06' ) && (strAuth!= '03' || strAuthId=='AD001')}"><button type="button" class="btn btn-default" onClick="goOrderExcel()">엑셀변환(구매입력)</button></c:if>
 	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" class="btn btn-success" onClick="fcOrderDetail_print('${orderVO.orderCode}')">인쇄</button></c:if>
           </div>
@@ -858,6 +897,7 @@ function totalTargetAmt(){
      <form:form commandName="orderListVO" id="orderDetailListForm" name="orderDetailListForm" method="post" action="" >
      <!-- <input type="hidden" name="orderCode" value="${orderVO.orderCode}" >
      <input type="hidden" name="companyCode" value="${orderVO.companyCode}" > -->
+     <input type="hidden" name="excelTransDate" value="" >
      <table style="width:460px" class="table table-bordered tbl_type" >
 	     <colgroup>
 	      <col width="80px" >
