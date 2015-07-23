@@ -88,7 +88,7 @@
 	      
 	      var frm=document.loginForm;
 	      frm.id.value='system';
-	      frm.pwd.value='doeltm@0407';
+	      frm.pwd.value='1';
 
 	      goLogin();
 	      
@@ -115,7 +115,7 @@
 
 	  window.fbAsyncInit = function() {
 	    FB.init({
-	      appId      : '703020146476408',
+	      appId      : '528679613946518',
 	      xfbml      : true,
 	      version    : 'v2.3'
 	    });

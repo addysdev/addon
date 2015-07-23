@@ -445,7 +445,23 @@ public class MasterController {
 	         
 		         if(cellItemTmp.length>0 && cellItemTmp[0] != ""){
 		        	 
-		        	 if(cellItemTmp.length>0){ productMasterVO.setProductCode(cellItemTmp[0]);}
+		        	 //productCode 값 celltype에 의해 뒤에 0이 없는경우 처리
+		        	 String cellProductCode="";
+		
+		        	 if(cellItemTmp[0].length()<8){
+		        		 int fill=8-cellItemTmp[0].length();
+		        		 String fillString="0";
+		        		 
+		        		 for (int f=0; f<fill-1;f++){
+		        			 fillString=fillString+"0";
+		        		 }    		 
+		        		 cellProductCode= cellItemTmp[0]+fillString;
+		        		 
+		        	 }else{
+		        		 cellProductCode= cellItemTmp[0];
+		        	 }
+		        		 
+		        	 if(cellItemTmp.length>0){ productMasterVO.setProductCode(cellProductCode);}
 		        	 if(cellItemTmp.length>1){ productMasterVO.setBarCode(cellItemTmp[1]);}
 		        	 if(cellItemTmp.length>2){ productMasterVO.setProductName(cellItemTmp[2]);}
 		        	 if(cellItemTmp.length>3){ productMasterVO.setProductPrice(cellItemTmp[3]);}
@@ -842,7 +858,23 @@ public class MasterController {
 	        			  excelStock="";
 	        		  }
 			          
-	        		  stockMasterResultVO.setProductCode(excelProductCode);
+	        		//productCode 값 celltype에 의해 뒤에 0이 없는경우 처리
+		        	 String cellProductCode="";
+		
+		        	 if(excelProductCode.length()<8){
+		        		 int fill=8-excelProductCode.length();
+		        		 String fillString="0";
+		        		 
+		        		 for (int f=0; f<fill-1;f++){
+		        			 fillString=fillString+"0";
+		        		 }    		 
+		        		 cellProductCode= excelProductCode+fillString;
+		        		 
+		        	 }else{
+		        		 cellProductCode= excelProductCode;
+		        	 }
+	        		  
+	        		  stockMasterResultVO.setProductCode(cellProductCode);
 			          stockMasterResultVO.setGroupId(excelGroupId);
 	
 	      		      if("hold".equals(importType)){

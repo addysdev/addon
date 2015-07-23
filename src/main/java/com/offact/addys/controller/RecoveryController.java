@@ -1110,8 +1110,23 @@ public class RecoveryController {
 			         }
 		         
 			         if(cellItemTmp.length>0 && cellItemTmp[0] != ""){
-			        	 
-			        	 productMasterVO.setProductCode(cellItemTmp[0]); 
+
+			        	 //productCode 값 celltype에 의해 뒤에 0이 없는경우 처리
+			        	 String cellProductCode="";
+			
+			        	 if(cellItemTmp[0].length()<8){
+			        		 int fill=8-cellItemTmp[0].length();
+			        		 String fillString="0";
+			        		 
+			        		 for (int f=0; f<fill-1;f++){
+			        			 fillString=fillString+"0";
+			        		 }    		 
+			        		 cellProductCode= cellItemTmp[0]+fillString;
+			        		 
+			        	 }else{
+			        		 cellProductCode= cellItemTmp[0];
+			        	 }
+			        	 productMasterVO.setProductCode(cellProductCode); 
 				
 				         excelUploadList.add(productMasterVO);
 
