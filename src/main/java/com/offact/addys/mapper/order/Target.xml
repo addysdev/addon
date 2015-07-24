@@ -191,7 +191,7 @@
            				 </if>
 					   ) As TEMP
 		      Where TEMP.stockCnt  <![CDATA[<=]]> TEMP.safeStock
-					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk
+					And TEMP.stockChk <![CDATA[>=]]>  TEMP.buyChk
 					And TEMP.stockCnt  <![CDATA[<]]> TEMP.holdStock 
 					<choose>
 						<when  test="con_orderState != null and con_orderState != ''">
@@ -356,7 +356,7 @@ From (
            				 </if>
 					   ) As TEMP
 		      Where TEMP.stockCnt  <![CDATA[<=]]> TEMP.safeStock
-					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk
+					And TEMP.stockChk <![CDATA[>=]]>  TEMP.buyChk
 					And TEMP.stockCnt  <![CDATA[<]]> TEMP.holdStock 
 					<choose>
 						<when  test="con_orderState != null and con_orderState != ''">
@@ -502,7 +502,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
            				 </if>
 					   ) As TEMP
 		      Where TEMP.stockCnt  <![CDATA[<=]]> TEMP.safeStock
-					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk  
+					And TEMP.stockChk <![CDATA[>=]]>  TEMP.buyChk  
 					And TEMP.stockCnt  <![CDATA[<]]> TEMP.holdStock   
            			AND TEMP.orderState in ('00','01','02')
 			  ) T1
@@ -618,7 +618,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 					   ) As TEMP
 					     Left Join adProductMaster T1 On TEMP.ProductCode = T1.ProductCode 
 		      Where TEMP.stockCnt  <![CDATA[<]]> TEMP.holdStock
-					And TEMP.stockChk <![CDATA[>]]>  TEMP.buyChk    
+					And TEMP.stockChk <![CDATA[>=]]>  TEMP.buyChk    
                     AND TEMP.orderState in ('01','07','08','09')
 			  ) T1
               Left Join adProductMaster T2 On T1.ProductCode = T2.ProductCode
