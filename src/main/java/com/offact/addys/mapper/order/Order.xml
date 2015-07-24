@@ -93,7 +93,8 @@
            TEMP.companyName,
            SUM(TEMP.supplyPrice) as supplyPrice,
            SUM(TEMP.vat) as vat,
-           SUM(TEMP.totalOrderPrice) as totalOrderPrice
+           SUM(TEMP.totalOrderPrice) as totalOrderPrice,
+           DATE_FORMAT(TEMP.buyDateTime, '%Y-%m-%d') as buyDateTime
            From
     (
     Select T5.codeName as orderStateView,
@@ -110,7 +111,8 @@
            (ifnull(T1.orderResultCnt,0)*(ifnull(T1.orderResultPrice,0)+ifnull(T1.orderVatRate,0))) as totalOrderPrice
            -->
            Case When T2.orderState in ('03','05') Then (ifnull(T1.orderResultCnt,0)*(ifnull(T7.productPrice,0)+ifnull(T7.vatRate,0)))
-           Else (ifnull(T1.orderResultCnt,0)*(ifnull(T1.orderResultPrice,0)+ifnull(T1.orderVatRate,0))) End totalOrderPrice
+           Else (ifnull(T1.orderResultCnt,0)*(ifnull(T1.orderResultPrice,0)+ifnull(T1.orderVatRate,0))) End totalOrderPrice,
+           T2.buyDateTime
   	From adOrderDetail T1
       	 Left Join adOrder T2 On T1.orderCode=T2.orderCode
        	 Left Join ofGroup T3 On T2.groupId =T3.groupId
@@ -456,8 +458,8 @@ SELECT sum(TOT.waitCnt) AS waitCnt,
 		update adOrder 
 			set
 				orderState = #{orderState}
-            	,buyUserId = #{buyUserId}
-            	,buyDateTime = now()
+            	,chkUserId = #{buyUserId}
+            	,chkDateTime = now()
             	,transDate = #{transDate}
 		where orderCode = #{orderCode}
 		                        

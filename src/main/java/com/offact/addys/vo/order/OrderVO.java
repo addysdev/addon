@@ -42,6 +42,8 @@ public class OrderVO extends AbstractVO {
 	private String deferUserName;
 	private String buyResult;
 	private String buyResultView;
+	private String chkDateTime;
+	private String chkUserId;
 	private String buyDateTime;
 	private String buyUserId;
 	private String buyUserName;
@@ -707,6 +709,18 @@ public class OrderVO extends AbstractVO {
 	}
 	public void setTransDate(String transDate) {
 		this.transDate = transDate;
+	}
+	public String getChkDateTime() {
+		return chkDateTime;
+	}
+	public void setChkDateTime(String chkDateTime) {
+		this.chkDateTime = chkDateTime;
+	}
+	public String getChkUserId() {
+		return chkUserId;
+	}
+	public void setChkUserId(String chkUserId) {
+		this.chkUserId = chkUserId;
 	}
 
 }

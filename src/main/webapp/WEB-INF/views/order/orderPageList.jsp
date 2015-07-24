@@ -110,6 +110,7 @@
             <!--  >th class='text-center'>공급가</th>
             <th class='text-center'>부가세</th-->
             <th class='text-center'>금액(VAT포함)</th>
+            <th class='text-center'>등록완료일자</th>
 	      </tr>
 	    </thead>
 	    <tbody>
@@ -125,12 +126,13 @@
                  <!--td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.supplyPrice}"/></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.vat}"/></td-->
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.totalOrderPrice}"/></td>
+                 <td class='text-center'><c:out value="${orderVO.buyDateTime}"></c:out></td>
               </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty orderList}">
            <tr>
-           	<td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
+           	<td colspan='8' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>
