@@ -554,16 +554,24 @@ function totalTargetAmt(){
       	
           }
   	}	
-    function fcOrder_reMail(reason){
+    function fcOrder_reMail(reason,reMail){
     	
     	if(reason==''){
     		alert('재송부사유를 입력하세요!');
     		return;
     	}
+    	
+    	if(reMail==''){
+    		alert('재송부 이메일을 입력하세요!');
+    		return;
+    	}
+
 
 	            if (confirm('발주서를 재송부 하시겠습니까?')){ 
 	            
 	            document.orderDetailForm.deferReason.value=reason;	
+	            document.orderDetailForm.email.value=reMail;
+	            alert(document.orderDetailForm.email.value);
 	            var paramString = $("#orderDetailForm").serialize();
 
 			  		$.ajax({
@@ -640,7 +648,19 @@ function totalTargetAmt(){
     }
     function fcDefer_reasonpop(deferType){
     	//$('#targetEtcView').attr('title',productName);
-    	var url='<%= request.getContextPath() %>/order/deferreason?deferType='+deferType;
+    	
+    	var h=200;
+    	var reMail='';
+    	
+    	if(deferType=='S'){
+    		h=260;
+    		
+    		reMail=document.orderDetailForm.email.value;
+
+    	}
+    	
+    	var url='<%= request.getContextPath() %>/order/deferreason?deferType='+deferType+'&reMail='+reMail;
+    	
 
     	$('#deferDialog').dialog({
             resizable : false, //사이즈 변경 불가능
@@ -648,7 +668,7 @@ function totalTargetAmt(){
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
             width : 300,
-            height : 200,
+            height : h,
             modal : true, //주위를 어둡게
 
             open:function(){

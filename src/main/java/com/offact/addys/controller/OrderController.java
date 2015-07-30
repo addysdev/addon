@@ -3327,7 +3327,8 @@ public class OrderController {
     @RequestMapping(value = "/order/deferreason")
     public ModelAndView deferReason(HttpServletRequest request, 
     		                       HttpServletResponse response,
-    		                       String deferType) throws BizException 
+    		                       String deferType,
+    		                       String reMail) throws BizException 
     {
         
     	//log Controller execute time start
@@ -3368,6 +3369,7 @@ public class OrderController {
 		}
         
         mv.addObject("deferType", deferType);
+        mv.addObject("reMail", reMail);
         mv.setViewName("/order/deferReason");
         
        //log Controller execute time end
