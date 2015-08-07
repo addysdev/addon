@@ -631,7 +631,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
               Left Join adCompany T3 On T2.companyCode = T3.companyCode 
               Left Join ofGroup T4 On T1.groupId = T4.groupId 
  	Where T2.companyCode =  #{con_companyCode}
- 	Order by T1.stockOrder,T1.stockCnt , T2.productName ASC
+ 	Order by T2.productName, T1.stockOrder,T1.stockCnt  ASC
 </select>
 
 <insert id="deferReasonInsert"  parameterType="com.offact.addys.vo.order.TargetVO" >

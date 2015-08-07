@@ -641,7 +641,12 @@ public class OrderController {
 		work.setWorkCode("OD003");
 		work.setWorkKey1(""+t1);
 		work.setSearchKey1(targetVO.getCompanyCode());
+		
+		if(targetVO.getPrintYn().equals("Y")){
+		
 		commonSvc.regiHistoryInsert(work);
+		
+		}
    		
    		return mv;
    	}

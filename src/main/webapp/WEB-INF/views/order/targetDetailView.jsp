@@ -131,8 +131,52 @@ function fcTargetDetail_print(reason){
 	   	}
 	   	
 	   	 document.targetDetailForm.deferReason.value=reason;
+	   	 document.targetDetailForm.printYn.value='Y';
 	   	 
 	     $('#deferDialog').dialog('close');
+
+		 var url="<%= request.getContextPath() %>/order/targetdetailprint"+'?'+$("#targetDetailForm").serialize();
+	
+		 frm.action =url; 
+		 frm.method="post";
+		 frm.target='orderPrintObj';
+		 frm.submit();
+/*
+	var url="<%= request.getContextPath() %>/order/targetdetailprint"+'?'+$("#targetDetailForm").serialize()+'&'+$("#targetDetailListForm").serialize();
+
+    tmt_winLaunch('', 'orderPrintObj', 'orderPrintObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
+	*/
+}
+/*
+ * print 화면 POPUP
+ */
+function fcTargetDetail_preView(){
+	
+	var h=800;
+	var s=950;
+	
+	
+	 var frm = document.targetDetailListForm;
+//alert(frm.seqs.length);
+	   	if(frm.seqs.length!=undefined){
+	   		for(i=0;i<frm.seqs.length;i++){
+				frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
+	   			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
+	   			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
+	   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.group1Name[i].value)+'|'+fillSpace(frm.orderCheck[i].checked);
+
+	   		}
+	   	}else{
+	   		
+				frm.seqs.value=fillSpace(frm.productCode.value)+
+				'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
+				'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
+				'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.group1Name.value)+'|'+fillSpace(frm.orderCheck.checked);
+
+
+	   	}
+	   
+	   	 document.targetDetailForm.printYn.value='N';
 
 		 var url="<%= request.getContextPath() %>/order/targetdetailprint"+'?'+$("#targetDetailForm").serialize();
 	
@@ -771,6 +815,7 @@ function fcDefer_reason(reason){
 	   <input type="hidden" name="companyCode"               id="companyCode"            value="${targetVO.companyCode}" />
 	   <input type="hidden" name="safeOrderCnt"               id="safeOrderCnt"            value="${targetVO.safeOrderCnt}" />
 	   <input type="hidden" name="email_cc"               id="email_cc"            value="${targetVO.email_cc}" />
+	   <input type="hidden" name="printYn"               id="printYn"            value="" />
 	      <!--  >h4><strong><font style="color:#428bca">발주방법 : </font></strong>
 	          <input type="checkbox" id="emailCheck" name="emailCheck" value="" title="선택" checked disabled />e-mail
 	          <input type="checkbox" id="smsCheck" name="smsCheck" value="" title="선택" disabled />sms
@@ -779,6 +824,7 @@ function fcDefer_reason(reason){
 	      <div style="position:absolute; left:30px" > 
 	      <button id="deferbtn" type="button" class="btn btn-primary" onClick="fcDefer_reasonpop('R')" >보류</button>
 	      <button type="button" class="btn btn-success" onClick="fcDefer_reasonpop('P')">인쇄</button>
+	      <button type="button" class="btn btn-default" onClick="fcTargetDetail_preView()">미리보기</button>
           </div >
           <div style="position:absolute; right:30px" > 
           <button type="button" class="btn btn-primary" onClick="fcOrder_process()">발주</button>

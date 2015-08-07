@@ -60,6 +60,8 @@ public class TargetVO extends AbstractVO {
 	private String etc;
 	private String orderCheck;
 	
+	private String printYn;
+	
 	//상세 추가항목
 	private String productCode;
 	private String productName;
@@ -617,6 +619,12 @@ public class TargetVO extends AbstractVO {
 	}
 	public void setEmail_cc(String email_cc) {
 		this.email_cc = email_cc;
+	}
+	public String getPrintYn() {
+		return printYn;
+	}
+	public void setPrintYn(String printYn) {
+		this.printYn = printYn;
 	}
     
 }
