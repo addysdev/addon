@@ -14,6 +14,25 @@
 			}else{
 				frm.pw_modifyYn.value='N';
 			}
+			
+			if(frm.authCode.value=='01' || frm.authCode.value=='02' || frm.authCode.value=='03'  ){//기본권한 (슈퍼관리자,관리자,일반)
+				
+				frm.auth.value=frm.authCode.value;
+				frm.authId.value='';
+			
+			}else{//일반 상세권한
+				
+				if(frm.authCode.value=='04'){//일반(본사)
+					
+					frm.auth.value='03';
+				    frm.authId.value='AD001';
+					
+				}else if(frm.authCode.value=='05'){//일반(staff)
+					
+					frm.auth.value='03';
+				    frm.authId.value='STAFF';
+				}
+			}
 
 			if (confirm('사용자 정보를 수정 하시겠습니까?')){ 
 				
@@ -74,16 +93,19 @@
 		                	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
 		                </c:forEach>
 		            </select>
-		            <input type="hidden" id="authId" name="authId" value="${userVO.authId}" ></th>
 		      	</tr>
 		      	<tr>
 		          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>권한</th>
 		          <th class='text-left'>
-		          	<select class="form-control" title="관리권한" id="auth" name="auth" value="${userVO.auth}" tabindex="5">
+		          	<select class="form-control" title="관리권한" id="authCode" name="authCode"  tabindex="5">
 		                 <option value="03">일반</option>
+		                 <option value="05">일반(staff)</option>
+		                 <option value="04">일반(본사)</option>
 		                 <option value="02">관리자</option>
 		                 <c:if test="${strAuth=='01'}"><option value="01">슈퍼관리자</option></c:if>
 		       		</select></th>
+		       		<input type="hidden" name="auth" id="auth" value="${userVO.auth}">
+	       		    <input type="hidden" name="authId" id="authId" value="${userVO.authId}">
 		      	</tr>
 		      	<tr>
 		          <th class='text-center' style="background-color:#E6F3FF" >email</th>
@@ -115,8 +137,28 @@
 <script>
 
 document.userModifyForm.groupId.value='${userVO.groupId}';
-document.userModifyForm.auth.value='${userVO.auth}';
 document.userModifyForm.smsYn.value='${userVO.smsYn}';
+
+if('${userVO.auth}'=='03'){//일반인경우
+	
+	if('${userVO.authId}'=='AD001'){//일반본사
+		
+		document.userModifyForm.authCode.value='04';
+		
+	}else if('${userVO.authId}'=='STAFF'){//일반스태프
+		
+		document.userModifyForm.authCode.value='05';
+		
+	}else{//일반
+		
+		document.userModifyForm.authCode.value='03';//일반
+	}
+	
+}else{
+	
+	document.userModifyForm.authCode.value='${userVO.auth}';
+	
+}
 
 </script>
 

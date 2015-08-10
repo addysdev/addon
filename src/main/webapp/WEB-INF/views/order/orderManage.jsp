@@ -5,7 +5,7 @@
 
         curPage = (curPage==null) ? 1:curPage;
         orderConForm.curPage.value = curPage;
- 
+ //alert(document.orderConForm.con_orderState.value);
         if(!dateCheck(document.orderConForm.start_orderDate,document.orderConForm.end_orderDate,'')){return;}
 
         commonDim(true);
@@ -163,7 +163,7 @@
 		                </select>
 					</c:otherwise>
 				</c:choose>
-				<label for="searchGubun">검수상태 :</label>
+				<label for="searchGubun con_orderState">검수상태 :</label>
 				<select class="form-control" title="발주상태" id="con_orderState" name="con_orderState" value="">
                 	<option value="">전체</option>
                     <c:forEach var="codeVO" items="${code_comboList}" >

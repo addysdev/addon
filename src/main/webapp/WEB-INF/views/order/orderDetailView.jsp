@@ -404,14 +404,19 @@ function totalTargetAmt(){
     			frm.orderVatRate.disabled=false;
 	   		}
 	  	}
-    	
-    	if(amtCnt==chkCnt){//검수버튼 활성화
-    		frm.orderCheckAll.checked=true;
-    		document.all('checkbtn').disabled=false;
+    	//alert('${strAuthId}');
+    	//스태프는 해당사항없음
+    	if('${strAuthId}'!='STAFF'){
+        	
+        	if(amtCnt==chkCnt){//검수버튼 활성화
+        		frm.orderCheckAll.checked=true;
+        		document.all('checkbtn').disabled=false;
+        		
+        	}else{
+        		frm.orderCheckAll.checked=false;
+        		document.all('checkbtn').disabled=true;
+        	}	
     		
-    	}else{
-    		frm.orderCheckAll.checked=false;
-    		document.all('checkbtn').disabled=true;
     	}
 
     }
@@ -834,17 +839,17 @@ function totalTargetAmt(){
 	   <input type="hidden" name="deliveryDate"               id="deliveryDate"            value="${orderVO.deliveryDate}" />
 	   <input type="hidden" name="transDate"               id="transDate"            value="${orderVO.transDate}" />
 	      <div style="position:absolute; left:30px" >
-	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='06'}"><button id="deferbtn" type="button" class="btn btn-primary" onClick="fcDefer_reasonpop('R')" >보류</button></c:if>
-	      <!--  >button id="defermodifybtn"  type="button" class="btn btn-primary">보류수정</button-->
+	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04' || orderVO.orderState=='06'}"><button id="deferbtn" type="button" class="btn btn-primary" onClick="fcDefer_reasonpop('R')" >보류</button></c:if>
+	      <!--<c:if test="${orderVO.orderState=='04'}"><button id="defermodifybtn"  type="button" class="btn btn-primary" onClick="fcDefer_reasonpop('M')" >보류수정</button></c:if>-->
 	      <c:if test="${orderVO.orderState=='04'}"><button id="defercancelbtn"  type="button" class="btn btn-danger" onClick="fcDefer_reasonpop('D')" >보류폐기</button></c:if>
 	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" class="btn btn-info" onClick="fcDefer_list('${orderVO.orderCode}')">보류사유</button></c:if>
-	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcOrder_complete_input()">검수완료</button></c:if>
+	      <c:if test="${(orderVO.orderState=='03' || orderVO.orderState=='04' ) && (strAuthId!='STAFF')}"><button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcOrder_complete_input()">검수완료</button></c:if>
 	      <c:if test="${(orderVO.orderState=='04' || orderVO.orderState=='06' ) && (strAuth!= '03' || strAuthId=='AD001')}"><button type="button" class="btn btn-default" onClick="goOrderExcel()">엑셀변환(구매입력)</button></c:if>
 	      <c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><button type="button" class="btn btn-success" onClick="fcOrderDetail_print('${orderVO.orderCode}')">인쇄</button></c:if>
           </div>
           <div style="position:absolute; right:30px" >
-          <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-warning" onClick="fcDefer_reasonpop('C')">취소</button></c:if>
-          <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07'}"><button type="button" class="btn btn-primary" onClick="fcDefer_reasonpop('S')">재송부</button></c:if>
+          <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07' && (strAuthId!='STAFF')}"><button type="button" class="btn btn-warning" onClick="fcDefer_reasonpop('C')">취소</button></c:if>
+          <c:if test="${orderVO.orderState!='04' && orderVO.orderState!='06' && orderVO.orderState!='07' && (strAuthId!='STAFF')}"><button type="button" class="btn btn-primary" onClick="fcDefer_reasonpop('S')">재송부</button></c:if>
           <c:if test="${orderVO.orderState=='06' && (strAuth!= '03' || strAuthId=='AD001')}"><button type="button" class="btn btn-primary" onClick="fcOrder_buy()">등록완료</button></c:if>
           </div>
           </tr>

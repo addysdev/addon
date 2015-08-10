@@ -31,6 +31,25 @@
 			
 			frm.userId.value=frm.d_userId.value;
 			
+			if(frm.authCode.value=='01' || frm.authCode.value=='02' || frm.authCode.value=='03'  ){//기본권한 (슈퍼관리자,관리자,일반)
+				
+				frm.auth.value=frm.authCode.value;
+				frm.authId.value='';
+			
+			}else{//일반 상세권한
+				
+				if(frm.authCode.value=='04'){//일반(본사)
+					
+					frm.auth.value='03';
+				    frm.authId.value='AD001';
+					
+				}else if(frm.authCode.value=='05'){//일반(staff)
+					
+					frm.auth.value='03';
+				    frm.authId.value='STAFF';
+				}
+			}
+			
 			if (confirm('사용자 정보를 등록 하시겠습니까?')){ 
 			
 			    $.ajax({
@@ -132,16 +151,19 @@
 	                	<option value="${groupVO.groupId}">${groupVO.groupName}</option>
 	                </c:forEach>
 	            </select>
-	            <input type="hidden" id="authId" name="authId" value="G00000" ></th>
 	      	</tr>
 	      	<tr>
 	          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>권한</th>
 	          <th class='text-left'>
-	          	<select class="form-control" title="관리권한" id="auth" name="auth" value="" tabindex="5">
+	          	<select class="form-control" title="관리권한" id="authCode" name="authCode" value="" tabindex="5">
 	                <option value="03">일반</option>
+	                <option value="05">일반(staff)</option>
+	                <option value="04">일반(본사)</option>
 	                <option value="02">관리자</option>
 	                <c:if test="${strAuth=='01'}"><option value="01">슈퍼관리자</option></c:if>
 	       		</select></th>
+	       		<input type="hidden" name="auth" id="auth" >
+	       		<input type="hidden" name="authId" id="authId" >
 	      	</tr>
 	      	<tr>
 	          <th class='text-center' style="background-color:#E6F3FF" >email</th>

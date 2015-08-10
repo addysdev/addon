@@ -1718,7 +1718,7 @@ public class OrderController {
         List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
         mv.addObject("group_comboList", group_comboList);
         
-        // 공통코드 조회 (발주상태코드)
+        // 공통코드 조회 (검수상태코드)
         CodeVO code = new CodeVO();
         code.setCodeGroupId("OD02");
         List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
@@ -1765,7 +1765,7 @@ public class OrderController {
 
         // 상태 값 null 일때 공백처리
         if (orderConVO.getCon_orderState() == null) {
-        	orderConVO.setCon_groupId("G00000");
+        	orderConVO.setCon_orderState("");
         }
 
         // 조회조건저장

@@ -62,10 +62,12 @@
     };
     
     function stateSearch(state){
-    	
+    	//alert('state::'+state);
     	document.orderConForm.con_orderState.value=state;
     	document.orderConForm.searchGubun.value='';
     	document.orderConForm.searchValue.value='';
+    	
+    	//alert(document.orderConForm.con_orderState.value);
     	fcOrder_listSearch();
     }
 </SCRIPT>

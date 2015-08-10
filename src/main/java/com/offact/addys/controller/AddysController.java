@@ -51,6 +51,7 @@ import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.UserVO;
 import com.offact.addys.vo.common.WorkVO;
 import com.offact.addys.vo.manage.UserManageVO;
+import com.offact.addys.vo.order.OrderVO;
 import com.offact.addys.vo.order.TargetVO;
 
 /**
@@ -95,7 +96,8 @@ public class AddysController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
-        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strAuthId = StringUtil.nvl((String) session.getAttribute("strAuthId"));
         
 		ModelAndView mv = new ModelAndView();
 		String strMainUrl = "addys/loginForm";
@@ -103,27 +105,63 @@ public class AddysController {
 		try{
 
 			if(!"".equals(strUserId)){
-
-		        TargetVO targetConVO = new TargetVO();
-		        
-		        targetConVO.setGroupId(groupId);
-
-		        // 조회조건저장
-		        mv.addObject("targetConVO", targetConVO);
-
-		        //조직정보 조회
+				
+				//조직정보 조회
 		        GroupVO group = new GroupVO();
-		        group.setGroupId(groupId);
+		        group.setGroupId(strGroupId);
 		        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
 		        mv.addObject("group_comboList", group_comboList);
-		        
-		        // 공통코드 조회 (발주상태코드)
-		        CodeVO code = new CodeVO();
-		        code.setCodeGroupId("OD01");
-		        List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
-		        mv.addObject("code_comboList", code_comboList);
-				
-				strMainUrl="order/targetManage";
+
+				if(strAuthId.equals("STAFF")){//스태프인 경우 검수화면 기본세팅
+					 
+					// 공통코드 조회 (검수상태코드)
+			        CodeVO code = new CodeVO();
+			        code.setCodeGroupId("OD02");
+			        List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
+			        mv.addObject("code_comboList", code_comboList);
+					
+					//검수리스트 화면 로직 추가
+					OrderVO orderConVO = new OrderVO();
+					
+			        //오늘 날짜
+			        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+			        Date currentTime = new Date();
+			        Date deliveryTime = new Date();
+			        int movedate=-7;//(1:내일 ,-1:어제)
+			        
+			        deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+			        
+			        String strToday = simpleDateFormat.format(currentTime);
+			        String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+			        
+			        orderConVO.setStart_orderDate(strDeliveryDay);
+			        orderConVO.setEnd_orderDate(strToday);
+   
+					orderConVO.setGroupId(strGroupId);
+	
+			        // 조회조건저장
+			        mv.addObject("orderConVO", orderConVO);
+	
+					strMainUrl = "order/orderManage";
+					
+				}else{//발주화면 기본화면
+
+					// 공통코드 조회 (발주상태코드)
+			        CodeVO code = new CodeVO();
+			        code.setCodeGroupId("OD01");
+			        List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
+			        mv.addObject("code_comboList", code_comboList);
+			        
+			        TargetVO targetConVO = new TargetVO();
+			        
+			        targetConVO.setGroupId(strGroupId);
+	
+			        // 조회조건저장
+			        mv.addObject("targetConVO", targetConVO);
+
+					strMainUrl="order/targetManage";
+					
+				}
 			}
 			
 		    mv.setViewName(strMainUrl);
@@ -341,28 +379,63 @@ public class AddysController {
 		        
 				mv.addObject("userId", strUserId);
 				
-				//발주리스트 화면 로직 추가
-				TargetVO targetConVO = new TargetVO();
-		        
-		        targetConVO.setGroupId(strGroupId);
-
-		        // 조회조건저장
-		        mv.addObject("targetConVO", targetConVO);
-
 		        //조직정보 조회
 		        GroupVO group = new GroupVO();
 		        group.setGroupId(strGroupId);
 		        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
 		        mv.addObject("group_comboList", group_comboList);
-		        
-		        // 공통코드 조회 (발주상태코드)
-		        CodeVO code = new CodeVO();
-		        code.setCodeGroupId("OD01");
-		        List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
-		        mv.addObject("code_comboList", code_comboList);
-
-				strMainUrl = "order/targetManage";
 				
+				if(strAuthId.equals("STAFF")){//스태프인 경우 검수화면 기본세팅
+					
+					// 공통코드 조회 (검수상태코드)
+			        CodeVO code = new CodeVO();
+			        code.setCodeGroupId("OD02");
+			        List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
+			        mv.addObject("code_comboList", code_comboList);
+			        
+					//검수리스트 화면 로직 추가
+					OrderVO orderConVO = new OrderVO();
+					
+			        //오늘 날짜
+			        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+			        Date currentTime = new Date();
+			        Date deliveryTime = new Date();
+			        int movedate=-7;//(1:내일 ,-1:어제)
+			        
+			        deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+			        
+			        String strToday = simpleDateFormat.format(currentTime);
+			        String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+			        
+			        orderConVO.setStart_orderDate(strDeliveryDay);
+			        orderConVO.setEnd_orderDate(strToday);
+   
+					orderConVO.setGroupId(strGroupId);
+	
+			        // 조회조건저장
+			        mv.addObject("orderConVO", orderConVO);
+	
+					strMainUrl = "order/orderManage";
+					
+				}else{
+				
+			        // 공통코드 조회 (발주상태코드)
+			        CodeVO code = new CodeVO();
+			        code.setCodeGroupId("OD01");
+			        List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
+			        mv.addObject("code_comboList", code_comboList);
+			        
+					//발주리스트 화면 로직 추가
+					TargetVO targetConVO = new TargetVO();
+			        
+			        targetConVO.setGroupId(strGroupId);
+	
+			        // 조회조건저장
+			        mv.addObject("targetConVO", targetConVO);
+
+					strMainUrl = "order/targetManage";
+				}
+					
 			} else {//app 상요자 정보가 없는경우
 	
 				logger.info(">>> 상담App 사용자 정보 없음");

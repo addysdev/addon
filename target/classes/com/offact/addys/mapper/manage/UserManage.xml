@@ -38,7 +38,9 @@
 			  ,T1.authId   
 			  ,Case T1.auth When '01' Then '슈퍼관리자'
   						   When '02' Then '관리자'
-  						   Else '일반'
+  						   Else Case T1.authId When 'AD001' Then '일반(본사)'
+  						   					   When 'STAFF' Then '일반(STAFF)'
+  						   					   Else '일반' End
          				   End authName
 			  ,IFNULL(T1.excelAuth,'N')   As excelAuth
 			  ,T1.password
@@ -168,6 +170,7 @@
 		                        groupId = #{groupId},
 		                        password = password(#{password}),
 		                        auth = #{auth},
+		                        authId = #{authId},
 		                        email = #{email},
 		                        officePhone = #{officePhone},
 		                        mobliePhone = #{mobliePhone},

@@ -216,57 +216,69 @@
 					   <img src="<%= request.getContextPath() %>/images/top/addys-menu_01.jpg" name="menu_01" border="0" id="menu_01" />
 					</a> 
 			          <ul class="dropdown-menu" role="menu">
+			          	<c:choose>
+	    					<c:when test="${strAuthId == 'STAFF'}">
+	    						<!--  STAFF 미사용  -->
+							</c:when>
+					    <c:otherwise>
 			            <li><a href="<%= request.getContextPath() %>/order/targetmanage" >발주 리스트</a></li>
+			            </c:otherwise>
+						</c:choose>
 			            <li><a href="<%= request.getContextPath() %>/order/ordermanage" >검수 리스트</a></li>                        
 			          </ul>
 			        </li>
 					<!-- 발주관리 끝 -->
-					<!-- 회수관리 시작 -->
-					<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#"   onmouseover="MM_nbGroup('over','menu_02','<%= request.getContextPath() %>/images/top/addys-menu_02_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_02_on.jpg',1)" onmouseout="MM_nbGroup('out')">
-					   <img src="<%= request.getContextPath() %>/images/top/addys-menu_02.jpg"   name="menu_02" border="0" id="menu_02"  /></a>
-					</a> 
-			          <ul class="dropdown-menu" role="menu">
-		            	<li><a href="<%= request.getContextPath() %>/recovery/collectmanage">회수 리스트</a></li>                    
-		          	</ul>
-			        </li>
-			        <!-- 분석 시작 -->
-					<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#"   onmouseover="MM_nbGroup('over','menu_06','<%= request.getContextPath() %>/images/top/addys-menu_06_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_06_on.jpg',1)" onmouseout="MM_nbGroup('out')">
-					   <img src="<%= request.getContextPath() %>/images/top/addys-menu_06.jpg"   name="menu_06" border="0" id="menu_06"  /></a>
-					</a> 
-			          <ul class="dropdown-menu" role="menu">
-		            	<li><a href="<%= request.getContextPath() %>/analysis/holdstockmanage">보유재고 분석/추천</a></li> 
-		            	<li><a href="<%= request.getContextPath() %>/analysis/gmroimanage">GMROI 분석</a></li>                           
-		          	</ul>
-			        </li>
-			        <c:if test="${strAuth != '03'}">
-			        <!-- 이력 시작 -->
-					<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#"   onmouseover="MM_nbGroup('over','menu_05','<%= request.getContextPath() %>/images/top/addys-menu_05_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_05_on.jpg',1)" onmouseout="MM_nbGroup('out')">
-					   <img src="<%= request.getContextPath() %>/images/top/addys-menu_05.jpg"   name="menu_05" border="0" id="menu_05"  /></a>
-					</a> 
-			          <ul class="dropdown-menu" role="menu">
-			            <li><a href="<%= request.getContextPath() %>/history/smshistorymanage">SMS 전송이력</a></li>
-			           <!--   <c:if test="${strAuth == '01'}"> -->
-			            <li><a href="<%= request.getContextPath() %>/history/workhistorymanage">업무 처리이력</a></li>
-			           <!-- </c:if>     -->        
-		          	</ul>
-			        </li>
-			        </c:if>
-			        <!-- Master 관리시작 -->
-			        <li class="dropdown">
-			         <a class="dropdown-toggle" data-toggle="dropdown" href="#"   onmouseover="MM_nbGroup('over','menu_03','<%= request.getContextPath() %>/images/top/addys-menu_03_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_03_on.jpg',1)" onmouseout="MM_nbGroup('out')">
-						<img src="<%= request.getContextPath() %>/images/top/addys-menu_03.jpg"   name="menu_03" border="0" id="menu_03"  /></a>
-			          <ul class="dropdown-menu" role="menu">
-			            <c:if test="${strAuth != '03'}">
-			            <li><a href="<%= request.getContextPath() %>/master/productmanage">품목 관리</a></li>
-			            <li><a href="<%= request.getContextPath() %>/master/orderlimitmanage">발주제한 관리</a></li>
-			            </c:if>
-			            <li><a href="<%= request.getContextPath() %>/master/stockmanage">재고현황 관리</a></li>   
-			            <li><a href="<%= request.getContextPath() %>/master/salesmanage">매출현황 관리</a></li>                            
-			          </ul>
-			        </li>
+					<c:choose>
+    					<c:when test="${strAuthId == 'STAFF'}">
+    						<!--  STAFF 미사용  -->
+						</c:when>
+				    <c:otherwise>
+						<!-- 회수관리 시작 -->
+						<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#"   onmouseover="MM_nbGroup('over','menu_02','<%= request.getContextPath() %>/images/top/addys-menu_02_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_02_on.jpg',1)" onmouseout="MM_nbGroup('out')">
+						   <img src="<%= request.getContextPath() %>/images/top/addys-menu_02.jpg"   name="menu_02" border="0" id="menu_02"  /></a>
+						</a> 
+				          <ul class="dropdown-menu" role="menu">
+			            	<li><a href="<%= request.getContextPath() %>/recovery/collectmanage">회수 리스트</a></li>                    
+			          	</ul>
+				        </li>
+				        <!-- 분석 시작 -->
+						<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#"   onmouseover="MM_nbGroup('over','menu_06','<%= request.getContextPath() %>/images/top/addys-menu_06_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_06_on.jpg',1)" onmouseout="MM_nbGroup('out')">
+						   <img src="<%= request.getContextPath() %>/images/top/addys-menu_06.jpg"   name="menu_06" border="0" id="menu_06"  /></a>
+						</a> 
+				          <ul class="dropdown-menu" role="menu">
+			            	<li><a href="<%= request.getContextPath() %>/analysis/holdstockmanage">보유재고 분석/추천</a></li> 
+			            	<li><a href="<%= request.getContextPath() %>/analysis/gmroimanage">GMROI 분석</a></li>                           
+			          	</ul>
+				        </li>
+				        <c:if test="${strAuth != '03'}">
+				        <!-- 이력 시작 -->
+						<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#"   onmouseover="MM_nbGroup('over','menu_05','<%= request.getContextPath() %>/images/top/addys-menu_05_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_05_on.jpg',1)" onmouseout="MM_nbGroup('out')">
+						   <img src="<%= request.getContextPath() %>/images/top/addys-menu_05.jpg"   name="menu_05" border="0" id="menu_05"  /></a>
+						</a> 
+				          <ul class="dropdown-menu" role="menu">
+				            <li><a href="<%= request.getContextPath() %>/history/smshistorymanage">SMS 전송이력</a></li>
+				            <li><a href="<%= request.getContextPath() %>/history/workhistorymanage">업무 처리이력</a></li>   
+			          	</ul>
+				        </li>
+				        </c:if>
+				        <!-- Master 관리시작 -->
+				        <li class="dropdown">
+				         <a class="dropdown-toggle" data-toggle="dropdown" href="#"   onmouseover="MM_nbGroup('over','menu_03','<%= request.getContextPath() %>/images/top/addys-menu_03_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_03_on.jpg',1)" onmouseout="MM_nbGroup('out')">
+							<img src="<%= request.getContextPath() %>/images/top/addys-menu_03.jpg"   name="menu_03" border="0" id="menu_03"  /></a>
+				          <ul class="dropdown-menu" role="menu">
+				            <c:if test="${strAuth != '03'}">
+				            <li><a href="<%= request.getContextPath() %>/master/productmanage">품목 관리</a></li>
+				            <li><a href="<%= request.getContextPath() %>/master/orderlimitmanage">발주제한 관리</a></li>
+				            </c:if>
+				            <li><a href="<%= request.getContextPath() %>/master/stockmanage">재고현황 관리</a></li>   
+				            <li><a href="<%= request.getContextPath() %>/master/salesmanage">매출현황 관리</a></li>                            
+				          </ul>
+				        </li>
+			        </c:otherwise>
+					</c:choose>
 			        <!-- 관리시작 -->
 			        <c:if test="${strAuth != '03'}">
 			        <li class="dropdown">
