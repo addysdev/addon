@@ -69,7 +69,7 @@ function fcDefer_reasonadd(){
 function fcBarCode_close(){
 	//$("#barCodeDialog").dialog('close');
 	barCodeCheck();
-	
+	opener.CheckInit++;
 	this.close();
 }
 
@@ -104,6 +104,8 @@ function fcBarCode_cancel(){
 
 		opener.totalOrderAmt();
 		opener.totalCheck();
+		
+		opener.CheckInit=0;
 
 		//$("#barCodeDialog").dialog('close');
 		this.close();

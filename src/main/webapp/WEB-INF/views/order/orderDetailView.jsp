@@ -729,6 +729,9 @@ function totalTargetAmt(){
     	eval(winName+"=window.open('"+theURL+"','"+targetName+"','"+features+"')");
 
     }
+    
+    var CheckInit=0;
+    
     function fcBarCode_check(orderstate){
     	
     	if (confirm('바코드 스캐너를 통해 검수수량을 자동입력 하시겠습니까?\n자동검수 처리시 스캐너 연동 및 환경이 정상적으로 설정 되어 있어야 합니다.')){ 
@@ -766,7 +769,8 @@ function totalTargetAmt(){
 	            }
 	        });
 	    	*/
-	    	if(orderstate=='03'){
+	        if(orderstate=='03' && CheckInit==0){ //검수대기상태최초에만 초기화
+	    	//if(false){ //초기화 삭제 
 		    	var frm=document.orderDetailListForm;
 				var amtCnt = frm.productCode.length;
 				
