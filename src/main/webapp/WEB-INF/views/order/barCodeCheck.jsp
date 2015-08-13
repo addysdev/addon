@@ -145,6 +145,9 @@ function barCodeCheck(){
 	var fCnt=0;
 	var totalFMsg='';
     var fMsg='';
+    var fBarCodes='';
+    var fBarCode='';
+
 
 	if(amtCnt > 1){
 		
@@ -178,6 +181,7 @@ function barCodeCheck(){
 		if(amtCnt > 1){
 			
 			fMsg='['+(x+1)+'] 번째 바코드 :'+barCodes[x]+"\n";
+			fBarCode=barCodes[x]+"^";
 
 	    	for(i=0;i<amtCnt;i++){
 
@@ -196,6 +200,7 @@ function barCodeCheck(){
 
 	    			sCnt++;
 	    			fMsg='';
+	    			fBarCode='';
 	    			
 	    			break;
 	    		}
@@ -203,10 +208,12 @@ function barCodeCheck(){
 	    	}
 	    	
 	    	totalFMsg=totalFMsg+fMsg;
+	    	fBarCodes=fBarCodes+fBarCode;
 	    	
 		}else{
 			
-			fMsg='['+(x+1)+'] 번째 바코드 :'+barCodes[x]+"|";
+			fMsg='['+(x+1)+'] 번째 바코드 :'+barCodes[x];
+			fBarCode=barCodes[x];
 
 			if(frm.barCode.value==barCodes[x]){	
 				
@@ -223,10 +230,12 @@ function barCodeCheck(){
 				
     			sCnt++;
     			fMsg='';
+    			fBarCode='';
 
     		}
 			
 			totalFMsg=totalFMsg+fMsg;
+			fBarCodes=fBarCodes+fBarCode;
 		}
 		
 	}
@@ -238,15 +247,20 @@ function barCodeCheck(){
     }
 */
 
+    var ordercode='${orderCode}';
+    var companycode='${companyCode}';
+    
+    //alert('companyCode::'+ordercode);
+    
     if(fCnt>0){
     	
     	//alert('미일치 바코드 정보가 아래와 같이 발생했습니다\n'+totalFMsg);
-    	var url='<%= request.getContextPath() %>/order/barcodecheckresult?fCnt='+fCnt+'&totalFMsg='+encodeURIComponent(totalFMsg);
+    	var url='<%= request.getContextPath() %>/order/barcodecheckresult?orderCode='+ordercode+'&companyCode='+companycode+'&fCnt='+fCnt+'&fBarCodes='+fBarCodes+'&totalFMsg='+encodeURIComponent(totalFMsg);
 
 		var h=350;
 		var s=300;
 
-	    tmt_winLaunch(url, 'barcodeResultObj', 'barcodeResultObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=no,scrollbars=yes');
+		opener.barcode_winLaunch(url, 'barcodeResultObj', 'barcodeResultObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=no,scrollbars=yes');
 
     	
     }
@@ -259,12 +273,7 @@ function barCodeCheck(){
 	//document.all('checkFCnt').innerText=fCnt+'건';
 }
 
-function tmt_winLaunch(theURL,winName,targetName,features) {
-	
-	var targetRandom=Math.random();
-	eval(winName+"=window.open('"+theURL+"','"+targetRandom+"','"+features+"')");
 
-}
 </SCRIPT>
 </head>
 <!-- 사용자관리 -->

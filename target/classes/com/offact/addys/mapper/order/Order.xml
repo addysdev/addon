@@ -465,19 +465,59 @@ SELECT sum(TOT.waitCnt) AS waitCnt,
 		                        
 </update>
 
-<update id="updateCheckDetail"  parameterType="com.offact.addys.vo.order.OrderVO" >
+<insert id="updateCheckDetail"  parameterType="com.offact.addys.vo.order.OrderVO" >
 	
-		update adOrderDetail 
-			set
-				orderResultPrice = #{orderResultPrice}
-            	,orderResultCnt = #{orderResultCnt}
-            	,orderVatRate = #{orderVatRate}
-            	,updateUserId = #{updateUserId}
-            	,orderCheck = 'Y'
-            	,updateDateTime = now()
-		where orderCode = #{orderCode}
-	  		  and productCode = #{productCode}
+insert into adOrderDetail (
+							orderCode
+							,productCode
+							,orderPrice
+							,orderResultPrice
+							,orderCnt
+							,orderResultCnt
+							,orderVatRate
+							,createUserId
+							,orderCheck
+							,createDateTime
+					)values(
+							 #{orderCode}
+							,#{productCode}
+							,ifnull(#{orderResultPrice},0)
+							,#{orderResultPrice}
+							,ifnull(#{orderCnt},0)
+							,#{orderResultCnt}
+							,#{orderVatRate}
+							,#{updateUserId}
+							, 'Y'
+							, now()			
+		
+					) 
+					ON DUPLICATE KEY UPDATE orderResultPrice = #{orderResultPrice}
+					                        ,orderResultPrice = #{orderResultPrice}
+            	                            ,orderResultCnt = #{orderResultCnt}
+            	                            ,orderVatRate = #{orderVatRate}
+            	                            ,updateUserId = #{updateUserId}
+            	                            ,orderCheck = 'Y'
+            	                            ,updateDateTime = now()
+                        
+</insert>
 
-		                        
-</update>
+<select id="getCheckAddList"  resultMap="orderVO" parameterType="com.offact.addys.vo.order.OrderVO" >
+	select T1.barCode,
+       	   T2.productCode,
+           T2.productName,
+           T2.productPrice,
+           format(T2.productPrice,0) as orderResultPriceView,
+           Sum(T1.cnt) as orderResultCnt ,
+           Case When T2.productCode is null Then '02' Else '01' End productChk
+                       From (
+                            	 ${checkAddList}
+                             ) as T1
+                             Left Join adProductMaster T2 On T1.barCode=T2.barCode
+                             group By T1.barCode,
+                                      T2.productCode,
+                                      T2.productName,
+                                      T2.productPrice
+                             order by productChk ,productName
+</select>
+
 </mapper>

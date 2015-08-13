@@ -60,6 +60,26 @@ function fcfCode_close(){
 	this.close();
 }
 
+function fcAdd_check(){
+
+	var fBarCodes='${fBarCodes}';
+	
+	//alert(fBarCodes);
+	var ordercode='${orderCode}';
+	var companycode='${companyCode}';
+	
+	//alert(companycode);
+	
+	var url='<%= request.getContextPath() %>/order/barcodecheckaddform?orderCode='+ordercode+'&companyCode='+companycode+'&fBarCodes='+fBarCodes;
+
+	var h=650;
+	var s=850;
+
+	opener.barcode_winLaunch(url, 'barcodeCehckObj', 'barcodeCehckObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=320,top=0,resizable=no,scrollbars=yes');
+
+	//this.close();
+}
+
 </SCRIPT>
 </head>
 <!-- 사용자관리 -->
@@ -80,6 +100,7 @@ function fcfCode_close(){
 <p><textarea style='height:220px;ime-mode:active;' class="form-control" id="barcode_list" name="barcode_list"  value=""  placeholder=""  />
 ${totalFMsg}</textarea></p>
 <button id="deferpopclosebtn" type="button" class="btn btn-default" onClick="fcfCode_close()">닫기</button> 
+<button id="addCheckbtn" type="button" class="btn btn-primary" onClick="fcAdd_check()">검수추가</button> 
 </form:form>
 </div>
 </body>

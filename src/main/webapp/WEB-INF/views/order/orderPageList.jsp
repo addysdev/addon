@@ -52,6 +52,18 @@
 	                 	  }else{
 	                 		barcodeObj.close();
 	                 	  }
+	               	
+	                if(barcodeResultObj==undefined){
+               		 	return;
+                 	  }else{
+                 		 barcodeResultObj.close();
+                 	  }
+	               	
+	               	  if(barcodeCehckObj==undefined){
+	               		 	return;
+	                 	  }else{
+	                 		 barcodeCehckObj.close();
+	                 	  }
 	           		  
 	           	  }catch(e){
 	           		 return;

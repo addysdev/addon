@@ -210,7 +210,7 @@ public class OrderServiceImpl implements OrderService {
 		        orderDetailVo.setOrderResultCnt(StringUtil.nvl(r_data[3],""));
 		        orderDetailVo.setOrderVatRate(StringUtil.nvl(r_data[4],""));
 		        orderDetailVo.setEtc(StringUtil.nvl(r_data[5],""));
-		        orderDetailVo.setUpdateUserId(orderVo.getDeferUserId());
+		        orderDetailVo.setUpdateUserId(orderVo.getBuyUserId());
 		    	
 	            retVal=this.commonDao.update("Order.updateCheckDetail", orderDetailVo);
 		      
@@ -235,4 +235,13 @@ public class OrderServiceImpl implements OrderService {
 
         return stateVO;
     }
+    
+    @Override
+    public List<OrderVO> getCheckAddList(OrderVO order) throws BizException {
+    	
+        List<OrderVO> addDetailList = commonDao.selectList("Order.getCheckAddList", order);
+
+        return addDetailList;
+    }
+    
 }

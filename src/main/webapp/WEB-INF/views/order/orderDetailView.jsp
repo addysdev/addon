@@ -9,7 +9,6 @@
 
 </style>
 <SCRIPT>
- 
 
 function tmt_winLaunch(theURL,winName,targetName,features) {
 	
@@ -314,10 +313,12 @@ function totalTargetAmt(){
 	    		
 	    		frm.orderResultPrice[i].value=isnullStr(frm.orderResultPrice[i].value);
 	    		frm.orderResultCnt[i].value=isnullStr(frm.orderResultCnt[i].value);
-	    		
+	    		//alert('['+i+']orderResultPrice:'+frm.orderResultPrice[i].value);
+	    		//alert('['+i+']orderResultCnt:'+frm.orderResultCnt[i].value);
 	    		var productPrice=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultPrice[i].value))));
 	    		var orderCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderResultCnt[i].value))));
 	    		var vatAmt=frm.orderVatRate[i].value;
+	    		//alert('['+i+']orderVatRate:'+frm.orderVatRate[i].value);
 	    		var sum_supplyAmt=productPrice*orderCnt;
 	
 	    		var sum_supplyAmt=productPrice*orderCnt;
@@ -330,9 +331,11 @@ function totalTargetAmt(){
 	    		//if(orderCnt>0){
 		    		totalprodcnt++;
 	    		//}
+	    		
+				if(i<document.all('orderTotalPriceView').length){
+					document.all('orderTotalPriceView')[i].innerText=addCommaStr(''+(productPrice*orderCnt));
+				}
 
-	    		document.all('orderTotalPriceView')[i].innerText=addCommaStr(''+(productPrice*orderCnt));
-	
 	    	}
 	    	
     	}else{
@@ -355,8 +358,9 @@ function totalTargetAmt(){
     		//if(orderCnt>0){
 	    		totalprodcnt++;
     		//}
-
-    		document.all('orderTotalPriceView').innerText=addCommaStr(''+(productPrice*orderCnt));
+	    	if(i<document.all('orderTotalPriceView').length){
+    			document.all('orderTotalPriceView').innerText=addCommaStr(''+(productPrice*orderCnt));
+	    	}
     	}
 
     	  totalamt=supplyamt+vatamt;
@@ -518,6 +522,7 @@ function totalTargetAmt(){
   
          	if(frm.seqs.length!=undefined){
          		for(i=0;i<frm.seqs.length;i++){
+         			
  					frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
          			'|'+fillSpace(frm.barCode[i].value)+'|'+fillSpace(deleteCommaStr(frm.orderResultPrice[i].value))+'|'+fillSpace(frm.orderResultCnt[i].value)+
          			'|'+fillSpace(frm.orderVatRate[i].value)+'|'+fillSpace(frm.etc[i].value);
@@ -723,8 +728,8 @@ function totalTargetAmt(){
     /*
      * 화면 POPUP
      */
-    function tmt_winLaunch(theURL,winName,targetName,features) {
-    	
+    function barcode_winLaunch(theURL,winName,targetName,features) {
+    	//alert('opener');
     	//var targetRandom=Math.random();
     	eval(winName+"=window.open('"+theURL+"','"+targetName+"','"+features+"')");
 
@@ -732,17 +737,17 @@ function totalTargetAmt(){
     
     var CheckInit=0;
     
-    function fcBarCode_check(orderstate){
+    function fcBarCode_check(orderstate,ordercode,companycode){
     	
     	if (confirm('바코드 스캐너를 통해 검수수량을 자동입력 하시겠습니까?\n자동검수 처리시 스캐너 연동 및 환경이 정상적으로 설정 되어 있어야 합니다.')){ 
     	
     		var orderCnt=document.all('totalTargetCnt').innerText;
-	    	var url='<%= request.getContextPath() %>/order/barcodecheck?orderCnt='+encodeURIComponent(orderCnt);
+	    	var url='<%= request.getContextPath() %>/order/barcodecheck?orderCode='+ordercode+'&companyCode='+companycode+'&orderCnt='+encodeURIComponent(orderCnt);
 
 			var h=510;
 			var s=280;
 
-		    tmt_winLaunch(url, 'barcodeObj', 'barcodeObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=no,scrollbars=yes');
+			barcode_winLaunch(url, 'barcodeObj', 'barcodeObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=no,scrollbars=yes');
 	
 		    /*
 	    	$('#barCodeDialog').dialog({
@@ -814,6 +819,29 @@ function totalTargetAmt(){
     	  }
     	 
       }
+    }
+    
+    function addCheckSet(bacode,prodcode,prodname,prodprice,checkcnt,prodpriceview,totalpriceview){
+
+    	//01.바코드 검색버튼 비활성화 (추가 바코드 검색 못하게 해야함)
+    	document.all('barcodebtn').disabled=true;
+    	document.all('contentId').style.display='block';
+    	//02.검수추가 데이타 세팅
+    	
+    	
+    	//03.검수추가 데이타 히든값 trail없게
+    	
+    	var rowCnt = contentId.rows.length;
+    	
+    	//alert('rowCnt:'+rowCnt);
+    	var newRow = contentId.insertRow( rowCnt++ );
+    	newRow.onmouseover=function(){contentId.clickedRowIndex=this.rowIndex};
+    	var newCell = newRow.insertCell();
+    	//alert('newCell:'+newCell);
+    	newCell.innerHTML ="<tr><td class='text-left'><input type='hidden' id='seqs' name='seqs' ><input type='checkbox' id='orderCheck' name='orderCheck' checked /></td><td> [품목코드] : "+prodcode+"</td><td> [바코드] : "+bacode+"</td><td> [상품명] : "+prodname+"</td><td> [검수수량] : <font style='color:blue'>"+checkcnt+"</font></td><td> 검수금액 : <font style='color:blue'>"+prodpriceview+"</font></td><td> [합계] : <font style='color:blue'>"+totalpriceview+"</font></td><input type='hidden' name='productCode' value='"+prodcode+"'><input type='hidden' name='barCode' value='"+bacode+"'><input type='hidden' name='productName' value='"+prodname+"'><input type='hidden' name='orderResultPrice' value='"+prodprice+"'><input type='hidden' name='orderVatRate' value='0'><input type='hidden' id='orderResultCnt' name='orderResultCnt'  value='"+checkcnt+"'><input type='hidden' name='orderPrice' value='"+prodprice+"'><input type='hidden' name='orderVatRate' value='0'><input type='hidden' name='etc' value=''></td></tr>";
+    	   	
+    	totalOrderAmt();
+    	
     }
 </SCRIPT>
 	<div class="container-fluid">
@@ -960,7 +988,7 @@ function totalTargetAmt(){
 	     	<td class='text-right'><span id="totalOrderCnt" style="color:red"></span></td>
 	     	<td style="background-color:#E6F3FF">검수 합계금액</td>
 	     	<td class='text-right'><span id="totalOrderAmt" style="color:red"></span></td>	
-	     	<c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><td>&nbsp;<button type="button" class="btn btn-xs btn-info" onClick="fcBarCode_check('${orderVO.orderState}')" >바코드 검수</button></td></c:if>
+	     	<c:if test="${orderVO.orderState=='03' || orderVO.orderState=='04'}"><td>&nbsp;<button type="button" id="barcodebtn" class="btn btn-xs btn-info" onClick="fcBarCode_check('${orderVO.orderState}','${orderVO.orderCode}','${orderVO.companyCode}')" >바코드 검수</button></td></c:if>
 	     </tr>
      </table>
        <div class="thead">
@@ -1064,7 +1092,7 @@ function totalTargetAmt(){
                  <input style="width:80px" type="hidden" class="form-control" id="orderVatRate" name="orderVatRate" onKeyup="totalOrderAmt()" value="0">
                  
                 <c:choose>
-		    		<c:when test="${orderVO.orderCnt=='0'}">
+		    		<c:when test="${orderVO.orderCnt=='0' && orderVO.orderState=='03'}">
                 		 <td class='text-right'><input  type="text" class="form-control" id="orderResultPrice" maxlength="9" numberOnly name="orderResultPrice" onKeyup="totalOrderAmt()" value="0"></td>
                 	</c:when>
 					<c:otherwise>
@@ -1092,7 +1120,19 @@ function totalTargetAmt(){
            	<td colspan='10' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
+         <!-- 검수 추가리스트 -->
+          <tr>
+          	<td colspan="10" class='text-left' >
+	          <table id="contentId" style="display:none"> 
+		          <tr>
+		          	<td class='text-left'><font style="color:blue">[검수 추가 리스트]</font></td>
+		          <tr>
+	          </table>
+         	 </td>
+         </tr>
+        
 	    </tbody>
+
 	   </table>
 	  </div>
       

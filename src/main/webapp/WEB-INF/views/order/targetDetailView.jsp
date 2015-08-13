@@ -799,6 +799,15 @@ function fcDefer_reason(reason){
             }
         });
     };
+    
+    function reservation(){
+    	
+    	if (confirm('SMS를 예약발송 하시겠습니까?\n영없시간 이외 설정값은 자동으로 익일 오전 09시에 발송됩니다.')){ 
+    	
+    	 	document.all('datetimepicker1').style.display="block";
+    	
+    	}
+    }
 </SCRIPT>
 	<div class="container-fluid">
 	 <div class="form-group" >
@@ -910,13 +919,34 @@ function fcDefer_reason(reason){
           <th class='text-center'><input type="text" class="form-control" id="payMethod" name="payMethod"  maxlength="10"  value="입금지정일.현금" placeholder="결재방법" /></th>
       	</tr>
       	<tr>
-          <th colspan='2' class='text-center' style="background-color:#E6F3FF">SMS내용</th>
+          <th colspan='2' class='text-center' style="background-color:#E6F3FF">SMS내용 <!-- <a href="javascript:reservation();">[예약]</a> -->
 	          <c:choose>
 	    		<c:when test="${targetVO.groupName=='반디울산점'}">
 				      <th colspan='4' class='text-center'><input type="text" class="form-control" id="sms" name="sms"  maxlength="50"  value="${targetVO.deliveryCharge}님 ADDYS 본사 에서 발주서를 보냈습니다.당일처리 부탁드립니다." placeholder="SMS" /></th>
 				</c:when>
 				<c:otherwise>
-					  <th colspan='4' class='text-center'><input type="text" class="form-control" id="sms" name="sms"  maxlength="50"  value="${targetVO.deliveryCharge}님 ADDYS ${targetVO.groupName}에서 발주서를 보냈습니다.당일처리 부탁드립니다." placeholder="SMS" /></th>
+					  <th colspan='4' class='text-center'><input type="text" class="form-control" id="sms" name="sms"  maxlength="50"  value="${targetVO.deliveryCharge}님 ADDYS ${targetVO.groupName}에서 발주서를 보냈습니다.당일처리 부탁드립니다." placeholder="SMS" />   
+					   	<div class="row" id="datetimepicker1" style="display:none">
+					        <div class='col-sm-6'>
+					            <div class="form-group">
+					                <div class='input-group date' id='datetimepicker2'>
+					                    <input type='text' class="form-control" />
+					                    <span class="input-group-addon">
+					                        <span class="glyphicon glyphicon-calendar"></span>
+					                    </span>
+					                </div>
+					            </div>
+					        </div>
+					        <script type="text/javascript">
+					            $(function () {
+					                $('#datetimepicker2').datetimepicker({
+					                    locale: 'ru'
+					                });
+					            });
+					        </script>
+					    </div>
+					    
+					  </th>
 				</c:otherwise>
 			  </c:choose>
         	</tr>
@@ -1064,4 +1094,6 @@ function fcDefer_reason(reason){
 	
 	totalCheck();
     initNotify();
+    
+
 </script>

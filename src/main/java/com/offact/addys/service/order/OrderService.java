@@ -100,4 +100,12 @@ public interface OrderService {
      * @throws BizException
      */
     public OrderVO getStateCnt(OrderVO orderCon) throws BizException;
+    
+    /**
+     * 검수추가 상세목록 조회
+     * 
+     * @return
+     * @throws BizException
+     */
+    public List<OrderVO> getCheckAddList(OrderVO order) throws BizException;
 }

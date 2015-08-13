@@ -127,6 +127,8 @@ public class OrderVO extends AbstractVO {
     private String page_limit_val1;
     private String page_limit_val2;
     
+    private String checkAddList;
+    
 	public String getOrderCode() {
 		return orderCode;
 	}
@@ -721,6 +723,12 @@ public class OrderVO extends AbstractVO {
 	}
 	public void setChkUserId(String chkUserId) {
 		this.chkUserId = chkUserId;
+	}
+	public String getCheckAddList() {
+		return checkAddList;
+	}
+	public void setCheckAddList(String checkAddList) {
+		this.checkAddList = checkAddList;
 	}
 
 }

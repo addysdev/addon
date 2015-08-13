@@ -3195,7 +3195,7 @@ public class OrderController {
         orderVO=orderSvc.getOrderDetail(orderConVO);
         
         //검수대상 상세정보
-        orderDetailList=orderSvc.getOrderDetailList(orderConVO);
+        orderDetailList=orderSvc.getOrderDetailList(orderConVO); 
  
         mv.addObject("orderVO", orderVO);
         mv.addObject("orderDetailList", orderDetailList);
@@ -3463,6 +3463,8 @@ public class OrderController {
     @RequestMapping(value = "/order/barcodecheck")
     public ModelAndView barCodeCheck(HttpServletRequest request, 
     		                       HttpServletResponse response,
+    		                       String orderCode,
+    		                       String companyCode,
     		                       String orderCnt) throws BizException 
     {
         
@@ -3504,6 +3506,8 @@ public class OrderController {
 		}
         
         
+        mv.addObject("orderCode", orderCode);
+        mv.addObject("companyCode", companyCode);
         mv.addObject("orderCnt", orderCnt);
         
         mv.setViewName("/order/barCodeCheck");
@@ -3528,6 +3532,9 @@ public class OrderController {
     @RequestMapping(value = "/order/barcodecheckresult")
     public ModelAndView barCodeCheckResult(HttpServletRequest request, 
     		                       HttpServletResponse response,
+    		                       String orderCode,
+    		                       String companyCode,
+    		                       String fBarCodes,
     		                       String totalFMsg,
     		                       String fCnt) throws BizException 
     {
@@ -3535,7 +3542,7 @@ public class OrderController {
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller barcodelist start");
+		logger.info("["+logid+"] Controller barcodelist start comapnyCode"+companyCode);
 
         ModelAndView mv = new ModelAndView();
         
@@ -3568,8 +3575,11 @@ public class OrderController {
  	       	mv.setViewName("/addys/loginForm");
        		return mv;
 		}
-        
+       
+        mv.addObject("orderCode", orderCode);
+        mv.addObject("companyCode", companyCode);
         mv.addObject("fCnt", fCnt);
+        mv.addObject("fBarCodes", fBarCodes);
         mv.addObject("totalFMsg", totalFMsg);
         
         mv.setViewName("/order/barCodeCheckResult");
@@ -3580,7 +3590,107 @@ public class OrderController {
       	
         return mv;
     }
-    
+    /**
+     * 메모관리
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/order/barcodecheckaddform")
+    public ModelAndView barCodeCheckAddForm(HttpServletRequest request, 
+    		                       HttpServletResponse response,
+    		                       String orderCode,
+    		                       String companyCode,
+    		                       String fBarCodes) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller barcodelist start [orderCode]:"+orderCode+"[companyCode]"+companyCode);
+
+        ModelAndView mv = new ModelAndView();
+        
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));    
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); 
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	        //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   	    work.setWorkIp(strIp);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
+       		return mv;
+		}
+       
+        String[] barCodes=null;
+        barCodes =fBarCodes.split("\\^");
+       
+        int barCodeCnt= barCodes.length;
+        String barCodeSql="";
+        String barCodeSqlList="";
+        
+        if(barCodeCnt>1){
+        	
+        	for (int i=0; i<barCodes.length; i++){
+        		barCodeSql="select '"+barCodes[i]+"' as barCode ,1 as cnt";
+        		
+        		if(i==0){
+        			barCodeSqlList=barCodeSql;
+        		}else{
+        			barCodeSqlList=barCodeSqlList+" union all "+barCodeSql;
+        		}
+        	}
+        	
+        }else{
+        	
+        	barCodeSqlList="select '"+barCodes[0]+"' as barCode ,1 as cnt";
+        	
+        }
+        
+        List<OrderVO> addDetailList = null;
+        
+        OrderVO checkAddVO = new OrderVO();
+        
+        checkAddVO.setCheckAddList(barCodeSqlList);
+  
+        addDetailList=orderSvc.getCheckAddList(checkAddVO);
+        
+        mv.addObject("orderCode", orderCode);
+        mv.addObject("companyCode", companyCode);
+        mv.addObject("barCodeSqlList", barCodeSqlList);
+        mv.addObject("addDetailList", addDetailList);
+        
+        mv.setViewName("/order/barCodeCheckAddForm");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller deferReason end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
     /**
      * 메모관리
      *

@@ -66,6 +66,33 @@ public class SmsServiceImpl implements SmsService {
     		   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.KOREA);
     		   Date cNow = new Date();
     		   sms_date = sdf.format(cNow);
+
+    		   //영업시간 외 시간체크
+    		    String timechk=sms_date.substring(11,13);
+    		    //String timechk="18";
+    		    
+    		    int TimeCheck = Integer.parseInt(timechk);
+    		    logger.debug("TimeCheck :: "+TimeCheck);
+    		   
+			    //오늘/내일 날짜 값
+		        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+		        Date currentTime = new Date();
+		        Date deliveryTime = new Date();
+		        int movedate=1;//(1:내일 ,-1:어제)
+		        
+		        deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+		        
+		        String strToday = simpleDateFormat.format(currentTime);
+		        String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+    	        
+		        if(TimeCheck>17 && TimeCheck <=24){
+		        	sms_date=strDeliveryDay+" 09:00:00";
+		        }else if(TimeCheck>=1 && TimeCheck < 9){
+		        	sms_date=strToday+" 09:00:00";
+		        }
+		        
+    	        logger.debug("SMS전송시간"+sms_date);
+
     		}
 
     		// UTF-8 설정
