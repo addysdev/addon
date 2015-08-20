@@ -64,6 +64,11 @@ function fcAdd_check(){
 
 	var fBarCodes='${fBarCodes}';
 	
+	if(fBarCodes=='^'){
+	    alert('추가할 바코드 정보가 없습니다.')
+		return;	
+	}
+	
 	//alert(fBarCodes);
 	var ordercode='${orderCode}';
 	var companycode='${companyCode}';

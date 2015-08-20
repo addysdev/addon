@@ -56,8 +56,10 @@ function fcStock_excelimport(){
 
     if(gap1=="xlsx"){
        url="<%= request.getContextPath() %>/master/stockexcelimport?fileName="+gap+"&extension="+gap1+"&upload_stockDate="+$("#upload_stockDate").val()+"&upload_groupId="+$("#upload_groupId").val();
-    }else{
-        alert("Excel 통합문서(xlsx) 파일만 등록 부탁드립니다.");
+    }else if(gap1=="xls"){
+        url="<%= request.getContextPath() %>/master/stockxlsimport?fileName="+gap+"&extension="+gap1+"&upload_salesDate="+$("#upload_salesDate").val()+"&upload_groupId="+$("#upload_groupId").val();
+    }else {
+    	alert("Excel (xlsx,xls) 파일만 등록 부탁드립니다.");
         return;
     }
     
