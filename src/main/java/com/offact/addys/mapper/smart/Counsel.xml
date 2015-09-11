@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Counsel">
+
+<resultMap id="counselListVO" type="com.offact.addys.vo.smart.CounselVO" >
+  <result column="idx"              property="idx"  />
+  <result column="groupId"            property="groupId"  />
+  <result column="customerKey"      	   property="customerKey"  />
+  <result column="customerId"       	   property="customerId"  />
+  <result column="customerName"       	   property="customerName"  />
+  <result column="counselState"              property="counselState"  />
+  <result column="counsel"                property="counsel"  />
+  <result column="counselDateTime"   property="counselDateTime"  />
+  <result column="userId"   property="userId"  />
+  <result column="userName"   property="userName"  />
+  <result column="counselResult"   property="counselResult"  />
+  <result column="counselResultDateTime"   property="counselResultDateTime"  />
+  <result column="stateUpdateUserId"   property="stateUpdateUserId"  />
+  <result column="stateUpdateUserName"   property="stateUpdateUserName"  />
+  <result column="stateUpdateDateTime"   property="stateUpdateDateTime"  />
+</resultMap>
+
+<select id="getCounselPageList"  resultMap="counselListVO" parameterType="com.offact.addys.vo.smart.CounselVO" >
+        SELECT T1.idx
+			  ,T1.groupId
+			  ,T2.groupName
+			  ,T1.customerKey
+			  ,T3.customerId   
+			  ,T3.customerName 
+			  ,DATE_FORMAT(T1.counselDateTime, '%Y-%m-%d %T') as counselDateTime
+			  ,Case When T1.counselState = '03' Then '상담완료' Else
+			  		(Case When T1.counselState = '02' Then '처리중' Else '상담접수' End)
+			  		End counselState
+			  ,T1.counsel
+			  ,Case When ifnull(T4.counselResultDateTime,'') = '' Then '' Else DATE_FORMAT(T4.counselResultDateTime, '%Y-%m-%d %T') End counselResultDateTime
+			  ,ifnull(T4.userId,'') as userId
+			  ,ifnull(T5.userName,'') as userName
+          FROM smCounsel T1
+          	   Left Join ofGroup T2 On T1.groupId=T2.groupId
+			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
+			   Left Join smCounselResult T4 On T1.idx=T4.idx
+			   Left Join ofUser T5 On T4.userId=T5.userId
+         WHERE 1=1
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND T1.customerKey  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND T3.customerName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+         ORDER BY counselDateTime desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getCounselCnt" resultType="int">
+	SELECT count(*) AS TOT_COUNT
+  		FROM smCounsel T1
+          	   Left Join ofGroup T2 On T1.groupId=T2.groupId
+			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
+         WHERE 1=1
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND T1.customerKey  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND T3.customerName  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+</select>
+
+<select id="getCounselDetail" resultMap="counselListVO" parameterType="com.offact.addys.vo.smart.CounselVO" >
+
+		SELECT T1.idx
+		      ,T1.customerKey
+			  ,T2.customerId   
+			  ,T2.customerName  
+			  ,T1.counselState
+			  ,T1.counsel
+			  ,T1.counselDateTime
+			  ,ifnull(T3.userId,'') as userId
+			  ,ifnull(T4.userName,'') as userName
+			  ,ifnull(T3.counselResult,'') as counselResult
+			  ,ifnull(T3.counselResultDateTime,'') as counselResultDateTime
+			  ,ifnull(T1.stateUpdateUserId,'') as stateUpdateUserId
+			  ,ifnull(T5.userName,'') as stateUpdateUserName
+			  ,ifnull(T1.stateUpdateDateTime,'') as stateUpdateDateTime
+          FROM smCounsel T1
+			   Left Join smCustomer T2 On T1.customerKey=T2.customerKey
+			   Left Join smCounselResult T3 On T1.idx=T3.idx
+			   Left Join ofUser T4 On T3.userId=T4.userId
+			   Left Join ofUser T5 On T1.stateUpdateUserId=T5.userId	   	     
+		 Where T1.idx = #{idx}
+</select>
+
+<update id="counselStateUpdate" parameterType="com.offact.addys.vo.smart.CounselVO" >
+        Update smCounsel
+       		Set
+  				counselState = #{counselState}
+  				,stateUpdateUserId = #{stateUpdateUserId}
+  				,stateUpdateDateTime = now()
+ 		Where idx = #{idx}
+</update>
+
+<insert id="counselResultInsert" parameterType="com.offact.addys.vo.smart.CounselVO" >
+  	Insert into smCounselResult( 
+        	 idx
+            ,userId
+            ,groupId
+            ,counselResult 
+            ,counselResultDateTime
+            )
+        Values (
+              #{idx}
+	  		, #{userId}
+	  		, #{groupId}
+	  		, #{counselResult}
+	  		, now()
+	  		)
+	  		
+</insert>
+
+</mapper>

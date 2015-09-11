@@ -849,7 +849,8 @@ function fcDefer_reason(reason){
           <th class='text-center' style="background-color:#E6F3FF">발신</th>
           <c:choose>
     		<c:when test="${targetVO.groupName=='반디울산점'}">
-			     <th class='text-center'><input type="text" class="form-control" id="orderName"  maxlength="20"  name="orderName"  value="애디스  본사" placeholder="발신"/></th>   
+			 <!--    <th class='text-center'><input type="text" class="form-control" id="orderName"  maxlength="20"  name="orderName"  value="애디스  본사" placeholder="발신"/></th>   -->
+			      <th class='text-center'><input type="text" class="form-control" id="orderName"  maxlength="20"  name="orderName"  value="애디스 ${targetVO.groupName}" placeholder="발신"/></th>
 			</c:when>
 			<c:otherwise>
 				 <th class='text-center'><input type="text" class="form-control" id="orderName"  maxlength="20"  name="orderName"  value="애디스 ${targetVO.groupName}" placeholder="발신"/></th>
