@@ -284,6 +284,18 @@
 					</c:choose>
 			        <!-- 관리시작 -->
 			        <c:if test="${strAuth != '03'}">
+			        <c:if test="${strAuth == '01'}">
+			        <li class="dropdown">
+			          <a class="dropdown-toggle" data-toggle="dropdown" href="#"  onmouseover="MM_nbGroup('over','menu_07','<%= request.getContextPath() %>/images/top/addys-menu_07_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_07_on.jpg',1)" onmouseout="MM_nbGroup('out')">
+						<img src="<%= request.getContextPath() %>/images/top/addys-menu_07.jpg"   name="menu_07" border="0" id="menu_07"  /></a>
+			          <ul class="dropdown-menu" role="menu">
+			            <li><a href="<%= request.getContextPath() %>/smart/counselmanage">상담 관리</a></li>
+			            <li><a href="<%= request.getContextPath() %>/smart/comunitymanage">커뮤니티 관리</a></li>
+			            <!-- li><a href="#">조직관리</a></li>
+			            <li><a href="#">메뉴권한관리</a></li -->                        
+			          </ul>
+			        </li>
+			        </c:if>
 			        <li class="dropdown">
 			          <a class="dropdown-toggle" data-toggle="dropdown" href="#"  onmouseover="MM_nbGroup('over','menu_04','<%= request.getContextPath() %>/images/top/addys-menu_04_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_04_on.jpg',1)" onmouseout="MM_nbGroup('out')">
 						<img src="<%= request.getContextPath() %>/images/top/addys-menu_04.jpg"   name="menu_04" border="0" id="menu_04"  /></a>
@@ -294,18 +306,6 @@
 			            <li><a href="#">메뉴권한관리</a></li -->                        
 			          </ul>
 			        </li>
-			        <c:if test="${strAuth == '01'}">
-				        <li class="dropdown">
-				          <a class="dropdown-toggle" data-toggle="dropdown" href="#"  onmouseover="MM_nbGroup('over','menu_07','<%= request.getContextPath() %>/images/top/addys-menu_07_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_07_on.jpg',1)" onmouseout="MM_nbGroup('out')">
-							<img src="<%= request.getContextPath() %>/images/top/addys-menu_07.jpg"   name="menu_07" border="0" id="menu_07"  /></a>
-				          <ul class="dropdown-menu" role="menu">
-				            <li><a href="<%= request.getContextPath() %>/smart/counselmanage">상담 관리</a></li>
-				            <li><a href="<%= request.getContextPath() %>/smart/comunitymanage">커뮤니티 관리</a></li>
-				            <!-- li><a href="#">조직관리</a></li>
-				            <li><a href="#">메뉴권한관리</a></li -->                        
-				          </ul>
-				        </li>
-			         </c:if>
 			        </c:if>
 				</ul>
 			</div>

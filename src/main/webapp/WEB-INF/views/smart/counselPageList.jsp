@@ -2,8 +2,8 @@
 <SCRIPT>
     // 페이지 이동
     function goPageCounselPageList(page) {
-        document.counselPageListForm.curPage.value = page;
-        var dataParam = $("#counselPageListForm").serialize();
+        document.counselConForm.curPage.value = page;
+        var dataParam = $("#counselConForm").serialize();
         commonDim(true);
         $.ajax({
             type: "POST",

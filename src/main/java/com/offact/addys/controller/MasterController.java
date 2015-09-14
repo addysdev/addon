@@ -3049,549 +3049,6 @@ public class MasterController {
   }
   
   /**
-   * 발주제한 관리화면
-   *
-   * @param request
-   * @param response
-   * @param model
-   * @param locale
-   * @return
-   * @throws BizException
-   */
-  @RequestMapping(value = "/master/orderlimitmanage")
-  public ModelAndView orderLimitManage(HttpServletRequest request, 
-  		                       HttpServletResponse response) throws BizException 
-  {
-      
-  	//log Controller execute time start
-		String logid=logid();
-		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start ");
-
-      ModelAndView mv = new ModelAndView();
-      
-   // 사용자 세션정보
-      HttpSession session = request.getSession();
-      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
-      String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
-      String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
-      
-      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-      	
-      	strIp = request.getRemoteAddr(); //로그인 상태처리		
-  		UserVO userState =new UserVO();
-  		userState.setUserId(strUserId);
-  		userState.setLoginYn("N");
-  		userState.setIp(strIp);
-  		userState.setConnectIp(sClientIP);
-  		userSvc.regiLoginYnUpdate(userState);
-          
-          //작업이력
-	 		WorkVO work = new WorkVO();
-	 		work.setWorkUserId(strUserId);
-	 		work.setWorkIp(strIp);
-	 		work.setWorkCategory("CM");
-	 		work.setWorkCode("CM004");
-	 		commonSvc.regiHistoryInsert(work);
-  		
-      	mv.setViewName("/addys/loginForm");
-     		return mv;
-		}
-      
-      OrderLimitVO orderLimitConVO = new OrderLimitVO();
-      
-      orderLimitConVO.setGroupId(strGroupId);
-
-      //오늘 날짜
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-      Date currentTime = new Date();
-      Date deliveryTime = new Date();
-      int movedate=-7;//(1:내일 ,-1:어제)
-      
-      deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
-      
-      String strToday = simpleDateFormat.format(currentTime);
-      String strDeliveryDay = simpleDateFormat.format(deliveryTime);
-      
-      orderLimitConVO.setStart_limitDate(strDeliveryDay);
-      orderLimitConVO.setEnd_limitDate(strToday);
-      
-      // 조회조건저장
-      mv.addObject("orderLimitConVO", orderLimitConVO);
-
-      //조직정보 조회
-      GroupVO group = new GroupVO();
-      group.setGroupId(strGroupId);
-      List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
-      mv.addObject("group_comboList", group_comboList);
-     
-      mv.setViewName("/master/orderLimitManage");
-      
-     //log Controller execute time end
-    	long t2 = System.currentTimeMillis();
-    	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
-    	
-      return mv;
-  }
-  /**
-   * 발주제한 목록조회
-   * 
-   * @param RecoveryVO
-   * @param request
-   * @param response
-   * @param model
-   * @param locale
-   * @return
-   * @throws BizException
-   */
-  @RequestMapping(value = "/master/orderlimitpagelist")
-  public ModelAndView orderLimitPageList(@ModelAttribute("orderlimitConVO") OrderLimitVO orderlimitConVO, 
-  		                         HttpServletRequest request, 
-  		                         HttpServletResponse response) throws BizException 
-  {
-      
-  	//log Controller execute time start
-		String logid=logid();
-		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : orderlimitConVO" + orderlimitConVO);
-
-      ModelAndView mv = new ModelAndView();
-      List<OrderLimitVO> orderLimitList = null;
-
-      // 조회조건저장
-      mv.addObject("orderlimitConVO", orderlimitConVO);
-
-      // 페이징코드
-      orderlimitConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(orderlimitConVO.getCurPage(), orderlimitConVO.getRowCount()));
-      orderlimitConVO.setPage_limit_val2(StringUtil.nvl(orderlimitConVO.getRowCount(), "10"));
-      
-      // 발주제한목록조회
-      orderLimitList = orderLimitSvc.getOrderLimitPageList(orderlimitConVO);
-      mv.addObject("orderLimitList", orderLimitList);
-
-     //  totalCount 조회
-      String totalCount = String.valueOf(orderLimitSvc.getOrderLimitCnt(orderlimitConVO));
-      mv.addObject("totalCount", totalCount);
-
-      mv.setViewName("/master/orderLimitPageList");
-      
-      //log Controller execute time end
-     	long t2 = System.currentTimeMillis();
-     	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
-     	
-      return mv;
-  }
-  
-  /**
-   * 발주대상 등록 화면
-   *
-   * @param request
-   * @param response
-   * @param model
-   * @param locale
-   * @return
-   * @throws BizException
-   */
-  @RequestMapping(value = "/master/orderlimitregistform")
-  public ModelAndView orderLimitRegistForm(HttpServletRequest request, 
-  		                               HttpServletResponse response) throws BizException 
-  {
-      
-  	//log Controller execute time start
-		String logid=logid();
-		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start ");
-
-      ModelAndView mv = new ModelAndView();
-      
-   // 사용자 세션정보
-      HttpSession session = request.getSession();
-      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
-      String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
-      String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
-      
-      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-      	
-      	strIp = request.getRemoteAddr(); //로그인 상태처리		
-  		UserVO userState =new UserVO();
-  		userState.setUserId(strUserId);
-  		userState.setLoginYn("N");
-  		userState.setIp(strIp);
-  		userState.setConnectIp(sClientIP);
-  		userSvc.regiLoginYnUpdate(userState);
-          
-          //작업이력
-	 		WorkVO work = new WorkVO();
-	 		work.setWorkUserId(strUserId);
-	 		work.setWorkIp(strIp);
-	 		work.setWorkCategory("CM");
-	 		work.setWorkCode("CM004");
-	 		commonSvc.regiHistoryInsert(work);
-  		
-      	mv.setViewName("/addys/loginForm");
-     		return mv;
-		}
-     
-      //오늘 날짜
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-      Date currentTime = new Date();
-      Date deliveryTime = new Date();
-      int movedate=0;//(1:내일 ,-1:어제)
-      
-      deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
-      
-      String strToday = simpleDateFormat.format(currentTime);
-      String strDeliveryDay = simpleDateFormat.format(deliveryTime);
-      
-      //제한일자 세팅
-      mv.addObject("limitStartDate", strToday);
-      mv.addObject("limitEndDate", strToday);
-      
-      //조직정보 조회
-      GroupVO group = new GroupVO();
-      group.setGroupId("G00000");
-      List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
-      mv.addObject("group_comboList", group_comboList);
-      
-      mv.setViewName("/master/orderLimitRegistForm");
-      
-     //log Controller execute time end
-    	long t2 = System.currentTimeMillis();
-    	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
-    	
-      return mv;
-  }
-  /**
- 	 * Simply selects the home view to render by returning its name.
- 	 * @throws BizException
- 	 */
-  @RequestMapping(value = "/master/orderlimitregislist")
- 	public ModelAndView orderLimitRegisList(HttpServletRequest request) throws BizException 
-     {
-  		//log Controller execute time start
-		String logid=logid();
-		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : reproductList");
-  			
- 		ModelAndView mv = new ModelAndView();
- 		
- 	// 사용자 세션정보
-        HttpSession session = request.getSession();
-        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
-        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
-        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
-        
-        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	
-        	strIp = request.getRemoteAddr(); //로그인 상태처리		
-    		UserVO userState =new UserVO();
-    		userState.setUserId(strUserId);
-    		userState.setLoginYn("N");
-    		userState.setIp(strIp);
-    		userState.setConnectIp(sClientIP);
-    		userSvc.regiLoginYnUpdate(userState);
-            
-            //작업이력
-	 		WorkVO work = new WorkVO();
-	 		work.setWorkUserId(strUserId);
-	 		work.setWorkIp(strIp);
-	 		work.setWorkCategory("CM");
-	 		work.setWorkCode("CM004");
-	 		commonSvc.regiHistoryInsert(work);
-    		
-        	mv.setViewName("/addys/loginForm");
-       		return mv;
-		}
-      
-      	List companyList = new ArrayList(); //DB 성공 대상데이타
-      
-      	mv.addObject("excelTotal", "0");
-	  	mv.addObject("companyList", companyList);
- 		
-	  	mv.setViewName("/master/orderLimitAttach");
- 		
- 	    //log Controller execute time end
-	 	long t2 = System.currentTimeMillis();
-	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
- 		
- 		return mv;
- 	}
-  /**
- 	 * Simply selects the home view to render by returning its name.
- 	 * @throws BizException
- 	 */
-  @RequestMapping(value = "/master/orderlimitexcelform")
- 	public ModelAndView orderLimitExcelForm(HttpServletRequest request) throws BizException 
-     {
-  	//log Controller execute time start
-		String logid=logid();
-		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : limitcompanyexcelform");
-  			
- 		ModelAndView mv = new ModelAndView();
- 		
- 		mv.setViewName("/master/orderLimitExcelForm");
- 		
- 	    //log Controller execute time end
-	 	long t2 = System.currentTimeMillis();
-	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
- 		
- 		return mv;
- 	}
-  /**
-	   * 제한업체 일괄등록
-	   *
-	   * @param MultipartFileVO
-	   * @param request
-	   * @param response
-	   * @param model
-	   * @param locale
-	   * @return
-	   * @throws BizException
-	   */
-	  @RequestMapping({"/master/orderlimitattach"})
-	  public ModelAndView orderLimitAttach(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO, 
-	  		                            HttpServletRequest request, 
-	  		                            HttpServletResponse response, 
-	  		                            String fileName, 
-	  		                            String extension) throws IOException, BizException
-	  {
-	    
-		  //log Controller execute time start
-		    String logid=logid();
-		    long t1 = System.currentTimeMillis();
-		    logger.info("["+logid+"] Controller start : fileVO" + fileVO);
-		  			
-		    ModelAndView mv = new ModelAndView();
-
-		    HttpSession session = request.getSession();
-		    String strUserId = (String)session.getAttribute("strUserId");
-
-		    ResourceBundle rb = ResourceBundle.getBundle("config");
-		    String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
-		    
-		    this.logger.debug("파일정보:" + fileName + extension);
-		    this.logger.debug("file:" + fileVO);
-
-		    List excelUploadList = new ArrayList();//업로드 대상 데이타
-
-		    String excelInfo = "";//excel 추출데이타
-		    
-		    List companyList = new ArrayList(); //DB 성공 대상데이타
-
-		    if (fileName != null) {
-		  	  
-		      List<MultipartFile> files = fileVO.getFiles();
-		      List fileNames = new ArrayList();
-		      String orgFileName = null;
-
-		      if ((files != null) && (files.size() > 0))
-		      {
-		        for (MultipartFile multipartFile : files)
-		        {
-		          orgFileName = multipartFile.getOriginalFilename();
-		          String filePath = uploadFilePath;
-
-		          File file = new File(filePath + orgFileName);
-		          multipartFile.transferTo(file);
-		          fileNames.add(orgFileName);
-		        }
-		   
-		      }
-
-		      String fname = uploadFilePath + orgFileName;
-
-		      FileInputStream fileInput = null;
-
-		      fileInput = new FileInputStream(fname);
-
-		      XSSFWorkbook workbook = new XSSFWorkbook(fileInput);
-		      XSSFSheet sheet = workbook.getSheetAt(0);//첫번째 sheet
-		 
-		      int TITLE_POINT =0;//타이틀 항목위치
-		      int ROW_START = 1;//data row 시작지점
-		      
-		      int TOTAL_ROWS=sheet.getPhysicalNumberOfRows(); //전체 ROW 수를 가져온다.
-		      int TOTAL_CELLS=sheet.getRow(TITLE_POINT).getPhysicalNumberOfCells(); //전체 셀의 항목 수를 가져온다.
-		      
-		      XSSFCell myCell = null;
-		    
-		      this.logger.debug("TOTAL_ROWS :" + TOTAL_ROWS);
-		      this.logger.debug("TOTAL_CELLS :" + TOTAL_CELLS);
-		          
-		          try {
-
-		           for (int rowcnt = ROW_START; rowcnt < TOTAL_ROWS; rowcnt++) {
-		             
-		   		     CompanyVO companyVO = new CompanyVO();
-		   			
-		             XSSFRow row = sheet.getRow(rowcnt);
-
-		             //cell type 구분하여 담기  
-		             String[] cellItemTmp = new String[TOTAL_CELLS]; 
-		             for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
-			            myCell = row.getCell(cellcnt); 
-			            
-			            if(myCell!=null){
-			            	
-				            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
-	
-				            	String rawCell = String.valueOf(myCell.getNumericCellValue()); 
-				            	int endChoice = rawCell.lastIndexOf("E");
-				            	if(endChoice>0){
-				            		rawCell= rawCell.substring(0, endChoice);
-				            		rawCell= rawCell.replace(".", "");
-				            	}
-				            	cellItemTmp[cellcnt]=rawCell;
-			    	
-				            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
-				            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
-				            }else{//그외 cell type
-				            	cellItemTmp[cellcnt] = ""; 
-				            }
-				            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
-				            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
-			            }else{
-			            	
-			            	cellItemTmp[cellcnt]="";
-			            	
-			            }
-			         }
-		         
-			         if(cellItemTmp.length>0 && cellItemTmp[0] != ""){
-			        	 
-			        	 companyVO.setCompanyCode(cellItemTmp[0]); 
-				
-				         excelUploadList.add(companyVO);
-
-				      }
-				     	
-				    }
-		          }catch (Exception e){
-		 
-		          excelInfo = excelInfo+"[error] : "+e.getMessage();
-		          CompanyVO companyVO = new CompanyVO();
-		          //limitCompanyVO.setErrMsg(excelInfo);
-		   	 
-		          //this.logger.info("["+logid+"] Controller getErrMsg : "+productMasterVO.getErrMsg());
-		        
-		          companyList.add(companyVO);
-
-		          mv.addObject("companyList", companyList);
-
-		          mv.setViewName("/master/uploadResult");
-		   	 
-		          //log Controller execute time end
-		          long t2 = System.currentTimeMillis();
-		          logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
-		 	 	
-		          return mv;
-		   	   
-		      	}
-		    }
-		    
-		    //DB처리
-		    companyList = this.orderLimitSvc.getExcelAttach(excelUploadList);
-
-		    mv.addObject("excelTotal", excelUploadList.size());
-		    mv.addObject("companyList", companyList);
-		    
-		    mv.setViewName("/master/orderLimitAttach");
-
-		    //log Controller execute time end
-		    long t2 = System.currentTimeMillis();
-		    logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
-			
-		    return mv;
-		        
-	  }
-	  
-  /**
-   * 발주대상 등록 처리
-   *
-   * @param TargetVO
-   * @param request
-   * @param response
-   * @param model
-   * @param locale
-   * @return
-   * @throws BizException
-   */
-  @RequestMapping({"/master/orderlimtregist"})
-  public @ResponseBody
-  String orderLimitRegist(@ModelAttribute("orderLimitVO") OrderLimitVO orderLimitVO,
-  		              @RequestParam(value="arrCheckGroupId", required=false, defaultValue="") String arrCheckGroupId,
-  		              @RequestParam(value="arrSelectCompanyCode", required=false, defaultValue="") String arrSelectCompanyCode,
-  		              HttpServletRequest request) throws BizException
-  {
-    
-	    //log Controller execute time start
-		String logid=logid();
-		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : orderLimitVO" + orderLimitVO);
-			
-	  String limitResult="orderlimit0000";
-		
-		// 사용자 세션정보
-      HttpSession session = request.getSession();
-      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-      
-      logger.info("@#@#@# arrCheckGroupId: " + arrCheckGroupId);
-      logger.info("@#@#@# arrSelectCompanyCode : " + arrSelectCompanyCode);
-	    
-      //오늘 날짜
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
-      Date currentTime = new Date();
-      String strToday = simpleDateFormat.format(currentTime);
-      
-      orderLimitVO.setLimitUserId(strUserId);
-      	   
-      try{//01.발주제한처리
-     
-          int dbResult=orderLimitSvc.regiOrderLimitRegist(orderLimitVO , arrCheckGroupId ,arrSelectCompanyCode);
-           
-	    	if(dbResult<1){//처리내역이 없을경우
-	    		
-	    		//log Controller execute time end
-		       	long t2 = System.currentTimeMillis();
-		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
-
-		        return "orderlimit0001";
-		        
-		    }
-
-	
-	    }catch(BizException e){
-	       	
-	    	e.printStackTrace();
-	        String errMsg = e.getMessage();
-	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
-			
-			//log Controller execute time end
-	       	long t2 = System.currentTimeMillis();
-	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
-
-	        return "orderlimit0002\n[errorMsg] : "+errMsg;
-	    	
-	    }
-
-	      //작업이력
-	 	 WorkVO work = new WorkVO();
-	 	 work.setWorkUserId(strUserId);
-	 	 work.setWorkCategory("LM");
-	 	 work.setWorkCode("LM001");
-	 	 commonSvc.regiHistoryInsert(work);
- 	 
-		//log Controller execute time end
-	 	long t2 = System.currentTimeMillis();
-	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
-
-  return limitResult;
-  }
-  /**
    * 품목 재고수량 수정처리
    *
    * @param stockVO
@@ -3635,110 +3092,7 @@ public class MasterController {
     return ""+retVal;
   } 
   
-  /**
-   * 발주제한 해제처리
-   *
-   * @param 
-   * @param request
-   * @param response
-   * @param model
-   * @param locale
-   * @return
-   * @throws BizException
-   */
-  @RequestMapping(value = "/master/limitcancel", method = RequestMethod.POST)
-  public @ResponseBody
-  String limitCancel(@ModelAttribute("orderLimitVO") OrderLimitVO orderLimitVO, 
-  		          HttpServletRequest request, 
-  		          HttpServletResponse response) throws BizException
-  {
-  	//log Controller execute time start
-		String logid=logid();
-		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : orderLimitVO" + orderLimitVO);
-		
-		// 사용자 세션정보
-	    HttpSession session = request.getSession();
-	    String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-	      
-	    orderLimitVO.setDeletedUserId(strUserId);
-
-		int retVal=this.orderLimitSvc.orderLimitCance(orderLimitVO);
-		
-	     //작업이력
-		 WorkVO work = new WorkVO();
-		 work.setWorkUserId(strUserId);
-		 work.setWorkCategory("LM");
-		 work.setWorkCode("LM002");
-		 commonSvc.regiHistoryInsert(work);
-		
-		//log Controller execute time end
-     	long t2 = System.currentTimeMillis();
-     	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
-
-    return ""+retVal;
-  } 
-  
-  /**
- 	 * Simply selects the home view to render by returning its name.
- 	 * @throws BizException
- 	 */
-  @RequestMapping(value = "/master/orderlimitalllist")
- 	public ModelAndView orderLimitAllList(HttpServletRequest request) throws BizException 
-     {
-  		//log Controller execute time start
-		String logid=logid();
-		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : reproductList");
-  			
- 		ModelAndView mv = new ModelAndView();
- 		
- 	// 사용자 세션정보
-        HttpSession session = request.getSession();
-        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
-        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
-        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
-        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
-        
-        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
-        	
-        	strIp = request.getRemoteAddr(); //로그인 상태처리		
-    		UserVO userState =new UserVO();
-    		userState.setUserId(strUserId);
-    		userState.setLoginYn("N");
-    		userState.setIp(strIp);
-    		userState.setConnectIp(sClientIP);
-    		userSvc.regiLoginYnUpdate(userState);
-            
-            //작업이력
-	 		WorkVO work = new WorkVO();
-	 		work.setWorkUserId(strUserId);
-	 		work.setWorkIp(strIp);
-	 		work.setWorkCategory("CM");
-	 		work.setWorkCode("CM004");
-	 		commonSvc.regiHistoryInsert(work);
-    		
-        	mv.setViewName("/addys/loginForm");
-       		return mv;
-		}
-      
-      	List companyList = new ArrayList(); //DB 성공 대상데이타
-      	CompanyVO companyConVo = new CompanyVO();
-      	
-      	companyList=commonSvc.getCompanyList(companyConVo);
-      
-      	mv.addObject("excelTotal", "0");
-	  	mv.addObject("companyList", companyList);
- 		
-	  	mv.setViewName("/master/orderLimitAttach");
- 		
- 	    //log Controller execute time end
-	 	long t2 = System.currentTimeMillis();
-	 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
- 		
- 		return mv;
- 	}
-  
+ 
   /**
 	 * 업로드 디렉토리 세팅
 	 */
@@ -3749,4 +3103,1302 @@ public class MasterController {
 	    
 		return wantedDirectory.mkdirs();
 	}
+	
+	
+	
+	 /**
+	   * 발주제한 관리화면
+	   *
+	   * @param request
+	   * @param response
+	   * @param model
+	   * @param locale
+	   * @return
+	   * @throws BizException
+	   */
+	  @RequestMapping(value = "/master/orderlimitmanage")
+	  public ModelAndView orderLimitManage(HttpServletRequest request, 
+	  		                       HttpServletResponse response) throws BizException 
+	  {
+	      
+	  	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start ");
+
+	      ModelAndView mv = new ModelAndView();
+	      
+	   // 사용자 세션정보
+	      HttpSession session = request.getSession();
+	      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	      String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	      String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+	      
+	      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	      	
+	      	strIp = request.getRemoteAddr(); //로그인 상태처리		
+	  		UserVO userState =new UserVO();
+	  		userState.setUserId(strUserId);
+	  		userState.setLoginYn("N");
+	  		userState.setIp(strIp);
+	  		userState.setConnectIp(sClientIP);
+	  		userSvc.regiLoginYnUpdate(userState);
+	          
+	          //작업이력
+		 		WorkVO work = new WorkVO();
+		 		work.setWorkUserId(strUserId);
+		 		work.setWorkIp(strIp);
+		 		work.setWorkCategory("CM");
+		 		work.setWorkCode("CM004");
+		 		commonSvc.regiHistoryInsert(work);
+	  		
+	      	mv.setViewName("/addys/loginForm");
+	     		return mv;
+			}
+	      
+	      OrderLimitVO orderLimitConVO = new OrderLimitVO();
+	      
+	      orderLimitConVO.setGroupId(strGroupId);
+
+	      //오늘 날짜
+	      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+	      Date currentTime = new Date();
+	      Date deliveryTime = new Date();
+	      int movedate=-7;//(1:내일 ,-1:어제)
+	      
+	      deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+	      
+	      String strToday = simpleDateFormat.format(currentTime);
+	      String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+	      
+	      orderLimitConVO.setStart_limitDate(strDeliveryDay);
+	      orderLimitConVO.setEnd_limitDate(strToday);
+	      
+	      // 조회조건저장
+	      mv.addObject("orderLimitConVO", orderLimitConVO);
+
+	      //조직정보 조회
+	      GroupVO group = new GroupVO();
+	      group.setGroupId(strGroupId);
+	      List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+	      mv.addObject("group_comboList", group_comboList);
+	     
+	      mv.setViewName("/master/orderLimitManage");
+	      
+	     //log Controller execute time end
+	    	long t2 = System.currentTimeMillis();
+	    	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	    	
+	      return mv;
+	  }
+	  /**
+	   * 발주제한 목록조회
+	   * 
+	   * @param RecoveryVO
+	   * @param request
+	   * @param response
+	   * @param model
+	   * @param locale
+	   * @return
+	   * @throws BizException
+	   */
+	  @RequestMapping(value = "/master/orderlimitpagelist")
+	  public ModelAndView orderLimitPageList(@ModelAttribute("orderlimitConVO") OrderLimitVO orderlimitConVO, 
+	  		                         HttpServletRequest request, 
+	  		                         HttpServletResponse response) throws BizException 
+	  {
+	      
+	  	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : orderlimitConVO" + orderlimitConVO);
+
+	      ModelAndView mv = new ModelAndView();
+	      List<OrderLimitVO> orderLimitList = null;
+
+	      // 조회조건저장
+	      mv.addObject("orderlimitConVO", orderlimitConVO);
+
+	      // 페이징코드
+	      orderlimitConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(orderlimitConVO.getCurPage(), orderlimitConVO.getRowCount()));
+	      orderlimitConVO.setPage_limit_val2(StringUtil.nvl(orderlimitConVO.getRowCount(), "10"));
+	      
+	      // 발주제한목록조회
+	      orderLimitList = orderLimitSvc.getOrderLimitPageList(orderlimitConVO);
+	      mv.addObject("orderLimitList", orderLimitList);
+
+	     //  totalCount 조회
+	      String totalCount = String.valueOf(orderLimitSvc.getOrderLimitCnt(orderlimitConVO));
+	      mv.addObject("totalCount", totalCount);
+
+	      mv.setViewName("/master/orderLimitPageList");
+	      
+	      //log Controller execute time end
+	     	long t2 = System.currentTimeMillis();
+	     	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	     	
+	      return mv;
+	  }
+	  
+	  /**
+	   * 발주대상 등록 화면
+	   *
+	   * @param request
+	   * @param response
+	   * @param model
+	   * @param locale
+	   * @return
+	   * @throws BizException
+	   */
+	  @RequestMapping(value = "/master/orderlimitregistform")
+	  public ModelAndView orderLimitRegistForm(HttpServletRequest request, 
+	  		                               HttpServletResponse response) throws BizException 
+	  {
+	      
+	  	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start ");
+
+	      ModelAndView mv = new ModelAndView();
+	      
+	   // 사용자 세션정보
+	      HttpSession session = request.getSession();
+	      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	      String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	      String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+	      
+	      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	      	
+	      	strIp = request.getRemoteAddr(); //로그인 상태처리		
+	  		UserVO userState =new UserVO();
+	  		userState.setUserId(strUserId);
+	  		userState.setLoginYn("N");
+	  		userState.setIp(strIp);
+	  		userState.setConnectIp(sClientIP);
+	  		userSvc.regiLoginYnUpdate(userState);
+	          
+	          //작업이력
+		 		WorkVO work = new WorkVO();
+		 		work.setWorkUserId(strUserId);
+		 		work.setWorkIp(strIp);
+		 		work.setWorkCategory("CM");
+		 		work.setWorkCode("CM004");
+		 		commonSvc.regiHistoryInsert(work);
+	  		
+	      	mv.setViewName("/addys/loginForm");
+	     		return mv;
+			}
+	     
+	      //오늘 날짜
+	      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+	      Date currentTime = new Date();
+	      Date deliveryTime = new Date();
+	      int movedate=0;//(1:내일 ,-1:어제)
+	      
+	      deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+	      
+	      String strToday = simpleDateFormat.format(currentTime);
+	      String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+	      
+	      //제한일자 세팅
+	      mv.addObject("limitStartDate", strToday);
+	      mv.addObject("limitEndDate", strToday);
+	      
+	      //조직정보 조회
+	      GroupVO group = new GroupVO();
+	      group.setGroupId("G00000");
+	      List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+	      mv.addObject("group_comboList", group_comboList);
+	      
+	      mv.setViewName("/master/orderLimitRegistForm");
+	      
+	     //log Controller execute time end
+	    	long t2 = System.currentTimeMillis();
+	    	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	    	
+	      return mv;
+	  }
+	  /**
+	 	 * Simply selects the home view to render by returning its name.
+	 	 * @throws BizException
+	 	 */
+	  @RequestMapping(value = "/master/orderlimitregislist")
+	 	public ModelAndView orderLimitRegisList(HttpServletRequest request) throws BizException 
+	     {
+	  		//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : reproductList");
+	  			
+	 		ModelAndView mv = new ModelAndView();
+	 		
+	 	// 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+	        
+	        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	        	
+	        	strIp = request.getRemoteAddr(); //로그인 상태처리		
+	    		UserVO userState =new UserVO();
+	    		userState.setUserId(strUserId);
+	    		userState.setLoginYn("N");
+	    		userState.setIp(strIp);
+	    		userState.setConnectIp(sClientIP);
+	    		userSvc.regiLoginYnUpdate(userState);
+	            
+	            //작업이력
+		 		WorkVO work = new WorkVO();
+		 		work.setWorkUserId(strUserId);
+		 		work.setWorkIp(strIp);
+		 		work.setWorkCategory("CM");
+		 		work.setWorkCode("CM004");
+		 		commonSvc.regiHistoryInsert(work);
+	    		
+	        	mv.setViewName("/addys/loginForm");
+	       		return mv;
+			}
+	      
+	      	List companyList = new ArrayList(); //DB 성공 대상데이타
+	      
+	      	mv.addObject("excelTotal", "0");
+		  	mv.addObject("companyList", companyList);
+	 		
+		  	mv.setViewName("/master/orderLimitAttach");
+	 		
+	 	    //log Controller execute time end
+		 	long t2 = System.currentTimeMillis();
+		 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	 		
+	 		return mv;
+	 	}
+	  /**
+	 	 * Simply selects the home view to render by returning its name.
+	 	 * @throws BizException
+	 	 */
+	  @RequestMapping(value = "/master/orderlimitexcelform")
+	 	public ModelAndView orderLimitExcelForm(HttpServletRequest request) throws BizException 
+	     {
+	  	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : limitcompanyexcelform");
+	  			
+	 		ModelAndView mv = new ModelAndView();
+	 		
+	 		mv.setViewName("/master/orderLimitExcelForm");
+	 		
+	 	    //log Controller execute time end
+		 	long t2 = System.currentTimeMillis();
+		 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	 		
+	 		return mv;
+	 	}
+	  /**
+		   * 제한업체 일괄등록
+		   *
+		   * @param MultipartFileVO
+		   * @param request
+		   * @param response
+		   * @param model
+		   * @param locale
+		   * @return
+		   * @throws BizException
+		   */
+		  @RequestMapping({"/master/orderlimitattach"})
+		  public ModelAndView orderLimitAttach(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO, 
+		  		                            HttpServletRequest request, 
+		  		                            HttpServletResponse response, 
+		  		                            String fileName, 
+		  		                            String extension) throws IOException, BizException
+		  {
+		    
+			  //log Controller execute time start
+			    String logid=logid();
+			    long t1 = System.currentTimeMillis();
+			    logger.info("["+logid+"] Controller start : fileVO" + fileVO);
+			  			
+			    ModelAndView mv = new ModelAndView();
+
+			    HttpSession session = request.getSession();
+			    String strUserId = (String)session.getAttribute("strUserId");
+
+			    ResourceBundle rb = ResourceBundle.getBundle("config");
+			    String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
+			    
+			    this.logger.debug("파일정보:" + fileName + extension);
+			    this.logger.debug("file:" + fileVO);
+
+			    List excelUploadList = new ArrayList();//업로드 대상 데이타
+
+			    String excelInfo = "";//excel 추출데이타
+			    
+			    List companyList = new ArrayList(); //DB 성공 대상데이타
+
+			    if (fileName != null) {
+			  	  
+			      List<MultipartFile> files = fileVO.getFiles();
+			      List fileNames = new ArrayList();
+			      String orgFileName = null;
+
+			      if ((files != null) && (files.size() > 0))
+			      {
+			        for (MultipartFile multipartFile : files)
+			        {
+			          orgFileName = multipartFile.getOriginalFilename();
+			          String filePath = uploadFilePath;
+
+			          File file = new File(filePath + orgFileName);
+			          multipartFile.transferTo(file);
+			          fileNames.add(orgFileName);
+			        }
+			   
+			      }
+
+			      String fname = uploadFilePath + orgFileName;
+
+			      FileInputStream fileInput = null;
+
+			      fileInput = new FileInputStream(fname);
+
+			      XSSFWorkbook workbook = new XSSFWorkbook(fileInput);
+			      XSSFSheet sheet = workbook.getSheetAt(0);//첫번째 sheet
+			 
+			      int TITLE_POINT =0;//타이틀 항목위치
+			      int ROW_START = 1;//data row 시작지점
+			      
+			      int TOTAL_ROWS=sheet.getPhysicalNumberOfRows(); //전체 ROW 수를 가져온다.
+			      int TOTAL_CELLS=sheet.getRow(TITLE_POINT).getPhysicalNumberOfCells(); //전체 셀의 항목 수를 가져온다.
+			      
+			      XSSFCell myCell = null;
+			    
+			      this.logger.debug("TOTAL_ROWS :" + TOTAL_ROWS);
+			      this.logger.debug("TOTAL_CELLS :" + TOTAL_CELLS);
+			          
+			          try {
+
+			           for (int rowcnt = ROW_START; rowcnt < TOTAL_ROWS; rowcnt++) {
+			             
+			   		     CompanyVO companyVO = new CompanyVO();
+			   			
+			             XSSFRow row = sheet.getRow(rowcnt);
+
+			             //cell type 구분하여 담기  
+			             String[] cellItemTmp = new String[TOTAL_CELLS]; 
+			             for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
+				            myCell = row.getCell(cellcnt); 
+				            
+				            if(myCell!=null){
+				            	
+					            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
+		
+					            	String rawCell = String.valueOf(myCell.getNumericCellValue()); 
+					            	int endChoice = rawCell.lastIndexOf("E");
+					            	if(endChoice>0){
+					            		rawCell= rawCell.substring(0, endChoice);
+					            		rawCell= rawCell.replace(".", "");
+					            	}
+					            	cellItemTmp[cellcnt]=rawCell;
+				    	
+					            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
+					            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
+					            }else{//그외 cell type
+					            	cellItemTmp[cellcnt] = ""; 
+					            }
+					            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
+					            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
+				            }else{
+				            	
+				            	cellItemTmp[cellcnt]="";
+				            	
+				            }
+				         }
+			         
+				         if(cellItemTmp.length>0 && cellItemTmp[0] != ""){
+				        	 
+				        	 companyVO.setCompanyCode(cellItemTmp[0]); 
+					
+					         excelUploadList.add(companyVO);
+
+					      }
+					     	
+					    }
+			          }catch (Exception e){
+			 
+			          excelInfo = excelInfo+"[error] : "+e.getMessage();
+			          CompanyVO companyVO = new CompanyVO();
+			          //limitCompanyVO.setErrMsg(excelInfo);
+			   	 
+			          //this.logger.info("["+logid+"] Controller getErrMsg : "+productMasterVO.getErrMsg());
+			        
+			          companyList.add(companyVO);
+
+			          mv.addObject("companyList", companyList);
+
+			          mv.setViewName("/master/uploadResult");
+			   	 
+			          //log Controller execute time end
+			          long t2 = System.currentTimeMillis();
+			          logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+			 	 	
+			          return mv;
+			   	   
+			      	}
+			    }
+			    
+			    //DB처리
+			    companyList = this.orderLimitSvc.getExcelAttach(excelUploadList);
+
+			    mv.addObject("excelTotal", excelUploadList.size());
+			    mv.addObject("companyList", companyList);
+			    
+			    mv.setViewName("/master/orderLimitAttach");
+
+			    //log Controller execute time end
+			    long t2 = System.currentTimeMillis();
+			    logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+				
+			    return mv;
+			        
+		  }
+		  
+	  /**
+	   * 발주대상 등록 처리
+	   *
+	   * @param TargetVO
+	   * @param request
+	   * @param response
+	   * @param model
+	   * @param locale
+	   * @return
+	   * @throws BizException
+	   */
+	  @RequestMapping({"/master/orderlimtregist"})
+	  public @ResponseBody
+	  String orderLimitRegist(@ModelAttribute("orderLimitVO") OrderLimitVO orderLimitVO,
+	  		              @RequestParam(value="arrCheckGroupId", required=false, defaultValue="") String arrCheckGroupId,
+	  		              @RequestParam(value="arrSelectCompanyCode", required=false, defaultValue="") String arrSelectCompanyCode,
+	  		              HttpServletRequest request) throws BizException
+	  {
+	    
+		    //log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : orderLimitVO" + orderLimitVO);
+				
+		  String limitResult="orderlimit0000";
+			
+			// 사용자 세션정보
+	      HttpSession session = request.getSession();
+	      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	      
+	      logger.info("@#@#@# arrCheckGroupId: " + arrCheckGroupId);
+	      logger.info("@#@#@# arrSelectCompanyCode : " + arrSelectCompanyCode);
+		    
+	      //오늘 날짜
+	      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+	      Date currentTime = new Date();
+	      String strToday = simpleDateFormat.format(currentTime);
+	      
+	      orderLimitVO.setLimitUserId(strUserId);
+	      	   
+	      try{//01.발주제한처리
+	     
+	          int dbResult=orderLimitSvc.regiOrderLimitRegist(orderLimitVO , arrCheckGroupId ,arrSelectCompanyCode);
+	           
+		    	if(dbResult<1){//처리내역이 없을경우
+		    		
+		    		//log Controller execute time end
+			       	long t2 = System.currentTimeMillis();
+			       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+			        return "orderlimit0001";
+			        
+			    }
+
+		
+		    }catch(BizException e){
+		       	
+		    	e.printStackTrace();
+		        String errMsg = e.getMessage();
+		        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+				
+				//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+		        return "orderlimit0002\n[errorMsg] : "+errMsg;
+		    	
+		    }
+
+		      //작업이력
+		 	 WorkVO work = new WorkVO();
+		 	 work.setWorkUserId(strUserId);
+		 	 work.setWorkCategory("LM");
+		 	 work.setWorkCode("LM001");
+		 	 commonSvc.regiHistoryInsert(work);
+	 	 
+			//log Controller execute time end
+		 	long t2 = System.currentTimeMillis();
+		 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+	  return limitResult;
+	  }
+	  
+	  /**
+	   * 발주제한 해제처리
+	   *
+	   * @param 
+	   * @param request
+	   * @param response
+	   * @param model
+	   * @param locale
+	   * @return
+	   * @throws BizException
+	   */
+	  @RequestMapping(value = "/master/limitcancel", method = RequestMethod.POST)
+	  public @ResponseBody
+	  String limitCancel(@ModelAttribute("orderLimitVO") OrderLimitVO orderLimitVO, 
+	  		          HttpServletRequest request, 
+	  		          HttpServletResponse response) throws BizException
+	  {
+	  	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : orderLimitVO" + orderLimitVO);
+			
+			// 사용자 세션정보
+		    HttpSession session = request.getSession();
+		    String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+		      
+		    orderLimitVO.setDeletedUserId(strUserId);
+
+			int retVal=this.orderLimitSvc.orderLimitCance(orderLimitVO);
+			
+		     //작업이력
+			 WorkVO work = new WorkVO();
+			 work.setWorkUserId(strUserId);
+			 work.setWorkCategory("LM");
+			 work.setWorkCode("LM002");
+			 commonSvc.regiHistoryInsert(work);
+			
+			//log Controller execute time end
+	     	long t2 = System.currentTimeMillis();
+	     	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+	    return ""+retVal;
+	  } 
+	  
+	  /**
+	 	 * Simply selects the home view to render by returning its name.
+	 	 * @throws BizException
+	 	 */
+	  @RequestMapping(value = "/master/orderlimitalllist")
+	 	public ModelAndView orderLimitAllList(HttpServletRequest request) throws BizException 
+	     {
+	  		//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : reproductList");
+	  			
+	 		ModelAndView mv = new ModelAndView();
+	 		
+	 	// 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+	        
+	        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	        	
+	        	strIp = request.getRemoteAddr(); //로그인 상태처리		
+	    		UserVO userState =new UserVO();
+	    		userState.setUserId(strUserId);
+	    		userState.setLoginYn("N");
+	    		userState.setIp(strIp);
+	    		userState.setConnectIp(sClientIP);
+	    		userSvc.regiLoginYnUpdate(userState);
+	            
+	            //작업이력
+		 		WorkVO work = new WorkVO();
+		 		work.setWorkUserId(strUserId);
+		 		work.setWorkIp(strIp);
+		 		work.setWorkCategory("CM");
+		 		work.setWorkCode("CM004");
+		 		commonSvc.regiHistoryInsert(work);
+	    		
+	        	mv.setViewName("/addys/loginForm");
+	       		return mv;
+			}
+	      
+	      	List companyList = new ArrayList(); //DB 성공 대상데이타
+	      	CompanyVO companyConVo = new CompanyVO();
+	      	
+	      	companyList=commonSvc.getCompanyList(companyConVo);
+	      
+	      	mv.addObject("excelTotal", "0");
+		  	mv.addObject("companyList", companyList);
+	 		
+		  	mv.setViewName("/master/orderLimitAttach");
+	 		
+	 	    //log Controller execute time end
+		 	long t2 = System.currentTimeMillis();
+		 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	 		
+	 		return mv;
+	 	}
+	  
+	  /**
+	   * 발주추가 관리화면
+	   *
+	   * @param request
+	   * @param response
+	   * @param model
+	   * @param locale
+	   * @return
+	   * @throws BizException
+	   */
+	  @RequestMapping(value = "/master/orderaddmanage")
+	  public ModelAndView orderAddManage(HttpServletRequest request, 
+	  		                       HttpServletResponse response) throws BizException 
+	  {
+	      
+	  	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start ");
+
+	      ModelAndView mv = new ModelAndView();
+	      
+	   // 사용자 세션정보
+	      HttpSession session = request.getSession();
+	      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	      String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	      String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+	      
+	      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	      	
+	      	strIp = request.getRemoteAddr(); //로그인 상태처리		
+	  		UserVO userState =new UserVO();
+	  		userState.setUserId(strUserId);
+	  		userState.setLoginYn("N");
+	  		userState.setIp(strIp);
+	  		userState.setConnectIp(sClientIP);
+	  		userSvc.regiLoginYnUpdate(userState);
+	          
+	          //작업이력
+		 		WorkVO work = new WorkVO();
+		 		work.setWorkUserId(strUserId);
+		 		work.setWorkIp(strIp);
+		 		work.setWorkCategory("CM");
+		 		work.setWorkCode("CM004");
+		 		commonSvc.regiHistoryInsert(work);
+	  		
+	      	mv.setViewName("/addys/loginForm");
+	     		return mv;
+			}
+	      
+	      OrderLimitVO orderLimitConVO = new OrderLimitVO();
+	      
+	      orderLimitConVO.setGroupId(strGroupId);
+
+	      //오늘 날짜
+	      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+	      Date currentTime = new Date();
+	      Date deliveryTime = new Date();
+	      int movedate=-7;//(1:내일 ,-1:어제)
+	      
+	      deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+	      
+	      String strToday = simpleDateFormat.format(currentTime);
+	      String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+	      
+	      orderLimitConVO.setStart_limitDate(strDeliveryDay);
+	      orderLimitConVO.setEnd_limitDate(strToday);
+	      
+	      // 조회조건저장
+	      mv.addObject("orderLimitConVO", orderLimitConVO);
+
+	      //조직정보 조회
+	      GroupVO group = new GroupVO();
+	      group.setGroupId(strGroupId);
+	      List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+	      mv.addObject("group_comboList", group_comboList);
+	     
+	      mv.setViewName("/master/orderAddManage");
+	      
+	     //log Controller execute time end
+	    	long t2 = System.currentTimeMillis();
+	    	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	    	
+	      return mv;
+	  }
+	  /**
+	   * 발주추가 목록조회
+	   * 
+	   * @param RecoveryVO
+	   * @param request
+	   * @param response
+	   * @param model
+	   * @param locale
+	   * @return
+	   * @throws BizException
+	   */
+	  @RequestMapping(value = "/master/orderaddpagelist")
+	  public ModelAndView orderAddPageList(@ModelAttribute("orderlimitConVO") OrderLimitVO orderlimitConVO, 
+	  		                         HttpServletRequest request, 
+	  		                         HttpServletResponse response) throws BizException 
+	  {
+	      
+	  	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : orderlimitConVO" + orderlimitConVO);
+
+	      ModelAndView mv = new ModelAndView();
+	      List<OrderLimitVO> orderLimitList = null;
+
+	      // 조회조건저장
+	      mv.addObject("orderlimitConVO", orderlimitConVO);
+
+	      // 페이징코드
+	      orderlimitConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(orderlimitConVO.getCurPage(), orderlimitConVO.getRowCount()));
+	      orderlimitConVO.setPage_limit_val2(StringUtil.nvl(orderlimitConVO.getRowCount(), "10"));
+	      
+	      // 발주제한목록조회
+	      orderLimitList = orderLimitSvc.getOrderLimitPageList(orderlimitConVO);
+	      mv.addObject("orderLimitList", orderLimitList);
+
+	     //  totalCount 조회
+	      String totalCount = String.valueOf(orderLimitSvc.getOrderLimitCnt(orderlimitConVO));
+	      mv.addObject("totalCount", totalCount);
+
+	      mv.setViewName("/master/orderAddPageList");
+	      
+	      //log Controller execute time end
+	     	long t2 = System.currentTimeMillis();
+	     	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	     	
+	      return mv;
+	  }
+	  
+	  /**
+	   * 발주대상 등록 화면
+	   *
+	   * @param request
+	   * @param response
+	   * @param model
+	   * @param locale
+	   * @return
+	   * @throws BizException
+	   */
+	  @RequestMapping(value = "/master/orderaddregistform")
+	  public ModelAndView orderAddRegistForm(HttpServletRequest request, 
+	  		                               HttpServletResponse response) throws BizException 
+	  {
+	      
+	  	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start ");
+
+	      ModelAndView mv = new ModelAndView();
+	      
+	   // 사용자 세션정보
+	      HttpSession session = request.getSession();
+	      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	      String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	      String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+	      
+	      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	      	
+	      	strIp = request.getRemoteAddr(); //로그인 상태처리		
+	  		UserVO userState =new UserVO();
+	  		userState.setUserId(strUserId);
+	  		userState.setLoginYn("N");
+	  		userState.setIp(strIp);
+	  		userState.setConnectIp(sClientIP);
+	  		userSvc.regiLoginYnUpdate(userState);
+	          
+	          //작업이력
+		 		WorkVO work = new WorkVO();
+		 		work.setWorkUserId(strUserId);
+		 		work.setWorkIp(strIp);
+		 		work.setWorkCategory("CM");
+		 		work.setWorkCode("CM004");
+		 		commonSvc.regiHistoryInsert(work);
+	  		
+	      	mv.setViewName("/addys/loginForm");
+	     		return mv;
+			}
+	     
+	      //오늘 날짜
+	      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+	      Date currentTime = new Date();
+	      Date deliveryTime = new Date();
+	      int movedate=0;//(1:내일 ,-1:어제)
+	      
+	      deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+	      
+	      String strToday = simpleDateFormat.format(currentTime);
+	      String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+	      
+	      //제한일자 세팅
+	      mv.addObject("limitStartDate", strToday);
+	      mv.addObject("limitEndDate", strToday);
+	      
+	      //조직정보 조회
+	      GroupVO group = new GroupVO();
+	      group.setGroupId("G00000");
+	      List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+	      mv.addObject("group_comboList", group_comboList);
+	      
+	      mv.setViewName("/master/orderAddRegistForm");
+	      
+	     //log Controller execute time end
+	    	long t2 = System.currentTimeMillis();
+	    	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	    	
+	      return mv;
+	  }
+	  /**
+	 	 * Simply selects the home view to render by returning its name.
+	 	 * @throws BizException
+	 	 */
+	  @RequestMapping(value = "/master/orderaddtregislist")
+	 	public ModelAndView orderAddRegisList(HttpServletRequest request) throws BizException 
+	     {
+	  		//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : reproductList");
+	  			
+	 		ModelAndView mv = new ModelAndView();
+	 		
+	 	// 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+	        
+	        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	        	
+	        	strIp = request.getRemoteAddr(); //로그인 상태처리		
+	    		UserVO userState =new UserVO();
+	    		userState.setUserId(strUserId);
+	    		userState.setLoginYn("N");
+	    		userState.setIp(strIp);
+	    		userState.setConnectIp(sClientIP);
+	    		userSvc.regiLoginYnUpdate(userState);
+	            
+	            //작업이력
+		 		WorkVO work = new WorkVO();
+		 		work.setWorkUserId(strUserId);
+		 		work.setWorkIp(strIp);
+		 		work.setWorkCategory("CM");
+		 		work.setWorkCode("CM004");
+		 		commonSvc.regiHistoryInsert(work);
+	    		
+	        	mv.setViewName("/addys/loginForm");
+	       		return mv;
+			}
+	      
+	      	List companyList = new ArrayList(); //DB 성공 대상데이타
+	      
+	      	mv.addObject("excelTotal", "0");
+		  	mv.addObject("companyList", companyList);
+	 		
+		  	mv.setViewName("/master/orderAddAttach");
+	 		
+	 	    //log Controller execute time end
+		 	long t2 = System.currentTimeMillis();
+		 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	 		
+	 		return mv;
+	 	}
+	  /**
+	 	 * Simply selects the home view to render by returning its name.
+	 	 * @throws BizException
+	 	 */
+	  @RequestMapping(value = "/master/orderaddexcelform")
+	 	public ModelAndView orderAddExcelForm(HttpServletRequest request) throws BizException 
+	     {
+	  	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : limitcompanyexcelform");
+	  			
+	 		ModelAndView mv = new ModelAndView();
+	 		
+	 		mv.setViewName("/master/orderAddExcelForm");
+	 		
+	 	    //log Controller execute time end
+		 	long t2 = System.currentTimeMillis();
+		 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	 		
+	 		return mv;
+	 	}
+	  /**
+		   * 제한업체 일괄등록
+		   *
+		   * @param MultipartFileVO
+		   * @param request
+		   * @param response
+		   * @param model
+		   * @param locale
+		   * @return
+		   * @throws BizException
+		   */
+		  @RequestMapping({"/master/orderaddattach"})
+		  public ModelAndView orderAddAttach(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO, 
+		  		                            HttpServletRequest request, 
+		  		                            HttpServletResponse response, 
+		  		                            String fileName, 
+		  		                            String extension) throws IOException, BizException
+		  {
+		    
+			  //log Controller execute time start
+			    String logid=logid();
+			    long t1 = System.currentTimeMillis();
+			    logger.info("["+logid+"] Controller start : fileVO" + fileVO);
+			  			
+			    ModelAndView mv = new ModelAndView();
+
+			    HttpSession session = request.getSession();
+			    String strUserId = (String)session.getAttribute("strUserId");
+
+			    ResourceBundle rb = ResourceBundle.getBundle("config");
+			    String uploadFilePath = rb.getString("offact.upload.path") + "excel/";
+			    
+			    this.logger.debug("파일정보:" + fileName + extension);
+			    this.logger.debug("file:" + fileVO);
+
+			    List excelUploadList = new ArrayList();//업로드 대상 데이타
+
+			    String excelInfo = "";//excel 추출데이타
+			    
+			    List companyList = new ArrayList(); //DB 성공 대상데이타
+
+			    if (fileName != null) {
+			  	  
+			      List<MultipartFile> files = fileVO.getFiles();
+			      List fileNames = new ArrayList();
+			      String orgFileName = null;
+
+			      if ((files != null) && (files.size() > 0))
+			      {
+			        for (MultipartFile multipartFile : files)
+			        {
+			          orgFileName = multipartFile.getOriginalFilename();
+			          String filePath = uploadFilePath;
+
+			          File file = new File(filePath + orgFileName);
+			          multipartFile.transferTo(file);
+			          fileNames.add(orgFileName);
+			        }
+			   
+			      }
+
+			      String fname = uploadFilePath + orgFileName;
+
+			      FileInputStream fileInput = null;
+
+			      fileInput = new FileInputStream(fname);
+
+			      XSSFWorkbook workbook = new XSSFWorkbook(fileInput);
+			      XSSFSheet sheet = workbook.getSheetAt(0);//첫번째 sheet
+			 
+			      int TITLE_POINT =0;//타이틀 항목위치
+			      int ROW_START = 1;//data row 시작지점
+			      
+			      int TOTAL_ROWS=sheet.getPhysicalNumberOfRows(); //전체 ROW 수를 가져온다.
+			      int TOTAL_CELLS=sheet.getRow(TITLE_POINT).getPhysicalNumberOfCells(); //전체 셀의 항목 수를 가져온다.
+			      
+			      XSSFCell myCell = null;
+			    
+			      this.logger.debug("TOTAL_ROWS :" + TOTAL_ROWS);
+			      this.logger.debug("TOTAL_CELLS :" + TOTAL_CELLS);
+			          
+			          try {
+
+			           for (int rowcnt = ROW_START; rowcnt < TOTAL_ROWS; rowcnt++) {
+			             
+			   		     CompanyVO companyVO = new CompanyVO();
+			   			
+			             XSSFRow row = sheet.getRow(rowcnt);
+
+			             //cell type 구분하여 담기  
+			             String[] cellItemTmp = new String[TOTAL_CELLS]; 
+			             for(int cellcnt=0;cellcnt<TOTAL_CELLS;cellcnt++){
+				            myCell = row.getCell(cellcnt); 
+				            
+				            if(myCell!=null){
+				            	
+					            if(myCell.getCellType()==0){ //cell type 이 숫자인경우
+		
+					            	String rawCell = String.valueOf(myCell.getNumericCellValue()); 
+					            	int endChoice = rawCell.lastIndexOf("E");
+					            	if(endChoice>0){
+					            		rawCell= rawCell.substring(0, endChoice);
+					            		rawCell= rawCell.replace(".", "");
+					            	}
+					            	cellItemTmp[cellcnt]=rawCell;
+				    	
+					            }else if(myCell.getCellType()==1){ //cell type 이 일반/문자 인경우
+					            	cellItemTmp[cellcnt] = myCell.getStringCellValue(); 
+					            }else{//그외 cell type
+					            	cellItemTmp[cellcnt] = ""; 
+					            }
+					            this.logger.debug("row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt]);
+					            excelInfo="row : ["+rowcnt+"] cell : ["+cellcnt+"] celltype : ["+myCell.getCellType()+"] ->"+ cellItemTmp[cellcnt];
+				            }else{
+				            	
+				            	cellItemTmp[cellcnt]="";
+				            	
+				            }
+				         }
+			         
+				         if(cellItemTmp.length>0 && cellItemTmp[0] != ""){
+				        	 
+				        	 companyVO.setCompanyCode(cellItemTmp[0]); 
+					
+					         excelUploadList.add(companyVO);
+
+					      }
+					     	
+					    }
+			          }catch (Exception e){
+			 
+			          excelInfo = excelInfo+"[error] : "+e.getMessage();
+			          CompanyVO companyVO = new CompanyVO();
+			          //limitCompanyVO.setErrMsg(excelInfo);
+			   	 
+			          //this.logger.info("["+logid+"] Controller getErrMsg : "+productMasterVO.getErrMsg());
+			        
+			          companyList.add(companyVO);
+
+			          mv.addObject("companyList", companyList);
+
+			          mv.setViewName("/master/uploadResult");
+			   	 
+			          //log Controller execute time end
+			          long t2 = System.currentTimeMillis();
+			          logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+			 	 	
+			          return mv;
+			   	   
+			      	}
+			    }
+			    
+			    //DB처리
+			    companyList = this.orderLimitSvc.getExcelAttach(excelUploadList);
+
+			    mv.addObject("excelTotal", excelUploadList.size());
+			    mv.addObject("companyList", companyList);
+			    
+			    mv.setViewName("/master/orderAddAttach");
+
+			    //log Controller execute time end
+			    long t2 = System.currentTimeMillis();
+			    logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+				
+			    return mv;
+			        
+		  }
+		  
+	  /**
+	   * 발주대상 등록 처리
+	   *
+	   * @param TargetVO
+	   * @param request
+	   * @param response
+	   * @param model
+	   * @param locale
+	   * @return
+	   * @throws BizException
+	   */
+	  @RequestMapping({"/master/orderaddregist"})
+	  public @ResponseBody
+	  String orderAddRegist(@ModelAttribute("orderLimitVO") OrderLimitVO orderLimitVO,
+	  		              @RequestParam(value="arrCheckGroupId", required=false, defaultValue="") String arrCheckGroupId,
+	  		              @RequestParam(value="arrSelectCompanyCode", required=false, defaultValue="") String arrSelectCompanyCode,
+	  		              HttpServletRequest request) throws BizException
+	  {
+	    
+		    //log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : orderLimitVO" + orderLimitVO);
+				
+		  String limitResult="orderlimit0000";
+			
+			// 사용자 세션정보
+	      HttpSession session = request.getSession();
+	      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	      
+	      logger.info("@#@#@# arrCheckGroupId: " + arrCheckGroupId);
+	      logger.info("@#@#@# arrSelectCompanyCode : " + arrSelectCompanyCode);
+		    
+	      //오늘 날짜
+	      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+	      Date currentTime = new Date();
+	      String strToday = simpleDateFormat.format(currentTime);
+	      
+	      orderLimitVO.setLimitUserId(strUserId);
+	      	   
+	      try{//01.발주제한처리
+	     
+	          int dbResult=orderLimitSvc.regiOrderLimitRegist(orderLimitVO , arrCheckGroupId ,arrSelectCompanyCode);
+	           
+		    	if(dbResult<1){//처리내역이 없을경우
+		    		
+		    		//log Controller execute time end
+			       	long t2 = System.currentTimeMillis();
+			       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+			        return "orderlimit0001";
+			        
+			    }
+
+		
+		    }catch(BizException e){
+		       	
+		    	e.printStackTrace();
+		        String errMsg = e.getMessage();
+		        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
+				
+				//log Controller execute time end
+		       	long t2 = System.currentTimeMillis();
+		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
+
+		        return "orderlimit0002\n[errorMsg] : "+errMsg;
+		    	
+		    }
+
+		      //작업이력
+		 	 WorkVO work = new WorkVO();
+		 	 work.setWorkUserId(strUserId);
+		 	 work.setWorkCategory("LM");
+		 	 work.setWorkCode("LM001");
+		 	 commonSvc.regiHistoryInsert(work);
+	 	 
+			//log Controller execute time end
+		 	long t2 = System.currentTimeMillis();
+		 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+	  return limitResult;
+	  }
+	  
+	  /**
+	   * 발주제한 해제처리
+	   *
+	   * @param 
+	   * @param request
+	   * @param response
+	   * @param model
+	   * @param locale
+	   * @return
+	   * @throws BizException
+	   */
+	  @RequestMapping(value = "/master/addcancel", method = RequestMethod.POST)
+	  public @ResponseBody
+	  String addCancel(@ModelAttribute("orderLimitVO") OrderLimitVO orderLimitVO, 
+	  		          HttpServletRequest request, 
+	  		          HttpServletResponse response) throws BizException
+	  {
+	  	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : orderLimitVO" + orderLimitVO);
+			
+			// 사용자 세션정보
+		    HttpSession session = request.getSession();
+		    String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+		      
+		    orderLimitVO.setDeletedUserId(strUserId);
+
+			int retVal=this.orderLimitSvc.orderLimitCance(orderLimitVO);
+			
+		     //작업이력
+			 WorkVO work = new WorkVO();
+			 work.setWorkUserId(strUserId);
+			 work.setWorkCategory("LM");
+			 work.setWorkCode("LM002");
+			 commonSvc.regiHistoryInsert(work);
+			
+			//log Controller execute time end
+	     	long t2 = System.currentTimeMillis();
+	     	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+	    return ""+retVal;
+	  } 
+	  
+	  /**
+	 	 * Simply selects the home view to render by returning its name.
+	 	 * @throws BizException
+	 	 */
+	  @RequestMapping(value = "/master/orderaddalllist")
+	 	public ModelAndView orderAddAllList(HttpServletRequest request) throws BizException 
+	     {
+	  		//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : reproductList");
+	  			
+	 		ModelAndView mv = new ModelAndView();
+	 		
+	 	// 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+	        
+	        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	        	
+	        	strIp = request.getRemoteAddr(); //로그인 상태처리		
+	    		UserVO userState =new UserVO();
+	    		userState.setUserId(strUserId);
+	    		userState.setLoginYn("N");
+	    		userState.setIp(strIp);
+	    		userState.setConnectIp(sClientIP);
+	    		userSvc.regiLoginYnUpdate(userState);
+	            
+	            //작업이력
+		 		WorkVO work = new WorkVO();
+		 		work.setWorkUserId(strUserId);
+		 		work.setWorkIp(strIp);
+		 		work.setWorkCategory("CM");
+		 		work.setWorkCode("CM004");
+		 		commonSvc.regiHistoryInsert(work);
+	    		
+	        	mv.setViewName("/addys/loginForm");
+	       		return mv;
+			}
+	      
+	      	List companyList = new ArrayList(); //DB 성공 대상데이타
+	      	CompanyVO companyConVo = new CompanyVO();
+	      	
+	      	companyList=commonSvc.getCompanyList(companyConVo);
+	      
+	      	mv.addObject("excelTotal", "0");
+		  	mv.addObject("companyList", companyList);
+	 		
+		  	mv.setViewName("/master/orderAddAttach");
+	 		
+	 	    //log Controller execute time end
+		 	long t2 = System.currentTimeMillis();
+		 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	 		
+	 		return mv;
+	 	}
 }

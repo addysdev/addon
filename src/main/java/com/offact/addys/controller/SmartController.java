@@ -52,11 +52,13 @@ import com.offact.addys.service.manage.UserManageService;
 import com.offact.addys.service.smart.CounselService;
 import com.offact.addys.service.smart.ComunityService;
 import com.offact.addys.service.history.WorkHistoryService;
+import com.offact.addys.service.common.SmsService;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.CommentVO;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.WorkVO;
 import com.offact.addys.vo.common.UserVO;
+import com.offact.addys.vo.common.SmsVO;
 import com.offact.addys.vo.history.WorkHistoryVO;
 import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.smart.CounselVO;
@@ -83,6 +85,21 @@ public class SmartController {
 		
 		return logid;
 	}
+    
+    @Value("#{config['offact.dev.option']}")
+    private String devOption;
+    
+    @Value("#{config['offact.dev.sms']}")
+    private String devSms;
+    
+    @Value("#{config['offact.sms.smsid']}")
+    private String smsId;
+    
+    @Value("#{config['offact.sms.smspw']}")
+    private String smsPw;
+    
+    @Value("#{config['offact.sms.smstype']}")
+    private String smsType;
 	
     @Autowired
     private CommonService commonSvc;
@@ -99,6 +116,9 @@ public class SmartController {
     @Autowired
     private ComunityService comunitySvc;
 	
+    @Autowired
+    private SmsService smsSvc;
+    
 	 /**
      * 상담관리 화면 로딩
      *
@@ -328,24 +348,63 @@ public class SmartController {
      */
     @RequestMapping(value = "/smart/counselprocess", method = RequestMethod.POST)
     public @ResponseBody
-    String counselProcess(@ModelAttribute("counselConVO") CounselVO counselConVO,
+    String counselProcess(@ModelAttribute("counselVO") CounselVO counselVO,
     		       HttpServletRequest request, 
     		       HttpServletResponse response) throws BizException
     {
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : counselConVO" + counselConVO);
+		logger.info("["+logid+"] Controller start : counselVO" + counselVO);
 
 		// 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strMobliePhone = StringUtil.nvl((String) session.getAttribute("strMobliePhone"));
         
-        counselConVO.setUserId(strUserId);
-        counselConVO.setGroupId(strGroupId);
+        counselVO.setUserId(strUserId);
+        counselVO.setGroupId(strGroupId);
+        counselVO.setStateUpdateUserId(strUserId);
         
-        int retVal=this.counselSvc.counselProc(counselConVO);
+        int retVal=this.counselSvc.counselProc(counselVO);
+        
+        try{
+			//SMS발송
+			SmsVO smsVO = new SmsVO();
+			SmsVO resultSmsVO = new SmsVO();
+			
+			smsVO.setSmsId(smsId);
+			smsVO.setSmsPw(smsPw);
+			smsVO.setSmsType(smsType);
+			smsVO.setSmsTo(counselVO.getCustomerKey());
+			smsVO.setSmsFrom(strMobliePhone);
+			smsVO.setSmsMsg(counselVO.getCounselResult());
+			smsVO.setSmsUserId(strUserId);
+			
+			logger.debug("#########devOption :"+devOption);
+			String[] devSmss= devSms.split("\\^");
+			
+    		if(devOption.equals("true")){
+				for(int i=0;i<devSmss.length;i++){
+					
+					if(devSmss[i].equals(counselVO.getCustomerKey().trim().replace("-", ""))){
+						resultSmsVO=smsSvc.sendSms(smsVO);
+					}
+				}
+			}else{
+				resultSmsVO=smsSvc.sendSms(smsVO);
+			}
+
+			logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+			logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+			logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+			
+		}catch(BizException e){
+			
+			logger.info("["+logid+"] Controller SMS전송오류");
+			
+		}
 
 		//작업이력
         /*

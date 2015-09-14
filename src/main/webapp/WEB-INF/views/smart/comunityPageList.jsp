@@ -2,8 +2,8 @@
 <SCRIPT>
     // 페이지 이동
     function goPageComunityPageList(page) {
-        document.comunityPageListForm.curPage.value = page;
-        var dataParam = $("#comunityPageListForm").serialize();
+        document.comunityConForm.curPage.value = page;
+        var dataParam = $("#comunityConForm").serialize();
         commonDim(true);
         $.ajax({
             type: "POST",

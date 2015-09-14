@@ -83,13 +83,14 @@
       <form:form class="form-inline" commandName="counselVO" id="counselProcForm" name="counselProcForm" method="post" action="">
       	<input type="hidden" id="idx" name="idx" value="${counselVO.idx}" >
       	<input type="hidden" id="counselState" name="counselState" value="03" >
+      	<input type="hidden" id="customerKey" name="customerKey" value="${counselVO.customerKey}" >
 	    <div class="form-group">
 		    <table class="table table-bordered" >
 		 	<tr>
 	          <th class='text-center' style="background-color:#E6F3FF" >고객 핸드폰번호</th>
 	          <th class='text-left'  width="250px"  >
 	          <div class="form-inline">
-	          <input type="text" class="form-control" id="customerKey" name="customerKey" maxlength="10"  tabindex="1" value="${counselVO.customerKey}" disabled>
+	          <input type="text" class="form-control"  maxlength="10"  tabindex="1" value="${counselVO.customerKey}" disabled>
     	      </div> 
 	          </th>
 	      	</tr>
