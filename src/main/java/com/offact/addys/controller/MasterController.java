@@ -69,6 +69,7 @@ import com.offact.addys.vo.master.ProductMasterVO;
 import com.offact.addys.vo.master.StockVO;
 import com.offact.addys.vo.master.SalesVO;
 import com.offact.addys.vo.master.OrderLimitVO;
+import com.offact.addys.vo.master.OrderAddVO;
 import com.offact.addys.vo.order.OrderVO;
 import com.offact.addys.vo.recovery.RecoveryVO;
 import com.offact.addys.vo.MultipartFileVO;
@@ -3805,9 +3806,9 @@ public class MasterController {
 	     		return mv;
 			}
 	      
-	      OrderLimitVO orderLimitConVO = new OrderLimitVO();
+	      OrderAddVO orderAddConVO = new OrderAddVO();
 	      
-	      orderLimitConVO.setGroupId(strGroupId);
+	      orderAddConVO.setGroupId(strGroupId);
 
 	      //오늘 날짜
 	      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -3820,11 +3821,11 @@ public class MasterController {
 	      String strToday = simpleDateFormat.format(currentTime);
 	      String strDeliveryDay = simpleDateFormat.format(deliveryTime);
 	      
-	      orderLimitConVO.setStart_limitDate(strDeliveryDay);
-	      orderLimitConVO.setEnd_limitDate(strToday);
+	      orderAddConVO.setStart_addDate(strDeliveryDay);
+	      orderAddConVO.setEnd_addDate(strToday);
 	      
 	      // 조회조건저장
-	      mv.addObject("orderLimitConVO", orderLimitConVO);
+	      mv.addObject("orderAddConVO", orderAddConVO);
 
 	      //조직정보 조회
 	      GroupVO group = new GroupVO();
@@ -3852,7 +3853,7 @@ public class MasterController {
 	   * @throws BizException
 	   */
 	  @RequestMapping(value = "/master/orderaddpagelist")
-	  public ModelAndView orderAddPageList(@ModelAttribute("orderlimitConVO") OrderLimitVO orderlimitConVO, 
+	  public ModelAndView orderAddPageList(@ModelAttribute("orderAddConVO") OrderAddVO orderAddConVO, 
 	  		                         HttpServletRequest request, 
 	  		                         HttpServletResponse response) throws BizException 
 	  {
@@ -3860,24 +3861,24 @@ public class MasterController {
 	  	//log Controller execute time start
 			String logid=logid();
 			long t1 = System.currentTimeMillis();
-			logger.info("["+logid+"] Controller start : orderlimitConVO" + orderlimitConVO);
+			logger.info("["+logid+"] Controller start : orderAddConVO" + orderAddConVO);
 
 	      ModelAndView mv = new ModelAndView();
-	      List<OrderLimitVO> orderLimitList = null;
+	      List<OrderAddVO> orderAddList = null;
 
 	      // 조회조건저장
-	      mv.addObject("orderlimitConVO", orderlimitConVO);
+	      mv.addObject("orderAddConVO", orderAddConVO);
 
 	      // 페이징코드
-	      orderlimitConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(orderlimitConVO.getCurPage(), orderlimitConVO.getRowCount()));
-	      orderlimitConVO.setPage_limit_val2(StringUtil.nvl(orderlimitConVO.getRowCount(), "10"));
+	      orderAddConVO.setPage_add_val1(StringUtil.getCalcLimitStart(orderAddConVO.getCurPage(), orderAddConVO.getRowCount()));
+	      orderAddConVO.setPage_add_val2(StringUtil.nvl(orderAddConVO.getRowCount(), "10"));
 	      
-	      // 발주제한목록조회
-	      orderLimitList = orderLimitSvc.getOrderLimitPageList(orderlimitConVO);
-	      mv.addObject("orderLimitList", orderLimitList);
+	      // 발주추가목록조회
+	      //orderAddList = orderLimitSvc.getOrderAddPageList(orderAddConVO);
+	      mv.addObject("orderAddList", orderAddList);
 
 	     //  totalCount 조회
-	      String totalCount = String.valueOf(orderLimitSvc.getOrderLimitCnt(orderlimitConVO));
+	      String totalCount = "0";//String.valueOf(orderLimitSvc.getOrderAddCnt(orderAddConVO));
 	      mv.addObject("totalCount", totalCount);
 
 	      mv.setViewName("/master/orderAddPageList");
@@ -3951,9 +3952,9 @@ public class MasterController {
 	      String strToday = simpleDateFormat.format(currentTime);
 	      String strDeliveryDay = simpleDateFormat.format(deliveryTime);
 	      
-	      //제한일자 세팅
-	      mv.addObject("limitStartDate", strToday);
-	      mv.addObject("limitEndDate", strToday);
+	      //추가일자 세팅
+	      mv.addObject("addStartDate", strToday);
+	      mv.addObject("addEndDate", strToday);
 	      
 	      //조직정보 조회
 	      GroupVO group = new GroupVO();
@@ -3973,7 +3974,7 @@ public class MasterController {
 	 	 * Simply selects the home view to render by returning its name.
 	 	 * @throws BizException
 	 	 */
-	  @RequestMapping(value = "/master/orderaddtregislist")
+	  @RequestMapping(value = "/master/orderaddregislist")
 	 	public ModelAndView orderAddRegisList(HttpServletRequest request) throws BizException 
 	     {
 	  		//log Controller execute time start
@@ -4035,7 +4036,7 @@ public class MasterController {
 	  	//log Controller execute time start
 			String logid=logid();
 			long t1 = System.currentTimeMillis();
-			logger.info("["+logid+"] Controller start : limitcompanyexcelform");
+			logger.info("["+logid+"] Controller start : addcompanyexcelform");
 	  			
 	 		ModelAndView mv = new ModelAndView();
 	 		
@@ -4048,7 +4049,7 @@ public class MasterController {
 	 		return mv;
 	 	}
 	  /**
-		   * 제한업체 일괄등록
+		   * 추가업체 일괄등록
 		   *
 		   * @param MultipartFileVO
 		   * @param request
@@ -4228,7 +4229,7 @@ public class MasterController {
 	   */
 	  @RequestMapping({"/master/orderaddregist"})
 	  public @ResponseBody
-	  String orderAddRegist(@ModelAttribute("orderLimitVO") OrderLimitVO orderLimitVO,
+	  String orderAddRegist(@ModelAttribute("orderAddVO") OrderAddVO orderAddVO,
 	  		              @RequestParam(value="arrCheckGroupId", required=false, defaultValue="") String arrCheckGroupId,
 	  		              @RequestParam(value="arrSelectCompanyCode", required=false, defaultValue="") String arrSelectCompanyCode,
 	  		              HttpServletRequest request) throws BizException
@@ -4237,7 +4238,7 @@ public class MasterController {
 		    //log Controller execute time start
 			String logid=logid();
 			long t1 = System.currentTimeMillis();
-			logger.info("["+logid+"] Controller start : orderLimitVO" + orderLimitVO);
+			logger.info("["+logid+"] Controller start : orderAddVO" + orderAddVO);
 				
 		  String limitResult="orderlimit0000";
 			
@@ -4253,10 +4254,11 @@ public class MasterController {
 	      Date currentTime = new Date();
 	      String strToday = simpleDateFormat.format(currentTime);
 	      
-	      orderLimitVO.setLimitUserId(strUserId);
+	      orderAddVO.setAddUserId(strUserId);
 	      	   
 	      try{//01.발주제한처리
-	     
+	 
+	    	  OrderLimitVO orderLimitVO = new OrderLimitVO();//임시
 	          int dbResult=orderLimitSvc.regiOrderLimitRegist(orderLimitVO , arrCheckGroupId ,arrSelectCompanyCode);
 	           
 		    	if(dbResult<1){//처리내역이 없을경우
@@ -4299,7 +4301,7 @@ public class MasterController {
 	  }
 	  
 	  /**
-	   * 발주제한 해제처리
+	   * 발주추가 해제처리
 	   *
 	   * @param 
 	   * @param request
@@ -4311,22 +4313,22 @@ public class MasterController {
 	   */
 	  @RequestMapping(value = "/master/addcancel", method = RequestMethod.POST)
 	  public @ResponseBody
-	  String addCancel(@ModelAttribute("orderLimitVO") OrderLimitVO orderLimitVO, 
+	  String addCancel(@ModelAttribute("orderAddVO") OrderAddVO orderAddVO, 
 	  		          HttpServletRequest request, 
 	  		          HttpServletResponse response) throws BizException
 	  {
 	  	//log Controller execute time start
 			String logid=logid();
 			long t1 = System.currentTimeMillis();
-			logger.info("["+logid+"] Controller start : orderLimitVO" + orderLimitVO);
+			logger.info("["+logid+"] Controller start : ordeorderAddVOrLimitVO" + orderAddVO);
 			
 			// 사용자 세션정보
 		    HttpSession session = request.getSession();
 		    String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
 		      
-		    orderLimitVO.setDeletedUserId(strUserId);
+		    orderAddVO.setDeletedUserId(strUserId);
 
-			int retVal=this.orderLimitSvc.orderLimitCance(orderLimitVO);
+			int retVal=-1;//this.orderLimitSvc.orderAddCance(orderAddVO);
 			
 		     //작업이력
 			 WorkVO work = new WorkVO();

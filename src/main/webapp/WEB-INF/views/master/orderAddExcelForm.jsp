@@ -15,7 +15,7 @@
 } --%>
 
 
-function fcLimitCompany_excelimport(){
+function fcAddCompany_excelimport(){
 
     if($("#files").val() == ''){
     	
@@ -32,7 +32,7 @@ function fcLimitCompany_excelimport(){
     var gap1 = fileName.substring(ln+1);
 
     if(gap1=="xlsx"){
-       url="<%= request.getContextPath() %>/master/orderlimitattach?fileName="+encodeURIComponent(gap)+"&extension="+gap1;
+       url="<%= request.getContextPath() %>/master/orderaddattach?fileName="+encodeURIComponent(gap)+"&extension="+gap1;
     }else{
     	alert("Excel 통합문서(xlsx) 파일만 등록 부탁드립니다.");
         return;
@@ -58,8 +58,8 @@ function fcLimitCompany_excelimport(){
         success: function(result) {
           //alert(result);
           commonDim(false);
-          $("#orderLimitRegisList").html(result);
-          $('#orderlimitExcelForm').dialog('close');
+          $("#orderAddRegisList").html(result);
+          $('#orderAddExcelForm').dialog('close');
         }
     });
 
@@ -90,7 +90,7 @@ function fcLimitCompany_excelimport(){
  <br>
  <!-- button -->
  <div >
-  <button type="button" class="btn btn-primary" onClick="javascript:fcLimitCompany_excelimport()">업로드</button>
+  <button type="button" class="btn btn-primary" onClick="javascript:fcAddCompany_excelimport()">업로드</button>
  </div>
   <!-- //button -->
 </div>

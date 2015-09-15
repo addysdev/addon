@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
- <form:form commandName="companyVO" name="limitCompanyListForm" method="post" action="" >
+ <form:form commandName="companyVO" name="addCompanyListForm" method="post" action="" >
     <table class="table table-striped" id="contentId">
    		<colgroup>
   		 <col width="25%" />
@@ -7,7 +7,7 @@
      	</colgroup>
 	  	<thead>
 		    <tr>
-		       <th class="text-center">발주 제한업체</th>
+		       <th class="text-center">발주 추가업체</th>
 		    </tr>
 	  	</thead>
 	  	<tbody>
@@ -27,7 +27,7 @@ var excelcnt='${excelTotal}';
 var companycnt = '${companyList.size()}';
 var totalcnt=0;
 
-var frm = document.limitCompanyListForm;
+var frm = document.addCompanyListForm;
 
 if(frm.selectCompany!=undefined ){
 	if(frm.selectCompany.length!=undefined ){

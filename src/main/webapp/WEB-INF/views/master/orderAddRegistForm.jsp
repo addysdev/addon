@@ -3,7 +3,7 @@
 $(function() {
     // 기간 설정 타입 1 
     // start Date 설정시 end Date의 min Date 지정
-    $( "#limitStartDate" ).datepicker({
+    $( "#addStartDate" ).datepicker({
         dateFormat: "yy-mm-dd",
         dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
         monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
@@ -15,11 +15,11 @@ $(function() {
         changeYear: true,
         maxDate : "+0D",
         onClose: function( selectedDate ) {
-            $( "#limitEndDate" ).datepicker( "option", "minDate", selectedDate );
+            $( "#addEndDate" ).datepicker( "option", "minDate", selectedDate );
         }
     }); 
      // end Date 설정시 start Date max Date 지정
-    $( "#limitEndDate" ).datepicker({
+    $( "#addEndDate" ).datepicker({
         dateFormat: "yy-mm-dd",
         dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
         monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
@@ -30,13 +30,13 @@ $(function() {
         showMonthAfterYear: true ,
         changeYear: true,
         onClose: function( selectedDate ) {
-            $( "#limitStartDate" ).datepicker( "option", "maxDate", selectedDate );
+            $( "#addStartDate" ).datepicker( "option", "maxDate", selectedDate );
         }
     });
 
     // 기간 설정 타입 2 
     // start Date 설정시 end Date 가 start Date보다 작을 경우 end Date를 start Date와 같게 설정
-    $("#limitStartDate").datepicker({
+    $("#addStartDate").datepicker({
         dateFormat: "yy-mm-dd",
         defaultDate: "+1w",
         numberOfMonths: 1,
@@ -44,14 +44,14 @@ $(function() {
         showMonthAfterYear: true ,
         changeYear: true,
         onClose: function( selectedDate ) {
-            if ($( "#limitStartDate" ).val() < selectedDate)
+            if ($( "#addStartDate" ).val() < selectedDate)
             {
-                $( "#limitEndDate" ).val(selectedDate);
+                $( "#addEndDate" ).val(selectedDate);
             }
         }
     }); 
     // end Date 설정시 end Date 가 start Date 보다 작을 경우 start Date를  end Date와 같게 설정
-    $( "#limitEndDate" ).datepicker({
+    $( "#addEndDate" ).datepicker({
         dateFormat: "yy-mm-dd",
         defaultDate: "+1w",
         numberOfMonths: 1,
@@ -59,9 +59,9 @@ $(function() {
         showMonthAfterYear: true ,
         changeYear: true,
         onClose: function( selectedDate ) {
-            if ($("#limitStartDate" ).val() > selectedDate)
+            if ($("#addStartDate" ).val() > selectedDate)
             {
-                $("#limitEndDate" ).val(selectedDate);
+                $("#addEndDate" ).val(selectedDate);
             }
         }
     });
@@ -71,9 +71,9 @@ $(function() {
 	function showCalendar2(div){
 	
 	   if(div == "1"){
-	   	   $('#limitStartDate').datepicker("show");
+	   	   $('#addStartDate').datepicker("show");
 	   } else if(div == "2"){
-		   $('#limitEndDate').datepicker("show");
+		   $('#addEndDate').datepicker("show");
 	   }  
 	}
 // 업체조회 리스트 Layup
@@ -82,7 +82,7 @@ function fCompany_list() {
 	//$('#targetEtcView').attr('title',productName);
 	var url='<%= request.getContextPath() %>/manage/companysearch';
 
-	$('#orderLimitCompanyList').dialog({
+	$('#orderAddCompanyList').dialog({
         resizable : false, //사이즈 변경 불가능
         draggable : true, //드래그 불가능
         closeOnEscape : true, //ESC 버튼 눌렀을때 종료
@@ -97,19 +97,19 @@ function fCompany_list() {
             $(this).load(url);
            
             $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
-                $("#orderLimitCompanyList").dialog('close');
+                $("#orderAddCompanyList").dialog('close');
 
                 });
         }
         ,close:function(){
-            $('#orderLimitCompanyList').empty();
+            $('#orderAddCompanyList').empty();
         }
     });
 };
-function fcOrderLimit_regist(){
+function fcOrderAdd_regist(){
 	
-	var frm=document.limitCompanyListForm;
-	var rfrm=document.orderLimitForm;
+	var frm=document.addCompanyListForm;
+	var rfrm=document.orderAddForm;
 	
 	var arrCheckGroupId = "";
 	var arrSelectCompanyCode = "";
@@ -124,7 +124,7 @@ function fcOrderLimit_regist(){
         
 	}else{
 		
-		alert('선택하신 제한 대상지점이 없습니다.');
+		alert('선택하신 추가 대상지점이 없습니다.');
 		return;
 	}
 	
@@ -147,28 +147,28 @@ function fcOrderLimit_regist(){
 	//alert(arrCheckGroupId);
 	//alert(arrSelectProductId);
 	//return;
-	if (confirm('발주제한 등록을  하시겠습니까?')){ 
+	if (confirm('발주추가 등록을  하시겠습니까?')){ 
 	
-		   var paramString = $("#orderLimitForm").serialize()+ "&arrCheckGroupId="+arrCheckGroupId+'&arrSelectCompanyCode='+arrSelectCompanyCode;
+		   var paramString = $("#orderAddForm").serialize()+ "&arrCheckGroupId="+arrCheckGroupId+'&arrSelectCompanyCode='+arrSelectCompanyCode;
 
 	  		$.ajax({
 		       type: "POST",
 		       async:false,
-		          url:  "<%= request.getContextPath() %>/master/orderlimtregist",
+		          url:  "<%= request.getContextPath() %>/master/orderaddregist",
 		          data:paramString,
 		          success: function(result) {
 	
 		        	resultMsg(result);
 
-					$('#orderLimitRegForm').dialog('close');
-					fcOrderLimit_listSearch();
+					$('#orderAddRegForm').dialog('close');
+					fcOrderAdd_listSearch();
 						
 		          },
 		          error:function(){
 		          
-		          alert('발주제한 호출오류!');
-                  $('#orderLimitRegForm').dialog('close');
-                  fcOrderLimit_listSearch();
+		          alert('발주추가 호출오류!');
+                  $('#orderAddRegForm').dialog('close');
+                  fcOrderAdd_listSearch();
 		          }
 		    });
 	}
@@ -176,7 +176,7 @@ function fcOrderLimit_regist(){
 
 function fcCompany_Select(companycode,companyname){
 	
-	var frm=document.limitCompanyListForm;
+	var frm=document.addCompanyListForm;
 	
 	if(frm.selectCompany!=undefined){
 		
@@ -209,7 +209,7 @@ function fcCompany_Select(companycode,companyname){
 function totalAttachCnt(flag){
 
 	var totalcnt=0;
-	var frm = document.limitCompanyListForm;
+	var frm = document.addCompanyListForm;
 	
 	if(flag=='add'){
 		//alert(frm.selectProduct.length);
@@ -255,7 +255,7 @@ function delFile2(obj){
 //레이어팝업 : 보유재고 Layer 팝업
 function fcCompany_excelForm(){
 
-	$('#orderlimitExcelForm').dialog({
+	$('#orderAddExcelForm').dialog({
         resizable : false, //사이즈 변경 불가능
         draggable : true, //드래그 불가능
         closeOnEscape : true, //ESC 버튼 눌렀을때 종료
@@ -266,28 +266,29 @@ function fcCompany_excelForm(){
 
         open:function(){
             //팝업 가져올 url
-            $(this).load('<%= request.getContextPath() %>/master/orderlimitexcelform');
+            $(this).load('<%= request.getContextPath() %>/master/orderaddexcelform');
             //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
             $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
-                $("#orderlimitExcelForm").dialog('close');
+                $("#orderAddExcelForm").dialog('close');
 
                 });
         }
         ,close:function(){
-            $('#orderlimitExcelForm').empty();
+            $('#orderAddExcelForm').empty();
         }
     });
 };
 // 리스트 조회
-function fcOrderLimit_registlist(){
+function fcOrderAdd_registlist(){
 
      $.ajax({
          type: "POST",
-            url:  "<%= request.getContextPath() %>/master/orderlimitregislist",
-                 data:$("#orderLimitForm").serialize(),
+            url:  "<%= request.getContextPath() %>/master/orderaddregislist",
+                 data:$("#orderAddForm").serialize(),
             success: function(result) {
                 commonDim(false);
-                $("#orderLimitRegisList").html(result);
+               
+                $("#orderAddRegisList").html(result);
             },
             error:function() {
             	
@@ -304,17 +305,17 @@ function fcGroup_checkAll(){
 
 function fcCompany_allAttach(){
 
-	if (confirm('전체 업체를 발주제한 업체로 추가하시겠습니까?')){ 
+	if (confirm('전체 업체를 발주추가 업체로 추가하시겠습니까?')){ 
 	
 	    commonDim(true);
 	    
 	    $.ajax({
 	        type: "POST",
-	           url:  "<%= request.getContextPath() %>/master/orderlimitalllist",
-	                data:$("#orderLimitForm").serialize(),
+	           url:  "<%= request.getContextPath() %>/master/orderaddalllist",
+	                data:$("#orderAddForm").serialize(),
 	           success: function(result) {
 	               commonDim(false);
-	               $("#orderLimitRegisList").html(result);
+	               $("#orderAddRegisList").html(result);
 	           },
 	           error:function() {
 	           	
@@ -329,27 +330,27 @@ function fcCompany_allAttach(){
 <!-- 사용자관리 -->
 <body>
   <div class="container-fluid">
-	<h5><strong><font style="color:#428bca">발주제한 관리&nbsp; 
-   		<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fCompany_list()" >제한 업체</button>
-   		<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcCompany_excelForm()" >제한 업체 엑셀추가</button>
-   		<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcCompany_allAttach()" >제한 업체 전체추가</button>
-   		<button id="memoinfobtn" type="button" class="btn btn-xs btn-primary" onClick="fcOrderLimit_regist()" >발주제한 요청</button>
+	<h5><strong><font style="color:#428bca">발주추가 관리&nbsp; 
+   		<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fCompany_list()" >추가 업체</button>
+   		<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcCompany_excelForm()" >추가 업체 엑셀추가</button>
+   		<button id="memoinfobtn" type="button" class="btn btn-xs btn-info" onClick="fcCompany_allAttach()" >추가 업체 전체추가</button>
+   		<button id="memoinfobtn" type="button" class="btn btn-xs btn-primary" onClick="fcOrderAdd_regist()" >발주추가 요청</button>
     	</font></strong></h5>
-		  <form:form commandName="orderLimitVO" id="orderLimitForm" name="orderLimitForm" method="post" action="" >
+		  <form:form commandName="orderAddVO" id="orderAddForm" name="orderAddForm" method="post" action="" >
 		  <br>
 		  <table class="table table-bordered" >
 		 	<tr>
-	          <th class='text-center' style="background-color:#E6F3FF;width:120px" >발주제한 기간</th>
+	          <th class='text-center' style="background-color:#E6F3FF;width:120px" >발주추가 기간</th>
 		      <th class='text-left'>
 	          <div class="form-inline">
 	              <!-- 조회시작일자-->
-				    <input  class="form-control" style='width:135px' name="limitStartDate" id="limitStartDate" value="${limitStartDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+				    <input  class="form-control" style='width:135px' name="addStartDate" id="addStartDate" value="${addStartDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
 				    <!-- 달력이미지 시작 -->
 				    <span class="icon_calendar"><img border="0" onclick="showCalendar2('1')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
 				    <!-- 달력이미지 끝 -->
 		            &nbsp;~&nbsp;
 	                <!-- 조회죵료일자-->
-				    <input  class="form-control" style='width:135px' name="limitEndDate" id="limitEndDate" value="${limitEndDate}" type="text" maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+				    <input  class="form-control" style='width:135px' name="addEndDate" id="addEndDate" value="${addEndDate}" type="text" maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
 				    <!-- 달력이미지 시작 -->
 				    <span class="icon_calendar"><img border="0" onclick="showCalendar2('2')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
 				    <!-- 달력이미지 끝 -->
@@ -357,7 +358,7 @@ function fcCompany_allAttach(){
 	          </th>
 	      	</tr>
 	      	<tr>
-	          <th class='text-center' style="background-color:#E6F3FF" >발주제한 대상지점<br>전체선택:<input type="checkbox"  id="regroupidCheckAll"  name="regroupidCheckAll" checked onchange="fcGroup_checkAll();" title="전체선택" /></th>
+	          <th class='text-center' style="background-color:#E6F3FF" >발주추가 대상지점<br>전체선택:<input type="checkbox"  id="regroupidCheckAll"  name="regroupidCheckAll" checked onchange="fcGroup_checkAll();" title="전체선택" /></th>
 	          <th>
 	 			<c:forEach var="groupVO" items="${group_comboList}" >
 	 				<input type="checkbox" id="regroupid" name="regroupid"  title="선택" checked value="${groupVO.groupId}"/>${groupVO.groupName}&nbsp;
@@ -369,12 +370,12 @@ function fcCompany_allAttach(){
 		  </form:form>
 
 
-   <div id="orderLimitRegisList"  title="제한대상 업체리스트"></div>
-  <!-- //제한대상업체리스트 -->
+   <div id="orderAddRegisList"  title="추가대상 업체리스트"></div>
+  <!-- //추가대상업체리스트 -->
   
   </div>  
 </body>
 <script type="text/javascript">
   
-	fcOrderLimit_registlist();
+	fcOrderAdd_registlist();
 </script>
