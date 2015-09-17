@@ -64,6 +64,11 @@ function resultMsg(result){
 	 result=result.replace('orderlimit0001','처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
 	 result=result.replace('orderlimit0002','발주제한 등록을 정상적으로 처리하지 못 했습니다..\n시스템 관리자에게 문의하세요.');
 	 
+     //발주추가처리
+	 result=result.replace('orderadd0000','발주추가 등록을 완료했습니다.');
+	 result=result.replace('orderadd0001','처리내역이 없습니다.\n시스템 관리자에게 문의하세요.[DB 처리오류]');
+	 result=result.replace('orderadd0002','발주추가 등록을 정상적으로 처리하지 못 했습니다..\n시스템 관리자에게 문의하세요.');
+	 
 	 alert(result);
 
 }

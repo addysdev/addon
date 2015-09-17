@@ -383,6 +383,8 @@ public class OrderController {
         CompanyVO companyVO = new CompanyVO();
         TargetVO targetConVO = new TargetVO();
         TargetVO targetVO = new TargetVO();
+        
+        TargetVO targetAddVO = new TargetVO();
 
         targetConVO.setCon_groupId(groupId);
         targetConVO.setCon_orderState(orderState);
@@ -395,6 +397,9 @@ public class OrderController {
         //업체 상세 정보조회
         companyVO.setCompanyCode(companyCode);
         companyVO = commonSvc.getCompanyDetail(companyVO);
+        
+        // 발주추가여부 조회
+        targetAddVO = targetSvc.getTargetAddYn(targetConVO);
 
         //발주기본 정보
         targetVO.setOrderCode(orderCode);
@@ -424,6 +429,8 @@ public class OrderController {
         targetVO.setDeliveryDate(strDeliveryDay);
         
         targetVO.setOrderAddress(orderAddress);
+        
+        targetVO.setOrderAddYn(StringUtil.nvl(targetAddVO.getOrderAddYn(),"N"));
         
         mv.addObject("targetVO", targetVO);
         

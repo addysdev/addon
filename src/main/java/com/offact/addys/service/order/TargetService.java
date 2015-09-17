@@ -102,4 +102,13 @@ public interface TargetService {
      * @throws BizException
      */
     public TargetVO getStateCnt(TargetVO targetCon) throws BizException;
+    
+    /**
+     * 추가여부 조회
+     * 
+     * @return
+     * @throws BizException
+     */
+    public TargetVO getTargetAddYn(TargetVO target) throws BizException;
+    
 }

@@ -272,9 +272,7 @@
 				            <c:if test="${strAuth != '03'}">
 				            <li><a href="<%= request.getContextPath() %>/master/productmanage">품목 관리</a></li>
 				            <li><a href="<%= request.getContextPath() %>/master/orderlimitmanage">발주제한 관리</a></li>
-				           		 <c:if test="${strAuth == '01'}">
-				         			<li><a href="<%= request.getContextPath() %>/master/orderaddmanage">발주추가 관리</a></li>
-				       			 </c:if>
+							<li><a href="<%= request.getContextPath() %>/master/orderaddmanage">발주추가 관리</a></li>
 				            </c:if>
 				            <li><a href="<%= request.getContextPath() %>/master/stockmanage">재고현황 관리</a></li>   
 				            <li><a href="<%= request.getContextPath() %>/master/salesmanage">매출현황 관리</a></li>                            

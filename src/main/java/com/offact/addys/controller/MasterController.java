@@ -57,6 +57,7 @@ import com.offact.addys.service.master.StockMasterService;
 import com.offact.addys.service.master.StockService;
 import com.offact.addys.service.master.SalesService;
 import com.offact.addys.service.master.OrderLimitService;
+import com.offact.addys.service.master.OrderAddService;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.SmsVO;
@@ -114,6 +115,9 @@ public class MasterController {
     
     @Autowired
     private OrderLimitService orderLimitSvc;
+    
+    @Autowired
+    private OrderAddService orderAddSvc;
     
     /**
      * 품목현황 관리화면
@@ -3874,11 +3878,11 @@ public class MasterController {
 	      orderAddConVO.setPage_add_val2(StringUtil.nvl(orderAddConVO.getRowCount(), "10"));
 	      
 	      // 발주추가목록조회
-	      //orderAddList = orderLimitSvc.getOrderAddPageList(orderAddConVO);
+	      orderAddList = orderAddSvc.getOrderAddPageList(orderAddConVO);
 	      mv.addObject("orderAddList", orderAddList);
 
 	     //  totalCount 조회
-	      String totalCount = "0";//String.valueOf(orderLimitSvc.getOrderAddCnt(orderAddConVO));
+	      String totalCount = String.valueOf(orderAddSvc.getOrderAddCnt(orderAddConVO));
 	      mv.addObject("totalCount", totalCount);
 
 	      mv.setViewName("/master/orderAddPageList");
@@ -4240,7 +4244,7 @@ public class MasterController {
 			long t1 = System.currentTimeMillis();
 			logger.info("["+logid+"] Controller start : orderAddVO" + orderAddVO);
 				
-		  String limitResult="orderlimit0000";
+		  String limitResult="orderadd0000";
 			
 			// 사용자 세션정보
 	      HttpSession session = request.getSession();
@@ -4258,8 +4262,7 @@ public class MasterController {
 	      	   
 	      try{//01.발주제한처리
 	 
-	    	  OrderLimitVO orderLimitVO = new OrderLimitVO();//임시
-	          int dbResult=orderLimitSvc.regiOrderLimitRegist(orderLimitVO , arrCheckGroupId ,arrSelectCompanyCode);
+	    	  int dbResult=orderAddSvc.regiOrderAddRegist(orderAddVO , arrCheckGroupId ,arrSelectCompanyCode);
 	           
 		    	if(dbResult<1){//처리내역이 없을경우
 		    		
@@ -4267,7 +4270,7 @@ public class MasterController {
 			       	long t2 = System.currentTimeMillis();
 			       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 
-			        return "orderlimit0001";
+			        return "orderadd0001";
 			        
 			    }
 
@@ -4282,15 +4285,15 @@ public class MasterController {
 		       	long t2 = System.currentTimeMillis();
 		       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds [errorMsg] : "+errMsg);
 
-		        return "orderlimit0002\n[errorMsg] : "+errMsg;
+		        return "orderadd0002\n[errorMsg] : "+errMsg;
 		    	
 		    }
 
 		      //작업이력
 		 	 WorkVO work = new WorkVO();
 		 	 work.setWorkUserId(strUserId);
-		 	 work.setWorkCategory("LM");
-		 	 work.setWorkCode("LM001");
+		 	 work.setWorkCategory("AM");
+		 	 work.setWorkCode("AM001");
 		 	 commonSvc.regiHistoryInsert(work);
 	 	 
 			//log Controller execute time end
@@ -4328,13 +4331,13 @@ public class MasterController {
 		      
 		    orderAddVO.setDeletedUserId(strUserId);
 
-			int retVal=-1;//this.orderLimitSvc.orderAddCance(orderAddVO);
+			int retVal=this.orderAddSvc.orderAddCance(orderAddVO);
 			
 		     //작업이력
 			 WorkVO work = new WorkVO();
 			 work.setWorkUserId(strUserId);
-			 work.setWorkCategory("LM");
-			 work.setWorkCode("LM002");
+			 work.setWorkCategory("AM");
+			 work.setWorkCode("AM002");
 			 commonSvc.regiHistoryInsert(work);
 			
 			//log Controller execute time end

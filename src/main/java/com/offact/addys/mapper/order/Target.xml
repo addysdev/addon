@@ -64,6 +64,8 @@
   <result column="targetCnt"        property="targetCnt"  />
   <result column="deliveryName"        property="deliveryName"  />
   <result column="orderName"        property="orderName"  />
+  <result column="orderAddYn"        property="orderAddYn"  />
+  <result column="orderAddChk"        property="orderAddChk"  />
 </resultMap>
 
 <select id="getTargetPageList"  resultMap="targetVO" parameterType="com.offact.addys.vo.order.TargetVO" >
@@ -522,11 +524,23 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 			           
 </select>
 
+<select id="getTargetAddYn"  resultMap="targetVO" parameterType="com.offact.addys.vo.order.TargetVO" >
 
+	Select T1.groupId, ifnull(T2.orderAddYn,'N') as orderAddYn
+      From ofGroup T1
+         Left Join ( Select groupId,
+                            Case When date_format(now(),'%Y-%m-%d') Between addStartDate  and addEndDate Then 'Y' /*추가상태*/
+                                 Else 'N' End orderAddYn /*발주추가여부*/
+		                        From adOrderAdd
+		                        Where groupId=#{con_groupId} And  companyCode=#{con_companyCode} And  deletedYn='N' ) As T2 On T1.groupId = T2.groupId
+      Where T1.groupId=#{con_groupId}
+
+</select>
 
 <select id="getTargetDetailList"  resultMap="targetVO" parameterType="com.offact.addys.vo.order.TargetVO" >
 
-  Select T1.groupID,
+  Select T1.orderAddChk,
+         T1.groupID,
          T4.groupName,
 		 T2.companyCode,
          T3.companyName,
@@ -542,7 +556,8 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
          (T1.holdStock-T1.StockCnt) as orderCnt,
          T1.stockOrder
   From (
-	      Select TEMP.orderState,
+	      Select TEMP.orderAddChk,
+	             TEMP.orderState,
 		         TEMP.stockCnt,
 				 TEMP.safeStock,
                  TEMP.holdStock,
@@ -562,7 +577,10 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 						   /*ifnull(I4.orderDate,'1999-01-01') as orderChk,*//*발주기준일*/
                			   ifnull(DATE_FORMAT(I5.buyDate, '%Y-%m-%d'),'1999-01-01') as buyChk,/*구매기준일*/
                            ifnull(I6.orderState,'01') as orderState,/*최신발주상태*/
-					       I6.orderCode/*최신발주코드*/
+					       I6.orderCode,/*최신발주코드*/
+					       Case When date_format(now(),'%Y-%m-%d') Between T7.addStartDate  and  T7.addEndDate Then '01' /*추가상태*/
+                                Else '00'
+                                End orderAddChk /*발주추가여부*/
 					  From adStockMaster I1
 					  		  Left Join ( Select groupId, max(stockDate) as stockDate 
                        					  	From adStock
@@ -618,7 +636,9 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
                         							Group By  groupID,productCode 
                         					 ) A5
 									) As I6 On I1.productCode = I6.productCode And I1.groupID = I6.groupID /*업데이트상태 및 주문번호*/  
-
+                                      Left Join adProductMaster T2 On I1.ProductCode = T2.ProductCode
+                                      Left Join adCompany T3 On T2.companyCode = T3.companyCode 
+                                      Left Join adOrderAdd T7 On I1.groupID=T7.groupId And  T2.companyCode=T7.companyCode And T7.deletedYn='N'
 					     Where I1.deletedYn='N' And (I1.safeStock > 0 Or I1.holdStock >0)
 					     	AND I1.groupId = #{con_groupId}
 					   ) As TEMP
@@ -686,6 +706,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
             	,deliveryName
             	,orderName
             	,safeOrderCnt
+            	,orderAddYn
 		)values(
 				 #{orderCode}
 	  			, #{con_groupId}
@@ -718,6 +739,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 	  			, #{deliveryName}
 	  			, #{orderName}
 	  			, #{safeOrderCnt}
+	  			, #{orderAddYn}
 	  			
 		)
 		ON DUPLICATE KEY UPDATE faxKey = #{faxKey}
@@ -747,6 +769,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
             					,orderState = #{orderState}
             					,deliveryName = #{deliveryName}
             					,orderName = #{orderName}
+            					,orderAddYn = #{orderAddYn}
 		                        
 </insert>
 
@@ -764,6 +787,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
             	,lossCnt
             	,addCnt
             	,minusCnt
+            	,plusCnt
             	,memo
             	,createUserId
             	,createDateTime
@@ -783,6 +807,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 	  			, #{lossCnt}
 	  			, #{addCnt}
 	  			, #{minusCnt}
+	  			, #{plusCnt}
 	  			, #{memo}
 	  			, #{createUserId}
 	  			, now()
@@ -805,6 +830,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
             					,lossCnt  = #{lossCnt}
             					,addCnt  = #{addCnt}
             					,minusCnt  = #{minusCnt}
+            					,plusCnt = #{plusCnt}
             					,memo  = #{memo}
             					,updateUserId  = #{createUserId}
             					,updateDateTime  = now()
@@ -862,6 +888,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
             	,orderState
             	,deliveryName
             	,orderName
+            	,orderAddYn
 		)values(
 				 #{orderCode}
 	  			, #{con_groupId}
@@ -893,6 +920,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 	  			, #{orderState}
 	  			, #{deliveryName}
 	  			, #{orderName}
+	  			, #{orderAddYn}
 		)	  			
 	  	ON DUPLICATE KEY UPDATE faxKey = #{faxKey}
             	                ,smsKey = #{smsKey}
@@ -921,8 +949,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
             					,orderState = #{orderState}
             					,deliveryName = #{deliveryName}
             					,orderName = #{orderName}
-	  			
-
+            					,orderAddYn = #{orderAddYn}
 		                        
 </insert>
 
@@ -945,6 +972,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
             	,lossCnt
             	,addCnt
             	,minusCnt
+            	,plusCnt
             	,memo
             	,createUserId
             	,createDateTime
@@ -969,6 +997,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 	  			, #{lossCnt}
 	  			, #{addCnt}
 	  			, #{minusCnt}
+	  			, #{plusCnt}
 	  			, #{memo}
 	  			, #{createUserId}
 	  			, now()
@@ -991,6 +1020,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
             					,lossCnt  = #{lossCnt}
             					,addCnt  = #{addCnt}
             					,minusCnt  = #{minusCnt}
+            					,plusCnt  = #{plusCnt}
             					,memo  = #{memo}
             					,updateUserId  = #{createUserId}
             					,updateDateTime  = now()
@@ -1021,7 +1051,8 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
          sms,
          memo,
          deliveryName,
-         orderName
+         orderName,
+         orderAddYn
   From adOrder
   Where orderCode = #{orderCode}
   
@@ -1046,6 +1077,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
            T1.addCnt,
            T1.lossCnt,
            T1.minusCnt,
+           T1.plusCnt,
            T1.etc,
            T1.deferCheck,
            case When T1.safeStock >= T1.stockCnt Then 0 Else 1 End stockOrder

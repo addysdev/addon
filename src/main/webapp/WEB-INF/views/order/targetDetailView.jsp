@@ -197,8 +197,10 @@ function fcOrder_process(){
 	
 	if(NONSTOCK>0){
 		
-		alert('발주 수량이 보유수량을 초과한 품목이 '+NONSTOCK+'건 있습니다.\n해당 발주 수량을 보유수량에 맞추신 후 발주 부탁드립니다.');
-		return;
+		if('${targetVO.orderAddYn}'=='N'){//발주추가 옵션이 설정되지 않은경우 check
+			alert('발주 수량이 보유수량을 초과한 품목이 '+NONSTOCK+'건 있습니다.\n해당 발주 수량을 보유수량에 맞추신 후 발주 부탁드립니다.');
+			return;
+		}
 		
 	}
 	
@@ -292,7 +294,7 @@ function fcOrder_process(){
 			frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
    			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
    			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
-   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.group1Name[i].value)+'|'+fillSpace(frm.orderCheck[i].checked)+'|'+fillSpace(frm.minusCnt[i].value);
+   			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.group1Name[i].value)+'|'+fillSpace(frm.orderCheck[i].checked)+'|'+fillSpace(frm.minusCnt[i].value)+'|'+fillSpace(frm.plusCnt[i].value);
 
    		}
    	}else{
@@ -300,7 +302,7 @@ function fcOrder_process(){
 			frm.seqs.value=fillSpace(frm.productCode.value)+
 			'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
 			'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
-			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.group1Name.value)+'|'+fillSpace(frm.orderCheck.checked)+'|'+fillSpace(frm.minusCnt.value);
+			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.group1Name.value)+'|'+fillSpace(frm.orderCheck.checked)+'|'+fillSpace(frm.minusCnt.value)+'|'+fillSpace(frm.plusCnt.value);
 
 
    	}
@@ -353,7 +355,7 @@ function fcDefer_reason(reason){
    					frm.seqs[i].value=fillSpace(frm.productCode[i].value)+
            			'|'+fillSpace(frm.productName[i].value)+'|'+fillSpace(frm.productPrice[i].value)+'|'+fillSpace(frm.orderCnt[i].value)+
            			'|'+fillSpace(frm.addCnt[i].value)+'|'+fillSpace(frm.lossCnt[i].value)+'|'+fillSpace(frm.safeStock[i].value)+
-           			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.minusCnt[i].value);
+           			'|'+fillSpace(frm.holdStock[i].value)+'|'+fillSpace(frm.stockCnt[i].value)+'|'+fillSpace(frm.stockDate[i].value)+'|'+fillSpace(frm.vatRate[i].value)+'|'+fillSpace(frm.etc[i].value)+'|'+fillSpace(frm.minusCnt[i].value+'|'+fillSpace(frm.plusCnt[i].value));
      
            		}
            	}else{
@@ -361,7 +363,7 @@ function fcDefer_reason(reason){
    				frm.seqs.value=fillSpace(frm.productCode.value)+
        			'|'+fillSpace(frm.productName.value)+'|'+fillSpace(frm.productPrice.value)+'|'+fillSpace(frm.orderCnt.value)+
        			'|'+fillSpace(frm.addCnt.value)+'|'+fillSpace(frm.lossCnt.value)+'|'+fillSpace(frm.safeStock.value)+
-       			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.minusCnt.value);
+       			'|'+fillSpace(frm.holdStock.value)+'|'+fillSpace(frm.stockCnt.value)+'|'+fillSpace(frm.stockDate.value)+'|'+fillSpace(frm.vatRate.value)+'|'+fillSpace(frm.etc.value)+'|'+fillSpace(frm.minusCnt.value)+'|'+fillSpace(frm.plusCnt.value);
 
 
            	}
@@ -508,15 +510,19 @@ function fcDefer_reason(reason){
  		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
  		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
  		var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt[index-1].value))));
+ 		var plusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.plusCnt[index-1].value))));
 		var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt[index-1].value))));
 
-		var orderCnt=(orderCntRaw-minusCnt-addCnt);
-
+		//alert(orderCntRaw);alert(minusCnt);alert(addCnt);
+		var orderCnt=(orderCntRaw-minusCnt+plusCnt-addCnt);
+		//alert(orderCnt);
 		if(orderCntRaw<orderCnt || 0>orderCnt){
 			alert('발주수량 추가는 보유재고범위를 넘을수 없습니다.');
 			frm.orderCnt[index-1].value=orderCntRaw;
 			document.all('orderCntView')[index-1].innerText=orderCntRaw;
 			frm.addCnt[index-1].value=0;
+			frm.minusCnt[index-1].value=0;
+			frm.plusCnt[index-1].value=0;
 			return;
 		}else{
 			frm.orderCnt[index-1].value=orderCnt;
@@ -533,15 +539,18 @@ function fcDefer_reason(reason){
  		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
  		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
  		var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt.value))));
+ 		var plusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.plusCnt.value))));
 		var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt.value))));
 
-		var orderCnt=(orderCntRaw-minusCnt-addCnt);
+		var orderCnt=(orderCntRaw-minusCnt+plusCnt-addCnt);
 
 		if(orderCntRaw<orderCnt || 0>orderCnt){
 			alert('발주수량 추가는 보유재고범위를 넘을수 없습니다.');
 			frm.orderCnt.value=orderCntRaw;
 			document.all('orderCntView').innerText=orderCntRaw;
 			frm.addCnt.value=0;
+			frm.minusCnt.value=0;
+			frm.plusCnt.value=0;
 			return;
 		}else{
 			frm.orderCnt.value=orderCnt;
@@ -573,15 +582,18 @@ function fcDefer_reason(reason){
     		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
     		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
     		var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt[index-1].value))));
+    		var plusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.plusCnt[index-1].value))));
 			var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt[index-1].value))));
 
-			var orderCnt=(orderCntRaw-minusCnt+lossCnt);
+			var orderCnt=(orderCntRaw-minusCnt+plusCnt+lossCnt);
 	
 			if(holdStock<orderCnt){
 				alert('발주수량은 보유재고수량을 넘을수 없습니다.');
 				frm.orderCnt[index-1].value=orderCntRaw;
 				document.all('orderCntView')[index-1].innerText=orderCntRaw;
 				frm.lossCnt[index-1].value=0;
+				frm.minusCnt[index-1].value=0;
+				frm.plusCnt[index-1].value=0;
 				return;
 			}else{
 				frm.orderCnt[index-1].value=orderCnt;
@@ -597,15 +609,18 @@ function fcDefer_reason(reason){
     		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
     		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
     		var minusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.minusCnt.value))));
+    		var plusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.plusCnt.value))));
 			var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt.value))));
 
-			var orderCnt=(orderCntRaw-minusCnt+lossCnt);
+			var orderCnt=(orderCntRaw-minusCnt+plusCnt+lossCnt);
 	
 			if(holdStock<orderCnt){
 				alert('발주수량은 보유재고수량을 넘을수 없습니다.');
 				frm.orderCnt.value=orderCntRaw;
 				document.all('orderCntView').innerText=orderCntRaw;
 				frm.lossCnt.value=0;
+				frm.minusCnt.value=0;
+				frm.plusCnt.value=0;
 				return;
 			}else{
 				frm.orderCnt.value=orderCnt;
@@ -630,6 +645,8 @@ function fcDefer_reason(reason){
 		 	
 		 	if(amtCnt > 1){
 		 		
+		 		frm.plusCnt[index-1].value=0;
+		 		
 		 		frm.minusCnt[index-1].value=isnullStr(frm.minusCnt[index-1].value);
 		 
 		 		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
@@ -645,6 +662,8 @@ function fcDefer_reason(reason){
 					frm.orderCnt[index-1].value=orderCntRaw;
 					document.all('orderCntView')[index-1].innerText=orderCntRaw;
 					frm.minusCnt[index-1].value=0;
+					frm.addCnt[index-1].value=0;
+					frm.lossCnt[index-1].value=0;
 					return;
 				}else{
 					frm.orderCnt[index-1].value=orderCnt;
@@ -653,6 +672,8 @@ function fcDefer_reason(reason){
 
 
 		 	}else{
+		 		
+		 		frm.plusCnt.value=0;
 		 		
 		 		frm.minusCnt.value=isnullStr(frm.minusCnt.value);
 		 		
@@ -669,6 +690,8 @@ function fcDefer_reason(reason){
 					frm.orderCnt.value=orderCntRaw;
 					document.all('orderCntView').innerText=orderCntRaw;
 					frm.minusCnt.value=0;
+					frm.addCnt.value=0;
+					frm.lossCnt.value=0;
 					return;
 				}else{
 					frm.orderCnt.value=orderCnt;
@@ -677,6 +700,77 @@ function fcDefer_reason(reason){
 
 		 	}
 
+		 	totalOrderAmt();
+	    }
+	 /*
+	  * 수량증가
+	  */ 
+		function fcPlus_Cnt(index){
+	    	
+			var frm=document.targetDetailListForm;
+		 	var amtCnt = frm.productPrice.length;
+		 	
+			if(amtCnt==undefined){
+				amtCnt=1;
+			}
+		 	
+		 	if(amtCnt > 1){
+		 		
+		 		frm.minusCnt[index-1].value=0;
+		 		
+		 		frm.plusCnt[index-1].value=isnullStr(frm.plusCnt[index-1].value);
+		 
+		 		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock[index-1].value))));
+		 		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw[index-1].value))));
+				var plusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.plusCnt[index-1].value))));
+				var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt[index-1].value))));
+				var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt[index-1].value))));
+	
+				var orderCnt=(orderCntRaw+plusCnt-addCnt+lossCnt);
+	
+				if( 0>orderCnt){
+					alert('발주수량이 0보다 작습니다.');
+					frm.orderCnt[index-1].value=orderCntRaw;
+					document.all('orderCntView')[index-1].innerText=orderCntRaw;
+					frm.plusCnt[index-1].value=0;
+					frm.addCnt[index-1].value=0;
+					frm.lossCnt[index-1].value=0;
+					return;
+				}else{
+					frm.orderCnt[index-1].value=orderCnt;
+					document.all('orderCntView')[index-1].innerText=orderCnt;
+				}
+	
+	
+		 	}else{
+		 		
+		 		frm.minusCnt.value=0;
+		 		
+		 		frm.plusCnt.value=isnullStr(frm.plusCnt.value);
+		 		
+		 		var holdStock=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.holdStock.value))));
+		 		var orderCntRaw=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.orderCntRaw.value))));
+				var plusCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.plusCnt.value))));
+				var addCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.addCnt.value))));
+				var lossCnt=isnullStr(parseInt(isnullStr(deleteCommaStr(frm.lossCnt.value))));
+	
+				var orderCnt=(orderCntRaw+plusCnt-addCnt+lossCnt);
+	
+				if(0>orderCnt){
+					alert('발주수량이 0보다 작습니다.');
+					frm.orderCnt.value=orderCntRaw;
+					document.all('orderCntView').innerText=orderCntRaw;
+					frm.plusCnt.value=0;
+					frm.addCnt.value=0;
+					frm.lossCnt.value=0;
+					return;
+				}else{
+					frm.orderCnt.value=orderCnt;
+					document.all('orderCntView').innerText=orderCnt;
+				}
+	
+		 	}
+	
 		 	totalOrderAmt();
 	    }
 	//체크박스 전체선택
@@ -825,6 +919,7 @@ function fcDefer_reason(reason){
 	   <input type="hidden" name="safeOrderCnt"               id="safeOrderCnt"            value="${targetVO.safeOrderCnt}" />
 	   <input type="hidden" name="email_cc"               id="email_cc"            value="${targetVO.email_cc}" />
 	   <input type="hidden" name="printYn"               id="printYn"            value="" />
+	   <input type="hidden" name="orderAddYn"               id="orderAddYn"            value="${targetVO.orderAddYn}" />
 	      <!--  >h4><strong><font style="color:#428bca">발주방법 : </font></strong>
 	          <input type="checkbox" id="emailCheck" name="emailCheck" value="" title="선택" checked disabled />e-mail
 	          <input type="checkbox" id="smsCheck" name="smsCheck" value="" title="선택" disabled />sms
@@ -959,142 +1054,286 @@ function fcDefer_reason(reason){
 	  </form:form>
 	 </div>
 	 
-     <form:form commandName="targetListVO" id="targetDetailListForm" name="targetDetailListForm" method="post" action="" >
-      <table style="width:460px" class="table table-bordered tbl_type" >
-	     <colgroup>
-	      <col width="80px" >
-	      <col width="70px" >
-	      <col width="80px" >
-	      <col width="70px">
-	      <col width="100px">
-	      <col width="100px">
-	     </colgroup>
-	     <tr>
-	     	<td style="background-color:#E6F3FF">발주 건수</td>
-	     	<td class='text-right'><span id="totalCheckCnt" style="color:red"></span></td>
-	     	<td style="background-color:#E6F3FF">발주 수량</td>
-	     	<td class='text-right'><span id="totalOrderCnt" style="color:red"></span></td>
-	     	<td style="background-color:#E6F3FF">발주 합계금액</td>
-	     	<td class='text-right'><span id="totalOrderAmt" style="color:red"></span></td>
-	     </tr>
-     </table>
-      <div class="thead">
-	   <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed">
-	    <caption>발주대상리스트</caption>
- 		<colgroup>
-	      <col width="50px" >
-	      <col width="80px" >
-	      <col width="270px">
-	      <col width="50px">
-	      <col width="50px">
-	      <col width="50px">
-	      <col width="70px">
-	      <col width="50px">
-	      <col width="50px">
-	      <col width="70px">
-	      <col width="*">
-	      </colgroup>
-	    <thead>
-		    <tr style="background-color:#E6F3FF">
-	          <!-- >th rowspan='2' class='text-center' >보류<br><input type="checkbox"  id="deferCheckAll"  name="deferCheckAll" onchange="fcDefer_checkAll();" title="전체선택" /></th -->
-	          <th rowspan='2' class='text-center'>no<br>
-	          <input type="checkbox"  id="orderCheckAll"  name="orderCheckAll" onchange="fcOrder_checkAll();" checked title="전체선택" />
-	          </th>
-	          <th rowspan='2' class='text-center'>품목코드</th>
-	          <th rowspan='2' class='text-center'>상품명</th>
-	          <th colspan='3' class='text-center'>재고</th>
-	          <th colspan='3' class='text-center'>발주</th>
-	          <th colspan='2' class='text-center'>loss</th>
-	      	</tr>
-	      	<tr style="background-color:#E6F3FF">
-	          <th class='text-center' >안전</th>
-	          <th class='text-center' >보유</th>
-	          <th class='text-center' >전산</th>
-	          <th class='text-center' >기준단가</th>
-	          <th class='text-center' >수량</th>
-	          <th class='text-center' >(-)</th>
-	          <th class='text-center' >(+)</th>
-	          <th class='text-center' >(-)</th>
-	        </tr>
-	    </thead>
-	  </table>
-	  </div>
-	  <div class="tbody">
-	    <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed"> 
-	      <caption>발주대상리스트</caption>
-	      <colgroup>
-	      <col width="49px" >
-	      <col width="80px" >
-	      <col width="270px">
-	      <col width="50px">
-	      <col width="50px">
-	      <col width="50px">
-	      <col width="70px">
-	      <col width="50px">
-	      <col width="50px">
-	      <col width="70px">
-	      <col width="*">
-	      </colgroup>
-	       <!-- :: loop :: -->
-	                <!--리스트---------------->
-	      <tbody>
-	        <c:if test="${!empty targetDetailList}">
-             <c:forEach items="${targetDetailList}" var="targetVO" varStatus="status">
-             	 <input type="hidden" id="seqs" name="seqs" >
-	             <c:choose>
-	                <c:when test="${targetVO.stockCnt<0}">
-						<tr id="select_tr_${targetVO.productCode}" style="background-color:#F0B3AC">
-					</c:when>
-		    		<c:when test="${Integer.parseInt(targetVO.stockCnt)<=Integer.parseInt(targetVO.safeStock)}">
-						<tr id="select_tr_${targetVO.productCode}" style="background-color:#FEE2B4;color:red">
-					</c:when>
-					<c:otherwise>
-						<tr id="select_tr_${targetVO.productCode}">
-					</c:otherwise>
-				</c:choose>
-				 <input type="hidden" name="productCode" value="${targetVO.productCode}">
-				 <input type="hidden" name="productName" value="${targetVO.productName}">
-				 <input type="hidden" name="safeStock" value="${targetVO.safeStock}">
-				 <input type="hidden" name="holdStock" value="${targetVO.holdStock}">
-				 <input type="hidden" name="stockCnt" value="${targetVO.stockCnt}">
-				 <input type="hidden" name="stockDate" value="${targetVO.stockDate}">
-				 <input type="hidden" name="group1Name" value="${targetVO.group1Name}">
-                 <!-- >td class='text-center'><input type="checkbox" id="deferCheck" name="deferCheck" value="${targetVO.productCode}" title="선택" /></td -->
-                 <td class='text-center'>${status.count}<br><input type="checkbox" id="orderCheck" checked name="orderCheck" value="${targetVO.productCode}" title="선택" onChange="totalCheck()" /></td>
-                 <td class='text-center'><c:out value="${targetVO.productCode}"></c:out></td>
-                 <td class='text-left'><c:out value="${targetVO.productName}"></c:out></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeStock}"/></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.holdStock}"/></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.stockCnt}"/></td>
-                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.productPrice}" /></td>
-                 <input type="hidden" id="productPrice" name="productPrice" value="${targetVO.productPrice}" >
-                 <td width="70" class='text-right' id='orderCntView' name='orderCntView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderCnt}"/></td>
-                 <input type="hidden" id="orderCnt" name="orderCnt" value="${targetVO.orderCnt}" >
-                 <input type="hidden" id="orderCntRaw" name="orderCntRaw" value="${targetVO.orderCnt}" >
-                 <input type="hidden" id="vatRate" name="vatRate" value="${targetVO.vatRate}" >
-                 <td class='text-right' ><input style="width:40px;" type="text" class="form-control" id="minusCnt" name="minusCnt" maxlength="2" numberOnly onKeyup="fcMinus_Cnt('${status.count}')" value="0"></td>
-                 <td class='text-right' ><input style="width:45px;" type="text" class="form-control" id="addCnt" name="addCnt" maxlength="2" numberOnly onKeyup="fcAdd_Cnt('${status.count}')" value="0"></td>
-                 <td class='text-right' ><input style="width:45px;" type="text" class="form-control" id="lossCnt" name="lossCnt" maxlength="2" numberOnly onKeyup="fcLoss_Cnt('${status.count}')" value="0"></td>
-                 <tr>
-	             	<td colspan='11' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  maxlength="50"  value="" placeholder="비고" /></td>
-	             </tr>
-             </c:forEach>
-            </c:if>
-           <c:if test="${empty targetDetailList}">
-           <tr>
-           	<td colspan='11' class='text-center'>조회된 데이터가 없습니다.</td>
-           </tr>
-          </c:if>
-	    </tbody>
-	   </table>
-	  </div>
-       
-	 </form:form>
+	 <c:choose>
+	 	<c:when test="${targetVO.orderAddYn=='Y'}">   <!-- 특정 발주 추가상태 옵션이 활성화 된경우 추가입력 기능 적용   -->
+	 	
+		     <form:form commandName="targetListVO" id="targetDetailListForm" name="targetDetailListForm" method="post" action="" >
+		      <table style="width:460px" class="table table-bordered tbl_type" >
+			     <colgroup>
+			      <col width="80px" >
+			      <col width="70px" >
+			      <col width="80px" >
+			      <col width="70px">
+			      <col width="100px">
+			      <col width="100px">
+			     </colgroup>
+			     <tr>
+			     	<td style="background-color:#E6F3FF">발주 건수</td>
+			     	<td class='text-right'><span id="totalCheckCnt" style="color:red"></span></td>
+			     	<td style="background-color:#E6F3FF">발주 수량</td>
+			     	<td class='text-right'><span id="totalOrderCnt" style="color:red"></span></td>
+			     	<td style="background-color:#E6F3FF">발주 합계금액</td>
+			     	<td class='text-right'><span id="totalOrderAmt" style="color:red"></span></td>
+			     </tr>
+		     </table>
+		      <div class="thead">
+			   <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed">
+			    <caption>발주대상리스트</caption>
+		 		<colgroup>
+			      <col width="50px" >
+			      <col width="80px" >
+			      <col width="240px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="70px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="*">
+			      </colgroup>
+			    <thead>
+				    <tr style="background-color:#E6F3FF">
+			          <!-- >th rowspan='2' class='text-center' >보류<br><input type="checkbox"  id="deferCheckAll"  name="deferCheckAll" onchange="fcDefer_checkAll();" title="전체선택" /></th -->
+			          <th rowspan='2' class='text-center'>no<br>
+			          <input type="checkbox"  id="orderCheckAll"  name="orderCheckAll" onchange="fcOrder_checkAll();" checked title="전체선택" />
+			          </th>
+			          <th rowspan='2' class='text-center'>품목코드</th>
+			          <th rowspan='2' class='text-center'>상품명</th>
+			          <th colspan='3' class='text-center'>재고</th>
+			          <th colspan='4' class='text-center'>발주</th>
+			          <th colspan='2' class='text-center'>loss</th>
+			      	</tr>
+			      	<tr style="background-color:#E6F3FF">
+			          <th class='text-center' >안전</th>
+			          <th class='text-center' >보유</th>
+			          <th class='text-center' >전산</th>
+			          <th class='text-center' >기준단가</th>
+			          <th class='text-center' >수량</th>
+			          <th class='text-center' >(-)</th>
+			          <th class='text-center' style="background-color:#F0B3AC" >(+)</th>
+			          <th class='text-center' >(+)</th>
+			          <th class='text-center' >(-)</th>
+			        </tr>
+			    </thead>
+			  </table>
+			  </div>
+			  <div class="tbody">
+			    <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed"> 
+			      <caption>발주대상리스트</caption>
+			      <colgroup>
+			      <col width="49px" >
+			      <col width="80px" >
+			      <col width="240px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="70px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="*">
+			      </colgroup>
+			       <!-- :: loop :: -->
+			                <!--리스트---------------->
+			      <tbody>
+			        <c:if test="${!empty targetDetailList}">
+		             <c:forEach items="${targetDetailList}" var="targetVO" varStatus="status">
+		             	 <input type="hidden" id="seqs" name="seqs" >
+			             <c:choose>
+			                <c:when test="${targetVO.stockCnt<0}">
+								<tr id="select_tr_${targetVO.productCode}" style="background-color:#F0B3AC">
+							</c:when>
+				    		<c:when test="${Integer.parseInt(targetVO.stockCnt)<=Integer.parseInt(targetVO.safeStock)}">
+								<tr id="select_tr_${targetVO.productCode}" style="background-color:#FEE2B4;color:red">
+							</c:when>
+							<c:otherwise>
+								<tr id="select_tr_${targetVO.productCode}">
+							</c:otherwise>
+						</c:choose>
+						 <input type="hidden" name="productCode" value="${targetVO.productCode}">
+						 <input type="hidden" name="productName" value="${targetVO.productName}">
+						 <input type="hidden" name="safeStock" value="${targetVO.safeStock}">
+						 <input type="hidden" name="holdStock" value="${targetVO.holdStock}">
+						 <input type="hidden" name="stockCnt" value="${targetVO.stockCnt}">
+						 <input type="hidden" name="stockDate" value="${targetVO.stockDate}">
+						 <input type="hidden" name="group1Name" value="${targetVO.group1Name}">
+		                 <!-- >td class='text-center'><input type="checkbox" id="deferCheck" name="deferCheck" value="${targetVO.productCode}" title="선택" /></td -->
+		                 <td class='text-center'>${status.count}<br><input type="checkbox" id="orderCheck" checked name="orderCheck" value="${targetVO.productCode}" title="선택" onChange="totalCheck()" /></td>
+		                 <td class='text-center'><c:out value="${targetVO.productCode}"></c:out></td>
+		                 <td class='text-left'><c:out value="${targetVO.productName}"></c:out></td>
+		                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeStock}"/></td>
+		                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.holdStock}"/></td>
+		                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.stockCnt}"/></td>
+		                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.productPrice}" /></td>
+		                 <input type="hidden" id="productPrice" name="productPrice" value="${targetVO.productPrice}" >
+		                 <td width="70" class='text-right' id='orderCntView' name='orderCntView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderCnt}"/></td>
+		                 <input type="hidden" id="orderCnt" name="orderCnt" value="${targetVO.orderCnt}" >
+		                 <input type="hidden" id="orderCntRaw" name="orderCntRaw" value="${targetVO.orderCnt}" >
+		                 <input type="hidden" id="vatRate" name="vatRate" value="${targetVO.vatRate}" >
+		                 <td class='text-right' ><input style="width:40px;" type="text" class="form-control" id="minusCnt" name="minusCnt" maxlength="2" numberOnly onKeyup="fcMinus_Cnt('${status.count}')" value="0"></td>
+		                 <td class='text-right' ><input style="width:40px;" type="text" class="form-control" id="plusCnt" name="plusCnt" maxlength="2" numberOnly onKeyup="fcPlus_Cnt('${status.count}')" value="0"></td>
+		                 <td class='text-right' ><input style="width:40px;" type="text" class="form-control" id="addCnt" name="addCnt" maxlength="2" numberOnly onKeyup="fcAdd_Cnt('${status.count}')" value="0"></td>
+		                 <td class='text-right' ><input style="width:40px;" type="text" class="form-control" id="lossCnt" name="lossCnt" maxlength="2" numberOnly onKeyup="fcLoss_Cnt('${status.count}')" value="0"></td>
+		                 <tr>
+			             	<td colspan='12' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  maxlength="50"  value="" placeholder="비고" /></td>
+			             </tr>
+		             </c:forEach>
+		            </c:if>
+		           <c:if test="${empty targetDetailList}">
+		           <tr>
+		           	<td colspan='12' class='text-center'>조회된 데이터가 없습니다.</td>
+		           </tr>
+		          </c:if>
+			    </tbody>
+			   </table>
+			  </div>
+			 </form:form>
+			 
+		</c:when>
+		<c:otherwise>  <!-- 평상시 발주 추가상태가 아닌경우   -->
+		
+			<form:form commandName="targetListVO" id="targetDetailListForm" name="targetDetailListForm" method="post" action="" >
+		      <table style="width:460px" class="table table-bordered tbl_type" >
+			     <colgroup>
+			      <col width="80px" >
+			      <col width="70px" >
+			      <col width="80px" >
+			      <col width="70px">
+			      <col width="100px">
+			      <col width="100px">
+			     </colgroup>
+			     <tr>
+			     	<td style="background-color:#E6F3FF">발주 건수</td>
+			     	<td class='text-right'><span id="totalCheckCnt" style="color:red"></span></td>
+			     	<td style="background-color:#E6F3FF">발주 수량</td>
+			     	<td class='text-right'><span id="totalOrderCnt" style="color:red"></span></td>
+			     	<td style="background-color:#E6F3FF">발주 합계금액</td>
+			     	<td class='text-right'><span id="totalOrderAmt" style="color:red"></span></td>
+			     </tr>
+		     </table>
+		      <div class="thead">
+			   <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed">
+			    <caption>발주대상리스트</caption>
+		 		<colgroup>
+			      <col width="50px" >
+			      <col width="80px" >
+			      <col width="270px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="70px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="70px">
+			      <col width="*">
+			      </colgroup>
+			    <thead>
+				    <tr style="background-color:#E6F3FF">
+			          <!-- >th rowspan='2' class='text-center' >보류<br><input type="checkbox"  id="deferCheckAll"  name="deferCheckAll" onchange="fcDefer_checkAll();" title="전체선택" /></th -->
+			          <th rowspan='2' class='text-center'>no<br>
+			          <input type="checkbox"  id="orderCheckAll"  name="orderCheckAll" onchange="fcOrder_checkAll();" checked title="전체선택" />
+			          </th>
+			          <th rowspan='2' class='text-center'>품목코드</th>
+			          <th rowspan='2' class='text-center'>상품명</th>
+			          <th colspan='3' class='text-center'>재고</th>
+			          <th colspan='3' class='text-center'>발주</th>
+			          <th colspan='2' class='text-center'>loss</th>
+			      	</tr>
+			      	<tr style="background-color:#E6F3FF">
+			          <th class='text-center' >안전</th>
+			          <th class='text-center' >보유</th>
+			          <th class='text-center' >전산</th>
+			          <th class='text-center' >기준단가</th>
+			          <th class='text-center' >수량</th>
+			          <th class='text-center' >(-)</th>
+			          <th class='text-center' >(+)</th>
+			          <th class='text-center' >(-)</th>
+			        </tr>
+			    </thead>
+			  </table>
+			  </div>
+			  <div class="tbody">
+			    <table cellspacing="0" border="0" summary="발주대상리스트" class="table table-bordered tbl_type" style="table-layout: fixed"> 
+			      <caption>발주대상리스트</caption>
+			      <colgroup>
+			      <col width="49px" >
+			      <col width="80px" >
+			      <col width="270px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="70px">
+			      <col width="50px">
+			      <col width="50px">
+			      <col width="70px">
+			      <col width="*">
+			      </colgroup>
+			       <!-- :: loop :: -->
+			                <!--리스트---------------->
+			      <tbody>
+			        <c:if test="${!empty targetDetailList}">
+		             <c:forEach items="${targetDetailList}" var="targetVO" varStatus="status">
+		             	 <input type="hidden" id="seqs" name="seqs" >
+			             <c:choose>
+			                <c:when test="${targetVO.stockCnt<0}">
+								<tr id="select_tr_${targetVO.productCode}" style="background-color:#F0B3AC">
+							</c:when>
+				    		<c:when test="${Integer.parseInt(targetVO.stockCnt)<=Integer.parseInt(targetVO.safeStock)}">
+								<tr id="select_tr_${targetVO.productCode}" style="background-color:#FEE2B4;color:red">
+							</c:when>
+							<c:otherwise>
+								<tr id="select_tr_${targetVO.productCode}">
+							</c:otherwise>
+						</c:choose>
+						 <input type="hidden" name="productCode" value="${targetVO.productCode}">
+						 <input type="hidden" name="productName" value="${targetVO.productName}">
+						 <input type="hidden" name="safeStock" value="${targetVO.safeStock}">
+						 <input type="hidden" name="holdStock" value="${targetVO.holdStock}">
+						 <input type="hidden" name="stockCnt" value="${targetVO.stockCnt}">
+						 <input type="hidden" name="stockDate" value="${targetVO.stockDate}">
+						 <input type="hidden" name="group1Name" value="${targetVO.group1Name}">
+		                 <!-- >td class='text-center'><input type="checkbox" id="deferCheck" name="deferCheck" value="${targetVO.productCode}" title="선택" /></td -->
+		                 <td class='text-center'>${status.count}<br><input type="checkbox" id="orderCheck" checked name="orderCheck" value="${targetVO.productCode}" title="선택" onChange="totalCheck()" /></td>
+		                 <td class='text-center'><c:out value="${targetVO.productCode}"></c:out></td>
+		                 <td class='text-left'><c:out value="${targetVO.productName}"></c:out></td>
+		                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.safeStock}"/></td>
+		                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.holdStock}"/></td>
+		                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.stockCnt}"/></td>
+		                 <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.productPrice}" /></td>
+		                 <input type="hidden" id="productPrice" name="productPrice" value="${targetVO.productPrice}" >
+		                 <td width="70" class='text-right' id='orderCntView' name='orderCntView'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${targetVO.orderCnt}"/></td>
+		                 <input type="hidden" id="orderCnt" name="orderCnt" value="${targetVO.orderCnt}" >
+		                 <input type="hidden" id="orderCntRaw" name="orderCntRaw" value="${targetVO.orderCnt}" >
+		                 <input type="hidden" id="vatRate" name="vatRate" value="${targetVO.vatRate}" >
+		                 <td class='text-right' ><input style="width:40px;" type="text" class="form-control" id="minusCnt" name="minusCnt" maxlength="2" numberOnly onKeyup="fcMinus_Cnt('${status.count}')" value="0"></td>
+		                 <input type="hidden" name="plusCnt" id="plusCnt" value="0">
+		                 <td class='text-right' ><input style="width:45px;" type="text" class="form-control" id="addCnt" name="addCnt" maxlength="2" numberOnly onKeyup="fcAdd_Cnt('${status.count}')" value="0"></td>
+		                 <td class='text-right' ><input style="width:45px;" type="text" class="form-control" id="lossCnt" name="lossCnt" maxlength="2" numberOnly onKeyup="fcLoss_Cnt('${status.count}')" value="0"></td>
+		                 <tr>
+			             	<td colspan='11' class='text-center'><input type="text" class="form-control" id="etc" name="etc"  maxlength="50"  value="" placeholder="비고" /></td>
+			             </tr>
+		             </c:forEach>
+		            </c:if>
+		           <c:if test="${empty targetDetailList}">
+		           <tr>
+		           	<td colspan='11' class='text-center'>조회된 데이터가 없습니다.</td>
+		           </tr>
+		          </c:if>
+			    </tbody>
+			   </table>
+			  </div>
+			 </form:form>
+			 
+		</c:otherwise>
+		</c:choose>
 	</div>
 	<script type="text/javascript">
 	
 	totalCheck();
     initNotify();
-    
+    //alert('${targetVO.orderAddYn}');
 
 </script>

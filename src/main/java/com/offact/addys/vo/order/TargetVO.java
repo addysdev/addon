@@ -60,6 +60,9 @@ public class TargetVO extends AbstractVO {
 	private String etc;
 	private String orderCheck;
 	
+	private String orderAddYn;
+	private String orderAddChk;
+	
 	private String printYn;
 	
 	//상세 추가항목
@@ -78,6 +81,7 @@ public class TargetVO extends AbstractVO {
 	private String addCnt;
 	private String lossCnt;
 	private String minusCnt;
+	private String plusCnt;
 	private String deferCheck;
 	
 	private String safeOrderCnt;
@@ -625,6 +629,24 @@ public class TargetVO extends AbstractVO {
 	}
 	public void setPrintYn(String printYn) {
 		this.printYn = printYn;
+	}
+	public String getOrderAddChk() {
+		return orderAddChk;
+	}
+	public void setOrderAddChk(String orderAddChk) {
+		this.orderAddChk = orderAddChk;
+	}
+	public String getOrderAddYn() {
+		return orderAddYn;
+	}
+	public void setOrderAddYn(String orderAddYn) {
+		this.orderAddYn = orderAddYn;
+	}
+	public String getPlusCnt() {
+		return plusCnt;
+	}
+	public void setPlusCnt(String plusCnt) {
+		this.plusCnt = plusCnt;
 	}
     
 }

@@ -84,6 +84,7 @@ public class TargetServiceImpl implements TargetService {
 		    	targetDetailVo.setVatRate(StringUtil.nvl(r_data[10],""));
 		    	targetDetailVo.setEtc(StringUtil.nvl(r_data[11],""));
 		    	targetDetailVo.setMinusCnt(StringUtil.nvl(r_data[12],""));
+		    	targetDetailVo.setPlusCnt(StringUtil.nvl(r_data[13],""));
 		    	targetDetailVo.setCreateUserId(targetVo.getDeferUserId());
 		    	
 	            retVal=this.commonDao.insert("Target.insertDeferDetail", targetDetailVo);
@@ -156,6 +157,7 @@ public class TargetServiceImpl implements TargetService {
 					targetDetailVo.setVatRate(StringUtil.nvl(r_data[10],""));
 			    	targetDetailVo.setEtc(StringUtil.nvl(r_data[11],""));
 			    	targetDetailVo.setMinusCnt(StringUtil.nvl(r_data[14],""));
+			    	targetDetailVo.setPlusCnt(StringUtil.nvl(r_data[15],""));
 					targetDetailVo.setCreateUserId(targetVo.getOrderUserId());
 					targetDetailVo.setOrderCheck(StringUtil.nvl(r_data[13],"true"));
 					
@@ -223,5 +225,13 @@ public class TargetServiceImpl implements TargetService {
    @Override
    public TargetVO getOrderCode(TargetVO target) throws BizException {
        return commonDao.selectOne("Target.getOrderCode", target);
+   }
+   
+   @Override
+   public TargetVO getTargetAddYn(TargetVO target) throws BizException {
+   	
+	   TargetVO targetVO = commonDao.selectOne("Target.getTargetAddYn", target);
+
+       return targetVO;
    }
 }

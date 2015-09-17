@@ -88,7 +88,7 @@
 	 </form:form>
 
 	 <!-- 페이징 -->
-     <taglib:paging cbFnc="goPageorderAddPageList" totalCount="${totalCount}" curPage="${orderAddConVO.curPage}" rowCount="${orderAddConVO.rowCount}" />
+     <taglib:paging cbFnc="goPageOrderAddPageList" totalCount="${totalCount}" curPage="${orderAddConVO.curPage}" rowCount="${orderAddConVO.rowCount}" />
      <!-- //페이징 -->
 
     
