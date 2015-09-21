@@ -46,14 +46,17 @@
                 
                 
                	try{
-	           		 // alert(barcodeObj);
+	           		// alert(barcodeObj);
+	           		// alert(etcObj);
+
+	           		
 	               	  if(barcodeObj==undefined){
 	               		 	return;
 	                 	  }else{
 	                 		barcodeObj.close();
 	                 	  }
 	               	
-	                if(barcodeResultObj==undefined){
+	               	  if(barcodeResultObj==undefined){
                		 	return;
                  	  }else{
                  		 barcodeResultObj.close();
@@ -64,6 +67,14 @@
 	                 	  }else{
 	                 		 barcodeCehckObj.close();
 	                 	  }
+	               	  
+	                  	 
+	               	  if(etcObj==undefined){
+	               		 	return;
+	                 	  }else{
+	                 		 etcObj.close();
+	                 	  }
+	
 	           		  
 	           	  }catch(e){
 	           		 return;

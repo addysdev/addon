@@ -484,9 +484,16 @@ function  fcEtc_detail(orderCode,productCode,productName,etc,idx,groupId) {
 		idx=0;
 	}
 	//$('#targetEtcView').attr('title',productName);
-	var url='<%= request.getContextPath() %>/order/etcmanage';
+	//var url='<%= request.getContextPath() %>/order/etcmanage';
+	var url='<%= request.getContextPath() %>/order/etcmanage?orderCode='+orderCode+'&category=06'+'&idx='+idx+'&companyCode='+groupId+'&productCode='+productCode+'&productName='+encodeURIComponent(productName)+'&etc='+encodeURIComponent(etc);
+	
+	var h=500;
+	var s=800;
 
-	$('#etcManage').dialog({
+	tmt_winLaunch(url, 'etcObj', 'etcObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=no,scrollbars=yes');
+	
+/*
+	$('#etcManage').dialog({g
         resizable : false, //사이즈 변경 불가능
         draggable : true, //드래그 불가능
         closeOnEscape : true, //ESC 버튼 눌렀을때 종료
@@ -510,6 +517,7 @@ function  fcEtc_detail(orderCode,productCode,productName,etc,idx,groupId) {
             $('#etcManage').empty();
         }
     });
+*/    
 };
 
 function fcDelivery_method(){

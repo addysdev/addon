@@ -466,12 +466,18 @@ function totalTargetAmt(){
     function  fcEtc_detail(orderCode,productCode,productName,etc,idx,companyCode) {
 
     	//$('#targetEtcView').attr('title',productName);
-    	var url='<%= request.getContextPath() %>/order/etcmanage';
-  
+    	//var url='<%= request.getContextPath() %>/order/etcmanage';
+    	var url='<%= request.getContextPath() %>/order/etcmanage?orderCode='+orderCode+'&category=04'+'&idx='+idx+'&productCode='+productCode+'&companyCode='+companyCode+'&productName='+encodeURIComponent(productName)+'&etc='+encodeURIComponent(etc);
     	if(document.orderDetailListForm.seqs.length==undefined){
     		idx=0;
     	}
+    	
+    	var h=500;
+		var s=800;
 
+		barcode_winLaunch(url, 'etcObj', 'etcObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=no,scrollbars=yes');
+    	
+/*
     	$('#etcManage').dialog({
             resizable : false, //사이즈 변경 불가능
             draggable : true, //드래그 불가능
@@ -495,6 +501,8 @@ function totalTargetAmt(){
                 $('#etcManage').empty();
             }
         });
+  
+*/    
     };
  //검수완료   
  function fcOrder_complete(transDate){
@@ -729,6 +737,7 @@ function totalTargetAmt(){
      * 화면 POPUP
      */
     function barcode_winLaunch(theURL,winName,targetName,features) {
+    	//alert(winName);
     	//alert('opener');
     	//var targetRandom=Math.random();
     	eval(winName+"=window.open('"+theURL+"','"+targetName+"','"+features+"')");

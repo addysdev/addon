@@ -1218,7 +1218,8 @@ public class MasterController {
         
         StockVO stockConVO = new StockVO();
         
-        stockConVO.setStart_stockDate(strToday);
+        //stockConVO.setStart_stockDate(strToday);
+        stockConVO.setStart_stockDate(strToday.substring(0,8)+"01");
         stockConVO.setEnd_stockDate(strToday);
         stockConVO.setGroupId(strGroupId);
        
@@ -2081,7 +2082,8 @@ public class MasterController {
        
        SalesVO salesConVO = new SalesVO();
        
-       salesConVO.setStart_salesDate(strToday);
+       //salesConVO.setStart_salesDate(strToday);
+       salesConVO.setStart_salesDate(strToday.substring(0,8)+"01");
        salesConVO.setEnd_salesDate(strToday);
        salesConVO.setGroupId(strGroupId);
 

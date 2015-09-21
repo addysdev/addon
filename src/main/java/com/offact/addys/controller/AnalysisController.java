@@ -165,7 +165,8 @@ public class AnalysisController {
         
         HoldStockVO holdStockConVO = new HoldStockVO();
         
-        holdStockConVO.setStart_saleDate(strDeliveryDay);
+        //holdStockConVO.setStart_saleDate(strDeliveryDay);
+        holdStockConVO.setStart_saleDate(strToday.substring(0,8)+"01");
         holdStockConVO.setEnd_saleDate(strToday);
         
         holdStockConVO.setUserId(strUserId);
@@ -558,7 +559,8 @@ public class AnalysisController {
         
         GmroiVO gmroiConVO = new GmroiVO();
         
-        gmroiConVO.setStart_saleDate(strDeliveryDay);
+        //gmroiConVO.setStart_saleDate(strDeliveryDay);
+        gmroiConVO.setStart_saleDate(strToday.substring(0,8)+"01");
         gmroiConVO.setEnd_saleDate(strToday);
         
         gmroiConVO.setUserId(strUserId);

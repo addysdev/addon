@@ -76,6 +76,7 @@
 
 </SCRIPT>
      <form:form commandName="targetVO" name="targetPageListForm" method="post" action="" >
+      <input type="hidden" name="selectCurPage"             id="selectCurPage"            value="${targetConVO.curPage}" />
 	  <table style="width:530px" class="table table-bordered tbl_type" >
 	     <colgroup>
 	      <col width="80px" >

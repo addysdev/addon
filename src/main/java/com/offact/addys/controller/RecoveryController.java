@@ -182,7 +182,8 @@ public class RecoveryController {
         String strToday = simpleDateFormat.format(currentTime);
         String strDeliveryDay = simpleDateFormat.format(deliveryTime);
         
-        collectConVO.setStart_recoveryDate(strDeliveryDay);
+        //collectConVO.setStart_recoveryDate(strDeliveryDay);
+        collectConVO.setStart_recoveryDate(strToday.substring(0,8)+"01");
         collectConVO.setEnd_recoveryDate(strToday);
         
         // 조회조건저장

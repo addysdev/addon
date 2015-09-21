@@ -1713,7 +1713,7 @@ public class OrderController {
         String strToday = simpleDateFormat.format(currentTime);
         String strDeliveryDay = simpleDateFormat.format(deliveryTime);
         
-        orderConVO.setStart_orderDate(strDeliveryDay);
+        orderConVO.setStart_orderDate(strToday.substring(0,8)+"01");
         orderConVO.setEnd_orderDate(strToday);
 
         // 조회조건저장
@@ -2774,7 +2774,8 @@ public class OrderController {
 
         mv.addObject("commentList", commentList);
         
-        mv.setViewName("/order/etcManage");
+        //mv.setViewName("/order/etcManage");
+        mv.setViewName("/order/etcList");
         
         //작업이력
 		WorkVO work = new WorkVO();

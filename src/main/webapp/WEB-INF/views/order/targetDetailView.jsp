@@ -317,7 +317,7 @@ function fcOrder_process(){
         	    resultMsg(result);
         	    
 	            $('#targetDetailView').dialog('close');
-				fcTarget_listSearch();
+	            fcTarget_listSearch(document.targetPageListForm.selectCurPage.value);
 				
            },
            error:function(){

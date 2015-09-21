@@ -46,11 +46,18 @@
          
                 $('#recoveryDetailView').empty();
                 try{
-	           		 // alert(barcodeObj);
+	           		  
 	               	  if(transObj==undefined){
 	               		 	return;
 	                 	  }else{
 	                 		 transObj.close();
+	                 	  }
+	               	  
+	                  	 
+	               	  if(etcObj==undefined){
+	               		 	return;
+	                 	  }else{
+	                 		 etcObj.close();
 	                 	  }
 	           		  
 	           	  }catch(e){
