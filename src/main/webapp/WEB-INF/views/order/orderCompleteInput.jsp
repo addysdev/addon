@@ -12,8 +12,7 @@ $(function() {
 	        numberOfMonths: 1,
 	        changeMonth: true,
 	        showMonthAfterYear: true ,
-	        changeYear: true,
-	        maxDate : "+0D"
+	        changeYear: true
 	    });
 
 	});
