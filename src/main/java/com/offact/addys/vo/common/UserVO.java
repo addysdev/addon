@@ -38,6 +38,8 @@ public class UserVO extends AbstractVO {
 	
 	private String pwdChangeDateTime;
 	private String pwCycleDate;
+	private String smsAlarmYn;
+	private String smsAlarmPoint;
 	
 	public String getUserId() {
 		return userId;
@@ -212,6 +214,18 @@ public class UserVO extends AbstractVO {
 	}
 	public void setPwCycleDate(String pwCycleDate) {
 		this.pwCycleDate = pwCycleDate;
+	}
+	public String getSmsAlarmYn() {
+		return smsAlarmYn;
+	}
+	public void setSmsAlarmYn(String smsAlarmYn) {
+		this.smsAlarmYn = smsAlarmYn;
+	}
+	public String getSmsAlarmPoint() {
+		return smsAlarmPoint;
+	}
+	public void setSmsAlarmPoint(String smsAlarmPoint) {
+		this.smsAlarmPoint = smsAlarmPoint;
 	}
 
 }

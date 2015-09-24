@@ -29,6 +29,8 @@
   <result column="encPwd"              property="encPwd"  />
   <result column="pwdChangeDateTime"   property="pwdChangeDateTime"  />
   <result column="pwCycleDate"   property="pwCycleDate"  />
+  <result column="smsAlarmYn"   property="smsAlarmYn"  />
+  <result column="smsAlarmPoint"   property="smsAlarmPoint"  />
 </resultMap>
 
 <select id="getUser" resultMap="UserVO" parameterType="com.offact.addys.vo.common.UserVO" >
@@ -58,6 +60,12 @@
 					  ,T1.deletedYn
 					  ,DATE_FORMAT(T1.pwdChangeDateTime, '%Y-%m-%d') as pwdChangeDateTime
 					  ,date_add(DATE_FORMAT(now(), '%Y-%m-%d'), interval (Select T4.codeId from ofCode T4 where T4.codeGroupId='PW01') month) as pwCycleDate
+					  ,case When T1.auth <![CDATA[<>]]> '03' 
+                  			Then ( Case When cast((select resultLastPoint from adSmsHistory where resultMessage='Success!!' order by smsDateTime desc limit 1 ) as SIGNED) <![CDATA[<]]> 
+                      			 cast((Select T4.codeId from ofCode T4 where T4.codeGroupId='SP01' ) as SIGNED) Then 'Y' Else 'N' End )
+                            Else 'N'
+                            End smsAlarmYn
+            		  ,(Select T4.codeId from ofCode T4 where T4.codeGroupId='SP01' ) as smsAlarmPoint
 				  From ofUser T1 
 					   Left Join ofGroup T2 On T1.groupId=T2.groupId
 					   Left Join ofGroup T3 On T1.authId=T3.groupId

@@ -112,6 +112,7 @@
 	#top_set .bar { padding-right:9px; background:url(../images/top/bar_top_set.gif) no-repeat right top; }
 	#top_set .addr { padding-left:15px; background:url(../images/top/icon_topaddr.gif) no-repeat 1px 0; }
 	#top_set li strong { color:#fff000; font-weight:normal; letter-spacing:0; }
+	#top_set li alarm { color:red; font-weight:bold; letter-spacing:0; }
 	#gnb_btn { position:absolute; right:18px; top:30px; }
 	#gnb_btn li { float:left; padding-right:2px; }
 	#gnb_inform { margin-left:70px; width:252px; height:24px; text-align:center; background: url(../images/top/inform.gif) no-repeat; color:#fff; }
@@ -195,6 +196,9 @@
 	<!-- 최상단메뉴 시작 -->
 	<div id="top_set">
 		<ul>
+		    <c:if test="${smsAlarmYn == 'Y'}">
+		    <li><span class="bar"><alarm>※ SMS 잔여포인트가 <strong>${smsAlarmPoint}(P)</strong> 이하로 남았습니다. 관리자를 통해 충전 부탁드립니다!!</alarm></span></li>
+		    </c:if>
 			<li>사용자 : <span class="bar"><strong> <%=strUserName %>(<%=strUserId %>)</strong></span></li>
 			<li>지점 : <span class="bar"><strong> <%=strGroupName %>(<%=strGroupId %>)</strong></span></li>
 			<li><span class="bar"><a href="javascript:goMyInfo('<%=strUserId %>');">비밀번호 변경</a></span></li>

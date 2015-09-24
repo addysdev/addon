@@ -384,16 +384,16 @@ public class HomeController {
 	 * Simply selects the home view to render by returning its name.
 	 * @throws BizException
 	 */
-	@RequestMapping(value = "/warning", method = RequestMethod.GET)
-	public ModelAndView warning(HttpServletRequest request,
+	@RequestMapping(value = "/systemworking", method = RequestMethod.GET)
+	public ModelAndView systemWorking(HttpServletRequest request,
 			                    HttpServletResponse response) throws BizException 
 	{
 		
-		logger.info("warning");
+		logger.info("systemwork");
 		
 		ModelAndView mv = new ModelAndView();
 		
-		mv.setViewName("errors/warning");
+		mv.setViewName("errors/systemWorking");
 		return mv;
 	}
 	/**

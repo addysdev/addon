@@ -487,8 +487,8 @@ function  fcEtc_detail(orderCode,productCode,productName,etc,idx,groupId) {
 	//var url='<%= request.getContextPath() %>/order/etcmanage';
 	var url='<%= request.getContextPath() %>/order/etcmanage?orderCode='+orderCode+'&category=06'+'&idx='+idx+'&companyCode='+groupId+'&productCode='+productCode+'&productName='+encodeURIComponent(productName)+'&etc='+encodeURIComponent(etc);
 	
-	var h=500;
-	var s=800;
+	var h=430;
+	var s=780;
 
 	tmt_winLaunch(url, 'etcObj', 'etcObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=no,scrollbars=yes');
 	

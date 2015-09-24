@@ -267,6 +267,8 @@ public class AddysController {
 		String strIp = "";
 		String strPwdChangeDateTime = "";
 		String strPwCycleDate = "";
+		String smsAlarmYn = "";
+		String smsAlarmPoint = "";
 		
 		strIp = ip;//Client 외부IP or G/W
 		
@@ -335,6 +337,8 @@ public class AddysController {
 			strAuth =userChk.getAuth();
 			strPwdChangeDateTime =userChk.getPwdChangeDateTime();
 			strPwCycleDate =userChk.getPwCycleDate();
+			smsAlarmYn =userChk.getSmsAlarmYn();
+			smsAlarmPoint =userChk.getSmsAlarmPoint();
 
 			// # 3. Session 객체에 셋팅
 			
@@ -364,6 +368,8 @@ public class AddysController {
 				session.setAttribute("sClientIP", sClientIP);
 				session.setAttribute("pwdChangeDateTime", strPwdChangeDateTime);
 				session.setAttribute("pwCycleDate", strPwCycleDate);
+				session.setAttribute("smsAlarmYn", smsAlarmYn);
+				session.setAttribute("smsAlarmPoint", smsAlarmPoint);
 				
 				//로그인 상태처리		
 				

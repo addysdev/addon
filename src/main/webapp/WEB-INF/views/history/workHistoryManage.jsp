@@ -234,6 +234,11 @@
   <div id=workHistoryPageList></div>
 
   <div id="workDetail"  title="업무상세내역"></div>
+  
+    <div id="deferReasonList"  title="보류사유"></div>
+    <div id="memoManage"  title="메모관리"></div>
+    <!-- //보류 상세화면 -->
+    <div id="etcManage"  title="비고"></div>
 </div>
 <br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>

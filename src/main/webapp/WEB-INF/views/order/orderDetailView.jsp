@@ -472,8 +472,8 @@ function totalTargetAmt(){
     		idx=0;
     	}
     	
-    	var h=500;
-		var s=800;
+    	var h=430;
+    	var s=780;
 
 		barcode_winLaunch(url, 'etcObj', 'etcObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=no,scrollbars=yes');
     	
