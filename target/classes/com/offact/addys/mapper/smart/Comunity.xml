@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Comunity">
+
+<resultMap id="comunityListVO" type="com.offact.addys.vo.smart.ComunityVO" >
+  <result column="idx"              property="idx"  />
+  <result column="groupId"            property="groupId"  />
+  <result column="customerKey"      	   property="customerKey"  />
+  <result column="customerId"       	   property="customerId"  />
+  <result column="customerName"       	   property="customerName"  />
+  <result column="commentType"              property="commentType"  />
+  <result column="comment"                property="comment"  />
+  <result column="commentDateTime"   property="commentDateTime"  />
+  <result column="upidx"   property="upidx"  />
+</resultMap>
+
+<select id="getComunityPageList"  resultMap="comunityListVO" parameterType="com.offact.addys.vo.smart.ComunityVO" >
+    SELECT T1.idx
+			  ,T1.groupId
+			  ,T2.groupName
+			  ,T1.customerKey
+			  ,T3.customerId   
+			  ,T3.customerName 
+        	  ,T1.commentType
+        	  ,T1.comment
+			  ,DATE_FORMAT(T1.commentDateTime, '%Y-%m-%d %T') as commentDateTime
+			  ,(Select count(T4.idx) From smCommunity T4 Where T4.upidx=T1.idx )  As commentCnt
+  	FROM smCommunity T1
+         Left Join ofGroup T2 On T1.groupId=T2.groupId
+			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
+         WHERE 1=1
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND T1.customerKey  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND T1.comment  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+         ORDER BY commentDateTime desc
+ LIMIT ${page_limit_val1} , ${page_limit_val2}
+</select>
+
+<select id="getComunityCnt" resultType="int">
+	SELECT count(*) AS TOT_COUNT
+  		FROM smCommunity T1
+         Left Join ofGroup T2 On T1.groupId=T2.groupId
+			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
+         WHERE 1=1
+           <if test="searchValue != null and searchValue != ''" >
+             <choose>
+               <when test="searchGubun.equals('01')">
+           AND T1.customerKey  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('02')">
+           AND T1.comment  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+             </choose>
+           </if>
+</select>
+
+<select id="getComunityReply" resultMap="comunityListVO" parameterType="com.offact.addys.vo.smart.ComunityVO" >
+
+		SELECT T1.idx
+		      ,T1.customerKey
+		      ,DATE_FORMAT(T1.commentDateTime, '%Y-%m-%d %T') as commentDateTime
+			  ,T1.comment
+          FROM smCommunity T1
+		 Where T1.upidx = #{upidx}
+		 order by commentDateTime desc
+</select>
+
+<insert id="regiReplyInsert" parameterType="com.offact.addys.vo.smart.ComunityVO" >
+  	
+  	Insert into smCommunity( 
+        	 customerKey
+            ,groupId
+            ,customerId
+            ,commentType 
+            ,comment
+            ,commentDateTime
+            ,upidx
+            )
+        Values (
+	  		  #{customerKey}
+	  		, #{groupId}
+	  		, #{customerId}
+	  		, 'Y'
+	  		, #{comment}
+	  		, now()
+	  		, #{upidx}
+	  		)
+</insert>
+
+</mapper>

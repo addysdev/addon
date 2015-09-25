@@ -30,7 +30,7 @@ body {
 					<tr>
 						<td width="145"><img src="<%= request.getContextPath() %>/images/error/error_ico_error.gif" width="145" height="134" /></td>
 						<td>&nbsp;&nbsp;<img src="<%= request.getContextPath() %>/images/common/bu_square.gif" alt="" /> 사용에 불편을 드려 죄송합니다.<br>
-						    &nbsp;&nbsp;<img src="<%= request.getContextPath() %>/images/common/bu_square.gif" alt="" /> 08:30 ~ 09:00 까지 시스템 점검 예정입니다.<br>
+						    &nbsp;&nbsp;<img src="<%= request.getContextPath() %>/images/common/bu_square.gif" alt="" /> 13:30 ~ 14:30 까지 시스템 점검 예정입니다.<br>
 			                &nbsp;&nbsp;<img src="<%= request.getContextPath() %>/images/common/bu_square.gif" alt="" /> 관리자에게 문의해주세요.
 							<!-- ul>
 						        <li>제공되던 서비스가 중단된 경우</li>

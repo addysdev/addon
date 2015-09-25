@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OrderAdd">
+
+<resultMap id="orderAddVO" type="com.offact.addys.vo.master.OrderAddVO" >
+  <result column="AddCode"      property="addCode"  />
+  <result column="groupId"          property="groupId"  />
+  <result column="groupName"      property="groupName"  />
+  <result column="companyCode"      property="companyCode"  />
+  <result column="companyName"      property="companyName"  />
+  <result column="addStartDate"     property="addStartDate"  />
+  <result column="addEndDate"          property="addEndDate"  />
+  <result column="addDateTime"           property="addDateTime"  />
+  <result column="addUserId"        property="addUserId"  />
+  <result column="deletedYn"        property="deletedYn"  />
+  <result column="deletedDateTime"        property="deletedDateTime"  />
+  <result column="deletedUserId"        property="deletedUserId"  />
+</resultMap>
+
+<select id="getOrderAddPageList"  resultMap="orderAddVO" parameterType="com.offact.addys.vo.master.OrderAddVO" >
+        Select T1.addCode,
+       		   T2.groupName,
+       		   T3.companyName,
+       	   	   T1.addStartDate,
+       		   T1.addEndDate
+  		From adOrderAdd T1
+       		 Left Join ofGroup T2 On T1.groupId = T2.groupId
+       		 Left Join adCompany T3 On T1.companyCode = T3.companyCode
+  		Where T1.deletedYn = 'N'
+          And T1.addStartDate between  #{start_addDate} and #{end_addDate}
+            <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           		AND T1.groupId = #{con_groupId}
+           </if>
+           <if test="searchValue != null and searchValue != ''" >
+             	<choose>
+               		<when test="searchGubun.equals('01')">
+           				AND T3.companyName  LIKE CONCAT('%', #{searchValue}, '%')
+               		</when>
+               		<when test="searchGubun.equals('02')">
+           				AND T1.companyCode  LIKE CONCAT('%', #{searchValue}, '%')
+               		</when>
+             	</choose>
+           	</if> 
+         ORDER BY addDateTime desc
+ LIMIT ${page_add_val1} , ${page_add_val2}
+</select>
+
+<select id="getOrderAddCnt" resultType="int">
+		SELECT count(*) AS TOT_COUNT
+  			From adOrderAdd T1
+ 				 Left Join ofGroup T2 On T1.groupId = T2.groupId
+       			 Left Join adCompany T3 On T1.companyCode = T3.companyCode
+           Where T1.deletedYn = 'N'
+             And T1.addStartDate between  #{start_addDate} and #{end_addDate}
+            <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           		AND T1.groupId = #{con_groupId}
+           </if>
+           <if test="searchValue != null and searchValue != ''" >
+             	<choose>
+               		<when test="searchGubun.equals('01')">
+           				AND T3.companyName  LIKE CONCAT('%', #{searchValue}, '%')
+               		</when>
+               		<when test="searchGubun.equals('02')">
+           				AND T1.companyCode  LIKE CONCAT('%', #{searchValue}, '%')
+               		</when>
+             	</choose>
+           	</if> 
+</select>
+
+<insert id="orderAddInsert"  parameterType="com.offact.addys.vo.master.OrderAddVO" >
+		insert into adOrderAdd (
+				 addCode
+            	,groupId
+            	,companyCode 
+            	,addStartDate
+            	,addEndDate
+            	,addDateTime
+            	,addUserId
+            	,deletedYn
+		)values(
+				 #{addCode}
+	  			, #{groupId}
+	  			, #{companyCode}
+	  		    , #{addStartDate}
+	  		    , #{addEndDate}
+	  		    , now()
+	  		    , #{addUserId}
+	  		    , 'N'
+		)
+		ON DUPLICATE KEY UPDATE addStartDate = #{addStartDate},
+		                        addEndDate = #{addEndDate},
+		                        updateUserId = #{addUserId},
+		                        updateDateTime =now(),
+		                        deletedYn = 'N'
+</insert>
+
+
+<update id="orderAddCance" parameterType="com.offact.addys.vo.master.OrderAddVO" >
+        Update adOrderAdd
+       		Set
+  				 deletedYn = 'Y'
+  				,deletedUserId = #{deletedUserId}
+            	,deletedDateTime = now()
+ 		Where addCode = #{addCode}
+</update>
+
+</mapper>
