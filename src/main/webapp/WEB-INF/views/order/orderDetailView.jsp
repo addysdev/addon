@@ -1005,14 +1005,14 @@ function totalTargetAmt(){
 	    <caption>발주대상리스트</caption>
  		<colgroup>
 	      <col width="50px" >
-	      <col width="80px" >
-	      <col width="110px" >
+	      <col width="75px" >
+	      <col width="105px" >
 	      <col width="230px">
 	      <col width="50px">
 	      <col width="65px">
 	      <col width="70px">
 	      <col width="90px">
-	      <col width="70px">
+	      <col width="80px">
 	      <col width="*">
 	      </colgroup>
 	    <thead>
@@ -1044,14 +1044,14 @@ function totalTargetAmt(){
 	      <caption>발주대상리스트</caption>
 	      <colgroup>
 	      <col width="50px" >
-	      <col width="80px" >
-	      <col width="110px" >
+	      <col width="75px" >
+	      <col width="105px" >
 	      <col width="230px">
 	      <col width="50px">
 	      <col width="65px">
 	      <col width="70px">
 	      <col width="90px">
-	      <col width="70px">
+	      <col width="80px">
 	      <col width="*">
 	      </colgroup>
 	       <!-- :: loop :: -->
@@ -1094,7 +1094,7 @@ function totalTargetAmt(){
                  <td class='text-left'><c:out value="${orderVO.productName}"></c:out></td>
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.orderCnt}"/></td>
                  <input type="hidden" name="orderCnt" value="${orderVO.orderCnt}">
-                 <td class='text-right'><input type="text" class="form-control" id="orderResultCnt" name="orderResultCnt" maxlength="2" numberOnly  onKeyup="totalOrderAmt()" value="${orderVO.orderResultCnt}"></td>
+                 <td class='text-right'><input type="text" class="form-control" id="orderResultCnt" name="orderResultCnt" maxlength="3" numberOnly  onKeyup="totalOrderAmt()" value="${orderVO.orderResultCnt}"></td>
                  
                  <td class='text-right'><f:formatNumber type="currency" currencySymbol="" pattern="#,##0" value="${orderVO.orderPrice+orderVO.orderVatRate}" /></td>
                  <input type="hidden" name="orderPrice" value="${orderVO.orderPrice+orderVO.orderVatRate}">

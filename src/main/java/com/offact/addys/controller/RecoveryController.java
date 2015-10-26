@@ -658,6 +658,9 @@ public class RecoveryController {
 					
 					smsVO.setSmsTo(smsNo);
 					
+					//즉시전송 세팅
+					smsVO.setSmsDirectYn("Y");
+					
 					logger.debug("#########devOption :"+devOption);
 					String[] devSmss= devSms.split("\\^");
 					
@@ -1678,5 +1681,141 @@ public class RecoveryController {
 		 	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 
 	    return recoveryResult;
+	    }
+	    
+	    /**
+	     * 메모관리
+	     *
+	     * @param request
+	     * @param response
+	     * @param model
+	     * @param locale
+	     * @return
+	     * @throws BizException
+	     */
+	    @RequestMapping(value = "/recovery/barcoderecovery")
+	    public ModelAndView barCodeRecovery(HttpServletRequest request, 
+	    		                       HttpServletResponse response,
+	    		                       String recoveryCode,
+	    		                       String recoveryCnt) throws BizException 
+	    {
+	        
+	    	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller barcodelist start");
+
+	        ModelAndView mv = new ModelAndView();
+	        
+	      	// 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));    
+	        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+	        
+	       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	        	
+	        	strIp = request.getRemoteAddr(); 
+	 	       	//로그인 상태처리		
+	 	   		UserVO userState =new UserVO();
+	 	   		userState.setUserId(strUserId);
+	 	   		userState.setLoginYn("N");
+	 	   		userState.setIp(strIp);
+	 	   		userState.setConnectIp(sClientIP);
+	 	   		userSvc.regiLoginYnUpdate(userState);
+	 	           
+	 	        //작업이력
+	 	   		WorkVO work = new WorkVO();
+	 	   		work.setWorkUserId(strUserId);
+	 	   	    work.setWorkIp(strIp);
+	 	   		work.setWorkCategory("CM");
+	 	   		work.setWorkCode("CM004");
+	 	   		commonSvc.regiHistoryInsert(work);
+	 	   		
+	 	       	mv.setViewName("/addys/loginForm");
+	       		return mv;
+			}
+	        
+	        
+	        mv.addObject("recoveryCode", recoveryCode);
+	        mv.addObject("recoveryCnt", recoveryCnt);
+	        
+	        mv.setViewName("/recovery/barCodeCheck");
+	        
+	       //log Controller execute time end
+	      	long t2 = System.currentTimeMillis();
+	      	logger.info("["+logid+"] Controller deferReason end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	      	
+	        return mv;
+	    }
+	    /**
+	     * 메모관리
+	     *
+	     * @param request
+	     * @param response
+	     * @param model
+	     * @param locale
+	     * @return
+	     * @throws BizException
+	     */
+	    @RequestMapping(value = "/recovery/barcodecheckresult")
+	    public ModelAndView barCodeCheckResult(HttpServletRequest request, 
+	    		                       HttpServletResponse response,
+	    		                       String recoveryCode,
+	    		                       String fBarCodes,
+	    		                       String totalFMsg,
+	    		                       String fCnt) throws BizException 
+	    {
+	        
+	    	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller barcodelist start recoveryCode"+recoveryCode);
+
+	        ModelAndView mv = new ModelAndView();
+	        
+	      	// 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));    
+	        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+	        
+	       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	        	
+	        	strIp = request.getRemoteAddr(); 
+	 	       	//로그인 상태처리		
+	 	   		UserVO userState =new UserVO();
+	 	   		userState.setUserId(strUserId);
+	 	   		userState.setLoginYn("N");
+	 	   		userState.setIp(strIp);
+	 	   		userState.setConnectIp(sClientIP);
+	 	   		userSvc.regiLoginYnUpdate(userState);
+	 	           
+	 	        //작업이력
+	 	   		WorkVO work = new WorkVO();
+	 	   		work.setWorkUserId(strUserId);
+	 	   	    work.setWorkIp(strIp);
+	 	   		work.setWorkCategory("CM");
+	 	   		work.setWorkCode("CM004");
+	 	   		commonSvc.regiHistoryInsert(work);
+	 	   		
+	 	       	mv.setViewName("/addys/loginForm");
+	       		return mv;
+			}
+	       
+	        mv.addObject("recoveryCode", recoveryCode);
+	        mv.addObject("fCnt", fCnt);
+	        mv.addObject("fBarCodes", fBarCodes);
+	        mv.addObject("totalFMsg", totalFMsg);
+	        
+	        mv.setViewName("/recovery/barCodeCheckResult");
+	        
+	       //log Controller execute time end
+	      	long t2 = System.currentTimeMillis();
+	      	logger.info("["+logid+"] Controller deferReason end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	      	
+	        return mv;
 	    }
 }

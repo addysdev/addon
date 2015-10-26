@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.offact.framework.db.SqlSessionCommonDao;
 import com.offact.framework.exception.BizException;
+import com.offact.framework.util.StringUtil;
 import com.offact.addys.service.common.SmsService;
 import com.offact.addys.vo.common.SmsVO;
 
@@ -59,13 +60,13 @@ public class SmsServiceImpl implements SmsService {
     		String sms_from = sms.getSmsFrom();
     		// 발송예약시간 (현재시간보다 작거나 같으면 즉시 발송이며 현재시간보다 10분이상 큰경우는 예약발송입니다.)
     		String sms_date = null;
+ 		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.KOREA);
+ 		    Date cNow = new Date();
+ 		    sms_date = sdf.format(cNow);
     		// 보내는 메세지
     		String sms_msg = sms.getSmsMsg();
     		// 발송시간을 파라메터로 받지 못한경우 현재시간을 입력해줍니다.
-    		if (sms_date == null) {
-    		   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.KOREA);
-    		   Date cNow = new Date();
-    		   sms_date = sdf.format(cNow);
+    		if ( !"Y".equals(StringUtil.nvl(sms.getSmsDirectYn(),"N"))) {
 
     		   //영업시간 외 시간체크
     		    String timechk=sms_date.substring(11,13);
@@ -91,10 +92,10 @@ public class SmsServiceImpl implements SmsService {
 		        	sms_date=strToday+" 09:00:00";
 		        }
 		        
-    	        logger.debug("SMS전송시간"+sms_date);
+    	        logger.debug("업무시간 확인된 SMS전송시간"+sms_date);
 
     		}
-
+    		logger.debug("최종 SMS전송시간"+sms_date);
     		// UTF-8 설정
     		whois_sms.setUtf8();
     	    sms_msg = new String(sms_msg.getBytes(), "ISO-8859-1");

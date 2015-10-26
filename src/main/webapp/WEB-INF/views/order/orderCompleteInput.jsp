@@ -39,7 +39,7 @@ function fcOrder_CompleteAdd(){
    <div class="form-inline">
 	<label for="transDate_view"><h6><strong><font style="color:#428bca"> 거래명세일자 : </font></strong></h6></label>
     <!-- 재고일자-->
-      <input  disabled class="form-control" style='width:135px' name="transDate_view" id="transDate_view" value="" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+      <input  disabled class="form-control" style='width:135px' name="transDate_view" id="transDate_view" value="${strToday}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
       <!-- 달력이미지 시작 -->
       <span class="icon_calendar"><img border="0" onclick="showCalendar2()" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
       <!-- 달력이미지 끝 -->

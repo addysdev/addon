@@ -43,6 +43,7 @@ public class RecoveryVO extends AbstractVO {
 	private String recoveryStateView;
 
 	private String productCode;
+	private String barCode;
 	private String productName;
 	private String productPrice;
 	private String stockDate;
@@ -603,6 +604,12 @@ public class RecoveryVO extends AbstractVO {
 	}
 	public void setAuth(String auth) {
 		this.auth = auth;
+	}
+	public String getBarCode() {
+		return barCode;
+	}
+	public void setBarCode(String barCode) {
+		this.barCode = barCode;
 	}
     
 }
