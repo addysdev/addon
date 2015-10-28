@@ -29,8 +29,8 @@ window.print();
 				<body>
 				<body><div align='center'></div><div align='left'><table width='612' border='0' align='center' cellpadding='0' cellspacing='0'><!--DWLayoutTable--><tr> <td width='516' valign='top'><table width='941' height='610' border='0' align='center' cellpadding='1' cellspacing='1' bgcolor='#000000'>
 <tr bgcolor='#FFFFFF'>
-<td width='794' height='55' colspan='9' align='center'><div align='center'><span class='style5'>${groupName} 회수코드</span></div></td>
-</tr><tr bgcolor='#FFFFFF'> <td height='518' colspan='9' align='center'><span class='style10'>${recoveryCode}</span></td>
+<td width='794' height='73' colspan='9' align='center'><div align='center'><span class='style5'>${groupName} 회수코드<br>(회수요청일:${collectDateTime} ~ 회수마감일:${recoveryClosingDate})</span></div></td>
+</tr><tr bgcolor='#FFFFFF'> <td height='500' colspan='9' align='center'><span class='style10'>${recoveryCode}</span></td>
  </tr></table>    </td></tr></table></div></body>
 				 </html>
 

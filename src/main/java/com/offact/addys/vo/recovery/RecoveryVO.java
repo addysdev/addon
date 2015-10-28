@@ -100,6 +100,8 @@ public class RecoveryVO extends AbstractVO {
 	private String quickTel;
 	private String transurl;
 	
+	private String stateDateTime;
+	
 	// /** for paging */
     private String totalCount       = "0";
     private String curPage          = "1";
@@ -610,6 +612,12 @@ public class RecoveryVO extends AbstractVO {
 	}
 	public void setBarCode(String barCode) {
 		this.barCode = barCode;
+	}
+	public String getStateDateTime() {
+		return stateDateTime;
+	}
+	public void setStateDateTime(String stateDateTime) {
+		this.stateDateTime = stateDateTime;
 	}
     
 }

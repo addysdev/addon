@@ -1082,13 +1082,13 @@ function fcDefer_reason(reason){
 		 		<colgroup>
 			      <col width="50px" >
 			      <col width="75px" >
-			      <col width="240px">
+			      <col width="235px">
 			      <col width="50px">
 			      <col width="50px">
 			      <col width="50px">
 			      <col width="70px">
 			      <col width="50px">
-			      <col width="50px">
+			      <col width="55px">
 			      <col width="55px">
 			      <col width="50px">
 			      <col width="*">
@@ -1125,13 +1125,13 @@ function fcDefer_reason(reason){
 			      <colgroup>
 			      <col width="49px" >
 			      <col width="75px" >
-			      <col width="240px">
+			      <col width="235px">
 			      <col width="50px">
 			      <col width="50px">
 			      <col width="50px">
 			      <col width="70px">
 			      <col width="50px">
-			      <col width="50px">
+			      <col width="55px">
 			      <col width="55px">
 			      <col width="50px">
 			      <col width="*">
@@ -1173,7 +1173,7 @@ function fcDefer_reason(reason){
 		                 <input type="hidden" id="orderCnt" name="orderCnt" value="${targetVO.orderCnt}" >
 		                 <input type="hidden" id="orderCntRaw" name="orderCntRaw" value="${targetVO.orderCnt}" >
 		                 <input type="hidden" id="vatRate" name="vatRate" value="${targetVO.vatRate}" >
-		                 <td class='text-right' ><input style="width:40px;" type="text" class="form-control" id="minusCnt" name="minusCnt" maxlength="2" numberOnly onKeyup="fcMinus_Cnt('${status.count}')" value="0"></td>
+		                 <td class='text-right' ><input style="width:45px;" type="text" class="form-control" id="minusCnt" name="minusCnt" maxlength="3" numberOnly onKeyup="fcMinus_Cnt('${status.count}')" value="0"></td>
 		                 <td class='text-right' ><input style="width:45px;" type="text" class="form-control" id="plusCnt" name="plusCnt" maxlength="3" numberOnly onKeyup="fcPlus_Cnt('${status.count}')" value="0"></td>
 		                 <td class='text-right' ><input style="width:40px;" type="text" class="form-control" id="addCnt" name="addCnt" maxlength="2" numberOnly onKeyup="fcAdd_Cnt('${status.count}')" value="0"></td>
 		                 <td class='text-right' ><input style="width:40px;" type="text" class="form-control" id="lossCnt" name="lossCnt" maxlength="2" numberOnly onKeyup="fcLoss_Cnt('${status.count}')" value="0"></td>

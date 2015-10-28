@@ -86,6 +86,7 @@ encoding//src/main/webapp/WEB-INF/views/order/targetManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/order/targetPageList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/recovery/barCodeCheck.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/recovery/barCodeCheckResult.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/recovery/barCodeRecovery.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/recovery/collectManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/recovery/collectPageList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/recovery/reProductAttach.jsp=UTF-8

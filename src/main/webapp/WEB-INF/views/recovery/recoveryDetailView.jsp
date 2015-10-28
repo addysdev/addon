@@ -33,7 +33,11 @@ function fcRecovery_print(recoveryCode){
 	var frm = document.recoveryDetailListForm;
 	var groupId='${recoveryConVO.groupId}';
 	var groupname=encodeURIComponent('${recoveryConVO.groupName}');
-	var url="<%= request.getContextPath() %>/recovery/recoverycodeprint?recoveryCode="+recoveryCode+"&groupId="+groupId+"&groupName="+groupname;
+
+	var collectDateTime='${recoveryConVO.collectDateTime}';
+	var recoveryClosingDate='${recoveryConVO.recoveryClosingDate}';
+	
+	var url="<%= request.getContextPath() %>/recovery/recoverycodeprint?recoveryCode="+recoveryCode+"&groupId="+groupId+"&groupName="+groupname+"&collectDateTime="+collectDateTime+"&recoveryClosingDate="+recoveryClosingDate;
 
    // tmt_winLaunch(url, 'printObj', 'printObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
 	 frm.action =url; 
@@ -433,7 +437,8 @@ function fcRecovery_complete(){
     }
 function totalCheck(){
 	
-	    if('${recoveryVO.receiveCnt==recoveryVO.totalCnt && strAuth!= "03"}'){
+	    //if('${recoveryVO.receiveCnt==recoveryVO.totalCnt && strAuth!= "03"}'){
+	    if('${strAuth!= "03"}'){
 
 	    	var frm=document.recoveryDetailListForm;
 	    	var amtCnt = frm.productCode.length;
@@ -637,6 +642,7 @@ function fcResult_cal(){
     	eval(winName+"=window.open('"+theURL+"','"+targetName+"','"+features+"')");
 
     }
+    var CheckInit=0;
     
 	function fcBarCode_recovery(recoveryCode){
     	
@@ -651,25 +657,66 @@ function fcResult_cal(){
 
 			barcode_winLaunch(url, 'barcodeObj', 'barcodeObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=no,scrollbars=yes');
 	
-			var frm=document.recoveryDetailListForm;
-			var amtCnt = frm.productCode.length;
-			
-			if(amtCnt==undefined){
-				amtCnt=1;
-			}
-			
-			if(amtCnt > 1){
+			if(CheckInit==0){ //회수대기상태최초에만 초기화
+				var frm=document.recoveryDetailListForm;
+				var amtCnt = frm.productCode.length;
 				
-		    	for(i=0;i<amtCnt;i++){
-		    		frm.recoveryCnt[i].value=0;
-		    	}
-		    	
-			}else{
+				if(amtCnt==undefined){
+					amtCnt=1;
+				}
 				
-				frm.recoveryCnt.value=0;
+				if(amtCnt > 1){
+					
+			    	for(i=0;i<amtCnt;i++){
+			    		frm.recoveryCnt[i].value=0;
+			    	}
+			    	
+				}else{
+					
+					frm.recoveryCnt.value=0;
+				}
+				
+				 fcResult_cal(); 	
 			}
+		
+    	}
+    };
+    
+	function fcBarCode_check(recoveryCode){
+    	
+    	if (confirm('바코드 스캐너를 통해 검수수량을 자동입력 하시겠습니까?\n자동검수 처리시 스캐너 연동 및 환경이 정상적으로 설정 되어 있어야 합니다.')){ 
+    	
+    		var recoveryResultCnt=document.all('totalRecoveryResultCnt').innerText;
+    	
+	    	var url='<%= request.getContextPath() %>/recovery/barcodecheck?recoveryCode='+recoveryCode+'&recoveryResultCnt='+encodeURIComponent(recoveryResultCnt);
+
+			var h=510;
+			var s=280;
+
+			barcode_winLaunch(url, 'barcodeObj', 'barcodeObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=no,scrollbars=yes');
+	
+			if(CheckInit==0){ //회수대기상태최초에만 초기화
 			
-			 fcResult_cal(); 	
+				var frm=document.recoveryDetailListForm;
+				var amtCnt = frm.productCode.length;
+				
+				if(amtCnt==undefined){
+					amtCnt=1;
+				}
+				
+				if(amtCnt > 1){
+					
+			    	for(i=0;i<amtCnt;i++){
+			    		frm.recoveryResultCnt[i].value=0;
+			    	}
+			    	
+				}else{
+					
+					frm.recoveryResultCnt.value=0;
+				}
+				
+				 fcResult_cal(); 	
+			}
 	
     	}
     };
@@ -692,7 +739,7 @@ function fcResult_cal(){
           </div >
           <div style="position:absolute; right:30px" > 
           <c:choose>
-    		<c:when test="${(recoveryConVO.receiveCnt+recoveryConVO.checkCnt)==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03' && strAuth!= '03'}">
+    		<c:when test="${recoveryConVO.recoveryState=='03' && strAuth!= '03'}">
 				<button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcRecovery_complete()">검수완료</button>
 			</c:when>
 			<c:otherwise>
@@ -817,8 +864,8 @@ function fcResult_cal(){
 	     	<td class='text-right'><span id="totalRecoveryResultCnt" style="color:red"></span></td>
 	     	<td style="background-color:#E6F3FF">검수 합계금액</td>
 	     	<td class='text-right'><span id="totalRecoveryResultAmt" style="color:red"></span></td>
-	        <c:if test="${recoveryConVO.recoveryState=='01'}"><td>&nbsp;<button type="button" id="barcodebtn" onClick="fcBarCode_recovery('${recoveryConVO.recoveryCode}')" class="btn btn-xs btn-info" onClick="" >바코드 회수</button></td></c:if>
-	        <c:if test="${(recoveryConVO.receiveCnt+recoveryConVO.checkCnt)==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"><td>&nbsp;<button type="button" id="barcodebtn" class="btn btn-xs btn-info" onClick="" >바코드 검수</button></td></c:if>
+	        <c:if test="${recoveryConVO.recoveryState=='01'}"><td>&nbsp;<button type="button" id="barcodebtn" onClick="fcBarCode_recovery('${recoveryConVO.recoveryCode}')" class="btn btn-xs btn-info">바코드 회수</button></td></c:if>
+	        <c:if test="${recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"><td>&nbsp;<button type="button" id="barcodebtncheck" class="btn btn-xs btn-info" onClick="fcBarCode_check('${recoveryConVO.recoveryCode}')" >바코드 검수</button></td></c:if>
 	     </tr>
      </table>
        <div class="thead">
@@ -838,7 +885,7 @@ function fcResult_cal(){
 	    <thead>
 		<tr style="background-color:#E6F3FF">
      	  <c:choose>
-    		<c:when test="${(recoveryConVO.receiveCnt+recoveryConVO.checkCnt)==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03'  && strAuth!= '03'}">
+    		<c:when test="${recoveryConVO.recoveryState=='03'  && strAuth!= '03'}">
 				<th class='text-center' >검수<input type="checkbox"  id="recoveryCheckAll"  name="recoveryCheckAll" onchange="fcRecovery_checkAll()" title="전체선택" /></th>
 			</c:when>
 			<c:otherwise>
@@ -879,7 +926,7 @@ function fcResult_cal(){
              	 <input type="hidden" id="seqs" name="seqs" >
 	             <tr id="barCodeCheckColor" >
                  <c:choose>
-		    		<c:when test="${(recoveryConVO.receiveCnt+recoveryConVO.checkCnt)==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"> 
+		    		<c:when test="${recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"> 
 						<td class='text-center'>${status.count}<br><input type="checkbox" id="recoveryCheck" name="recoveryCheck" value="${recoveryVO.productCode}" title="선택"  onChange="totalCheck()" /></td>
 		    		</c:when>
 					<c:otherwise>
@@ -912,7 +959,7 @@ function fcResult_cal(){
                     </c:otherwise>
 				</c:choose>
                  <c:choose>
-		    		<c:when test="${(recoveryConVO.receiveCnt+recoveryConVO.checkCnt)==recoveryConVO.totalCnt && recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"> 
+		    		<c:when test="${recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"> 
 					    <td class='text-center'>
 					    <input style="width:55px;" class="form-control" type="text" id="recoveryResultCnt" name="recoveryResultCnt" maxlength="3" numberOnly onKeyup="fcResult_cal()" value="${recoveryVO.recoveryResultCnt}">
 					    </td>

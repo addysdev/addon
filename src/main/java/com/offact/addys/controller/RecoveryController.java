@@ -646,7 +646,7 @@ public class RecoveryController {
 		    	smsNoList=commonSvc.getSmsList(userConVO);
 		    	
 
-				smsVO.setSmsMsg("[애디스] 회수품목이 등록되었습니다."+recoveryVO.getRecoveryClosingDate()+"까지 해당품목을 발신처리 부탁드립니다.");
+				smsVO.setSmsMsg("[애디스] 회수품목이 등록되었습니다."+recoveryVO.getRecoveryClosingDate()+"까지 수신될 수 있도록 해당품목을 발신처리 부탁드립니다.");
 
 				for (int j=0;j<smsNoList.size();j++){
 					
@@ -1241,7 +1241,9 @@ public class RecoveryController {
 	   	public ModelAndView recoveryCodePrint(HttpServletRequest request,
                                               String recoveryCode,
                                               String groupId,
-                                              String groupName) throws BizException 
+                                              String groupName,
+                                              String collectDateTime,
+                                              String recoveryClosingDate) throws BizException 
 	       {
 	    	//log Controller execute time start
 			String logid=logid();
@@ -1255,6 +1257,8 @@ public class RecoveryController {
 	   		
 	   	    mv.addObject("groupName", groupName);
 	     	mv.addObject("recoveryCode", recoveryCode);
+	     	mv.addObject("collectDateTime", collectDateTime);
+	     	mv.addObject("recoveryClosingDate", recoveryClosingDate);
 	   		
 	   		mv.setViewName("/recovery/recoveryCodePrint");
 	   		
@@ -1740,6 +1744,72 @@ public class RecoveryController {
 	        
 	        mv.addObject("recoveryCode", recoveryCode);
 	        mv.addObject("recoveryCnt", recoveryCnt);
+	        
+	        mv.setViewName("/recovery/barCodeRecovery");
+	        
+	       //log Controller execute time end
+	      	long t2 = System.currentTimeMillis();
+	      	logger.info("["+logid+"] Controller deferReason end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	      	
+	        return mv;
+	    }
+	    /**
+	     * 메모관리
+	     *
+	     * @param request
+	     * @param response
+	     * @param model
+	     * @param locale
+	     * @return
+	     * @throws BizException
+	     */
+	    @RequestMapping(value = "/recovery/barcodecheck")
+	    public ModelAndView barCodeCheck(HttpServletRequest request, 
+	    		                       HttpServletResponse response,
+	    		                       String recoveryCode,
+	    		                       String recoveryResultCnt) throws BizException 
+	    {
+	        
+	    	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller barcodelist start");
+
+	        ModelAndView mv = new ModelAndView();
+	        
+	      	// 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));    
+	        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+	        
+	       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	        	
+	        	strIp = request.getRemoteAddr(); 
+	 	       	//로그인 상태처리		
+	 	   		UserVO userState =new UserVO();
+	 	   		userState.setUserId(strUserId);
+	 	   		userState.setLoginYn("N");
+	 	   		userState.setIp(strIp);
+	 	   		userState.setConnectIp(sClientIP);
+	 	   		userSvc.regiLoginYnUpdate(userState);
+	 	           
+	 	        //작업이력
+	 	   		WorkVO work = new WorkVO();
+	 	   		work.setWorkUserId(strUserId);
+	 	   	    work.setWorkIp(strIp);
+	 	   		work.setWorkCategory("CM");
+	 	   		work.setWorkCode("CM004");
+	 	   		commonSvc.regiHistoryInsert(work);
+	 	   		
+	 	       	mv.setViewName("/addys/loginForm");
+	       		return mv;
+			}
+	        
+	        
+	        mv.addObject("recoveryCode", recoveryCode);
+	        mv.addObject("recoveryResultCnt", recoveryResultCnt);
 	        
 	        mv.setViewName("/recovery/barCodeCheck");
 	        

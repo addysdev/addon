@@ -65,7 +65,7 @@ function fcBarCode_close(){
 
 function fcBarCode_cancel(){
 	
-	if (confirm('바코드 스캐너를 통한 검수를 취소하시겠습니까?\n취소하실 경우 검수수량은 회수수량으로 기본세팅되며\n직접 수량 확인 하시기 바랍니다.')){ 
+	if (confirm('바코드 스캐너를 통한 회수를 취소하시겠습니까?\n취소하실 경우 회수수량은 재고수량으로 기본세팅되며\n직접 수량 확인 하시기 바랍니다.')){ 
 		
 
 		var frm=opener.document.recoveryDetailListForm;
@@ -78,23 +78,20 @@ function fcBarCode_cancel(){
 		if(amtCnt > 1){
 			
 	    	for(i=0;i<amtCnt;i++){
-	    		frm.recoveryResultCnt[i].value=frm.recoveryCnt[i].value;
+	    		frm.recoveryCnt[i].value=frm.stockCnt[i].value;
 	    		opener.document.all('barCodeView')[i].innerText='';
 	    		opener.document.all('barCodeCheckColor')[i].style.backgroundColor='';
-	    		frm.recoveryCheck[i].checked=false;
 	    	}
 	    	
 		}else{
 			
-			frm.recoveryResultCnt.value=frm.recoveryCnt.value;
+			frm.recoveryCnt.value=frm.stockCnt.value;
 			opener.document.all('barCodeView').innerText='';
 			opener.document.all('barCodeCheckColor')[i].style.backgroundColor='';
-			frm.recoveryCheck.checked=false;
 
 		}
 
-		opener.fcResult_cal();
-		opener.totalCheck();
+		opener.fcResult_cal(); 	
 		opener.CheckInit=0;
 		//$("#barCodeDialog").dialog('close');
 		this.close();
@@ -142,11 +139,9 @@ function barCodeCheck(){
 		
     	for(i=0;i<amtCnt;i++){
     		//frm.orderResultCnt[i].value=0;
-    		if(frm.recoveryCnt[i].value==frm.recoveryResultCnt[i].value){
-    			frm.recoveryCheck[i].checked=true;
+    		if(frm.stockCnt[i].value==frm.recoveryCnt[i].value){
     			opener.document.all('barCodeCheckColor')[i].style.backgroundColor='';
     		}else{
-    			frm.recoveryCheck[i].checked=false;
     			opener.document.all('barCodeCheckColor')[i].style.backgroundColor='#FEE2B4';
     		}
     	}
@@ -154,11 +149,9 @@ function barCodeCheck(){
 	}else{
 		
 		//frm.orderResultCnt.value=0;
-		if(frm.recoveryCnt.value==frm.recoveryResultCnt.value){
-			frm.recoveryCheck.checked=true;
+		if(frm.stockCnt.value==frm.recoveryCnt.value){
 			opener.document.all('barCodeCheckColor').style.backgroundColor='';
 		}else{
-			frm.recoveryCheck.checked=false;
 			opener.document.all('barCodeCheckColor').style.backgroundColor='#FEE2B4';
 		}
 	}
@@ -176,14 +169,12 @@ function barCodeCheck(){
 
 	    		if(frm.barCode[i].value==barCodes[x]){	
 	    
-	    			frm.recoveryResultCnt[i].value=addCommaStr(''+(parseInt(isnullStr(deleteCommaStr(frm.recoveryResultCnt[i].value)))+1));
+	    			frm.recoveryCnt[i].value=addCommaStr(''+(parseInt(isnullStr(deleteCommaStr(frm.recoveryCnt[i].value)))+1));
 	    			opener.document.all('barCodeView')[i].innerText=barCodes[x];
 	    			
-	    			if(frm.recoveryCnt[i].value==frm.recoveryResultCnt[i].value){
-	    				frm.recoveryCheck[i].checked=true;
+	    			if(frm.stockCnt[i].value==frm.recoveryCnt[i].value){
 		    			opener.document.all('barCodeCheckColor')[i].style.backgroundColor='';
 	    			}else{
-	    				frm.recoveryCheck[i].checked=false;
 	    				opener.document.all('barCodeCheckColor')[i].style.backgroundColor='#FEE2B4';
 	    			}
 
@@ -206,14 +197,12 @@ function barCodeCheck(){
 
 			if(frm.barCode.value==barCodes[x]){	
 				
-				frm.recoveryResultCnt.value=addCommaStr(''+(parseInt(isnullStr(deleteCommaStr(frm.recoveryResultCnt.value)))+1));
+				frm.recoveryCnt.value=addCommaStr(''+(parseInt(isnullStr(deleteCommaStr(frm.recoveryCnt.value)))+1));
 				opener.document.all('barCodeView').innerText=barCodes[x];
 				
-				if(frm.recoveryCnt.value==frm.recoveryResultCnt.value){
-					frm.recoveryCheck.checked=true;
+				if(frm.stockCnt.value==frm.recoveryCnt.value){
 	    			opener.document.all('barCodeCheckColor').style.backgroundColor='';
     			}else{
-    				frm.recoveryCheck.checked=false;
     				opener.document.all('barCodeCheckColor').style.backgroundColor='#FEE2B4';
     			}
 				
@@ -253,8 +242,7 @@ function barCodeCheck(){
     	
     }
      
-	opener.fcResult_cal(); 	
-	opener.totalCheck();
+	opener. fcResult_cal(); 	
 
 	//document.all('checkTCnt').innerText=totCnt+'건';
 	//document.all('checkSCnt').innerText=sCnt+'건';
@@ -277,11 +265,11 @@ function barCodeCheck(){
 	      <col width="60px" >
 	     </colgroup>
 	     <tr>
-	     	<td style="background-color:#E6F3FF" class='text-center'>검수대상</td>
+	     	<td style="background-color:#E6F3FF" class='text-center'>회수대상</td>
 	     	<td class='text-right'><span style="color:gray">
-	          ${recoveryResultCnt}
+	          ${recoveryCnt}
 	          </span></td>
-	        <td style="background-color:#E6F3FF" class='text-center' >검수대기</td>
+	        <td style="background-color:#E6F3FF" class='text-center' >회수대기</td>
 	     	<td class='text-right'><span id="checkTCnt" style="color:red">0건</span></td>
 	     </tr>
 	   <!-- <tr>
@@ -294,7 +282,7 @@ function barCodeCheck(){
      </table>  
 <p><textarea style='height:340px;ime-mode:active;' class="form-control" id="barcode_list" name="barcode_list"  value=""  placeholder="바코드를 스캔하세요"  onkeyPress='javascript:EnterKey(event);'/></textarea></p>
 <br>
-<button id="deferpopclosebtn" type="button" class="btn btn-danger" onClick="fcBarCode_cancel()">바코드 검수취소</button>&nbsp;<button id="deferpopclosebtn" type="button" class="btn btn-default" onClick="fcBarCode_close()">닫기</button>  
+<button id="deferpopclosebtn" type="button" class="btn btn-danger" onClick="fcBarCode_cancel()">바코드 회수취소</button>&nbsp;<button id="deferpopclosebtn" type="button" class="btn btn-default" onClick="fcBarCode_close()">닫기</button>  
 </form:form>
 </div>
 </body>

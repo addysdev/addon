@@ -181,9 +181,9 @@
 	              <input type="hidden" name="groupId"  id="groupId" value="${stockMasterVO.groupId}">
 	              <td><c:out value="${stockMasterVO.groupName}"></c:out></td>
 	              <td class='text-right'>
-	              <input style="width:45px;" type="text" class="form-control" id="safeStock" name="safeStock" maxlength="2" numberOnly value="${stockMasterVO.safeStock}">   
+	              <input style="width:45px;" type="text" class="form-control" id="safeStock" name="safeStock" maxlength="3" numberOnly value="${stockMasterVO.safeStock}">   
 	              <td class='text-right'>
-	              <input style="width:45px;" type="text" class="form-control" id="holdStock" name="holdStock" maxlength="2" numberOnly value="${stockMasterVO.holdStock}">
+	              <input style="width:45px;" type="text" class="form-control" id="holdStock" name="holdStock" maxlength="3" numberOnly value="${stockMasterVO.holdStock}">
 	              </td>
 	              <td>
 	              <button type="button" id="receivebtn" class="btn btn-xs btn-success" onClick="fcUpdate_stockCnt('${status.count}');">변경</button>

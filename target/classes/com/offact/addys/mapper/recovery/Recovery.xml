@@ -183,6 +183,11 @@
 <select id="getRecoveryList"  resultMap="recoveryVO" parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
 Select T6.recoveryStateView,
        T6.recoveryState,
+       Case When T6.recoveryState = '02' Then DATE_FORMAT(T6.sendDateTime, '%Y-%m-%d') Else 
+                                              Case When T6.recoveryState = '03' Then DATE_FORMAT(T6.receiveDateTime, '%Y-%m-%d') Else 
+                                              Case When T6.recoveryState = '04' Then DATE_FORMAT(T6.checkDateTime, '%Y-%m-%d') Else '' End 
+                                              End
+            End stateDateTime,
        T6.recoveryCode,
        T6.recoveryClosingDate,
        T6.collectDateTime,
@@ -193,6 +198,9 @@ Select T6.recoveryStateView,
 From (
   Select T4.codeName as recoveryStateView ,
          T1.recoveryState,
+         T1.sendDateTime,
+         T1.receiveDateTime,
+         T1.checkDateTime,
          T1.recoveryCode,
          T2.recoveryClosingDate,
          DATE_FORMAT(T2.collectDateTime, '%Y-%m-%d') as collectDateTime,

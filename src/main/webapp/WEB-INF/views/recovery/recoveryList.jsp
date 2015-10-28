@@ -158,6 +158,7 @@
 	    <thead>
 	      <tr style="background-color:#E6F3FF">
 	        <th class='text-center'>진행상태</th>
+	        <th class='text-center'>진행일시</th>
             <th class='text-center'>회수번호</th>
             <th class='text-center'>매장명</th>
             <th class='text-center'>회수수량</th>
@@ -171,6 +172,7 @@
              <tr id="select_tr_${recoveryVO.recoveryStateView}">
                  <input type="hidden" id="recoveryState" name="recoveryState" value="${recoveryVO.recoveryState}">
                  <td class='text-center'><c:out value="${recoveryVO.recoveryStateView}"></c:out></td>
+                 <td class='text-center'><c:out value="${recoveryVO.stateDateTime }"></c:out></td>
                  <td><a href="javascript:fcRecovery_detail('${recoveryVO.recoveryCode}','${recoveryVO.groupId}','${recoveryVO.groupName}','${recoveryVO.recoveryState}',
                  '${recoveryVO.collectDateTime}','${recoveryVO.recoveryClosingDate}','${recoveryState.totalCnt}','${recoveryState.receiveCnt}','${recoveryState.checkCnt}')"><c:out value="${recoveryVO.recoveryCode}"></c:out></a></td>
                  <td><c:out value="${recoveryVO.groupName}"></c:out></td>
@@ -186,7 +188,7 @@
             </c:if>
            <c:if test="${empty recoveryList}">
               <tr>
-                  <td colspan='6' class='text-center'>조회된 데이터가 없습니다.</td>
+                  <td colspan='7' class='text-center'>조회된 데이터가 없습니다.</td>
               </tr>
           </c:if>
 	    </tbody>
