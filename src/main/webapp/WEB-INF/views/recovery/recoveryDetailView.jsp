@@ -438,7 +438,7 @@ function fcRecovery_complete(){
 function totalCheck(){
 	
 	    //if('${recoveryVO.receiveCnt==recoveryVO.totalCnt && strAuth!= "03"}'){
-	    if('${strAuth!= "03"}'){
+	    if('${strAuth!= "03" || strAuthId== "AD001" }'){
 
 	    	var frm=document.recoveryDetailListForm;
 	    	var amtCnt = frm.productCode.length;
@@ -739,7 +739,7 @@ function fcResult_cal(){
           </div >
           <div style="position:absolute; right:30px" > 
           <c:choose>
-    		<c:when test="${recoveryConVO.recoveryState=='03' && strAuth!= '03'}">
+    		<c:when test="${recoveryConVO.recoveryState=='03' && (strAuth!='03' || strAuthId=='AD001')}">
 				<button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcRecovery_complete()">검수완료</button>
 			</c:when>
 			<c:otherwise>
@@ -865,7 +865,7 @@ function fcResult_cal(){
 	     	<td style="background-color:#E6F3FF">검수 합계금액</td>
 	     	<td class='text-right'><span id="totalRecoveryResultAmt" style="color:red"></span></td>
 	        <c:if test="${recoveryConVO.recoveryState=='01'}"><td>&nbsp;<button type="button" id="barcodebtn" onClick="fcBarCode_recovery('${recoveryConVO.recoveryCode}')" class="btn btn-xs btn-info">바코드 회수</button></td></c:if>
-	        <c:if test="${recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"><td>&nbsp;<button type="button" id="barcodebtncheck" class="btn btn-xs btn-info" onClick="fcBarCode_check('${recoveryConVO.recoveryCode}')" >바코드 검수</button></td></c:if>
+	        <c:if test="${recoveryConVO.recoveryState=='03'  && (strAuth!='03' || strAuthId=='AD001')}"><td>&nbsp;<button type="button" id="barcodebtncheck" class="btn btn-xs btn-info" onClick="fcBarCode_check('${recoveryConVO.recoveryCode}')" >바코드 검수</button></td></c:if>
 	     </tr>
      </table>
        <div class="thead">
@@ -885,7 +885,7 @@ function fcResult_cal(){
 	    <thead>
 		<tr style="background-color:#E6F3FF">
      	  <c:choose>
-    		<c:when test="${recoveryConVO.recoveryState=='03'  && strAuth!= '03'}">
+    		<c:when test="${recoveryConVO.recoveryState=='03'  && (strAuth!='03' || strAuthId=='AD001')}">
 				<th class='text-center' >검수<input type="checkbox"  id="recoveryCheckAll"  name="recoveryCheckAll" onchange="fcRecovery_checkAll()" title="전체선택" /></th>
 			</c:when>
 			<c:otherwise>
@@ -926,7 +926,7 @@ function fcResult_cal(){
              	 <input type="hidden" id="seqs" name="seqs" >
 	             <tr id="barCodeCheckColor" >
                  <c:choose>
-		    		<c:when test="${recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"> 
+		    		<c:when test="${recoveryConVO.recoveryState=='03'  && (strAuth!='03' || strAuthId=='AD001')}"> 
 						<td class='text-center'>${status.count}<br><input type="checkbox" id="recoveryCheck" name="recoveryCheck" value="${recoveryVO.productCode}" title="선택"  onChange="totalCheck()" /></td>
 		    		</c:when>
 					<c:otherwise>
@@ -959,7 +959,7 @@ function fcResult_cal(){
                     </c:otherwise>
 				</c:choose>
                  <c:choose>
-		    		<c:when test="${recoveryConVO.recoveryState=='03'  && strAuth!= '03'}"> 
+		    		<c:when test="${recoveryConVO.recoveryState=='03'  && (strAuth!='03' || strAuthId=='AD001')}"> 
 					    <td class='text-center'>
 					    <input style="width:55px;" class="form-control" type="text" id="recoveryResultCnt" name="recoveryResultCnt" maxlength="3" numberOnly onKeyup="fcResult_cal()" value="${recoveryVO.recoveryResultCnt}">
 					    </td>

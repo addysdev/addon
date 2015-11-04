@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="Counsel">
+<mapper namespace="As">
 
-<resultMap id="counselListVO" type="com.offact.addys.vo.smart.CounselVO" >
+<resultMap id="asListVO" type="com.offact.addys.vo.smart.AsVO" >
   <result column="idx"              property="idx"  />
   <result column="groupId"            property="groupId"  />
   <result column="customerKey"      	   property="customerKey"  />
   <result column="customerId"       	   property="customerId"  />
   <result column="customerName"       	   property="customerName"  />
-  <result column="counselState"              property="counselState"  />
-  <result column="counsel"                property="counsel"  />
-  <result column="counselDateTime"   property="counselDateTime"  />
+  <result column="asState"              property="asState"  />
+  <result column="as"                property="as"  />
+  <result column="asDateTime"   property="asDateTime"  />
   <result column="userId"   property="userId"  />
   <result column="userName"   property="userName"  />
-  <result column="counselResult"   property="counselResult"  />
-  <result column="counselResultDateTime"   property="counselResultDateTime"  />
+  <result column="asResult"   property="asResult"  />
+  <result column="asResultDateTime"   property="asResultDateTime"  />
   <result column="stateUpdateUserId"   property="stateUpdateUserId"  />
   <result column="stateUpdateUserName"   property="stateUpdateUserName"  />
   <result column="stateUpdateDateTime"   property="stateUpdateDateTime"  />
 </resultMap>
 
-<select id="getCounselPageList"  resultMap="counselListVO" parameterType="com.offact.addys.vo.smart.CounselVO" >
+<select id="getAsPageList"  resultMap="asListVO" parameterType="com.offact.addys.vo.smart.AsVO" >
         SELECT T1.idx
 			  ,T1.groupId
 			  ,T2.groupName
 			  ,T1.customerKey
 			  ,T3.customerId   
 			  ,T3.customerName 
-			  ,DATE_FORMAT(T1.counselDateTime, '%Y-%m-%d %T') as counselDateTime
-			  ,Case When T1.counselState = '03' Then '상담완료' Else
-			  		(Case When T1.counselState = '02' Then '처리중' Else '상담접수' End)
-			  		End counselState
-			  ,T1.counsel
-			  ,Case When ifnull(T4.counselResultDateTime,'') = '' Then '' Else DATE_FORMAT(T4.counselResultDateTime, '%Y-%m-%d %T') End counselResultDateTime
+			  ,DATE_FORMAT(T1.asDateTime, '%Y-%m-%d %T') as asDateTime
+			  ,Case When T1.asState = '03' Then 'AS완료' Else
+			  		(Case When T1.asState = '02' Then '처리중' Else 'AS접수' End)
+			  		End asState
+			  ,T1.as
+			  ,Case When ifnull(T4.asResultDateTime,'') = '' Then '' Else DATE_FORMAT(T4.asResultDateTime, '%Y-%m-%d %T') End asResultDateTime
 			  ,ifnull(T4.userId,'') as userId
 			  ,ifnull(T5.userName,'') as userName
-          FROM smCounsel T1
+          FROM smAs T1
           	   Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
-			   Left Join smCounselResult T4 On T1.idx=T4.idx
+			   Left Join smAsResult T4 On T1.idx=T4.idx
 			   Left Join ofUser T5 On T4.userId=T5.userId
-         WHERE T1.counselDateTime between concat(#{start_counselDate},' 00:00:00') and concat(#{end_counselDate},' 23:59:59')
+         WHERE T1.asDateTime between concat(#{start_asDate},' 00:00:00') and concat(#{end_asDate},' 23:59:59')
          	<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}
            </if>
@@ -54,16 +54,16 @@
                </when>
              </choose>
            </if>
-         ORDER BY counselDateTime desc
+         ORDER BY asDateTime desc
  LIMIT ${page_limit_val1} , ${page_limit_val2}
 </select>
 
-<select id="getCounselCnt" resultType="int">
+<select id="getAsCnt" resultType="int">
 	SELECT count(*) AS TOT_COUNT
-  		FROM smCounsel T1
+  		FROM smAs T1
           	   Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
-         WHERE T1.counselDateTime between concat(#{start_counselDate},' 00:00:00') and concat(#{end_counselDate},' 23:59:59')
+         WHERE T1.asDateTime between concat(#{start_asDate},' 00:00:00') and concat(#{end_asDate},' 23:59:59')
          	<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}
            </if>
@@ -79,83 +79,83 @@
            </if>
 </select>
 
-<select id="getCounselDetail" resultMap="counselListVO" parameterType="com.offact.addys.vo.smart.CounselVO" >
+<select id="getAsDetail" resultMap="asListVO" parameterType="com.offact.addys.vo.smart.AsVO" >
 
 		SELECT T1.idx
 		      ,T1.customerKey
 			  ,T2.customerId   
 			  ,T2.customerName  
-			  ,T1.counselState
-			  ,T1.counsel
-			  ,T1.counselDateTime
+			  ,T1.asState
+			  ,T1.as
+			  ,T1.asDateTime
 			  ,ifnull(T3.userId,'') as userId
 			  ,ifnull(T4.userName,'') as userName
-			  ,ifnull(T3.counselResult,'') as counselResult
-			  ,ifnull(T3.counselResultDateTime,'') as counselResultDateTime
+			  ,ifnull(T3.asResult,'') as asResult
+			  ,ifnull(T3.asResultDateTime,'') as asResultDateTime
 			  ,ifnull(T1.stateUpdateUserId,'') as stateUpdateUserId
 			  ,ifnull(T5.userName,'') as stateUpdateUserName
 			  ,ifnull(T1.stateUpdateDateTime,'') as stateUpdateDateTime
-          FROM smCounsel T1
+          FROM smAs T1
 			   Left Join smCustomer T2 On T1.customerKey=T2.customerKey
-			   Left Join smCounselResult T3 On T1.idx=T3.idx
+			   Left Join smAsResult T3 On T1.idx=T3.idx
 			   Left Join ofUser T4 On T3.userId=T4.userId
 			   Left Join ofUser T5 On T1.stateUpdateUserId=T5.userId	   	     
 		 Where T1.idx = #{idx}
 </select>
 
-<update id="counselStateUpdate" parameterType="com.offact.addys.vo.smart.CounselVO" >
-        Update smCounsel
+<update id="asStateUpdate" parameterType="com.offact.addys.vo.smart.AsVO" >
+        Update smAs
        		Set
-  				counselState = #{counselState}
+  				asState = #{asState}
   				,stateUpdateUserId = #{stateUpdateUserId}
   				,stateUpdateDateTime = now()
  		Where idx = #{idx}
 </update>
 
-<insert id="counselResultInsert" parameterType="com.offact.addys.vo.smart.CounselVO" >
-  	Insert into smCounselResult( 
+<insert id="asResultInsert" parameterType="com.offact.addys.vo.smart.AsVO" >
+  	Insert into smAsResult( 
         	 idx
             ,userId
             ,groupId
-            ,counselResult 
-            ,counselResultDateTime
+            ,asResult 
+            ,asResultDateTime
             )
         Values (
               #{idx}
 	  		, #{userId}
 	  		, #{groupId}
-	  		, #{counselResult}
+	  		, #{asResult}
 	  		, now()
 	  		)
 	  		
 </insert>
 
-<select id="getCounselReply" resultMap="counselListVO" parameterType="com.offact.addys.vo.smart.CounselVO" >
+<select id="getAsReply" resultMap="asListVO" parameterType="com.offact.addys.vo.smart.AsVO" >
 
 		SELECT T1.idx
 		      ,T1.userId
 		      ,T2.userName
-		      ,DATE_FORMAT(T1.counselHistoryDateTime, '%Y-%m-%d %T') as counselHistoryDateTime
-			  ,T1.counselHistory
-          FROM smCounselHistory T1
+		      ,DATE_FORMAT(T1.asHistoryDateTime, '%Y-%m-%d %T') as asHistoryDateTime
+			  ,T1.asHistory
+          FROM smAsHistory T1
                Left Join ofUser T2 on T1.userId=T2.userId
 		 Where T1.upidx = #{upidx}
-		 order by counselHistoryDateTime desc
+		 order by asHistoryDateTime desc
 </select>
 
-<insert id="regiReplyInsert" parameterType="com.offact.addys.vo.smart.CounselVO" >
+<insert id="regiReplyInsert" parameterType="com.offact.addys.vo.smart.AsVO" >
   	
-  	Insert into smCounselHistory( 
+  	Insert into smAsHistory( 
         	 userId
             ,groupId
-            ,counselHistory
-            ,counselHistoryDateTime
+            ,asHistory
+            ,asHistoryDateTime
             ,upidx
             )
         Values (
 	  		  #{userId}
 	  		, #{groupId}
-	  		, #{counselHistory}
+	  		, #{asHistory}
 	  		, now()
 	  		, #{upidx}
 	  		)

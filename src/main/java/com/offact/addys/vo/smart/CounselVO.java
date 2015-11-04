@@ -17,7 +17,10 @@ public class CounselVO extends AbstractVO {
 	private String counselState;
 	private String counsel;
 	private String counselDateTime;
+	private String counselHistory;
+	private String counselHistoryDateTime;
 	
+	private String upidx;
 	private String userId;
 	private String userName;
 	private String counselResult;
@@ -29,6 +32,10 @@ public class CounselVO extends AbstractVO {
 	
     private String searchGubun;
     private String searchValue;
+
+	private String start_counselDate;
+	private String end_counselDate;
+	private String con_groupId;
     
     // /** for paging */
     private String totalCount       = "0";
@@ -171,6 +178,42 @@ public class CounselVO extends AbstractVO {
 	}
 	public void setStateUpdateUserName(String stateUpdateUserName) {
 		this.stateUpdateUserName = stateUpdateUserName;
+	}
+	public String getStart_counselDate() {
+		return start_counselDate;
+	}
+	public void setStart_counselDate(String start_counselDate) {
+		this.start_counselDate = start_counselDate;
+	}
+	public String getEnd_counselDate() {
+		return end_counselDate;
+	}
+	public void setEnd_counselDate(String end_counselDate) {
+		this.end_counselDate = end_counselDate;
+	}
+	public String getCon_groupId() {
+		return con_groupId;
+	}
+	public void setCon_groupId(String con_groupId) {
+		this.con_groupId = con_groupId;
+	}
+	public String getUpidx() {
+		return upidx;
+	}
+	public void setUpidx(String upidx) {
+		this.upidx = upidx;
+	}
+	public String getCounselHistory() {
+		return counselHistory;
+	}
+	public void setCounselHistory(String counselHistory) {
+		this.counselHistory = counselHistory;
+	}
+	public String getCounselHistoryDateTime() {
+		return counselHistoryDateTime;
+	}
+	public void setCounselHistoryDateTime(String counselHistoryDateTime) {
+		this.counselHistoryDateTime = counselHistoryDateTime;
 	}
     
 }

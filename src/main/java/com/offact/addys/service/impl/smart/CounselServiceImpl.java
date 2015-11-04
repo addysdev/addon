@@ -16,6 +16,7 @@ import com.offact.framework.util.StringUtil;
 import com.offact.framework.db.SqlSessionCommonDao;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.service.smart.CounselService;
+import com.offact.addys.vo.smart.ComunityVO;
 import com.offact.addys.vo.smart.CounselVO;
 
 /**
@@ -71,6 +72,26 @@ public class CounselServiceImpl implements CounselService {
     	int retval=0;
     	
     	retval=commonDao.update("Counsel.counselStateUpdate", counsel);
+    	
+    	return retval;
+
+    }
+    
+    @Override
+    public List<CounselVO> getCounselReply(CounselVO counsel) throws BizException {
+    	
+        List<CounselVO> counselList = commonDao.selectList("Counsel.getCounselReply", counsel);
+
+        return counselList;
+    }
+
+    @Override
+    public int regiReplyInsert(CounselVO counsel) throws BizException {
+        //상담처리
+    	
+    	int retval=0;
+
+    	retval=commonDao.insert("Counsel.regiReplyInsert", counsel);
     	
     	return retval;
 

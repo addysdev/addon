@@ -18,11 +18,16 @@ public class ComunityVO extends AbstractVO {
 	private String comment;
 	private String commentDateTime;
 	private String upidx;
+	private String userId;
 	
 	private String commentCnt;
 
     private String searchGubun;
     private String searchValue;
+    
+	private String start_comunityDate;
+	private String end_comunityDate;
+	private String con_groupId;
     
     // /** for paging */
     private String totalCount       = "0";
@@ -135,6 +140,30 @@ public class ComunityVO extends AbstractVO {
 	}
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getStart_comunityDate() {
+		return start_comunityDate;
+	}
+	public void setStart_comunityDate(String start_comunityDate) {
+		this.start_comunityDate = start_comunityDate;
+	}
+	public String getEnd_comunityDate() {
+		return end_comunityDate;
+	}
+	public void setEnd_comunityDate(String end_comunityDate) {
+		this.end_comunityDate = end_comunityDate;
+	}
+	public String getCon_groupId() {
+		return con_groupId;
+	}
+	public void setCon_groupId(String con_groupId) {
+		this.con_groupId = con_groupId;
 	}
     
 }

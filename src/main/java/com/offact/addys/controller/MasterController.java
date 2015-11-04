@@ -4408,4 +4408,68 @@ public class MasterController {
 	 		
 	 		return mv;
 	 	}
+	  
+	  /**
+	   	 * Simply selects the home view to render by returning its name.
+	   	 * @throws BizException
+	   	 */
+	       @RequestMapping(value = "/master/stockcheckform")
+	   	public ModelAndView stockCheckForm(HttpServletRequest request) throws BizException 
+	       {
+	   		
+	   		ModelAndView mv = new ModelAndView();
+	   		
+	   	// 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+	        
+	        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	        	
+	        	strIp = request.getRemoteAddr(); //로그인 상태처리		
+	    		UserVO userState =new UserVO();
+	    		userState.setUserId(strUserId);
+	    		userState.setLoginYn("N");
+	    		userState.setIp(strIp);
+	    		userState.setConnectIp(sClientIP);
+	    		userSvc.regiLoginYnUpdate(userState);
+	            
+	            //작업이력
+		 		WorkVO work = new WorkVO();
+		 		work.setWorkUserId(strUserId);
+		 		work.setWorkIp(strIp);
+		 		work.setWorkCategory("CM");
+		 		work.setWorkCode("CM004");
+		 		commonSvc.regiHistoryInsert(work);
+	    		
+	        	mv.setViewName("/addys/loginForm");
+	       		return mv;
+			}
+	        
+	        StockVO stockConVO = new StockVO();
+	        
+	        stockConVO.setGroupId(strGroupId);
+	        
+	        //오늘 날짜
+	        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+	        Date currentTime = new Date();
+	        String strToday = simpleDateFormat.format(currentTime);
+	        
+	        stockConVO.setStart_stockDate(strToday);
+
+	        // 조회조건저장
+	        mv.addObject("stockConVO", stockConVO);
+
+	        //조직정보 조회
+	        GroupVO group = new GroupVO();
+	        group.setGroupId(strGroupId);
+	        List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
+	        mv.addObject("group_comboList", group_comboList);
+	   		
+	   		mv.setViewName("/master/stockCheckForm");
+	   		
+	   		return mv;
+	   	}
 }

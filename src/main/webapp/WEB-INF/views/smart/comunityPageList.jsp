@@ -55,7 +55,7 @@
 	 </form:form>
 
 	 <!-- 페이징 -->
-     <taglib:paging cbFnc="goPageComunityPageList" totalCount="${totalCount}" curPage="${comunityCon.curPage}" rowCount="${comunityCon.rowCount}" />
+     <taglib:paging cbFnc="goPageComunityPageList" totalCount="${totalCount}" curPage="${comunityConVO.curPage}" rowCount="${comunityConVO.rowCount}" />
      <!-- //페이징 -->
 
     

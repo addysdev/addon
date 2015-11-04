@@ -174,7 +174,7 @@
 									 ) As I5 On I1.productCode = I5.productCode And I1.groupID = I5.groupID /*구매기준일*/   
                            Left Join(
 									  Select groupID,productCode,updateDate,
-                           					(Select orderCode From adOrderDetail Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime)  as orderCode,
+                           					(Select max(orderCode) From adOrderDetail Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime)  as orderCode,
                            					(Select C10.orderState 
                                					From adOrderDetail C9
                                     				Left Join adOrder C10 On C9.orderCode = C10.orderCode
@@ -341,7 +341,7 @@ From (
 									 ) As I5 On I1.productCode = I5.productCode And I1.groupID = I5.groupID /*구매기준일*/   
                            Left Join(
 									  Select groupID,productCode,updateDate,
-                           					(Select orderCode From adOrderDetail Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime)  as orderCode,
+                           					(Select max(orderCode) From adOrderDetail Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime)  as orderCode,
                            					(Select C10.orderState 
                                					From adOrderDetail C9
                                     				Left Join adOrder C10 On C9.orderCode = C10.orderCode
@@ -490,7 +490,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 									 ) As I5 On I1.productCode = I5.productCode And I1.groupID = I5.groupID /*구매기준일*/   
                            Left Join(
 									  Select groupID,productCode,updateDate,
-                           					(Select orderCode From adOrderDetail Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime)  as orderCode,
+                           					(Select max(orderCode) From adOrderDetail Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime)  as orderCode,
                            					(Select C10.orderState 
                                					From adOrderDetail C9
                                     				Left Join adOrder C10 On C9.orderCode = C10.orderCode
@@ -624,7 +624,7 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
 									 ) As I5 On I1.productCode = I5.productCode And I1.groupID = I5.groupID /*구매기준일*/   
                            Left Join(
 									  Select groupID,productCode,updateDate,
-                           					(Select orderCode From adOrderDetail Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime)  as orderCode,
+                           					(Select max(orderCode) From adOrderDetail Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime)  as orderCode,
                            					(Select C10.orderState 
                                					From adOrderDetail C9
                                     				Left Join adOrder C10 On C9.orderCode = C10.orderCode

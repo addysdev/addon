@@ -40,7 +40,9 @@
 	    	<c:if test="${!empty counselList}">
              <c:forEach items="${counselList}" var="counselListVO" varStatus="status">
              <tr id="select_tr_${counselListVO.idx}">
-                 <td><a href="javascript:fcCounsel_procForm('${counselListVO.idx}')"><c:out value="${counselListVO.customerKey}"></c:out></a></td>
+                 <td><a href="javascript:fcCounsel_procForm('${counselListVO.idx}')"><c:out value="${counselListVO.customerKey}"></c:out></a>
+                 <img id="hisbtn" onClick="fcHis_detail('${counselListVO.customerKey}','${counselListVO.idx}','${counselListVO.counsel}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="이력">
+                 </td>
                  <td><c:out value="${counselListVO.customerName}"></c:out></td>
                  <td><c:out value="${counselListVO.customerId}"></c:out></td>
                  <td><c:out value="${counselListVO.counselDateTime}"></c:out></td>

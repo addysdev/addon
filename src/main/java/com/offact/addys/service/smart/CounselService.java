@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.offact.framework.exception.BizException;
+import com.offact.addys.vo.smart.ComunityVO;
 import com.offact.addys.vo.smart.CounselVO;
 
 /**
@@ -54,5 +55,21 @@ public interface CounselService {
      * @throws BizException
      */
     public int counselProc(CounselVO counsel) throws BizException;
+    
+    /**
+     * 상담 상세조회
+     * 
+     * @return
+     * @throws BizException
+     */
+    public List<CounselVO> getCounselReply(CounselVO counsel) throws BizException;
+    
+    /**
+     * 상담 상세 처리
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int regiReplyInsert(CounselVO counsel) throws BizException;
 
 }

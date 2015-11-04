@@ -28,7 +28,10 @@
   	FROM smCommunity T1
          Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
-         WHERE 1=1
+         WHERE T1.commentDateTime between concat(#{start_comunityDate},' 00:00:00') and concat(#{end_comunityDate},' 23:59:59')
+         	<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           		AND T1.groupId = #{con_groupId}
+           </if>
            <if test="searchValue != null and searchValue != ''" >
              <choose>
                <when test="searchGubun.equals('01')">
@@ -48,7 +51,10 @@
   		FROM smCommunity T1
          Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
-         WHERE 1=1
+         WHERE T1.commentDateTime between concat(#{start_comunityDate},' 00:00:00') and concat(#{end_comunityDate},' 23:59:59')
+           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           		AND T1.groupId = #{con_groupId}
+           </if>
            <if test="searchValue != null and searchValue != ''" >
              <choose>
                <when test="searchGubun.equals('01')">
@@ -82,6 +88,7 @@
             ,comment
             ,commentDateTime
             ,upidx
+            ,userId
             )
         Values (
 	  		  #{customerKey}
@@ -91,6 +98,7 @@
 	  		, #{comment}
 	  		, now()
 	  		, #{upidx}
+	  		, #{userId}
 	  		)
 </insert>
 

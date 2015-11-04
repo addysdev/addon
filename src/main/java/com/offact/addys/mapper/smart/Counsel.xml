@@ -40,7 +40,10 @@
 			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
 			   Left Join smCounselResult T4 On T1.idx=T4.idx
 			   Left Join ofUser T5 On T4.userId=T5.userId
-         WHERE 1=1
+         WHERE T1.counselDateTime between concat(#{start_counselDate},' 00:00:00') and concat(#{end_counselDate},' 23:59:59')
+         	<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           		AND T1.groupId = #{con_groupId}
+           </if>
            <if test="searchValue != null and searchValue != ''" >
              <choose>
                <when test="searchGubun.equals('01')">
@@ -60,7 +63,10 @@
   		FROM smCounsel T1
           	   Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
-         WHERE 1=1
+         WHERE T1.counselDateTime between concat(#{start_counselDate},' 00:00:00') and concat(#{end_counselDate},' 23:59:59')
+         	<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           		AND T1.groupId = #{con_groupId}
+           </if>
            <if test="searchValue != null and searchValue != ''" >
              <choose>
                <when test="searchGubun.equals('01')">
@@ -122,6 +128,37 @@
 	  		, now()
 	  		)
 	  		
+</insert>
+
+<select id="getCounselReply" resultMap="counselListVO" parameterType="com.offact.addys.vo.smart.CounselVO" >
+
+		SELECT T1.idx
+		      ,T1.userId
+		      ,T2.userName
+		      ,DATE_FORMAT(T1.counselHistoryDateTime, '%Y-%m-%d %T') as counselHistoryDateTime
+			  ,T1.counselHistory
+          FROM smCounselHistory T1
+               Left Join ofUser T2 on T1.userId=T2.userId
+		 Where T1.upidx = #{upidx}
+		 order by counselHistoryDateTime desc
+</select>
+
+<insert id="regiReplyInsert" parameterType="com.offact.addys.vo.smart.CounselVO" >
+  	
+  	Insert into smCounselHistory( 
+        	 userId
+            ,groupId
+            ,counselHistory
+            ,counselHistoryDateTime
+            ,upidx
+            )
+        Values (
+	  		  #{userId}
+	  		, #{groupId}
+	  		, #{counselHistory}
+	  		, now()
+	  		, #{upidx}
+	  		)
 </insert>
 
 </mapper>
