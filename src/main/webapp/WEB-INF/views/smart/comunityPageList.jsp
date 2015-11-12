@@ -27,21 +27,28 @@
 	    <thead>
 	      <tr style="background-color:#E6F3FF">
 	        <th>핸드폰번호</th>
-            <th>커뮤니티 글</th>
+            <th>댓글수</th>
+            <th>talk내용</th>
             <th>직원여부</th>
             <th>등록일시</th>
-            <th>댓글수</th>
 	      </tr>
 	    </thead>
 	    <tbody>
 	    	<c:if test="${!empty comunityList}">
              <c:forEach items="${comunityList}" var="comunityListVO" varStatus="status">
              <tr id="select_tr_${comunityListVO.idx}">
-                 <td><a href="javascript:fcComunity_procForm('${comunityListVO.idx}','${comunityListVO.comment}')"><c:out value="${comunityListVO.customerKey}"></c:out></a></td>
+             <c:choose>
+	    		<c:when test="${comunityListVO.commentType == 'Y'}">
+                 <td><c:out value="${comunityListVO.customerKey}"></c:out></td>
+                 </c:when>
+					<c:otherwise>
+					   <td><a href="javascript:fcComunity_procForm('${comunityListVO.idx}','${comunityListVO.comment}')"><c:out value="${comunityListVO.customerKey}"></c:out></a></td>
+					</c:otherwise>
+				</c:choose>
+                 <td><c:out value="${comunityListVO.commentCnt}"></c:out></td>
                  <td><c:out value="${comunityListVO.comment}"></c:out></td>
                  <td><c:out value="${comunityListVO.commentType}"></c:out></td>
                  <td><c:out value="${comunityListVO.commentDateTime}"></c:out></td>
-                 <td><c:out value="${comunityListVO.commentCnt}"></c:out></td>
               </tr>
              </c:forEach>
             </c:if>

@@ -14,12 +14,12 @@
 function fcReply_add(){
 
 	if($("#comment").val()==''){
-		alert('추가할 답글내용을 입력하세요!');
+		alert('추가할 댓글내용을 입력하세요!');
 		$("#comment").focus();
 		return;
 	}
 
-	if (confirm('답글을 추가 하시겠습니까?')){ 
+	if (confirm('댓글을 추가 하시겠습니까?')){ 
 	
 	commonDim(true);
 	
@@ -46,15 +46,15 @@ function fcReply_add(){
 	<h5><strong><font style="color:#428bca"><span class="glyphicon glyphicon-book"></span>답글추가 &nbsp; 
    				</font></strong></h5>
 	  <form:form commandName="comunityVO" id="replyForm" name="replyForm" method="post" action="" >
-	  <input type="hidden" name="upidx"          id="upidx"         value="${idx}"  />
+	  <input type="hidden" name="upidx"          id="upidx"         value="${upidx}"  />
 	  <br>
 	  <table class="table table-bordered" >
 	 	<tr>
-          <th class='text-center' style="background-color:#E6F3FF;width:120px" >커뮤니티 글</th>
+          <th class='text-center' style="background-color:#E6F3FF;width:120px" >talk 내용</th>
           <th><input type="text" class="form-control" value="${comment}" placeholder="" disabled /></th>
       	</tr>
       	<tr>
-          <th class='text-center' style="background-color:#E6F3FF" >추가 커뮤니티</th>
+          <th class='text-center' style="background-color:#E6F3FF" >추가 댓글</th>
           <th>
           <div class="form-inline">
           <input type="text" class="form-control" id="comment" style="width:520px"  name="comment" style='ime-mode:active;' maxlength="200" value="" placeholder="커뮤니티"  />
@@ -80,7 +80,7 @@ function fcReply_add(){
 		        <th class='text-center'>no</th>
 	            <th class='text-center'>작성자</th>
 	            <th class='text-center'>작성일시</th>
-	            <th class='text-center'>답글</th>
+	            <th class='text-center'>댓글</th>
 		      </tr>
 		    </thead>
 		  </table>
@@ -101,7 +101,7 @@ function fcReply_add(){
 		             <c:forEach items="${comunityReply}" var="comunityVO" varStatus="status">
 		             <tr id="select_tr_${comunityVO.idx}">
 		                 <td class='text-left'><c:out value="${comunityReply.size()-(status.count-1)}"></c:out></td>
-		                 <td class='text-center'><c:out value="${comunityVO.customerKey}"></c:out></td>
+		                 <td class='text-center'><c:out value="${comunityVO.userId}"></c:out></td>
 		                 <td class='text-center'><c:out value="${comunityVO.commentDateTime}"></c:out></td>
 		                 <td class='text-left'><c:out value="${comunityVO.comment}"></c:out></td>
 		                 </tr>

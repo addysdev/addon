@@ -221,7 +221,7 @@ public class BatchController {
     	
     	smsNoList=commonSvc.getSmsBatchList(userConVO);
 
-		smsVO.setSmsMsg("[애디스] 회수 마감일이 하루 남았습니다.회수요청건에 대해 발신처리 부탁드립니다.");
+		smsVO.setSmsMsg("[애디스] 회수 마감일이 하루 남았습니다.회수요청건에 대해 발송처리 부탁드립니다.");
 
 		for (int j=0;j<smsNoList.size();j++){
 			

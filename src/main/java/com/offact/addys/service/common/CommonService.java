@@ -117,5 +117,14 @@ public interface CommonService {
      */
     public UserVO getEncPassword(UserVO user)
     	    throws BizException;
+    
+    /**
+     * 운송회사
+     *
+     * @return
+     * @throws BizException
+     */
+    public CodeVO getCodeName(CodeVO code) throws BizException;
+    
 
 }

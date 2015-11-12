@@ -16,6 +16,7 @@ import com.offact.framework.util.StringUtil;
 import com.offact.framework.db.SqlSessionCommonDao;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.service.recovery.RecoveryService;
+import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.master.ProductMasterVO;
 import com.offact.addys.vo.master.StockVO;
 import com.offact.addys.vo.order.TargetVO;
@@ -318,4 +319,12 @@ public class RecoveryServiceImpl implements RecoveryService {
 
         return recoveryList;
     }
+    
+    @Override
+    public int transUpdateProc(RecoveryVO recovery) throws BizException {
+
+    	return commonDao.update("Recovery.transUpdateProc", recovery);
+
+    }
+
 }

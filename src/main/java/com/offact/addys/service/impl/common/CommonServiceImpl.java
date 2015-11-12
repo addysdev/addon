@@ -162,4 +162,11 @@ public class CommonServiceImpl implements CommonService {
 	    return userVo;
 	    
   }
+   
+   @Override
+   public CodeVO getCodeName(CodeVO code) throws BizException {
+	   CodeVO transNaem = commonDao.selectOne("Code.getCodeName", code);
+
+       return transNaem;
+   }
 }

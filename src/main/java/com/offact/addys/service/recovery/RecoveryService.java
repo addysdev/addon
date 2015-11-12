@@ -10,6 +10,7 @@ import java.util.Map;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.vo.order.TargetVO;
 import com.offact.addys.vo.recovery.RecoveryVO;
+import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.master.ProductMasterVO;
 
 /**
@@ -162,4 +163,13 @@ public interface RecoveryService {
      * @throws BizException
      */
     public List<RecoveryVO> getTransProduct(RecoveryVO recovery) throws BizException;
+    
+    /**
+     * 운송정보 수정
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int transUpdateProc(RecoveryVO recovery) throws BizException;
+
 }

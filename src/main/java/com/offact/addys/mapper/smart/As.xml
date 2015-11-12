@@ -25,22 +25,24 @@
 			  ,T1.groupId
 			  ,T2.groupName
 			  ,T1.customerKey
-			  ,T3.customerId   
 			  ,T3.customerName 
-			  ,DATE_FORMAT(T1.asDateTime, '%Y-%m-%d %T') as asDateTime
-			  ,Case When T1.asState = '03' Then 'AS완료' Else
-			  		(Case When T1.asState = '02' Then '처리중' Else 'AS접수' End)
-			  		End asState
-			  ,T1.as
-			  ,Case When ifnull(T4.asResultDateTime,'') = '' Then '' Else DATE_FORMAT(T4.asResultDateTime, '%Y-%m-%d %T') End asResultDateTime
-			  ,ifnull(T4.userId,'') as userId
-			  ,ifnull(T5.userName,'') as userName
+			  ,T1.productCode
+			  ,T5.productName
+			  ,T1.asCompanyCode
+			  ,T1.asState
+			  ,T1.asCategory
+			  ,T1.asCode
+			  ,T1.asDetail
+			  ,DATE_FORMAT(T1.asStartDateTime, '%Y-%m-%d %T') as asStartDateTime
+			  ,Case When ifnull(T1.asTargetDate,'') = '' Then '' Else DATE_FORMAT(T1.asTargetDate, '%Y-%m-%d %T') End asTargetDate
+			  ,ifnull(T1.asStartUserId,'') as asStartUserId
+			  ,ifnull(T4.userName,'') as asStartUserName
           FROM smAs T1
           	   Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
-			   Left Join smAsResult T4 On T1.idx=T4.idx
-			   Left Join ofUser T5 On T4.userId=T5.userId
-         WHERE T1.asDateTime between concat(#{start_asDate},' 00:00:00') and concat(#{end_asDate},' 23:59:59')
+			   Left Join ofUser T4 On T1.asStartUserId=T4.userId
+			   Left Join adProductMaster T5 On T1.productCode=T5.productCode
+         WHERE T1.asStartDateTime between concat(#{start_asDate},' 00:00:00') and concat(#{end_asDate},' 23:59:59')
          	<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}
            </if>
@@ -54,7 +56,7 @@
                </when>
              </choose>
            </if>
-         ORDER BY asDateTime desc
+         ORDER BY asStartDateTime desc
  LIMIT ${page_limit_val1} , ${page_limit_val2}
 </select>
 
@@ -63,7 +65,9 @@
   		FROM smAs T1
           	   Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
-         WHERE T1.asDateTime between concat(#{start_asDate},' 00:00:00') and concat(#{end_asDate},' 23:59:59')
+			   Left Join ofUser T4 On T1.asStartUserId=T4.userId
+			   Left Join adProductMaster T5 On T1.productCode=T5.productCode
+         WHERE T1.asStartDateTime between concat(#{start_asDate},' 00:00:00') and concat(#{end_asDate},' 23:59:59')
          	<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}
            </if>

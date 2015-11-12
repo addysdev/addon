@@ -46,6 +46,20 @@ function fcRecovery_print(recoveryCode){
 	 frm.submit();
 }
 
+/*
+ * 회수 print 화면 POPUP
+ */
+function fcRecoveryDetail_print(recoveryCode){
+	
+	var frm = document.recoveryDetailListForm;
+	var url="<%= request.getContextPath() %>/recovery/recoverydetailprint?recoveryCode="+recoveryCode;
+
+    frm.action =url; 
+	frm.method="post";
+ 	frm.target='printObj';
+ 	frm.submit();
+}
+
 //회수처리
 function fcRecovery_process(){
         
@@ -615,7 +629,10 @@ function fcResult_cal(){
 
 }
 
-	function fcRecovery_transpath(url,transno){
+	function fcRecovery_transpath(){
+		
+		var url=document.recoveryDetailForm.transurl_Modify.value;
+		var transno=document.recoveryDetailForm.transportNo_Modify.value;
 		
 		var theURL=url+transno;
 		
@@ -720,6 +737,33 @@ function fcResult_cal(){
 	
     	}
     };
+    function fcModify_trans(recoveryCode,deliveryMethod){
+
+    	var url='<%= request.getContextPath() %>/recovery/transmodifyform';
+
+    	$('#transManage').dialog({
+            resizable : false, //사이즈 변경 불가능
+            draggable : true, //드래그 불가능
+            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+            width : 800,
+            height : 180,
+            modal : true, //주위를 어둡게
+
+            open:function(){
+                //팝업 가져올 url
+                $(this).load(url+'?recoveryCode='+recoveryCode+'&deliveryMethod='+deliveryMethod);
+               
+                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+                    $("#transManage").dialog('close');
+
+                    });
+            }
+            ,close:function(){
+            	$('#transManage').empty();
+            }
+        });
+    };
 
 </SCRIPT>
 	<div class="container-fluid">
@@ -743,6 +787,7 @@ function fcResult_cal(){
 				<button type="button" id="checkbtn"  name="checkbtn" disabled class="btn btn-primary" onClick="fcRecovery_complete()">검수완료</button>
 			</c:when>
 			<c:otherwise>
+			    <button type="button" class="btn btn-success" onClick="fcRecoveryDetail_print('${recoveryConVO.recoveryCode}')" >회수목록 인쇄</button>
 				<c:if test="${recoveryConVO.recoveryState=='01'}"><button type="button" class="btn btn-primary" onClick="fcRecovery_process()">발신</button></c:if>
 			</c:otherwise>
 		  </c:choose>
@@ -754,7 +799,7 @@ function fcResult_cal(){
           <th class='text-center'  style="background-color:#E6F3FF" >회수번호</th>
           <th class='text-center' colspan="2" ><c:out value="${recoveryConVO.recoveryCode}"></c:out>&nbsp;&nbsp;
           <c:if test="${recoveryConVO.recoveryState=='01'}"> 
-          <button id="downbtn" type="button" class="btn btn-xs btn-success" onClick="fcRecovery_print('${recoveryConVO.recoveryCode}')" >인쇄</button>
+          <button id="downbtn" type="button" class="btn btn-xs btn-success" onClick="fcRecovery_print('${recoveryConVO.recoveryCode}')" >회수번호 인쇄</button>
           </c:if>
           </th>
           <th class='text-center' style="background-color:#E6F3FF">회수요청일</th>
@@ -773,7 +818,7 @@ function fcResult_cal(){
 		          <!-- >button id="downbtn" type="button" class="btn btn-xs btn-success" onClick="" >직접입력</button --></th>
 		          <th class='text-center' colspan="2" >
 				  <select class="form-control" title="운송업체" id="transportCode" name="transportCode" value="">
-                	<option value="">선택</option>
+                	<option value="">없음</option>
                     <c:forEach var="codeVO" items="${code_comboList}" >
                     	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
                     </c:forEach>
@@ -803,24 +848,28 @@ function fcResult_cal(){
 		          <c:choose>
     				<c:when test="${recoveryConVO.deliveryMethod=='01'}">
 		         	  <th class='text-center' >&nbsp;택배 </th>
-		              <th class='text-center' style="background-color:#E6F3FF">운송회사</th>
-		              <th class='text-center' colspan="2" >${recoveryConVO.transport}</th>
+		              <th class='text-center' style="background-color:#E6F3FF">운송회사&nbsp;<button id="modifytrans" type="button" class="btn btn-xs btn-success" onClick="fcModify_trans('${recoveryConVO.recoveryCode}','${recoveryConVO.deliveryMethod}')" >수정</button></th>
+		              <th class='text-center' colspan="2" id="transCompanyId" >${recoveryConVO.transport}</th>
                       <th class='text-center'  style="background-color:#E6F3FF">운송장번호</th>
 		               <c:choose>
     						 <c:when test="${recoveryConVO.transurl!='N'}">
-    						  	<th class='text-center'><a href="javascript:fcRecovery_transpath('${recoveryConVO.transurl}','${recoveryConVO.transportNo}');">${recoveryConVO.transportNo}</a></th>
+    						    <input type="hidden" name="transurl_Modify" id="transurl_Modify" value="${recoveryConVO.transurl}" >
+    						    <input type="hidden" name="transportNo_Modify" id="transportNo_Modify" value="${recoveryConVO.transportNo}" >
+    						  	<th class='text-center'><a href="javascript:fcRecovery_transpath();"><span id="transNoId">${recoveryConVO.transportNo}</span></a></th>
 		             	 	 </c:when>
 							 <c:otherwise>
-							  	<th class='text-center'>${recoveryConVO.transportNo}</th>
+							    <input type="hidden" name="transurl_Modify" id="transurl_Modify" value="${recoveryConVO.transurl}" >
+    						    <input type="hidden" name="transportNo_Modify" id="transportNo_Modify" value="${recoveryConVO.transportNo}" >
+							  	<th class='text-center' id="transNoId" >${recoveryConVO.transportNo}</th>
 							 </c:otherwise>
 		 			  </c:choose>
 		            </c:when>
 			        <c:otherwise>	
 			       	  <th class='text-center' >&nbsp;퀵 </th>
-		              <th class='text-center' style="background-color:#E6F3FF">담당자</th>
-		              <th class='text-center' colspan="2" >${recoveryConVO.quickCharge}</th>
+		              <th class='text-center' style="background-color:#E6F3FF">담당자&nbsp;<button id="modifytrans" type="button" class="btn btn-xs btn-success" onClick="fcModify_trans('${recoveryConVO.recoveryCode}','${recoveryConVO.deliveryMethod}')" >수정</button></th>
+		              <th class='text-center' colspan="2" id="quickId" >${recoveryConVO.quickCharge}</th>
                       <th class='text-center'  style="background-color:#E6F3FF">연락처</th>
-		              <th class='text-center'>${recoveryConVO.quickTel}</th>
+		              <th class='text-center' id="quicktelId">${recoveryConVO.quickTel}</th>
 		            </c:otherwise>
 		 		   </c:choose>
 		      	</tr>

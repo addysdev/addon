@@ -121,7 +121,7 @@ $(function() {
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load('<%= request.getContextPath() %>/smart/comunityprodessform?idx='+idx+'&comment='+encodeURIComponent(comment));
+                $(this).load('<%= request.getContextPath() %>/smart/comunityprodessform?upidx='+idx+'&comment='+encodeURIComponent(comment));
                 //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#comunityProcessForm").dialog('close');
@@ -139,7 +139,7 @@ $(function() {
 <div class="container-fluid">
     <!-- 서브타이틀 영역 : 시작 -->
 	<div class="sub_title">
-   		<p class="titleP">커뮤니티 관리</p>
+   		<p class="titleP">매장과talk 관리</p>
 	</div>
 	<!-- 서브타이틀 영역 : 끝 -->
 	  <!-- 조회조건 -->
@@ -149,7 +149,7 @@ $(function() {
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
         <fieldset>
         	<div class="form-group">
-        	     <label for="start_comunityDate end_comunityDate">커뮤니티일자 :</label>
+        	     <label for="start_comunityDate end_comunityDate">talk일자 :</label>
 				<!-- 조회시작일자-->
 			    <input  class="form-control" style='width:135px' name="start_comunityDate" id="start_comunityDate" value="${comunityConVO.start_comunityDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
 			    <!-- 달력이미지 시작 -->
@@ -179,7 +179,7 @@ $(function() {
 				<label for="searchGubun">검색조건 :</label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
                 	<option value="01" >핸드폰</option>
-                    <option value="02" >커뮤니티 글</option>
+                    <option value="02" >talk내용</option>
            		</select>
 				<label class="sr-only" for="searchValue"> 조회값 </label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${comunityConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>

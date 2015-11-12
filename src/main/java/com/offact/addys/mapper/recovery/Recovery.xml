@@ -578,4 +578,18 @@ Select concat(right(#{collectCode},6),T3.recoveryCode) As recoveryCode,
     
 </select>
 
+
+<update id="transUpdateProc"  parameterType="com.offact.addys.vo.recovery.RecoveryVO" >
+	
+		update adRecovery 
+			set  deliveryMethod = #{deliveryMethod}
+			    ,transportCode = #{transportCode}
+        		,transport = #{transport}
+				,transportNo = #{transportNo}
+         		,quickCharge = #{quickCharge}
+			    ,quickTel = #{quickTel}
+		where recoveryCode = #{recoveryCode}
+		                        
+</update>
+
 </mapper>

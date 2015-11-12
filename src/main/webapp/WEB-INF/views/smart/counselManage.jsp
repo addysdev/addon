@@ -107,7 +107,7 @@ $(function() {
         }
     }
     
-    //레이어팝업 : 상담처리 Layer 팝업
+    //레이어팝업 : 1:1문의처리 Layer 팝업
     function fcCounsel_procForm(idx){
 
     	$('#counselProcessForm').dialog({
@@ -139,7 +139,7 @@ $(function() {
         });
     };
     
-    //레이어팝업 : 상담처리 Layer 팝업
+    //레이어팝업 : 1:1문의처리 Layer 팝업
     function fcHis_detail(customerKey,idx,counsel){
 
     	$('#counselHistory').dialog({
@@ -172,7 +172,7 @@ $(function() {
 <div class="container-fluid">
     <!-- 서브타이틀 영역 : 시작 -->
 	<div class="sub_title">
-   		<p class="titleP">상담관리</p>
+   		<p class="titleP">1:1문의관리</p>
 	</div>
 	<!-- 서브타이틀 영역 : 끝 -->
 	  <!-- 조회조건 -->
@@ -182,7 +182,7 @@ $(function() {
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
         <fieldset>
         	<div class="form-group">
-        	   <label for="start_counselDate end_counselDate">상담일자 :</label>
+        	   <label for="start_counselDate end_counselDate">1:1문의일자 :</label>
 				<!-- 조회시작일자-->
 			    <input  class="form-control" style='width:135px' name="start_counselDate" id="start_counselDate" value="${counselConVO.start_counselDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
 			    <!-- 달력이미지 시작 -->
@@ -226,10 +226,10 @@ $(function() {
   <!-- 조회결과리스트 -->
   <div id=counselPageList></div>
  
-  <!-- 상담처리-->
-  <div id="counselProcessForm"  title="상담처리"></div>
+  <!-- 1:1문의처리-->
+  <div id="counselProcessForm"  title="1:1문의처리"></div>
   
-  <div id="counselHistory"  title="상담이력"></div>
+  <div id="counselHistory"  title="1:1문의이력"></div>
 
 </div>
 <br>

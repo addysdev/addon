@@ -43,5 +43,17 @@
           And codeGroupId= 'SE02'             
        	  And Left(codeId,2) = #{codeId}
          Order By orderNo ,codeId ASC
-    </select>   
+    </select> 
+    
+    <select id="getCodeName"  resultMap="codeVO" parameterType="com.offact.addys.vo.common.CodeVO" >
+        SELECT
+               codeId, 
+               codeName,
+               description
+        From ofCode T1 
+        Where deletedYn = 'N'              
+              And codeGroupId = #{codeGroupId}
+              And codeId = #{codeId}
+
+    </select>    
 </mapper>

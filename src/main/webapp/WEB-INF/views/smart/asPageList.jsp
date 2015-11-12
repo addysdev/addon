@@ -27,13 +27,11 @@
 	    <thead>
 	      <tr style="background-color:#E6F3FF">
 	        <th>핸드폰번호</th>
-            <th>고객명</th>
-            <th>고객ID</th>
-            <th>AS일시</th>
-            <th>AS내용</th>
-            <th>AS상태</th>
-            <th>처리일시</th>
-            <th>처리자</th>
+	        <th>접수일자</th>
+            <th>접수자</th>
+            <th>완료일자</th>
+            <th>상품명</th>
+            <th>처리상태</th>
 	      </tr>
 	    </thead>
 	    <tbody>
@@ -41,21 +39,19 @@
              <c:forEach items="${asList}" var="asListVO" varStatus="status">
              <tr id="select_tr_${asListVO.idx}">
                  <td><a href="javascript:fcAs_procForm('${asListVO.idx}')"><c:out value="${asListVO.customerKey}"></c:out></a>
-                 <img id="hisbtn" onClick="fcHis_detail('${asListVO.customerKey}','${asListVO.idx}','${asListVO.as}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="이력">
+                 <img id="hisbtn" onClick="fcHis_detail('${asListVO.customerKey}','${asListVO.idx}','${asListVO.asDetail}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="이력">
                  </td>
-                 <td><c:out value="${asListVO.customerName}"></c:out></td>
-                 <td><c:out value="${asListVO.customerId}"></c:out></td>
-                 <td><c:out value="${asListVO.asDateTime}"></c:out></td>
-                 <td><c:out value="${asListVO.as}"></c:out></td>
-                 <td><c:out value="${asListVO.asState}"></c:out></td>
-                 <td><c:out value="${asListVO.asResultDateTime}"></c:out></td>
+                 <td><c:out value="${asListVO.asStartDateTime}"></c:out></td>
                  <td><c:out value="${asListVO.userName}(${asListVO.userId})"></c:out></td>
+                 <td><c:out value="${asListVO.asTargetDate}"></c:out></td>
+                 <td><c:out value="${asListVO.productName}"></c:out></td>
+                 <td><c:out value="${asListVO.asState}"></c:out></td>
               </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty asList}">
            <tr>
-               <td colspan='8' class='text-center'>조회된 데이터가 없습니다.</td>
+               <td colspan='6' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>

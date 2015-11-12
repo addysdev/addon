@@ -50,11 +50,13 @@ import com.offact.addys.service.common.CommonService;
 import com.offact.addys.service.common.SmsService;
 import com.offact.addys.service.common.UserService;
 import com.offact.addys.service.recovery.RecoveryService;
+import com.offact.addys.vo.common.CommentVO;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.SmsVO;
 import com.offact.addys.vo.common.UserVO;
 import com.offact.addys.vo.common.WorkVO;
+import com.offact.addys.vo.manage.UserManageVO;
 import com.offact.addys.vo.master.SalesVO;
 import com.offact.addys.vo.master.StockMasterVO;
 import com.offact.addys.vo.master.ProductMasterVO;
@@ -646,7 +648,7 @@ public class RecoveryController {
 		    	smsNoList=commonSvc.getSmsList(userConVO);
 		    	
 
-				smsVO.setSmsMsg("[애디스] 회수품목이 등록되었습니다."+recoveryVO.getRecoveryClosingDate()+"까지 수신될 수 있도록 해당품목을 발신처리 부탁드립니다.");
+				smsVO.setSmsMsg("[애디스] 회수품목이 등록되었습니다."+recoveryVO.getRecoveryClosingDate()+"까지 회수될 수 있도록 해당품목을 발송처리 부탁드립니다.");
 
 				for (int j=0;j<smsNoList.size();j++){
 					
@@ -1887,5 +1889,301 @@ public class RecoveryController {
 	      	logger.info("["+logid+"] Controller deferReason end execute time:[" + (t2-t1)/1000.0 + "] seconds");
 	      	
 	        return mv;
+	    }
+	    
+	    /**
+	     * 검수대상 상세조회
+	     * 
+	     * @param orderCode
+	     * @param request
+	     * @param response
+	     * @param model
+	     * @param locale
+	     * @return
+	     * @throws BizException
+	     */
+	    @RequestMapping(value = "/recovery/recoverydetailprint")
+	    public ModelAndView recoveryDetailPrint( HttpServletRequest request, 
+	    		                              HttpServletResponse response,
+	    		                              String recoveryCode) throws BizException 
+	    {   	
+	    	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : recoveryCode : [" + recoveryCode+"]");
+
+	        ModelAndView mv = new ModelAndView();
+	        List<RecoveryVO> recoveryDetailList = null;
+	        
+	      	// 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+	        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+	        
+	        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	        	
+	        	strIp = request.getRemoteAddr(); 
+	 	       	//로그인 상태처리		
+	 	   		UserVO userState =new UserVO();
+	 	   		userState.setUserId(strUserId);
+	 	   		userState.setLoginYn("N");
+	 	   		userState.setIp(strIp);
+	 	   		userState.setConnectIp(sClientIP);
+	 	   		userSvc.regiLoginYnUpdate(userState);
+	 	           
+	 	        //작업이력
+	 	   		WorkVO work = new WorkVO();
+	 	   		work.setWorkUserId(strUserId);
+	 	   	    work.setWorkIp(strIp);
+	 	   		work.setWorkCategory("CM");
+	 	   		work.setWorkCode("CM004");
+	 	   		commonSvc.regiHistoryInsert(work);
+	 	   		
+	 	       	mv.setViewName("/addys/loginForm");
+	       		return mv;
+			}
+
+	        //오늘 날짜
+	        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+	        Date currentTime = new Date();
+	         
+	        String strToday = simpleDateFormat.format(currentTime);
+	        
+	        RecoveryVO recoveryConVO = new RecoveryVO();
+	       
+	        recoveryConVO.setRecoveryCode(recoveryCode);
+
+	        recoveryConVO=recoverySvc.getRecoveryDetail(recoveryConVO);
+
+	        mv.addObject("recoveryConVO", recoveryConVO);
+
+	        // 공통코드 조회 (배송업체코드)
+	        CodeVO code = new CodeVO();
+	        code.setCodeGroupId("DE01");
+	        List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
+	        mv.addObject("code_comboList", code_comboList);
+	        
+	        //회수대상 상세정보
+	        recoveryDetailList=recoverySvc.getRecoveryDetailList(recoveryConVO);
+
+	        mv.addObject("recoveryDetailList", recoveryDetailList);
+	   
+	        mv.setViewName("/recovery/recoveryDetailPrint");
+	        
+	        //작업이력
+	        /*
+			WorkVO work = new WorkVO();
+			work.setWorkUserId(strUserId);
+			work.setWorkCategory("CH");
+			work.setWorkCode("CH003");
+			work.setWorkKey1(orderCode);
+			work.setSearchKey1(orderVO.getCompanyCode());
+			commonSvc.regiHistoryInsert(work);
+			*/
+	        //log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	       	
+	        return mv;
+	    }
+	    
+	    /**
+	     * 메모관리
+	     *
+	     * @param request
+	     * @param response
+	     * @param model
+	     * @param locale
+	     * @return
+	     * @throws BizException
+	     */
+	    @RequestMapping(value = "/recovery/transmodifyform")
+	    public ModelAndView transModifyForm(HttpServletRequest request, 
+	    		                       HttpServletResponse response,
+			                           String recoveryCode,
+			                           String deliveryMethod) throws BizException 
+	    {
+	        
+	    	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start recoveryCode:"+recoveryCode);
+
+	        ModelAndView mv = new ModelAndView();
+	        
+	      	// 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+	        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+	        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+	        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+	        
+	        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+	        	
+	        	strIp = request.getRemoteAddr(); 
+	 	       	//로그인 상태처리		
+	 	   		UserVO userState =new UserVO();
+	 	   		userState.setUserId(strUserId);
+	 	   		userState.setLoginYn("N");
+	 	   		userState.setIp(strIp);
+	 	   		userState.setConnectIp(sClientIP);
+	 	   		userSvc.regiLoginYnUpdate(userState);
+	 	           
+	 	        //작업이력
+	 	   		WorkVO work = new WorkVO();
+	 	   		work.setWorkUserId(strUserId);
+	 	   	    work.setWorkIp(strIp);
+	 	   		work.setWorkCategory("CM");
+	 	   		work.setWorkCode("CM004");
+	 	   		commonSvc.regiHistoryInsert(work);
+	 	   		
+	 	       	mv.setViewName("/addys/loginForm");
+	       		return mv;
+			}
+	        
+	        // 조회조건저장
+	        mv.addObject("recoveryCode", recoveryCode);
+	        mv.addObject("deliveryMethod", deliveryMethod);
+	        
+	        // 공통코드 조회 (배송업체코드)
+	        CodeVO code = new CodeVO();
+	        code.setCodeGroupId("DE01");
+	        List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
+	        mv.addObject("code_comboList", code_comboList);
+
+	        mv.setViewName("/recovery/transModifyForm");
+	        
+	       //log Controller execute time end
+	      	long t2 = System.currentTimeMillis();
+	      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+	      	
+	        return mv;
+	    }
+	    
+	    /**
+	     * 운송업체 정보 수정처리
+	     *
+	     * @param UserManageVO
+	     * @param request
+	     * @param response
+	     * @param model
+	     * @param locale
+	     * @return
+	     * @throws BizException
+	     */
+	    @RequestMapping(value = "/recover/transupdate", method = RequestMethod.POST)
+	    public @ResponseBody
+	    String transUpdate(@ModelAttribute("recoveryVO") RecoveryVO recoveryVO, 
+	    		          HttpServletRequest request, 
+	    		          HttpServletResponse response) throws BizException
+	    {
+	    	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : recoveryVO" + recoveryVO);
+			
+			// 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	        
+	      //오늘 날짜
+	        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+	        Date currentTime = new Date();
+	        String strToday = simpleDateFormat.format(currentTime);
+
+	        CodeVO code =new CodeVO();
+			code.setCodeGroupId("DE01");
+			code.setCodeId(recoveryVO.getTransportCode());
+			
+			code=commonSvc.getCodeName(code);
+			
+			recoveryVO.setTransport(code.getCodeName());
+
+			int retVal=this.recoverySvc.transUpdateProc(recoveryVO);
+
+			//작업이력
+			/*
+			WorkVO work = new WorkVO();
+			work.setWorkUserId(strUserId);
+			work.setWorkCategory(workCategory);
+			work.setWorkCode(workCode);
+			commonSvc.regiHistoryInsert(work);
+			*/
+			
+			String transResult="-1";
+			
+			if(retVal>0){
+				
+				transResult=code.getCodeName()+"^"+code.getDescription()+"^"+recoveryVO.getTransportNo();
+				
+			}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+	      return transResult;
+	    }
+	    
+	    /**
+	     * 퀵정보 수정처리
+	     *
+	     * @param UserManageVO
+	     * @param request
+	     * @param response
+	     * @param model
+	     * @param locale
+	     * @return
+	     * @throws BizException
+	     */
+	    @RequestMapping(value = "/recover/quickupdate", method = RequestMethod.POST)
+	    public @ResponseBody
+	    String quickUpdate(@ModelAttribute("recoveryVO") RecoveryVO recoveryVO, 
+	    		          HttpServletRequest request, 
+	    		          HttpServletResponse response) throws BizException
+	    {
+	    	//log Controller execute time start
+			String logid=logid();
+			long t1 = System.currentTimeMillis();
+			logger.info("["+logid+"] Controller start : recoveryVO" + recoveryVO);
+			
+			// 사용자 세션정보
+	        HttpSession session = request.getSession();
+	        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+	        
+	      //오늘 날짜
+	        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+	        Date currentTime = new Date();
+	        String strToday = simpleDateFormat.format(currentTime);
+
+
+			int retVal=this.recoverySvc.transUpdateProc(recoveryVO);
+
+			//작업이력
+			/*
+			WorkVO work = new WorkVO();
+			work.setWorkUserId(strUserId);
+			work.setWorkCategory(workCategory);
+			work.setWorkCode(workCode);
+			commonSvc.regiHistoryInsert(work);
+			*/
+			
+			String quickResult="-1";
+			
+			if(retVal>0){
+				
+				quickResult=recoveryVO.getQuickCharge()+"^"+recoveryVO.getQuickTel();
+				
+			}
+			
+			//log Controller execute time end
+	       	long t2 = System.currentTimeMillis();
+	       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+	      return quickResult;
 	    }
 }

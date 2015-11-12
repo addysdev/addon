@@ -11,24 +11,26 @@ public class AsVO extends AbstractVO {
 
 	private String idx;
 	private String groupId;
+	private String groupName;
 	private String customerKey;
 	private String customerId;
 	private String customerName;
 	private String asState;
-	private String as;
-	private String asDateTime;
-	private String asHistory;
-	private String asHistoryDateTime;
+	private String productCode;
+	private String productName;
+	private String asCompanyCode;
+	private String asCompanyName;
+	private String asCategory;
+	private String asCode;
+	private String asDetail;
+	private String asTargetDate;
+	private String asResult;
 	
 	private String upidx;
 	private String userId;
 	private String userName;
-	private String asResult;
-	private String asResultDateTime;
-	
-	private String stateUpdateUserId;
-	private String stateUpdateUserName;
-	private String stateUpdateDateTime;
+	private String asHistory;
+	private String asHistoryDateTime;
 	
     private String searchGubun;
     private String searchValue;
@@ -55,6 +57,12 @@ public class AsVO extends AbstractVO {
 	public void setGroupId(String groupId) {
 		this.groupId = groupId;
 	}
+	public String getGroupName() {
+		return groupName;
+	}
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
 	public String getCustomerKey() {
 		return customerKey;
 	}
@@ -79,29 +87,59 @@ public class AsVO extends AbstractVO {
 	public void setAsState(String asState) {
 		this.asState = asState;
 	}
-	public String getAs() {
-		return as;
+	public String getProductCode() {
+		return productCode;
 	}
-	public void setAs(String as) {
-		this.as = as;
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
 	}
-	public String getAsDateTime() {
-		return asDateTime;
+	public String getProductName() {
+		return productName;
 	}
-	public void setAsDateTime(String asDateTime) {
-		this.asDateTime = asDateTime;
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
-	public String getAsHistory() {
-		return asHistory;
+	public String getAsCompanyCode() {
+		return asCompanyCode;
 	}
-	public void setAsHistory(String asHistory) {
-		this.asHistory = asHistory;
+	public void setAsCompanyCode(String asCompanyCode) {
+		this.asCompanyCode = asCompanyCode;
 	}
-	public String getAsHistoryDateTime() {
-		return asHistoryDateTime;
+	public String getAsCompanyName() {
+		return asCompanyName;
 	}
-	public void setAsHistoryDateTime(String asHistoryDateTime) {
-		this.asHistoryDateTime = asHistoryDateTime;
+	public void setAsCompanyName(String asCompanyName) {
+		this.asCompanyName = asCompanyName;
+	}
+	public String getAsCategory() {
+		return asCategory;
+	}
+	public void setAsCategory(String asCategory) {
+		this.asCategory = asCategory;
+	}
+	public String getAsCode() {
+		return asCode;
+	}
+	public void setAsCode(String asCode) {
+		this.asCode = asCode;
+	}
+	public String getAsDetail() {
+		return asDetail;
+	}
+	public void setAsDetail(String asDetail) {
+		this.asDetail = asDetail;
+	}
+	public String getAsTargetDate() {
+		return asTargetDate;
+	}
+	public void setAsTargetDate(String asTargetDate) {
+		this.asTargetDate = asTargetDate;
+	}
+	public String getAsResult() {
+		return asResult;
+	}
+	public void setAsResult(String asResult) {
+		this.asResult = asResult;
 	}
 	public String getUpidx() {
 		return upidx;
@@ -121,35 +159,17 @@ public class AsVO extends AbstractVO {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public String getAsResult() {
-		return asResult;
+	public String getAsHistory() {
+		return asHistory;
 	}
-	public void setAsResult(String asResult) {
-		this.asResult = asResult;
+	public void setAsHistory(String asHistory) {
+		this.asHistory = asHistory;
 	}
-	public String getAsResultDateTime() {
-		return asResultDateTime;
+	public String getAsHistoryDateTime() {
+		return asHistoryDateTime;
 	}
-	public void setAsResultDateTime(String asResultDateTime) {
-		this.asResultDateTime = asResultDateTime;
-	}
-	public String getStateUpdateUserId() {
-		return stateUpdateUserId;
-	}
-	public void setStateUpdateUserId(String stateUpdateUserId) {
-		this.stateUpdateUserId = stateUpdateUserId;
-	}
-	public String getStateUpdateUserName() {
-		return stateUpdateUserName;
-	}
-	public void setStateUpdateUserName(String stateUpdateUserName) {
-		this.stateUpdateUserName = stateUpdateUserName;
-	}
-	public String getStateUpdateDateTime() {
-		return stateUpdateDateTime;
-	}
-	public void setStateUpdateDateTime(String stateUpdateDateTime) {
-		this.stateUpdateDateTime = stateUpdateDateTime;
+	public void setAsHistoryDateTime(String asHistoryDateTime) {
+		this.asHistoryDateTime = asHistoryDateTime;
 	}
 	public String getSearchGubun() {
 		return searchGubun;
@@ -214,4 +234,5 @@ public class AsVO extends AbstractVO {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+    
 }

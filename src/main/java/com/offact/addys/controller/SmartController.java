@@ -683,7 +683,7 @@ public class SmartController {
     @RequestMapping(value = "/smart/comunityprodessform")
     public ModelAndView comunityProdessForm(HttpServletRequest request, 
     		                       HttpServletResponse response,
-		                           String idx,
+		                           String upidx,
 		                           String comment) throws BizException 
     {
         
@@ -727,11 +727,11 @@ public class SmartController {
         
         // 조회조건저장
         mv.addObject("comment", comment);
-        mv.addObject("idx", idx);
+        mv.addObject("upidx", upidx);
         
         ComunityVO comunityVO = new ComunityVO();
         
-        comunityVO.setUpidx(idx);
+        comunityVO.setUpidx(upidx);
         
         List<ComunityVO> comunityReply = new ArrayList();
 
@@ -822,7 +822,7 @@ public class SmartController {
         
         // 조회조건저장
         mv.addObject("comment", comunityVO.getComment());
-        mv.addObject("idx", comunityVO.getIdx());
+        mv.addObject("upidx", comunityVO.getUpidx());
        
         List<ComunityVO> comunityReply = new ArrayList();
 
@@ -1281,7 +1281,6 @@ public class SmartController {
         
         asVO.setUserId(strUserId);
         asVO.setGroupId(strGroupId);
-        asVO.setStateUpdateUserId(strUserId);
         
         int retVal=this.asSvc.asProc(asVO);
         
@@ -1373,7 +1372,6 @@ public class SmartController {
         asConVO.setGroupId(strGroupId);
         asConVO.setIdx(idx);
         asConVO.setAsState(asState);
-        asConVO.setStateUpdateUserId(strUserId);
         
         int retVal=this.asSvc.asStateUpdate(asConVO);
 
@@ -1544,7 +1542,7 @@ public class SmartController {
 	    }
         
         // 조회조건저장
-        mv.addObject("as", asVO.getAs());
+        mv.addObject("as", asVO.getAsDetail());
         mv.addObject("idx", asVO.getIdx());
        
         List<AsVO> asReply = new ArrayList();

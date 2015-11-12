@@ -208,6 +208,10 @@
    <!-- 보유재고 일괄등록-->
   <div id="reProductExcelForm"  title="회수품목 일괄등록"></div>
   
+  
+  <div id="transManage"  title="운송방법"></div>
+  <!-- //메모 상세화면 -->
+  
 </div>
 <br>
 <%@ include file="/WEB-INF/views/addys/footer.jsp" %>
