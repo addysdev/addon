@@ -94,5 +94,5 @@
 	 </form:form>
 
 	 <!-- 페이징 -->
-     <taglib:paging cbFnc="goPageUserManagePageList" totalCount="${totalCount}" curPage="${userCon.curPage}" rowCount="${userCon.rowCount}" />
+     <taglib:paging cbFnc="goPageUserManagePageList" totalCount="${totalCount}" curPage="${salesConVO.curPage}" rowCount="${salesConVO.rowCount}" />
      <!-- //페이징 -->
