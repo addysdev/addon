@@ -29,9 +29,9 @@
 	        <th>핸드폰번호</th>
             <th>고객명</th>
             <th>고객ID</th>
-            <th>1:1문의일시</th>
-            <th>1:1문의내용</th>
-            <th>1:1문의상태</th>
+            <th>문의일시</th>
+            <th>문의내용</th>
+            <th>문의상태</th>
             <th>처리일시</th>
             <th>처리자</th>
 	      </tr>
@@ -46,7 +46,13 @@
                  <td><c:out value="${counselListVO.customerName}"></c:out></td>
                  <td><c:out value="${counselListVO.customerId}"></c:out></td>
                  <td><c:out value="${counselListVO.counselDateTime}"></c:out></td>
-                 <td><c:out value="${counselListVO.counsel}"></c:out></td>
+                 <td>
+                 <c:out value="${counselListVO.counsel}">
+                 </c:out>
+                 <c:if test="${counselListVO.counselImage!=null}">
+					<a href="javascript:imageView('${counselListVO.counselImage}')"><font style="color:blue">[image view]</font></a>
+				 </c:if>
+                 </td>
                  <td><c:out value="${counselListVO.counselState}"></c:out></td>
                  <td><c:out value="${counselListVO.counselResultDateTime}"></c:out></td>
                  <td><c:out value="${counselListVO.userName}(${counselListVO.userId})"></c:out></td>

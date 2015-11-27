@@ -16,6 +16,7 @@ public class CounselVO extends AbstractVO {
 	private String customerName;
 	private String counselState;
 	private String counsel;
+	private String counselImage;
 	private String counselDateTime;
 	private String counselHistory;
 	private String counselHistoryDateTime;
@@ -214,6 +215,12 @@ public class CounselVO extends AbstractVO {
 	}
 	public void setCounselHistoryDateTime(String counselHistoryDateTime) {
 		this.counselHistoryDateTime = counselHistoryDateTime;
+	}
+	public String getCounselImage() {
+		return counselImage;
+	}
+	public void setCounselImage(String counselImage) {
+		this.counselImage = counselImage;
 	}
     
 }

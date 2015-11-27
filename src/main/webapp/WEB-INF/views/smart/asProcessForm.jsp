@@ -47,7 +47,7 @@
 
 			var idx='${asVO.idx}';
 			
-			if('${asVO.asState}'!='03' && '${strUserId}'=='${asVO.stateUpdateUserId}'){
+			if('${asVO.asState}'!='03' && '${strUserId}'=='${asVO.asStartUserId}'){
 			
 				$.ajax({
 			        type: "POST",
@@ -99,16 +99,12 @@
 	          <th class='text-left'><input type="text" class="form-control" id="customerName" name="customerName" maxlength="50"  tabindex="2" value="${asVO.customerName}" disabled></th>
 	      	</tr>
 	      	<tr>
-	          <th class='text-center' style="background-color:#E6F3FF" >고객 ID</th>
-	          <th class='text-left'><input  type="text" class="form-control" id="customerId"  name="customerId" maxlength="25" tabindex="3" value="${asVO.customerId}" disabled></th>
-	      	</tr>
-	      	<tr>
 	          <th class='text-center' style="background-color:#E6F3FF" >AS요청일자</th>
-	          <th class='text-left'><input  type="text" class="form-control" id="asDateTime"  name="asDateTime" maxlength="25" tabindex="3" value="${asVO.asDateTime}" disabled></th>
+	          <th class='text-left'><input  type="text" class="form-control" id="asDateTime"  name="asDateTime" maxlength="25" tabindex="3" value="${asVO.asStartDateTime}" disabled></th>
 	      	</tr>
 	      	<tr>
 	          <th class='text-center' style="background-color:#E6F3FF" >AS내용</th>
-				<th class='text-left'><textarea style='width:210px;height:110px;ime-mode:active;' row="6" class="form-control" id="as" maxlength="200" name="as"  value="${asVO.as}"  disabled >${asVO.as}</textarea></th>
+				<th class='text-left'><textarea style='width:210px;height:110px;ime-mode:active;' row="6" class="form-control" id="as" maxlength="200" name="as"  value="${asVO.asDetail}"  disabled >${asVO.asDetail}</textarea></th>
 	      	</tr>
 	      	<tr>
 	          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>AS답변</th>
@@ -131,21 +127,21 @@
   </body>
 </html>
 <script>
-//alert('${strUserId}');
-if('${asVO.asState}'=='02' && '${strUserId}'!='${asVO.stateUpdateUserId}'){
+/*	
+if('${asVO.asState}'=='02' && '${strUserId}'!='${asVO.asStartUserId}'){
 	
-	alert('본 AS건은 현재 ${asVO.stateUpdateUserName}(${asVO.stateUpdateUserId})님이 처리중인 상태입니다.\n처리완료후 확인하세요.');
+	alert('본 AS건은 현재 ${asVO.asStartUserName}(${asVO.asStartUserId})님이 접수중인 상태입니다.\n처리완료후 확인하세요.');
 	$('#asProcessForm').dialog('close');
 	fcAs_listSearch();
 	
 }else if('${asVO.asState}'=='01'){
 	
-	var idx='${asVO.idx}';
-	
+	var asNo='${asVO.asNo}';
+
 	$.ajax({
         type: "POST",
         async:false,
-           url:  "<%= request.getContextPath() %>/smart/asstateupdate?asState=02&idx="+idx,
+           url:  "<%= request.getContextPath() %>/smart/asstateupdate?asState=02&asNo="+asNo,
            success: function(result) {
 
 				if(result=='1'){
@@ -164,11 +160,13 @@ if('${asVO.asState}'=='02' && '${strUserId}'!='${asVO.stateUpdateUserId}'){
         	   fcAs_listSearch();
            }
     });
-	
+
 	
 }
 
 document.asProcForm.asResult.focus();
+
+*/	
 </script>
  
 

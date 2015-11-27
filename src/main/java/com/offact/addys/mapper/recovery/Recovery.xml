@@ -357,13 +357,16 @@ From (
          Left Join adProductMaster T5 On T1.productCode = T5.productCode
          Left Join adCompany T6 On T5.companyCode = T6.companyCode
          Left Join(
-									 Select groupID,productCode,stockDate,
-                     						(Select stockCnt From adStockDetail Where A1.groupId=groupId and A1.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
-                					 	From ( 
-                        					  Select groupId,productCode , max(stockDate) as stockDate 
-                       						  	From adStockDetail 
-                        						Group By  groupID,productCode 
-                        					 ) As A1
+									 Select A0.groupID,A0.productCode,A1.stockDate,
+                     						(Select stockCnt From adStockDetail Where A0.groupId=groupId and A0.productCode=productCode and A1.stockDate=stockDate)  as stockCnt
+                					 	From adStockDetail A0 
+                                 			Left Join( 
+                                					  Select groupId, max(stockDate) as stockDate 
+                               						  	From adStockDetail 
+                                						Group By  groupID
+                                					 ) As A1 On A0.groupId = A1.groupId
+                            				Group By A0.groupId,A0.productCode
+                            				
 									  ) As I2 On T1.productCode = I2.productCode And T2.groupID = I2.groupID /*재고기준일*/
     Where T3.deletedYn='N' And T1.recoveryCode = #{recoveryCode}
     Order by (select count(idx) from adComment T7 Where T1.recoveryCode = T7.orderCode  And T1.productCode=T7.productCode And T7.commentCategory='06') desc,

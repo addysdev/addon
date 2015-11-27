@@ -10,6 +10,7 @@
   <result column="customerName"       	   property="customerName"  />
   <result column="counselState"              property="counselState"  />
   <result column="counsel"                property="counsel"  />
+  <result column="counselImage"                property="counselImage"  />
   <result column="counselDateTime"   property="counselDateTime"  />
   <result column="userId"   property="userId"  />
   <result column="userName"   property="userName"  />
@@ -32,6 +33,7 @@
 			  		(Case When T1.counselState = '02' Then '처리중' Else '상담접수' End)
 			  		End counselState
 			  ,T1.counsel
+			  ,T1.counselImage
 			  ,Case When ifnull(T4.counselResultDateTime,'') = '' Then '' Else DATE_FORMAT(T4.counselResultDateTime, '%Y-%m-%d %T') End counselResultDateTime
 			  ,ifnull(T4.userId,'') as userId
 			  ,ifnull(T5.userName,'') as userName
@@ -87,6 +89,7 @@
 			  ,T2.customerName  
 			  ,T1.counselState
 			  ,T1.counsel
+			  ,T1.counselImage
 			  ,T1.counselDateTime
 			  ,ifnull(T3.userId,'') as userId
 			  ,ifnull(T4.userName,'') as userName

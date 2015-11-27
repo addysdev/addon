@@ -126,7 +126,7 @@ $(function() {
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#asProcessForm").dialog('close');
                 
-                    counsetStateChekc();
+                   // counsetStateChekc();
                  
 
                     });
@@ -134,7 +134,7 @@ $(function() {
             ,close:function(){
                 $('#asProcessForm').empty();
                 
-                counsetStateChekc();
+               // counsetStateChekc();
             }
         });
     };

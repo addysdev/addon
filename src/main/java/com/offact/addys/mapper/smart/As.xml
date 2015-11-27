@@ -3,45 +3,67 @@
 <mapper namespace="As">
 
 <resultMap id="asListVO" type="com.offact.addys.vo.smart.AsVO" >
-  <result column="idx"              property="idx"  />
+  <result column="asNo"              property="asNo"  />
   <result column="groupId"            property="groupId"  />
+ <result column="groupName"            property="groupName"  />
   <result column="customerKey"      	   property="customerKey"  />
-  <result column="customerId"       	   property="customerId"  />
   <result column="customerName"       	   property="customerName"  />
-  <result column="asState"              property="asState"  />
-  <result column="as"                property="as"  />
-  <result column="asDateTime"   property="asDateTime"  />
-  <result column="userId"   property="userId"  />
-  <result column="userName"   property="userName"  />
+  <result column="productCode"              property="productCode"  />
+  <result column="productName"              property="productName"  />
+  <result column="group1Id"            property="group1Id"  />
+  <result column="group1Name"            property="group1Name"  />
+  <result column="asCategory"                property="asCategory"  />
+  <result column="asCode"   property="asCode"  />
+  <result column="asDetail"   property="asDetail"  />
+  <result column="asImage"   property="asImage"  />
+  <result column="asState"   property="asState"  />
+  <result column="asStartUserId"   property="asStartUserId"  />
+  <result column="asStartDateTime"   property="asStartDateTime"  />
+  <result column="asRequestUserId"   property="asRequestUserId"  />
+  <result column="asRequestDateTime"   property="asRequestDateTime"  />
+  <result column="asResponseUserId"   property="asResponseUserId"  />
+  <result column="asResponseDateTime"   property="asResponseDateTime"  />
+  <result column="asCompleteUserId"   property="asCompleteUserId"  />
+  <result column="asCompleteDateTime"   property="asCompleteDateTime"  />
+  <result column="asTargetDate"   property="asTargetDate"  />
   <result column="asResult"   property="asResult"  />
-  <result column="asResultDateTime"   property="asResultDateTime"  />
-  <result column="stateUpdateUserId"   property="stateUpdateUserId"  />
-  <result column="stateUpdateUserName"   property="stateUpdateUserName"  />
-  <result column="stateUpdateDateTime"   property="stateUpdateDateTime"  />
+  <result column="receiveName"   property="receiveName"  />
+  <result column="receiveTelNo"   property="receiveTelNo"  />
+  <result column="receiveType"   property="receiveType"  />
+  <result column="receiveAddress"   property="receiveAddress"  />
+  <result column="receiveAddressDetail"   property="receiveAddressDetail"  />
+  <result column="receivePost"   property="receivePost"  />
+  <result column="customerRequest"   property="customerRequest"  />
+  <result column="purchaseDate"   property="purchaseDate"  />
+  <result column="receiptImage"   property="receiptImage"  />
+  <result column="Memo"   property="Memo"  />
+  <result column="asTransferNo"   property="asTransferNo"  />
+  <result column="receiveTransferNo"   property="receiveTransferNo"  />
 </resultMap>
 
 <select id="getAsPageList"  resultMap="asListVO" parameterType="com.offact.addys.vo.smart.AsVO" >
-        SELECT T1.idx
+        SELECT T1.asNo
 			  ,T1.groupId
 			  ,T2.groupName
 			  ,T1.customerKey
-			  ,T3.customerName 
+			  ,T1.customerName 
 			  ,T1.productCode
-			  ,T5.productName
-			  ,T1.asCompanyCode
-			  ,T1.asState
+			  ,T4.productName
+			  ,T4.group1
+			  ,T4.group1Name
 			  ,T1.asCategory
 			  ,T1.asCode
 			  ,T1.asDetail
-			  ,DATE_FORMAT(T1.asStartDateTime, '%Y-%m-%d %T') as asStartDateTime
-			  ,Case When ifnull(T1.asTargetDate,'') = '' Then '' Else DATE_FORMAT(T1.asTargetDate, '%Y-%m-%d %T') End asTargetDate
+			  ,T1.asImage
+			  ,T1.asState
+			  ,DATE_FORMAT(T1.asStartDateTime, '%Y-%m-%d') as asStartDateTime
+			  ,Case When ifnull(T1.asTargetDate,'') = '' Then '' Else DATE_FORMAT(T1.asTargetDate, '%Y-%m-%d') End asTargetDate
 			  ,ifnull(T1.asStartUserId,'') as asStartUserId
-			  ,ifnull(T4.userName,'') as asStartUserName
+			  ,ifnull(T3.userName,'') as asStartUserName
           FROM smAs T1
           	   Left Join ofGroup T2 On T1.groupId=T2.groupId
-			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
-			   Left Join ofUser T4 On T1.asStartUserId=T4.userId
-			   Left Join adProductMaster T5 On T1.productCode=T5.productCode
+			   Left Join ofUser T3 On T1.asStartUserId=T3.userId
+			   Left Join adProductMaster T4 On T1.productCode=T4.productCode
          WHERE T1.asStartDateTime between concat(#{start_asDate},' 00:00:00') and concat(#{end_asDate},' 23:59:59')
          	<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}
@@ -52,7 +74,7 @@
            AND T1.customerKey  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
                <when test="searchGubun.equals('02')">
-           AND T3.customerName  LIKE CONCAT('%', #{searchValue}, '%')
+           AND T1.customerName  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
              </choose>
            </if>
@@ -64,9 +86,8 @@
 	SELECT count(*) AS TOT_COUNT
   		FROM smAs T1
           	   Left Join ofGroup T2 On T1.groupId=T2.groupId
-			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
-			   Left Join ofUser T4 On T1.asStartUserId=T4.userId
-			   Left Join adProductMaster T5 On T1.productCode=T5.productCode
+			   Left Join ofUser T3 On T1.asStartUserId=T3.userId
+			   Left Join adProductMaster T4 On T1.productCode=T4.productCode
          WHERE T1.asStartDateTime between concat(#{start_asDate},' 00:00:00') and concat(#{end_asDate},' 23:59:59')
          	<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}
@@ -77,7 +98,7 @@
            AND T1.customerKey  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
                <when test="searchGubun.equals('02')">
-           AND T3.customerName  LIKE CONCAT('%', #{searchValue}, '%')
+           AND T1.customerName  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
              </choose>
            </if>
@@ -85,47 +106,62 @@
 
 <select id="getAsDetail" resultMap="asListVO" parameterType="com.offact.addys.vo.smart.AsVO" >
 
-		SELECT T1.idx
-		      ,T1.customerKey
-			  ,T2.customerId   
-			  ,T2.customerName  
+		SELECT T1.asNo
+		      ,T1.groupId
+			  ,T2.groupName
+			  ,T1.customerKey
+			  ,T1.customerName 
+			  ,T1.productCode
+			  ,T4.productName
+			  ,T4.group1
+			  ,T4.group1Name
+			  ,T1.asCategory
+			  ,T1.asCode
+			  ,T1.asDetail
+			  ,T1.asImage
 			  ,T1.asState
-			  ,T1.as
-			  ,T1.asDateTime
-			  ,ifnull(T3.userId,'') as userId
-			  ,ifnull(T4.userName,'') as userName
-			  ,ifnull(T3.asResult,'') as asResult
-			  ,ifnull(T3.asResultDateTime,'') as asResultDateTime
-			  ,ifnull(T1.stateUpdateUserId,'') as stateUpdateUserId
-			  ,ifnull(T5.userName,'') as stateUpdateUserName
-			  ,ifnull(T1.stateUpdateDateTime,'') as stateUpdateDateTime
+			  ,DATE_FORMAT(T1.asStartDateTime, '%Y-%m-%d') as asStartDateTime
+			  ,Case When ifnull(T1.asTargetDate,'') = '' Then '' Else DATE_FORMAT(T1.asTargetDate, '%Y-%m-%d') End asTargetDate
+			  ,ifnull(T1.asStartUserId,'') as asStartUserId
+			  ,ifnull(T3.userName,'') as asStartUserName
+			  ,ifnull(T1.asResult,'') as asResult
+			  ,ifnull(T1.asResultDateTime,'') as asResultDateTime
+			  ,T1.receiveName
+			  ,T1.receiveTelNo
+			  ,T1.receiveType
+			  ,T1.receiveAddress
+			  ,T1.receiveAddressDetail
+			  ,T1.receivePost
+			  ,T1.customerRequest
+			  ,T1.purchaseDate
+			  ,T1.receiptImage
+			  ,T1.Memo
+			  ,T1.receiveTransferNo
           FROM smAs T1
-			   Left Join smCustomer T2 On T1.customerKey=T2.customerKey
-			   Left Join smAsResult T3 On T1.idx=T3.idx
-			   Left Join ofUser T4 On T3.userId=T4.userId
-			   Left Join ofUser T5 On T1.stateUpdateUserId=T5.userId	   	     
-		 Where T1.idx = #{idx}
+			   Left Join ofGroup T2 On T1.groupId=T2.groupId
+			   Left Join ofUser T3 On T1.asStartUserId=T3.userId
+			   Left Join adProductMaster T4 On T1.productCode=T4.productCode  
+		 Where T1.asNo = #{asNo}
+		 
 </select>
 
 <update id="asStateUpdate" parameterType="com.offact.addys.vo.smart.AsVO" >
         Update smAs
        		Set
   				asState = #{asState}
-  				,stateUpdateUserId = #{stateUpdateUserId}
-  				,stateUpdateDateTime = now()
- 		Where idx = #{idx}
+ 		Where asNo = #{asNo}
 </update>
 
 <insert id="asResultInsert" parameterType="com.offact.addys.vo.smart.AsVO" >
   	Insert into smAsResult( 
-        	 idx
+        	 asNo
             ,userId
             ,groupId
             ,asResult 
             ,asResultDateTime
             )
         Values (
-              #{idx}
+              #{asNo}
 	  		, #{userId}
 	  		, #{groupId}
 	  		, #{asResult}
@@ -143,7 +179,7 @@
 			  ,T1.asHistory
           FROM smAsHistory T1
                Left Join ofUser T2 on T1.userId=T2.userId
-		 Where T1.upidx = #{upidx}
+		 Where T1.asNo = #{asNo}
 		 order by asHistoryDateTime desc
 </select>
 
@@ -154,14 +190,14 @@
             ,groupId
             ,asHistory
             ,asHistoryDateTime
-            ,upidx
+            ,asNo
             )
         Values (
 	  		  #{userId}
 	  		, #{groupId}
 	  		, #{asHistory}
 	  		, now()
-	  		, #{upidx}
+	  		, #{asNo}
 	  		)
 </insert>
 

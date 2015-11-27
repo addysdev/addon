@@ -37,9 +37,9 @@
 	    <tbody>
 	    	<c:if test="${!empty asList}">
              <c:forEach items="${asList}" var="asListVO" varStatus="status">
-             <tr id="select_tr_${asListVO.idx}">
-                 <td><a href="javascript:fcAs_procForm('${asListVO.idx}')"><c:out value="${asListVO.customerKey}"></c:out></a>
-                 <img id="hisbtn" onClick="fcHis_detail('${asListVO.customerKey}','${asListVO.idx}','${asListVO.asDetail}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="이력">
+             <tr id="select_tr_${asListVO.asNo}">
+                 <td><a href="javascript:fcAs_procForm('${asListVO.asNo}')"><c:out value="${asListVO.customerKey}"></c:out></a>
+                 <img id="hisbtn" onClick="fcHis_detail('${asListVO.customerKey}','${asListVO.asNo}','${asListVO.asDetail}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="이력">
                  </td>
                  <td><c:out value="${asListVO.asStartDateTime}"></c:out></td>
                  <td><c:out value="${asListVO.userName}(${asListVO.userId})"></c:out></td>

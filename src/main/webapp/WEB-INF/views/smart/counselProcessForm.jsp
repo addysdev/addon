@@ -108,7 +108,11 @@
 	      	</tr>
 	      	<tr>
 	          <th class='text-center' style="background-color:#E6F3FF" >상담내용</th>
-				<th class='text-left'><textarea style='width:210px;height:110px;ime-mode:active;' row="6" class="form-control" id="counsel" maxlength="200" name="counsel"  value="${counselVO.counsel}"  disabled >${counselVO.counsel}</textarea></th>
+				<th class='text-left'><textarea style='width:210px;height:110px;ime-mode:active;' row="6" class="form-control" id="counsel" maxlength="200" name="counsel"  value="${counselVO.counsel}"  disabled >${counselVO.counsel}</textarea>
+				<c:if test="${counselVO.counselImage!=null}">
+					<br><a href="javascript:imageView('${counselVO.counselImage}')"><font style="color:blue">[image view]</font></a>
+				 </c:if>
+				</th>
 	      	</tr>
 	      	<tr>
 	          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>상담처리</th>

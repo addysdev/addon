@@ -1404,15 +1404,15 @@ public class SmartController {
     @RequestMapping(value = "/smart/ashistory")
     public ModelAndView asHistory(HttpServletRequest request, 
     		                       HttpServletResponse response,
-		                           String idx,
+		                           String asNo,
 		                           String customerKey,
-		                           String as) throws BizException 
+		                           String asDetail) throws BizException 
     {
         
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start idx:"+idx);
+		logger.info("["+logid+"] Controller start asNo:"+asNo);
 
         ModelAndView mv = new ModelAndView();
         
@@ -1449,12 +1449,12 @@ public class SmartController {
         
         // 조회조건저장
         mv.addObject("customerKey", customerKey);
-        mv.addObject("idx", idx);
-        mv.addObject("as", as);
+        mv.addObject("asNo", asNo);
+        mv.addObject("asDetail", asDetail);
         
         AsVO asVO = new AsVO();
         
-        asVO.setUpidx(idx);
+        asVO.setAsNo(asNo);
         
         List<AsVO> asReply = new ArrayList();
 
@@ -1563,6 +1563,72 @@ public class SmartController {
        	long t2 = System.currentTimeMillis();
        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
        	
+        return mv;
+    }
+    
+    /**
+     * 글올리기
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/imageview")
+    public ModelAndView imageView(HttpServletRequest request, 
+    		                      HttpServletResponse response,
+    		                      String imageurl) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start imageView");
+
+        ModelAndView mv = new ModelAndView();
+        
+    	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        String strMobliePhone = StringUtil.nvl((String) session.getAttribute("strMobliePhone"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); 
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	        //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   	    work.setWorkIp(strIp);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
+       		return mv;
+		}
+        
+        mv.addObject("imageurl", imageurl);
+
+        mv.setViewName("/smart/imageView");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
         return mv;
     }
     
