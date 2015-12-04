@@ -75,98 +75,223 @@
 			}
 			
 		}
+		function AutoResize(img){
+	    	   foto1= new Image();
+	    	   foto1.src=(img);
+	    	   Controlla(img);
+	    	 }
+	  	 function Controlla(img){
+	  	   if((foto1.width!=0)&&(foto1.height!=0)){
+	  	     viewFoto(img);
+	  	   }
+	  	   else{
+	  	     funzione="Controlla('"+img+"')";
+	  	     intervallo=setTimeout(funzione,20);
+	  	   }
+	  	 }
+	   	 function viewFoto(img){
+	   	   largh=foto1.width-20;
+	   	   altez=foto1.height-20;
+	   	   stringa="width="+largh+",height="+altez;
+	   	  // finestra=window.open(img,"",stringa);
+	   	  
+		   	var h=screen.height-(screen.height*(8.5/100));
+			var s=screen.width;
+			
+			if(h<s){
+				s=h;
+			}
+			
+			if(s<largh){
+				largh=s;
+			}
+
+	   	  	var url='<%= request.getContextPath() %>/smart/imageview';
+	   	   
+		   	$('#imageView').dialog({
+		        resizable : false, //사이즈 변경 불가능
+		        draggable : true, //드래그 불가능
+		        closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+		        position : 'center',
+		        width : largh,
+		        modal : true, //주위를 어둡게
 		
+		        open:function(){
+		            //팝업 가져올 url
+		        	 $(this).load(url+'?imageurl='+img);
+		
+		        }
+		        ,close:function(){
+		            $('#imageView').empty();
+		        }
+		    });
+	   	   
+	   	 }
+	   	 
+	  // 리스트 조회
+	     function fcAs_HistoryList(){
+		
+		  var asNo='${asVO.asNo}';
+		  
+		     commonDim(true);
+		     
+	         $.ajax({
+	             type: "POST",
+	                url:  "<%= request.getContextPath() %>/smart/ashitorylist?asNo="+asNo,
+	                success: function(result) {
+	                    commonDim(false);
+	                    $("#asHistoryList").html(result);
+	                },
+	                error:function() {
+	                    commonDim(false);
+	                }
+	         });
+	     }
+	  
+	  function fcAs_MainTransfer(){
+		  
+	  }
 	</script>
   </head>
   <body>
 	<div class="container-fluid">
-      <form:form class="form-inline" commandName="asVO" id="asProcForm" name="asProcForm" method="post" action="">
-      	<input type="hidden" id="idx" name="idx" value="${asVO.idx}" >
-      	<input type="hidden" id="asState" name="asState" value="03" >
-      	<input type="hidden" id="customerKey" name="customerKey" value="${asVO.customerKey}" >
-	    <div class="form-group">
-		    <table class="table table-bordered" >
-		 	<tr>
-	          <th class='text-center' style="background-color:#E6F3FF" >고객 핸드폰번호</th>
-	          <th class='text-left'  width="250px"  >
-	          <div class="form-inline">
-	          <input type="text" class="form-control"  maxlength="10"  tabindex="1" value="${asVO.customerKey}" disabled>
-    	      </div> 
-	          </th>
-	      	</tr>
-	      	<tr>
-	          <th class='text-center' style="background-color:#E6F3FF" >고객명</th>
-	          <th class='text-left'><input type="text" class="form-control" id="customerName" name="customerName" maxlength="50"  tabindex="2" value="${asVO.customerName}" disabled></th>
-	      	</tr>
-	      	<tr>
-	          <th class='text-center' style="background-color:#E6F3FF" >AS요청일자</th>
-	          <th class='text-left'><input  type="text" class="form-control" id="asDateTime"  name="asDateTime" maxlength="25" tabindex="3" value="${asVO.asStartDateTime}" disabled></th>
-	      	</tr>
-	      	<tr>
-	          <th class='text-center' style="background-color:#E6F3FF" >AS내용</th>
-				<th class='text-left'><textarea style='width:210px;height:110px;ime-mode:active;' row="6" class="form-control" id="as" maxlength="200" name="as"  value="${asVO.asDetail}"  disabled >${asVO.asDetail}</textarea></th>
-	      	</tr>
-	      	<tr>
-	          <th class='text-center' style="background-color:#E6F3FF" ><span class="glyphicon glyphicon-asterisk"></span>AS답변</th>
-	            <c:choose>
-		    		<c:when test="${asVO.asState=='03'}">
-                		 <th class='text-left'><textarea style='width:210px;height:110px;ime-mode:active;' row="6" class="form-control" id="asResult" maxlength="200" name="asResult"  value="${asVO.asResult}" disabled >${asVO.asResult}</textarea></th>
-                	</c:when>
-					<c:otherwise>
-					     <th class='text-left'><textarea style='width:210px;height:110px;ime-mode:active;' row="6" class="form-control" id="asResult" maxlength="200" name="asResult"  value="${asVO.asResult}" >${asVO.asResult}</textarea></th>
-                   </c:otherwise>
-				</c:choose>
-	      	</tr>
-		  </table>
-		   <c:if test="${asVO.asState!='03'}">
-          <td><button type="button" class="btn btn-primary" onClick="javascript:fAs_proc()">처리</button></td>
-           </c:if>
-	    </div>
+	 <div class="form-group" >
+	 <form:form commandName="asVO"  id="asProcForm" name="asProcForm" method="post" target="file_result" >
+       <input type="hidden" name="asNo"             id="asNo"            value="${asVO.asNo}" />
+	   <input type="hidden" name="groupId"             id="groupId"            value="${strGroupId}" />
+	   <input type="hidden" name="asStartUserId"             id="asStartUserId"            value="${strUserId}" />
+	   <input type="hidden" name="productCode"             id="productCode"            value="${productCode}" />
+	      <tr>
+	      <div style="position:absolute; left:30px" > 
+	                      ※ A/S 접수 기본정보
+          </div >
+          </tr>
+          <br><br>
+	  <table class="table table-bordered" >
+	  	<tr>
+	      <th class='text-center' style="background-color:#E6F3FF">접수번호</th>
+          <th class='text-center'>${asVO.asNo}</th>
+          <th class='text-center' style="background-color:#E6F3FF">접수일</th>
+          <th class='text-center'>${asVO.asStartDateTime}</th>
+          <th class='text-center' style="background-color:#E6F3FF" >접수지점</th>
+          <th class='text-center'>${asVO.groupName}</th>  
+          <th class='text-center' style="background-color:#E6F3FF">담당자</th>
+          <th class='text-center'>${asVO.asStartUserName}</th>  
+      	</tr>
+      	</table>
+      	<table class="table table-bordered" >
+	 	<tr>
+          <th rowspan='3' class='text-center' style="background-color:#E6F3FF">고객정보</th>
+          <th class='text-center' style="background-color:#E6F3FF" >의뢰인</th>
+          <th class='text-left' colspan="2" >${asVO.customerName}</th>
+          <th class='text-center'  style="background-color:#E6F3FF;width:140px" >의뢰인 연락처</th>
+          <th class='text-left' colspan="2" >${asVO.customerKey}</th>
+      	</tr>
+      	<tr>
+          <th class='text-center'  style="background-color:#E6F3FF" >수령인</th>
+          <th class=''text-left'' colspan="2" >${asVO.receiveName}</th>
+          <th class='text-center'  style="background-color:#E6F3FF" >수령인 연락처</th>
+          <th class='text-left' >${asVO.receiveTelNo}</th>
+      	</tr>
+      	<tr>
+          <th class='text-center'  style="background-color:#E6F3FF" >수령방법</th>
+          <th colspan="4" class='text-left'>
+          
+          <c:choose>
+    		  	<c:when test="${asVO.receiveType=='02'}">
+    		  		택배(퀵) 수령  [수령주소] : ${asVO.receiveAddress} ${asVO.receiveAddressDetail}
+            	</c:when>
+				<c:otherwise>
+					매장 수령
+				</c:otherwise>
+		  </c:choose>
+
+          </th>
+      	</tr>
+      	<tr>
+          <th rowspan='5' class='text-center' style="background-color:#E6F3FF">상품정보</th>
+          <th class='text-center'  style="background-color:#E6F3FF" >브랜드명</th>
+          <th class='text-left'>${asVO.group1Name}</th>
+      	  <th class='text-center'  style="background-color:#E6F3FF" >모델명</th>
+          <th class='text-left' colspan="2" >${asVO.productName}</th>
+      	</tr>
+      	<tr>
+          <th class='text-center'  style="background-color:#E6F3FF" >A/S정책</th>
+          <th colspan="4" class='text-left'>
+          ${asVO.asPolicy}</th>
+      	</tr>
+      	<tr>
+          <th class='text-center'  style="background-color:#E6F3FF" >증상</th>
+          <th colspan="3" class='text-left' style="width:400px">
+          ${asVO.asDetail}
+          </th>
+          <th class='text-center'><a href="javascript:AutoResize('${asVO.asImage}')"><img src='${asVO.asImage}' width="80" height="80" /></a></th>
+      	</tr>
+      	<tr>
+          <th class='text-center'  style="background-color:#E6F3FF" >의뢰인<br>요청사항</th>
+          <th colspan="4" class='text-left'>
+          ${asVO.customerRequest}
+          </th>
+      	</tr>
+      	<tr>
+          <th class='text-center'  style="background-color:#E6F3FF" >구입일</th>
+          <th class='text-left' colspan="2">
+		  ${asVO.purchaseDate}
+		  </th>
+          <th class='text-center'  style="background-color:#E6F3FF" >영수증</th>
+          <th class='text-center'><a href="javascript:AutoResize('${asVO.receiptImage}')"><img src='${asVO.receiptImage}' width="30" height="30" /></a></th>
+      	</tr>
+      	</table>
+      	<table class="table table-bordered" >
+      	<tr>
+          <th class='text-center' style="background-color:#E6F3FF;width:130px">완료예정일</th>
+          <th class='text-left' style="width:90px">
+          ${asVO.asTargetDate}
+          </th>
+          <th class='text-center' style="background-color:#E6F3FF;width:130px">담당자<br>의견</th>
+          <th class='text-left'>${asVO.memo}</th>
+      	</tr>
+	  </table>
 	  </form:form>
-	</div>
+        <c:choose>
+   		  	<c:when test="${asVO.asState=='01' || asVO.asState=='02' || asVO.asState=='03'}">
+   		  	  <tr>
+		      	<div style="position:absolute; left:30px" > 
+		         	※A/S처리 결과
+		        </div >
+		      </tr>
+		      <br><br>
+   		  		<table class="table table-bordered" >
+			      	<tr>
+			          <th class='text-center' style="background-color:#E6F3FF;width:130px">처리완료일</th>
+			          <th class='text-left' style="width:90px">
+			          ${asVO.asCompleteDateTime}
+			          </th>
+			          <th class='text-center' style="background-color:#E6F3FF;width:130px">처리결과</th>
+			          <th class='text-left' style="width:90px">${asVO.asStateTrans}</th>
+			          <th class='text-left'>${asVO.asResult}</th>
+			      	</tr>
+				</table>
+           	</c:when>
+			<c:otherwise>
+			  <tr>
+		      	<div style="position:absolute; left:30px" > 
+		         	※A/S처리 및 이력
+		        </div >
+		        <div style="position:absolute; right:30px" > 
+		       		<button type="button" class="btn btn-success" onClick="fcAs_MainTransfer()">배송</button>
+		        </div>
+		      </tr>
+		      <br><br>
+		        <div id="asHistoryList"></div>
+				<script>
+				 fcAs_HistoryList();
+				</script>
+			</c:otherwise>
+	    </c:choose>
+
+	 </div>
   </body>
 </html>
-<script>
-/*	
-if('${asVO.asState}'=='02' && '${strUserId}'!='${asVO.asStartUserId}'){
-	
-	alert('본 AS건은 현재 ${asVO.asStartUserName}(${asVO.asStartUserId})님이 접수중인 상태입니다.\n처리완료후 확인하세요.');
-	$('#asProcessForm').dialog('close');
-	fcAs_listSearch();
-	
-}else if('${asVO.asState}'=='01'){
-	
-	var asNo='${asVO.asNo}';
 
-	$.ajax({
-        type: "POST",
-        async:false,
-           url:  "<%= request.getContextPath() %>/smart/asstateupdate?asState=02&asNo="+asNo,
-           success: function(result) {
-
-				if(result=='1'){
-					//성공
-				} else{
-					 alert('AS상태 변경을 실패했습니다.\n관리자에게 문의하세요');
-					 $('#asProcessForm').dialog('close');
-					 fcAs_listSearch();
-				}
-
-           },
-           error:function(){
-        	   
-        	   alert('AS상태 변경을 실패했습니다.\n관리자에게 문의하세요');
-        	   $('#asProcessForm').dialog('close');
-        	   fcAs_listSearch();
-           }
-    });
-
-	
-}
-
-document.asProcForm.asResult.focus();
-
-*/	
-</script>
- 
 

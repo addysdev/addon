@@ -16,6 +16,7 @@ import com.offact.framework.util.StringUtil;
 import com.offact.framework.db.SqlSessionCommonDao;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.service.smart.AsService;
+import com.offact.addys.vo.order.TargetVO;
 import com.offact.addys.vo.smart.AsVO;
 
 /**
@@ -51,16 +52,23 @@ public class AsServiceImpl implements AsService {
     }
 
     @Override
-    public int asProc(AsVO as) throws BizException {
+    public int asResultInsert(AsVO as) throws BizException {
+        //상담처리
+
+    	return commonDao.insert("As.asResultInsert", as);
+
+    }
+    
+    @Override
+    public int asRegistInsert(AsVO as) throws BizException {
         //상담처리
     	
-    	int retval=0;
+    	if(as.getAsState().equals("03")){
+    		return commonDao.insert("As.asReplaceInsert", as);
+    	}else{
+    		return commonDao.insert("As.asRegistInsert", as);
+    	}
     	
-    	retval=commonDao.update("As.asStateUpdate", as);
-    	
-    	retval=commonDao.insert("As.asResultInsert", as);
-    	
-    	return retval;
 
     }
     
@@ -94,6 +102,11 @@ public class AsServiceImpl implements AsService {
     	
     	return retval;
 
+    }
+    
+    @Override
+    public AsVO getAsNo(AsVO as) throws BizException {
+        return commonDao.selectOne("As.getAsNo", as);
     }
 
 }

@@ -26,26 +26,34 @@
 	  <table class="table table-bordered">
 	    <thead>
 	      <tr style="background-color:#E6F3FF">
+	        <th>접수번호</th>
 	        <th>핸드폰번호</th>
+	        <th>고객명</th>
+	        <th>A/S상태</th>
+	        <th>처리상태</th>
 	        <th>접수일자</th>
             <th>접수자</th>
+            <th>예상일자</th>
             <th>완료일자</th>
             <th>상품명</th>
-            <th>처리상태</th>
 	      </tr>
 	    </thead>
 	    <tbody>
 	    	<c:if test="${!empty asList}">
              <c:forEach items="${asList}" var="asListVO" varStatus="status">
              <tr id="select_tr_${asListVO.asNo}">
-                 <td><a href="javascript:fcAs_procForm('${asListVO.asNo}')"><c:out value="${asListVO.customerKey}"></c:out></a>
-                 <img id="hisbtn" onClick="fcHis_detail('${asListVO.customerKey}','${asListVO.asNo}','${asListVO.asDetail}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="이력">
+                 <td><a href="javascript:fcAs_procForm('${asListVO.asNo}')"><c:out value="${asListVO.asNo}"></c:out></a>
+                 <!-- <img id="hisbtn" onClick="fcHis_detail('${asListVO.customerKey}','${asListVO.asNo}','${asListVO.asDetail}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="이력">-->
                  </td>
-                 <td><c:out value="${asListVO.asStartDateTime}"></c:out></td>
-                 <td><c:out value="${asListVO.userName}(${asListVO.userId})"></c:out></td>
-                 <td><c:out value="${asListVO.asTargetDate}"></c:out></td>
-                 <td><c:out value="${asListVO.productName}"></c:out></td>
+                 <td><c:out value="${asListVO.customerKey}"></c:out></td>
+                 <td><c:out value="${asListVO.customerName}"></c:out></td>
                  <td><c:out value="${asListVO.asState}"></c:out></td>
+                 <td><c:out value="${asListVO.asSubState}"></c:out></td>
+                 <td><c:out value="${asListVO.asStartDateTime}"></c:out></td>
+                 <td><c:out value="${asListVO.asStartUserName}(${asListVO.asStartUserId})"></c:out></td>
+                 <td><c:out value="${asListVO.asTargetDate}"></c:out></td>
+                 <td><c:out value="${asListVO.asCompleteDateTime}"></c:out></td>
+                 <td><c:out value="${asListVO.productName}"></c:out></td>
               </tr>
              </c:forEach>
             </c:if>

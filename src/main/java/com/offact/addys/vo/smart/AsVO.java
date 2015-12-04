@@ -15,6 +15,8 @@ public class AsVO extends AbstractVO {
 	private String customerKey;
 	private String customerName;
 	private String asState;
+	private String asStateTrans;
+	private String asSubState;
 	private String productCode;
 	private String productName;
 	private String group1Id;
@@ -40,6 +42,8 @@ public class AsVO extends AbstractVO {
 	private String asResult;
 	private String asResultDateTime;
 
+	private String asPolicy;
+	
 	private String receiveName;
 	private String receiveTelNo;
 	private String receiveType;
@@ -49,7 +53,7 @@ public class AsVO extends AbstractVO {
 	private String customerRequest;
 	private String purchaseDate;
 	private String receiptImage;
-	private String Memo;
+	private String memo;
 	private String asTransferNo;
 	private String receiveTransferNo;
 	
@@ -58,10 +62,12 @@ public class AsVO extends AbstractVO {
 	private String userName;
 	private String asHistory;
 	private String asHistoryDateTime;
-	private String asSubState;
 	
     private String searchGubun;
     private String searchValue;
+    
+    private String searchState;
+    private String searchSubState;
 
 	private String start_asDate;
 	private String end_asDate;
@@ -375,11 +381,18 @@ public class AsVO extends AbstractVO {
 	public void setReceiptImage(String receiptImage) {
 		this.receiptImage = receiptImage;
 	}
+	
+	public String getAsPolicy() {
+		return asPolicy;
+	}
+	public void setAsPolicy(String asPolicy) {
+		this.asPolicy = asPolicy;
+	}
 	public String getMemo() {
-		return Memo;
+		return memo;
 	}
 	public void setMemo(String memo) {
-		Memo = memo;
+		this.memo = memo;
 	}
 	public String getAsTransferNo() {
 		return asTransferNo;
@@ -420,6 +433,24 @@ public class AsVO extends AbstractVO {
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	public String getSearchState() {
+		return searchState;
+	}
+	public void setSearchState(String searchState) {
+		this.searchState = searchState;
+	}
+	public String getSearchSubState() {
+		return searchSubState;
+	}
+	public void setSearchSubState(String searchSubState) {
+		this.searchSubState = searchSubState;
+	}
+	public String getAsStateTrans() {
+		return asStateTrans;
+	}
+	public void setAsStateTrans(String asStateTrans) {
+		this.asStateTrans = asStateTrans;
 	}
     
 }

@@ -53,7 +53,15 @@ public interface AsService {
      * @return
      * @throws BizException
      */
-    public int asProc(AsVO as) throws BizException;
+    public int asResultInsert(AsVO as) throws BizException;
+    
+    /**
+     * as 처리
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int asRegistInsert(AsVO as) throws BizException;
     
     /**
      * as 상세조회
@@ -70,5 +78,15 @@ public interface AsService {
      * @throws BizException
      */
     public int regiReplyInsert(AsVO as) throws BizException;
+    
+
+    /**
+     * as 접수번호 생성
+     * 
+     * @param idx
+     * @return
+     * @throws BizException
+     */
+    public AsVO getAsNo(AsVO as) throws BizException;
 
 }

@@ -108,33 +108,29 @@ $(function() {
     }
     
     //레이어팝업 : AS처리 Layer 팝업
-    function fcAs_procForm(idx){
+    function fcAs_procForm(asNo){
 
     	$('#asProcessForm').dialog({
             resizable : false, //사이즈 변경 불가능
             draggable : true, //드래그 불가능
             closeOnEscape : true, //ESC 버튼 눌렀을때 종료
 
-            width : 400,
-            height : 580,
+            width : 950,
+            height : 850,
             modal : true, //주위를 어둡게
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load('<%= request.getContextPath() %>/smart/asprodessform?idx='+idx);
+                $(this).load('<%= request.getContextPath() %>/smart/asprodessform?asNo='+asNo);
                 //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#asProcessForm").dialog('close');
-                
-                   // counsetStateChekc();
-                 
 
                     });
             }
             ,close:function(){
                 $('#asProcessForm').empty();
-                
-               // counsetStateChekc();
+
             }
         });
     };
@@ -166,13 +162,45 @@ $(function() {
             }
         });
     };
+    // A/S접수  Layup
+    function fcAs_searchForm() {
+    	
+    	var url='<%= request.getContextPath() %>/smart/productsearch';
 
+    	$('#asSearchForm').dialog({
+            resizable : false, //사이즈 변경 불가능
+            draggable : true, //드래그 불가능
+            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+            width : 650,
+            height : 750,
+            modal : true, //주위를 어둡게
+
+            open:function(){
+                //팝업 가져올 url
+                $(this).load(url);
+               
+                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+                    $("#asSearchForm").dialog('close');
+
+                    });
+            }
+            ,close:function(){
+                $('#asSearchForm').empty();
+            }
+        });
+    };
+    function imageClose(){
+   	 
+   	 $("#imageView").dialog('close');
+   	 $('#imageView').empty();
+    }
 
 </SCRIPT>
 <div class="container-fluid">
     <!-- 서브타이틀 영역 : 시작 -->
 	<div class="sub_title">
-   		<p class="titleP">AS관리</p>
+   		<p class="titleP">AS관리</p>&nbsp;<button type="button" class="btn btn-success" onClick="fcAs_searchForm()">A/S접수</button></p>
 	</div>
 	<!-- 서브타이틀 영역 : 끝 -->
 	  <!-- 조회조건 -->
@@ -182,7 +210,7 @@ $(function() {
         <input type="hidden" name="totalCount"          id="totalCount"         value=""  />
         <fieldset>
         	<div class="form-group">
-        	   <label for="start_asDate end_asDate">AS일자 :</label>
+        	   <label for="start_asDate end_asDate">AS접수일자 :</label>
 				<!-- 조회시작일자-->
 			    <input  class="form-control" style='width:135px' name="start_asDate" id="start_asDate" value="${asConVO.start_asDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
 			    <!-- 달력이미지 시작 -->
@@ -209,10 +237,24 @@ $(function() {
 		                </select>
 					</c:otherwise>
 				</c:choose>
+				<label for="asStateSerch">A/S상태 :</label>
+				<select class="form-control" title="A/S상태" id="searchState" name="searchState" value="">
+                	<option value="">전체</option>
+                    <c:forEach var="acodeVO" items="${acode_comboList}" >
+                    	<option value="${acodeVO.codeId}">${acodeVO.codeName}</option>
+                    </c:forEach>
+           		</select>
+           		<label for="asStateSerch">처리상태 :</label>
+           		<select class="form-control" title="처리상태" id="searchSubState" name="searchSubState" value="">
+                	<option value="">전체</option>
+                    <c:forEach var="sacodeVO" items="${sacode_comboList}" >
+                    	<option value="${sacodeVO.codeId}">${sacodeVO.codeName}</option>
+                    </c:forEach>
+           		</select>
 				<label for="searchGubun">검색조건 :</label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
-                	<option value="01" >고객명</option>
-                    <option value="02" >고객ID</option>
+                	<option value="01" >핸드폰번호</option>
+                	<option value="02" >고객명</option>
            		</select>
 				<label class="sr-only" for="searchValue"> 조회값 </label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${userConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
@@ -230,6 +272,21 @@ $(function() {
   <div id="asProcessForm"  title="AS처리"></div>
   
   <div id="asHistory"  title="AS이력"></div>
+
+  <!-- //AS 등록화면 -->
+  <div id="asSearchForm"  title="A/S품목조회"></div>
+  
+  <!-- //AS 등록화면 -->
+  <div id="asRegForm"  title="A/S접수"></div>
+  
+   <!-- //AS 등록화면 -->
+  <div id="ReplaceResult"  title="1:1 교환처리"></div>
+  
+  <!-- //브랜드 A/S정보 -->
+  <div id="brandInfo"  title="A/S정책"></div>
+  
+  <!-- //이미지정보 -->
+  <div id="imageView"  title="이미지" onClick="imageClose()"></div>
 
 </div>
 <br>

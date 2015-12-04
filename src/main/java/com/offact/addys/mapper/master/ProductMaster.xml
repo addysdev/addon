@@ -69,6 +69,9 @@
                <when test="searchGubun.equals('02')">
            AND T1.barCode  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
+                <when test="searchGubun.equals('05')">
+           AND T1.group1Name  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
              </choose>
            </if>
          ORDER BY createDateTime desc
@@ -93,6 +96,9 @@
                </when>
                <when test="searchGubun.equals('02')">
            AND T1.barCode  LIKE CONCAT('%', #{searchValue}, '%')
+               </when>
+               <when test="searchGubun.equals('05')">
+           AND T1.group1Name  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
              </choose>
            </if>

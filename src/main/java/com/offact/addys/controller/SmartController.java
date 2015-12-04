@@ -49,9 +49,12 @@ import com.offact.framework.jsonrpc.JSONRpcService;
 import com.offact.addys.service.common.CommonService;
 import com.offact.addys.service.common.UserService;
 import com.offact.addys.service.manage.UserManageService;
+import com.offact.addys.service.master.ProductMasterService;
 import com.offact.addys.service.smart.CounselService;
 import com.offact.addys.service.smart.ComunityService;
 import com.offact.addys.service.smart.AsService;
+import com.offact.addys.service.smart.AsHistoryService;
+import com.offact.addys.service.smart.BrandService;
 import com.offact.addys.service.history.WorkHistoryService;
 import com.offact.addys.service.common.SmsService;
 import com.offact.addys.vo.common.CodeVO;
@@ -62,10 +65,13 @@ import com.offact.addys.vo.common.UserVO;
 import com.offact.addys.vo.common.SmsVO;
 import com.offact.addys.vo.history.WorkHistoryVO;
 import com.offact.addys.vo.manage.UserManageVO;
+import com.offact.addys.vo.master.ProductMasterVO;
 import com.offact.addys.vo.master.StockVO;
 import com.offact.addys.vo.smart.CounselVO;
 import com.offact.addys.vo.smart.ComunityVO;
 import com.offact.addys.vo.smart.AsVO;
+import com.offact.addys.vo.smart.AsHistoryVO;
+import com.offact.addys.vo.smart.BrandVO;
 import com.offact.addys.vo.MultipartFileVO;
 
 /**
@@ -88,6 +94,8 @@ public class SmartController {
 		
 		return logid;
 	}
+    @Value("#{config['offact.host.url']}")
+    private String hostUrl;
     
     @Value("#{config['offact.dev.option']}")
     private String devOption;
@@ -121,9 +129,18 @@ public class SmartController {
     
     @Autowired
     private AsService asSvc;
-	
+    
+    @Autowired
+    private AsHistoryService asHistorySvc;
+    
+    @Autowired
+    private BrandService brandSvc;
+    
     @Autowired
     private SmsService smsSvc;
+    
+    @Autowired
+    private ProductMasterService productMasterSvc;
     
 	 /**
      * 상담관리 화면 로딩
@@ -1094,6 +1111,18 @@ public class SmartController {
         List<GroupVO> group_comboList = commonSvc.getGroupComboList(group);
         mv.addObject("group_comboList", group_comboList);
         
+        // 공통코드 조회 (발주상태코드)
+        CodeVO acode = new CodeVO();
+        acode.setCodeGroupId("AS01");
+        List<CodeVO> acode_comboList = commonSvc.getCodeComboList(acode);
+        mv.addObject("acode_comboList", acode_comboList);
+        
+        // 공통코드 조회 (발주상태코드)
+        CodeVO sacode = new CodeVO();
+        sacode.setCodeGroupId("AS02");
+        List<CodeVO> sacode_comboList = commonSvc.getCodeComboList(sacode);
+        mv.addObject("sacode_comboList", sacode_comboList);
+        
         mv.setViewName("/smart/asManage");
         
        //log Controller execute time end
@@ -1197,10 +1226,14 @@ public class SmartController {
 	 * @throws BizException
 	 */
     @RequestMapping(value = "/smart/asprodessform")
-	public ModelAndView asProcessForm(String idx,
-			                               HttpServletRequest request) throws BizException 
+	public ModelAndView asProcessForm(String asNo,
+			                          HttpServletRequest request) throws BizException 
     {
-		
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : asNo : " + asNo);
+    			
 		ModelAndView mv = new ModelAndView();
 		
 		AsVO asVO = new AsVO();
@@ -1234,9 +1267,9 @@ public class SmartController {
        		return mv;
 		}
 		
-        asVO.setIdx(idx);
+        asVO.setAsNo(asNo);
         
-        asVO = asSvc.getAsDetail(idx);
+        asVO = asSvc.getAsDetail(asNo);
         
 		mv.addObject("asVO", asVO);
 		
@@ -1249,6 +1282,11 @@ public class SmartController {
         */
    
 		mv.setViewName("/smart/asProcessForm");
+		
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
 		return mv;
 	}
 	 /**
@@ -1282,7 +1320,7 @@ public class SmartController {
         asVO.setUserId(strUserId);
         asVO.setGroupId(strGroupId);
         
-        int retVal=this.asSvc.asProc(asVO);
+        int retVal=-1;//this.asSvc.asProc(asVO);
         
         try{
 			//SMS발송
@@ -1351,29 +1389,40 @@ public class SmartController {
      */
     @RequestMapping(value = "/smart/asstateupdate", method = RequestMethod.POST)
     public @ResponseBody
-    String asStateUpdate(String  idx,
-    		       String  asState,
-    		       HttpServletRequest request, 
-    		       HttpServletResponse response) throws BizException
+    String asStateUpdate(@ModelAttribute("asVO") AsVO asVO,
+    		             HttpServletRequest request, 
+    		             HttpServletResponse response) throws BizException
     {
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
-		logger.info("["+logid+"] Controller start : idx" + idx);
+		logger.info("["+logid+"] Controller start : asVO" + asVO);
 
 		// 사용자 세션정보
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         
+        String asNo="";
+
         AsVO asConVO = new AsVO();
+
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
         
-        asConVO.setUserId(strUserId);
+        asConVO.setAsNo("A"+strGroupId+strToday);
+        asConVO=asSvc.getAsNo(asConVO);
+        
         asConVO.setGroupId(strGroupId);
-        asConVO.setIdx(idx);
-        asConVO.setAsState(asState);
-        
-        int retVal=this.asSvc.asStateUpdate(asConVO);
+        asConVO.setAsStartUserId(strUserId);
+        asConVO.setAsCompleteUserId(strUserId);
+        asConVO.setProductCode(asVO.getProductCode());
+        asConVO.setCustomerKey(asVO.getCustomerKey());
+        asConVO.setAsState(asVO.getAsState());
+
+        int retVal=this.asSvc.asResultInsert(asConVO);
 
 		//작업이력
         /*
@@ -1631,5 +1680,588 @@ public class SmartController {
       	
         return mv;
     }
+    /**
+     * 메모관리
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/asregistform")
+    public ModelAndView asRegistForm(String customerKey ,
+						    		 String brandCode ,
+						    		 String brandName ,
+						    		 String productCode ,
+						    		 String productName ,
+						    		 String asPolicy ,
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start asregistform customerKey :"+customerKey);
+
+        ModelAndView mv = new ModelAndView();
+        
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); 
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	        //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   	    work.setWorkIp(strIp);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
+       		return mv;
+		}
+        
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        Date deliveryTime = new Date();
+        int movedate=14;//(1:내일 ,-1:어제)
+        
+        deliveryTime.setTime(currentTime.getTime()+(1000*60*60*24)*movedate);
+        
+        String strToday = simpleDateFormat.format(currentTime);
+        String strDeliveryDay = simpleDateFormat.format(deliveryTime);
+        
+        mv.addObject("strToday", strToday);
+        mv.addObject("strDeliveryDay", strDeliveryDay);
+        mv.addObject("customerKey", customerKey);
+        mv.addObject("brandCode", brandCode);
+        mv.addObject("brandName", brandName);
+        mv.addObject("productCode", productCode);
+        mv.addObject("productName", productName);
+        mv.addObject("asPolicy", asPolicy);
+        
+        mv.setViewName("/smart/asRegistForm");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
     
+    /**
+     * 보류사유 리스트
+     * 
+     * @param orderCode
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/replceresult")
+    public ModelAndView replceResult( HttpServletRequest request, 
+    		                              HttpServletResponse response) throws BizException 
+    {   	
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : replcereason");
+
+        ModelAndView mv = new ModelAndView();
+ 
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); 
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	        //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   	    work.setWorkIp(strIp);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
+       		return mv;
+		}
+ 
+        mv.setViewName("/smart/replceResult");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    
+    /**
+     * A/S품목조회화면
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/productsearch")
+    public ModelAndView productSearch(HttpServletRequest request, 
+    		                       HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+  	String logid=logid();
+  	long t1 = System.currentTimeMillis();
+  	logger.info("["+logid+"] Controller start ");
+
+      ModelAndView mv = new ModelAndView();
+        
+   // 사용자 세션정보
+      HttpSession session = request.getSession();
+      String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+      String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+      String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+      String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+      
+      if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+      	
+      	strIp = request.getRemoteAddr(); //로그인 상태처리		
+  		UserVO userState =new UserVO();
+  		userState.setUserId(strUserId);
+  		userState.setLoginYn("N");
+  		userState.setIp(strIp);
+  		userState.setConnectIp(sClientIP);
+  		userSvc.regiLoginYnUpdate(userState);
+          
+          //작업이력
+   		WorkVO work = new WorkVO();
+   		work.setWorkUserId(strUserId);
+   		work.setWorkIp(strIp);
+   		work.setWorkCategory("CM");
+   		work.setWorkCode("CM004");
+   		commonSvc.regiHistoryInsert(work);
+  		
+      	mv.setViewName("/addys/loginForm");
+     		return mv;
+  	}
+
+      mv.setViewName("/smart/productSearch");
+        
+       //log Controller execute time end
+      long t2 = System.currentTimeMillis();
+      logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+      return mv;
+    }
+    /**
+     * A/S품목 검색목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/productsearchlist")
+    public ModelAndView productSearchList(@ModelAttribute("productConVO") ProductMasterVO productConVO, 
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+  	  	String logid=logid();
+  		long t1 = System.currentTimeMillis();
+  		logger.info("["+logid+"] Controller start : productConVO" + productConVO);
+
+        ModelAndView mv = new ModelAndView();
+        
+     // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
+    		UserVO userState =new UserVO();
+    		userState.setUserId(strUserId);
+    		userState.setLoginYn("N");
+    		userState.setIp(strIp);
+    		userState.setConnectIp(sClientIP);
+    		userSvc.regiLoginYnUpdate(userState);
+            
+            //작업이력
+  	 		WorkVO work = new WorkVO();
+  	 		work.setWorkUserId(strUserId);
+  	 		work.setWorkIp(strIp);
+  	 		work.setWorkCategory("CM");
+  	 		work.setWorkCode("CM004");
+  	 		commonSvc.regiHistoryInsert(work);
+    		
+        	mv.setViewName("/addys/loginForm");
+       		return mv;
+  		}
+        
+        List<ProductMasterVO> productList = null;
+
+        // 조회조건 null 일때 공백처리
+        if (productConVO.getSearchGubun() == null) {
+        	productConVO.setSearchGubun("01");
+        }
+        
+        // 조회값 null 일때 공백처리
+        if (productConVO.getSearchValue() == null) {
+        	productConVO.setSearchValue("");
+        }
+        
+        // 조회조건저장
+        mv.addObject("productCon", productConVO);
+
+        // 페이징코드
+        productConVO.setPage_limit_val1(StringUtil.getCalcLimitStart(productConVO.getCurPage(), productConVO.getRowCount()));
+        productConVO.setPage_limit_val2(StringUtil.nvl(productConVO.getRowCount(), "10"));
+        
+        // 사용자목록조회
+        productList = productMasterSvc.getProductList(productConVO);
+        mv.addObject("productList", productList);
+
+        // totalCount 조회
+        String totalCount = String.valueOf(productMasterSvc.getProductCnt(productConVO));
+        mv.addObject("totalCount", totalCount);
+
+        mv.setViewName("/smart/productSearchList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    
+    /**
+     * A/S품목 검색목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/brandinfo")
+    public ModelAndView brandInfo(String brandCode, 
+    							  String productCode,
+    							  String productName, 
+    		                      HttpServletRequest request, 
+    		                      HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+  	  	String logid=logid();
+  		long t1 = System.currentTimeMillis();
+  		logger.info("["+logid+"] Controller start : brandCode" + brandCode);
+
+        ModelAndView mv = new ModelAndView();
+        
+     // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
+    		UserVO userState =new UserVO();
+    		userState.setUserId(strUserId);
+    		userState.setLoginYn("N");
+    		userState.setIp(strIp);
+    		userState.setConnectIp(sClientIP);
+    		userSvc.regiLoginYnUpdate(userState);
+            
+            //작업이력
+  	 		WorkVO work = new WorkVO();
+  	 		work.setWorkUserId(strUserId);
+  	 		work.setWorkIp(strIp);
+  	 		work.setWorkCategory("CM");
+  	 		work.setWorkCode("CM004");
+  	 		commonSvc.regiHistoryInsert(work);
+    		
+        	mv.setViewName("/addys/loginForm");
+       		return mv;
+  		}
+        
+        BrandVO brandVo = new BrandVO();
+        brandVo.setBrandCode(brandCode);
+        
+        brandVo = brandSvc.getBrandDetail(brandVo);
+        // 조회조건저장
+        mv.addObject("brandVo", brandVo);
+        mv.addObject("productCode", productCode);
+        mv.addObject("productName", productName);
+
+        mv.setViewName("/smart/brandInfo");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+    
+    /**
+     * AS등록
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/asregist")
+    public ModelAndView asRegist(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO,
+    		                     @ModelAttribute("asVO") AsVO asVO,
+    		                     HttpServletRequest request, 
+    		                     HttpServletResponse response,
+    		                     String fileAttach) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : fileVO" + fileVO);
+		logger.info("["+logid+"] Controller start : asVO" + asVO);
+
+        ModelAndView mv = new ModelAndView();
+
+        String fname ="";
+
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
+    		UserVO userState =new UserVO();
+    		userState.setUserId(strUserId);
+    		userState.setLoginYn("N");
+    		userState.setIp(strIp);
+    		userState.setConnectIp(sClientIP);
+    		userSvc.regiLoginYnUpdate(userState);
+            
+            //작업이력
+  	 		WorkVO work = new WorkVO();
+  	 		work.setWorkUserId(strUserId);
+  	 		work.setWorkIp(strIp);
+  	 		work.setWorkCategory("CM");
+  	 		work.setWorkCode("CM004");
+  	 		commonSvc.regiHistoryInsert(work);
+    		
+        	mv.setViewName("/addys/loginForm");
+       		return mv;
+  		}
+     
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+     
+        String imagePath="as/"+strToday+"/";
+        
+        ResourceBundle rb = ResourceBundle.getBundle("config");
+        String uploadFilePath = rb.getString("offact.upload.path") + imagePath;
+
+        try {
+        
+	        if (fileAttach.equals("Y")) {
+		    	  
+		        List<MultipartFile> files = fileVO.getFiles();
+		        List fileNames = new ArrayList();
+		        String orgFileName = null;
+		        
+		        int filecnt=0;
+
+		        if ((files != null) && (files.size() > 0))
+		        {
+		          for (MultipartFile multipartFile : files)
+		          {
+		            orgFileName = multipartFile.getOriginalFilename();
+		            this.logger.debug("orgFileName :" + orgFileName);
+		            
+		            if(!orgFileName.equals("")){
+		            	int extIndex = orgFileName.lastIndexOf(".");
+			            String extension=orgFileName.substring(extIndex+1);
+			            
+			            long fileName = System.currentTimeMillis();
+			            orgFileName = fileName +"."+ extension;
+			            this.logger.debug("orgFileName 2 :" + orgFileName);
+			            
+			            boolean check=setDirectory(uploadFilePath);
+
+			            String filePath = uploadFilePath;
+
+			            File file = new File(filePath + orgFileName);
+			            multipartFile.transferTo(file);
+			            fileNames.add(orgFileName);
+			            
+			            if(filecnt==0){
+			            	asVO.setAsImage(hostUrl+"/upload/"+imagePath+orgFileName);
+			            }else{
+			            	asVO.setReceiptImage(hostUrl+"/upload/"+imagePath+orgFileName);
+			            }
+			            
+		            }
+		            
+		            filecnt++;   
+		            
+		          }
+		     
+		        }
+		        
+		        fname = uploadFilePath + orgFileName;
+
+	        }
+        }catch (Exception e){
+        	
+        	logger.info("["+logid+"][error] : "+e.getMessage()); 
+        	
+        }
+        
+        AsVO asConVO = new AsVO();
+
+        asConVO.setAsNo("A"+strGroupId+strToday);
+        asConVO=asSvc.getAsNo(asConVO);
+        
+        asVO.setAsNo(asConVO.getAsNo());
+        asVO.setAsCompleteUserId(strUserId);
+        asVO.setAsTargetDate(asVO.getAsTargetDate().trim().replace("-", ""));
+        asVO.setPurchaseDate(asVO.getPurchaseDate().trim().replace("-", ""));
+
+        int retVal=asSvc.asRegistInsert(asVO);
+        
+        mv.addObject("retVal",""+retVal);
+        mv.addObject("asState", asVO.getAsState());
+        mv.setViewName("/smart/asRegist");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    
+	/**
+	 * 업로드 디렉토리 세팅
+	 */
+	private static boolean setDirectory( String directory) {
+		File wantedDirectory = new File(directory);
+		if (wantedDirectory.isDirectory())
+			return true;
+	    
+		return wantedDirectory.mkdirs();
+	}
+	
+	/**
+     * AS관리 목록조회
+     * 
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/ashitorylist")
+    public ModelAndView asHitoryList(String asNo, 
+    		                         HttpServletRequest request, 
+    		                         HttpServletResponse response) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : asNo" + asNo);
+
+        ModelAndView mv = new ModelAndView();
+
+     // 사용자 세션정보
+        HttpSession session = request.getSession();
+        
+        String customerKey = StringUtil.nvl((String) session.getAttribute("customerKey")); 
+        String customerName = StringUtil.nvl((String) session.getAttribute("customerName")); 
+        String customerId = StringUtil.nvl((String) session.getAttribute("customerId"));
+        
+        if(customerKey.equals("") || customerKey.equals("null") || customerKey.equals(null)){
+
+ 	       	//mv.setViewName("/common/customerLoginForm");
+        	mv.setViewName("/common/sessionOut");
+        	return mv;
+		}
+        
+        List<AsHistoryVO> asHistoryList = null;
+        
+        AsHistoryVO asConVO = new AsHistoryVO();
+        asConVO.setAsNo(asNo);
+
+        // 목록조회
+        asHistoryList = asHistorySvc.getAsHistoryList(asConVO);
+        mv.addObject("asHistoryList", asHistoryList);
+
+        mv.setViewName("/smart/asHitoryList");
+        
+        //log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+       	
+        return mv;
+    }
+   
 }

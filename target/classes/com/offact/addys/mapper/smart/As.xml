@@ -36,7 +36,7 @@
   <result column="customerRequest"   property="customerRequest"  />
   <result column="purchaseDate"   property="purchaseDate"  />
   <result column="receiptImage"   property="receiptImage"  />
-  <result column="Memo"   property="Memo"  />
+  <result column="memo"   property="memo"  />
   <result column="asTransferNo"   property="asTransferNo"  />
   <result column="receiveTransferNo"   property="receiveTransferNo"  />
 </resultMap>
@@ -55,18 +55,28 @@
 			  ,T1.asCode
 			  ,T1.asDetail
 			  ,T1.asImage
-			  ,T1.asState
+			  ,T5.codeName as asState
+			  ,T6.codeName as asSubState
 			  ,DATE_FORMAT(T1.asStartDateTime, '%Y-%m-%d') as asStartDateTime
 			  ,Case When ifnull(T1.asTargetDate,'') = '' Then '' Else DATE_FORMAT(T1.asTargetDate, '%Y-%m-%d') End asTargetDate
+			  ,DATE_FORMAT(T1.asCompleteDateTime, '%Y-%m-%d') as asCompleteDateTime
 			  ,ifnull(T1.asStartUserId,'') as asStartUserId
 			  ,ifnull(T3.userName,'') as asStartUserName
           FROM smAs T1
           	   Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join ofUser T3 On T1.asStartUserId=T3.userId
 			   Left Join adProductMaster T4 On T1.productCode=T4.productCode
+			   Left Join ofCode T5 On T1.asState=T5.codeId And T5.codeGroupId='AS01'
+			   Left Join ofCode T6 On T1.asSubState=T5.codeId And T5.codeGroupId='AS02'
          WHERE T1.asStartDateTime between concat(#{start_asDate},' 00:00:00') and concat(#{end_asDate},' 23:59:59')
-         	<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
+           <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}
+           </if>
+           <if test="searchState != null and searchState != ''" >
+           		AND T1.asState = #{searchState}
+           </if>
+           <if test="searchSubState != null and searchSubState != ''" >
+           		AND T1.asSubState = #{searchSubState}
            </if>
            <if test="searchValue != null and searchValue != ''" >
              <choose>
@@ -88,9 +98,17 @@
           	   Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join ofUser T3 On T1.asStartUserId=T3.userId
 			   Left Join adProductMaster T4 On T1.productCode=T4.productCode
+			   Left Join ofCode T5 On T1.asState=T5.codeId And T5.codeGroupId='AS01'
+			   Left Join ofCode T6 On T1.asSubState=T5.codeId And T5.codeGroupId='AS02'
          WHERE T1.asStartDateTime between concat(#{start_asDate},' 00:00:00') and concat(#{end_asDate},' 23:59:59')
          	<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}
+           </if>
+           <if test="searchState != null and searchState != ''" >
+           		AND T1.asState = #{searchState}
+           </if>
+           <if test="searchSubState != null and searchSubState != ''" >
+           		AND T1.asSubState = #{searchSubState}
            </if>
            <if test="searchValue != null and searchValue != ''" >
              <choose>
@@ -112,18 +130,23 @@
 			  ,T1.customerKey
 			  ,T1.customerName 
 			  ,T1.productCode
-			  ,T4.productName
-			  ,T4.group1
-			  ,T4.group1Name
+			  ,T5.productName
+			  ,T5.group1
+			  ,T6.brandName as group1Name
+			  ,replace(T6.asPolicy,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as asPolicy
 			  ,T1.asCategory
 			  ,T1.asCode
-			  ,T1.asDetail
+			  ,replace(T1.asDetail,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as asDetail
 			  ,T1.asImage
 			  ,T1.asState
+			  ,T7.codeName as asStateTrans
 			  ,DATE_FORMAT(T1.asStartDateTime, '%Y-%m-%d') as asStartDateTime
+			  ,DATE_FORMAT(T1.asCompleteDateTime, '%Y-%m-%d') as asCompleteDateTime
 			  ,Case When ifnull(T1.asTargetDate,'') = '' Then '' Else DATE_FORMAT(T1.asTargetDate, '%Y-%m-%d') End asTargetDate
 			  ,ifnull(T1.asStartUserId,'') as asStartUserId
 			  ,ifnull(T3.userName,'') as asStartUserName
+			  ,ifnull(T1.asCompleteUserId,'') as asCompleteUserId
+			  ,ifnull(T4.userName,'') as asCompleteUserName
 			  ,ifnull(T1.asResult,'') as asResult
 			  ,ifnull(T1.asResultDateTime,'') as asResultDateTime
 			  ,T1.receiveName
@@ -132,40 +155,165 @@
 			  ,T1.receiveAddress
 			  ,T1.receiveAddressDetail
 			  ,T1.receivePost
-			  ,T1.customerRequest
-			  ,T1.purchaseDate
+			  ,replace(T1.customerRequest,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as customerRequest
+			  ,Case When ifnull(T1.purchaseDate,'') = '' Then '' Else DATE_FORMAT(T1.purchaseDate, '%Y-%m-%d') End purchaseDate
 			  ,T1.receiptImage
-			  ,T1.Memo
+			  ,replace(T1.memo,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as memo
 			  ,T1.receiveTransferNo
           FROM smAs T1
 			   Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join ofUser T3 On T1.asStartUserId=T3.userId
-			   Left Join adProductMaster T4 On T1.productCode=T4.productCode  
+			   Left Join ofUser T4 On T1.asCompleteUserId=T4.userId
+			   Left Join adProductMaster T5 On T1.productCode=T5.productCode 
+			   Left Join smBrand T6 On T5.group1=T6.brandCode 
+			   Left Join ofCode T7 On T1.asState=T7.codeId And T7.codeGroupId='AS01'  
 		 Where T1.asNo = #{asNo}
 		 
 </select>
 
 <update id="asStateUpdate" parameterType="com.offact.addys.vo.smart.AsVO" >
         Update smAs
-       		Set
+       		Set 
   				asState = #{asState}
  		Where asNo = #{asNo}
 </update>
 
 <insert id="asResultInsert" parameterType="com.offact.addys.vo.smart.AsVO" >
-  	Insert into smAsResult( 
+  	Insert into smAs( 
         	 asNo
-            ,userId
+        	,asState
+        	,productCode
+        	,customerKey
+            ,asStartUserId
+            ,asCompleteUserId
             ,groupId
             ,asResult 
+            ,asStartDateTime
+            ,asCompleteDateTime
             ,asResultDateTime
             )
         Values (
               #{asNo}
-	  		, #{userId}
+            , #{asState}
+            , #{productCode}
+            , #{customerKey}
+	  		, #{asStartUserId}
+	  		, #{asCompleteUserId}
 	  		, #{groupId}
 	  		, #{asResult}
 	  		, now()
+	  		, now()
+	  		, now()
+	  		)
+	  		
+</insert>
+
+<insert id="asReplaceInsert" parameterType="com.offact.addys.vo.smart.AsVO" >
+  	Insert into smAs( 
+        	 asNo
+        	,asState
+        	,productCode
+        	,customerKey
+        	,customerName
+            ,asStartUserId
+            ,asCompleteUserId
+            ,groupId
+            ,asTargetDate
+            ,asResult 
+            ,asStartDateTime
+            ,asCompleteDateTime
+            ,asResultDateTime
+            ,asDetail
+            ,asImage
+            ,receiveName
+            ,receiveTelNo
+            ,receiveType
+            ,receiveAddress
+            ,receiveAddressDetail
+            ,receivePost
+            ,customerRequest
+            ,purchaseDate
+            ,receiptImage
+            ,memo
+            )
+        Values (
+              #{asNo}
+            , #{asState}
+            , #{productCode}
+            , #{customerKey}
+            , #{customerName}
+	  		, #{asStartUserId}
+	  		, #{asCompleteUserId}
+	  		, #{groupId}
+	  		, #{asTargetDate}
+	  		, #{asResult}
+	  		, now()
+	  		, now()
+	  		, now()
+	  		, #{asDetail}
+	  		, #{asImage}
+	  		, #{receiveName}
+	  		, #{receiveTelNo}
+	  		, #{receiveType}
+	  		, #{receiveAddress}
+	  		, #{receiveAddressDetail}
+	  		, #{receivePost}
+	  		, #{customerRequest}
+	  		, #{purchaseDate}
+	  		, #{receiptImage}
+	  		, #{memo}
+	  		)
+	  		
+</insert>
+
+<insert id="asRegistInsert" parameterType="com.offact.addys.vo.smart.AsVO" >
+  	  	Insert into smAs( 
+        	 asNo
+        	,asState
+        	,productCode
+        	,customerKey
+        	,customerName
+            ,asStartUserId
+            ,groupId
+            ,asTargetDate
+            ,asResult 
+            ,asStartDateTime
+            ,asDetail
+            ,asImage
+            ,receiveName
+            ,receiveTelNo
+            ,receiveType
+            ,receiveAddress
+            ,receiveAddressDetail
+            ,receivePost
+            ,customerRequest
+            ,purchaseDate
+            ,receiptImage
+            ,memo
+            )
+        Values (
+              #{asNo}
+            , #{asState}
+            , #{productCode}
+            , #{customerKey}
+            , #{customerName}
+	  		, #{asStartUserId}
+	  		, #{groupId}
+	  		, #{asTargetDate}
+	  		, #{asResult}
+	  		, now()
+	  		, #{asDetail}
+	  		, #{asImage}
+	  		, #{receiveName}
+	  		, #{receiveTelNo}
+	  		, #{receiveType}
+	  		, #{receiveAddress}
+	  		, #{receiveAddressDetail}
+	  		, #{receivePost}
+	  		, #{customerRequest}
+	  		, #{purchaseDate}
+	  		, #{receiptImage}
+	  		, #{memo}
 	  		)
 	  		
 </insert>
@@ -200,5 +348,23 @@
 	  		, #{asNo}
 	  		)
 </insert>
+
+<select id="getAsNo"  resultMap="asListVO" parameterType="com.offact.addys.vo.smart.AsVO" >
+
+  Select concat(#{asNo} ,T3.asNo) As asNo
+  From (
+  Select Case When T2.asNoNo <![CDATA[<]]>  10 Then concat('00',T2.asNoNo) 
+              When T2.asNoNo <![CDATA[>=]]>  10 And T2.asNoNo  <![CDATA[<]]>   99  Then concat('0',T2.asNoNo) 
+              Else T2.asNoNo End asNo
+    From(
+          Select (cast(right(T1.asNo,3) As unsigned)+1) As asNoNo 
+            From (
+                  Select ifnull(max(asNo),concat(#{asNo},'000')) As asNo 
+                    From smAs where left(asNo,12)=#{asNo} ) As T1 
+    ) As T2
+  ) As T3
+
+    
+</select>
 
 </mapper>

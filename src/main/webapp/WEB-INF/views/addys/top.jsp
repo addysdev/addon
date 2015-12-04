@@ -291,9 +291,8 @@
 			          <a class="dropdown-toggle" data-toggle="dropdown" href="#"  onmouseover="MM_nbGroup('over','menu_07','<%= request.getContextPath() %>/images/top/addys-menu_07_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_07_on.jpg',1)" onmouseout="MM_nbGroup('out')">
 						<img src="<%= request.getContextPath() %>/images/top/addys-menu_07.jpg"   name="menu_07" border="0" id="menu_07"  /></a>
 			          <ul class="dropdown-menu" role="menu">
-
+ 						<li><a href="<%= request.getContextPath() %>/smart/asmanage">AS 관리</a></li>
 			            <li><a href="<%= request.getContextPath() %>/smart/counselmanage">문의 관리</a></li>
-			            <li><a href="<%= request.getContextPath() %>/smart/asmanage">AS 관리</a></li>
 			            <li><a href="<%= request.getContextPath() %>/smart/comunitymanage">매장과talk 관리</a></li>
 			            
 			            <!-- li><a href="#">조직관리</a></li>
