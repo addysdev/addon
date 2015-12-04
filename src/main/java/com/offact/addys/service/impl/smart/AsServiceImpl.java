@@ -60,6 +60,64 @@ public class AsServiceImpl implements AsService {
     }
     
     @Override
+    public int asTransUpdate(AsVO as) throws BizException {
+        //상담처리
+
+    	int retVal=-1;
+    	
+    	retVal=commonDao.update("As.asTransUpdate", as);
+    	
+    	retVal=commonDao.insert("As.asTransHistoryInsert", as);
+    	
+    	return retVal;
+
+    }
+    
+    @Override
+    public int asStateProc(AsVO as) throws BizException {
+        //상담처리
+
+    	int retVal=-1;
+    	
+    	retVal=commonDao.update("As.asStateProc", as);
+    	
+    	retVal=commonDao.insert("As.asTransHistoryInsert", as);
+    	
+    	return retVal;
+
+
+    }
+    
+    @Override
+    public int asCenterStart(AsVO as) throws BizException {
+        //상담처리
+
+    	int retVal=-1;
+    	
+    	retVal=commonDao.update("As.asCenterStart", as);
+    	
+    	retVal=commonDao.insert("As.asCenterHistoryInsert", as);
+    	
+    	return retVal;
+
+
+    }
+
+    
+    @Override
+    public int transUpdateProc(AsVO as) throws BizException {
+        //상담처리
+
+    	int retVal=-1;
+    	
+    	retVal=commonDao.update("As.asTransReUpdate", as);
+
+    	return retVal;
+
+    }
+    
+    
+    @Override
     public int asRegistInsert(AsVO as) throws BizException {
         //상담처리
     	

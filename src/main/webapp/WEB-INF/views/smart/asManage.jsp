@@ -287,6 +287,9 @@ $(function() {
   
   <!-- //이미지정보 -->
   <div id="imageView"  title="이미지" onClick="imageClose()"></div>
+  
+  <div id="asTransManage"  title="운송정보 수정"></div>
+  
 
 </div>
 <br>

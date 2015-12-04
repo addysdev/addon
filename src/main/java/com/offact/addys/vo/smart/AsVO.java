@@ -54,14 +54,29 @@ public class AsVO extends AbstractVO {
 	private String purchaseDate;
 	private String receiptImage;
 	private String memo;
-	private String asTransferNo;
-	private String receiveTransferNo;
+	private String asDeliveryMethod;
+	private String reDeliveryMethod;
+	private String asTransportCode;
+	private String reTransportCode;
+	private String asTransport;
+	private String reTransport;
+	private String asTransportNo;
+	private String reTransportNo;
+	private String asQuickCharge;
+	private String reQuickCharge;
+	private String asQuickTel;
+	private String reQuickTel;
+	
+	private String asTransurl;
+	private String reTransurl;
 	
 	private String idx;
 	private String userId;
 	private String userName;
 	private String asHistory;
 	private String asHistoryDateTime;
+	private String centerAsNo;
+	private String centerImage;
 	
     private String searchGubun;
     private String searchValue;
@@ -394,19 +409,79 @@ public class AsVO extends AbstractVO {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
-	public String getAsTransferNo() {
-		return asTransferNo;
-	}
-	public void setAsTransferNo(String asTransferNo) {
-		this.asTransferNo = asTransferNo;
-	}
-	public String getReceiveTransferNo() {
-		return receiveTransferNo;
-	}
-	public void setReceiveTransferNo(String receiveTransferNo) {
-		this.receiveTransferNo = receiveTransferNo;
-	}
 	
+	public String getAsDeliveryMethod() {
+		return asDeliveryMethod;
+	}
+	public void setAsDeliveryMethod(String asDeliveryMethod) {
+		this.asDeliveryMethod = asDeliveryMethod;
+	}
+	public String getReDeliveryMethod() {
+		return reDeliveryMethod;
+	}
+	public void setReDeliveryMethod(String reDeliveryMethod) {
+		this.reDeliveryMethod = reDeliveryMethod;
+	}
+	public String getAsTransportCode() {
+		return asTransportCode;
+	}
+	public void setAsTransportCode(String asTransportCode) {
+		this.asTransportCode = asTransportCode;
+	}
+	public String getReTransportCode() {
+		return reTransportCode;
+	}
+	public void setReTransportCode(String reTransportCode) {
+		this.reTransportCode = reTransportCode;
+	}
+	public String getAsTransport() {
+		return asTransport;
+	}
+	public void setAsTransport(String asTransport) {
+		this.asTransport = asTransport;
+	}
+	public String getReTransport() {
+		return reTransport;
+	}
+	public void setReTransport(String reTransport) {
+		this.reTransport = reTransport;
+	}
+	public String getAsTransportNo() {
+		return asTransportNo;
+	}
+	public void setAsTransportNo(String asTransportNo) {
+		this.asTransportNo = asTransportNo;
+	}
+	public String getReTransportNo() {
+		return reTransportNo;
+	}
+	public void setReTransportNo(String reTransportNo) {
+		this.reTransportNo = reTransportNo;
+	}
+	public String getAsQuickCharge() {
+		return asQuickCharge;
+	}
+	public void setAsQuickCharge(String asQuickCharge) {
+		this.asQuickCharge = asQuickCharge;
+	}
+	public String getReQuickCharge() {
+		return reQuickCharge;
+	}
+	public void setReQuickCharge(String reQuickCharge) {
+		this.reQuickCharge = reQuickCharge;
+	}
+	public String getAsQuickTel() {
+		return asQuickTel;
+	}
+	public void setAsQuickTel(String asQuickTel) {
+		this.asQuickTel = asQuickTel;
+	}
+	public String getReQuickTel() {
+		return reQuickTel;
+	}
+	public void setReQuickTel(String reQuickTel) {
+		this.reQuickTel = reQuickTel;
+	}
 	public String getAsStartUserName() {
 		return asStartUserName;
 	}
@@ -451,6 +526,30 @@ public class AsVO extends AbstractVO {
 	}
 	public void setAsStateTrans(String asStateTrans) {
 		this.asStateTrans = asStateTrans;
+	}
+	public String getAsTransurl() {
+		return asTransurl;
+	}
+	public void setAsTransurl(String asTransurl) {
+		this.asTransurl = asTransurl;
+	}
+	public String getReTransurl() {
+		return reTransurl;
+	}
+	public void setReTransurl(String reTransurl) {
+		this.reTransurl = reTransurl;
+	}
+	public String getCenterAsNo() {
+		return centerAsNo;
+	}
+	public void setCenterAsNo(String centerAsNo) {
+		this.centerAsNo = centerAsNo;
+	}
+	public String getCenterImage() {
+		return centerImage;
+	}
+	public void setCenterImage(String centerImage) {
+		this.centerImage = centerImage;
 	}
     
 }

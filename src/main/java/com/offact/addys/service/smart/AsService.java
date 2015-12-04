@@ -53,7 +53,41 @@ public interface AsService {
      * @return
      * @throws BizException
      */
+    public int asStateProc(AsVO as) throws BizException;
+    
+    /**
+     * as 처리
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int asCenterStart(AsVO as) throws BizException;
+    
+
+    /**
+     * as 처리
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int transUpdateProc(AsVO as) throws BizException;
+    
+    /**
+     * as 처리
+     * 
+     * @return
+     * @throws BizException
+     */
     public int asResultInsert(AsVO as) throws BizException;
+    
+    /**
+     * as 베송상태 업데이트
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int asTransUpdate(AsVO as) throws BizException;
+    
     
     /**
      * as 처리
