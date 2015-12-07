@@ -2342,6 +2342,7 @@ public class SmartController {
 
         asVO.setUserId(strUserId);
         asVO.setGroup1Id(strGroupId);
+        asVO.setAsState("05");
         asVO.setAsSubState("01");
         asVO.setAsHistory("점포->본사배송");
         
@@ -2517,6 +2518,7 @@ public class SmartController {
     @RequestMapping(value = "/smart/asstateprocess", method = RequestMethod.POST)
     public @ResponseBody
     String asStateProcess(String asNo,
+    		              String asState,
     					  String asSubState,
     					  String asHistory,
     		              HttpServletRequest request, 
@@ -2542,6 +2544,7 @@ public class SmartController {
         asVO.setAsNo(asNo);
         asVO.setUserId(strUserId);
         asVO.setGroup1Id(strGroupId);
+        asVO.setAsState(asState);
         asVO.setAsSubState(asSubState);
         asVO.setAsHistory(asHistory);
         

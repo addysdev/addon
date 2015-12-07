@@ -100,7 +100,7 @@
                </when>
              </choose>
            </if>
-         ORDER BY asStartDateTime desc
+         ORDER BY asStartDateTime desc  ,asNo desc
  LIMIT ${page_limit_val1} , ${page_limit_val2}
 </select>
 
@@ -297,8 +297,8 @@
 <update id="asTransUpdate" parameterType="com.offact.addys.vo.smart.AsVO" >
         Update smAs
        		Set 
-  				asState = '05'
-  				,asSubState ='01'
+  				asState = #{asState}
+  				,asSubState = #{asSubState}
   				,asDeliveryMethod = #{asDeliveryMethod}
   				,asTransportCode = #{asTransportCode}
   				,asTransport = #{asTransport}
@@ -311,7 +311,8 @@
 <update id="asStateProc" parameterType="com.offact.addys.vo.smart.AsVO" >
         Update smAs
        		Set
-  			   asSubState =#{asSubState}
+       		   asState =#{asState} 
+  			   ,asSubState =#{asSubState}
  		Where asNo = #{asNo}
 </update>
 
@@ -343,6 +344,7 @@
         	 asNo
         	,userId
         	,groupId
+        	,asState
         	,asSubState
         	,asHistory
             ,asHistoryDateTime
@@ -351,6 +353,7 @@
               #{asNo}
             , #{userId}
             , #{groupId}
+            , #{asState}
             , #{asSubState}
             , #{asHistory}
             , now()
@@ -364,6 +367,7 @@
         	 asNo
         	,userId
         	,groupId
+        	,asState
         	,asSubState
         	,asHistory
             ,asHistoryDateTime
@@ -374,6 +378,7 @@
               #{asNo}
             , #{userId}
             , #{groupId}
+            , #{asState}
             , #{asSubState}
             , #{asHistory}
             , now()
