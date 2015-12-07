@@ -2400,7 +2400,11 @@ public class SmartController {
 		code.setCodeGroupId("DE01");
 		code.setCodeId(asVO.getAsTransportCode());
 		
-		code=commonSvc.getCodeName(code);
+		if(asVO.getAsDeliveryMethod().equals("01")){
+		
+			code=commonSvc.getCodeName(code);
+		
+		}
 		
 		asVO.setAsTransport(code.getCodeName());
 
@@ -2420,6 +2424,75 @@ public class SmartController {
 		if(retVal>0){
 			
 			transResult=code.getCodeName()+"^"+code.getDescription()+"^"+asVO.getAsTransportNo();
+			
+		}
+		
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+      return transResult;
+    }
+    
+    /**
+     * 운송업체 정보 수정처리
+     *
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/retransreupdate", method = RequestMethod.POST)
+    public @ResponseBody
+    String retransUpdate(@ModelAttribute("asVO") AsVO asVO, 
+    		          HttpServletRequest request, 
+    		          HttpServletResponse response) throws BizException
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : asVO" + asVO);
+		
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        
+      //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+
+        CodeVO code =new CodeVO();
+		code.setCodeGroupId("DE01");
+		code.setCodeId(asVO.getReTransportCode());
+		
+		if(asVO.getReDeliveryMethod().equals("01")){
+		
+			code=commonSvc.getCodeName(code);
+		
+		}
+		
+		asVO.setReTransport(code.getCodeName());
+
+		int retVal=this.asSvc.reTransUpdateProc(asVO);
+
+		//작업이력
+		/*
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory(workCategory);
+		work.setWorkCode(workCode);
+		commonSvc.regiHistoryInsert(work);
+		*/
+		
+		String transResult="-1";
+		
+		if(retVal>0){
+			
+			transResult=code.getCodeName()+"^"+code.getDescription()+"^"+asVO.getReTransportNo();
 			
 		}
 		
@@ -2768,5 +2841,194 @@ public class SmartController {
         return mv;
     }
     
+    /**
+     * 메모관리
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/retransmodifyform")
+    public ModelAndView reTransModifyForm(HttpServletRequest request, 
+    		                       HttpServletResponse response,
+		                           String asNo,
+		                           String reDeliveryMethod) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start asNo:"+asNo);
+
+        ModelAndView mv = new ModelAndView();
+        
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
+        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); 
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	        //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   	    work.setWorkIp(strIp);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
+       		return mv;
+		}
+        
+        // 조회조건저장
+        mv.addObject("asNo", asNo);
+        mv.addObject("reDeliveryMethod", reDeliveryMethod);
+        
+        // 공통코드 조회 (배송업체코드)
+        CodeVO code = new CodeVO();
+        code.setCodeGroupId("DE01");
+        List<CodeVO> code_comboList = commonSvc.getCodeComboList(code);
+        mv.addObject("code_comboList", code_comboList);
+
+        mv.setViewName("/smart/reTransModifyForm");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    
+    /**
+     * AS상태변경
+     *
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/asreceivetrans", method = RequestMethod.POST)
+    public @ResponseBody
+    String asReceiveTrans(@ModelAttribute("asVO") AsVO asVO,
+    					  String asHistory,
+    		              HttpServletRequest request, 
+    		              HttpServletResponse response) throws BizException
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : asVO" + asVO);
+
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+
+        asVO.setUserId(strUserId);
+        asVO.setGroup1Id(strGroupId);
+        asVO.setAsState("06");
+        asVO.setAsSubState("07");
+        asVO.setAsHistory(asHistory);
+        
+        int retVal=this.asSvc.asReceiveState(asVO);
+
+		//작업이력
+        /*
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("MU");
+		work.setWorkCode("MU001");
+		commonSvc.regiHistoryInsert(work);
+		*/
+        
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+      return ""+retVal;
+    }
+    
+    /**
+     * AS상태변경
+     *
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/ascustomerreceive", method = RequestMethod.POST)
+    public @ResponseBody
+    String asCustomerReceive(@ModelAttribute("asVO") AsVO asVO,
+    					  String asHistory,
+    		              HttpServletRequest request, 
+    		              HttpServletResponse response) throws BizException
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : asVO" + asVO);
+
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+
+        asVO.setUserId(strUserId);
+        asVO.setGroup1Id(strGroupId);
+        asVO.setAsState("08");
+        asVO.setAsSubState("09");
+        asVO.setAsHistory(asHistory);
+        
+        int retVal=this.asSvc.asReceiveState(asVO);
+
+        //SMS발송
+        
+		//작업이력
+        /*
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("MU");
+		work.setWorkCode("MU001");
+		commonSvc.regiHistoryInsert(work);
+		*/
+        
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+      return ""+retVal;
+    }
     
 }

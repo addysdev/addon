@@ -311,6 +311,132 @@
 				
 			}
 	  }
+
+	  function fcAs_ReceiveTrans(asNo){
+		  
+		  	frm=document.asProcForm;
+		  
+	    	if(frm.reDeliveryRadio[0].checked==true){
+				
+				if(frm.reTransportCode.value==''){
+					alert('택배로 운송처리시 운송회사를 입력하셔야 합니다.');
+					return;
+				}
+				
+				if(frm.reTransportNo.value==''){
+					alert('택배로 운송처리시 운송장 번호를 입력하셔야 합니다.');
+					return;
+				}
+				
+			}else{
+				
+				if(frm.reQuickCharge.value==''){
+					alert('퀵 운송처리시 퀵 운송 담당자를 입력하셔야 합니다.');
+					return;
+				}
+				
+				if(frm.reQuickTel.value==''){
+					alert('퀵 운송처리시 퀵 운송 연락처를 입력하셔야 합니다.');
+					return;
+				}
+			}
+		    
+		  frm.reTransport.value=$("#reTransportCode option:selected").text();
+		  
+	
+		  var asHistory='본사->점포배송';
+		  
+		  if (confirm('점포 배송상태로 저장 하시겠습니까?')){
+				
+				$.ajax({
+			        type: "POST",
+			        async:false,
+			           url:  "<%= request.getContextPath() %>/smart/asreceivetrans?asHistory="+encodeURIComponent(asHistory),		
+			           data:$("#asProcForm").serialize(),
+			           success: function(result) {
+
+							if(result=='1'){
+								 alert('A/S 처리상태 변경을 성공했습니다.');
+							} else{
+								 alert('A/S 처리상태 변경을 실패했습니다.');
+							}
+							
+							$('#asProcessForm').dialog('close');
+							fcAs_listSearch();
+							
+			           },
+			           error:function(){
+			        	   
+			        	   alert('A/S 처리상태 변경을 실패했습니다.');
+			        	   $('#asProcessForm').dialog('close');
+			           }
+			    });
+				
+			}
+	  }
+	  
+	function fcAs_CustomerReceive(asNo){
+		  
+		  	frm=document.asProcForm;
+			  
+	    	if(frm.reDeliveryRadio[0].checked==true){
+				
+				if(frm.reTransportCode.value==''){
+					alert('택배로 운송처리시 운송회사를 입력하셔야 합니다.');
+					return;
+				}
+				
+				if(frm.reTransportNo.value==''){
+					alert('택배로 운송처리시 운송장 번호를 입력하셔야 합니다.');
+					return;
+				}
+				
+			}else{
+				
+				if(frm.reQuickCharge.value==''){
+					alert('퀵 운송처리시 퀵 운송 담당자를 입력하셔야 합니다.');
+					return;
+				}
+				
+				if(frm.reQuickTel.value==''){
+					alert('퀵 운송처리시 퀵 운송 연락처를 입력하셔야 합니다.');
+					return;
+				}
+			}
+		    
+		  frm.reTransport.value=$("#reTransportCode option:selected").text();
+		  
+	
+		  var asHistory='본사->고객배송';
+		  
+		  if (confirm('고객 배송상태로 저장 하시겠습니까?\n저장시 고객 수령안내 SMS가 고객님께 발송됩니다.')){
+				
+				$.ajax({
+			        type: "POST",
+			        async:false,
+			           url:  "<%= request.getContextPath() %>/smart/ascustomerreceive?asHistory="+encodeURIComponent(asHistory),		
+			           data:$("#asProcForm").serialize(),	   
+			           success: function(result) {
+
+							if(result=='1'){
+								 alert('A/S 처리상태 변경을 성공했습니다.');
+							} else{
+								 alert('A/S 처리상태 변경을 실패했습니다.');
+							}
+							
+							$('#asProcessForm').dialog('close');
+							fcAs_listSearch();
+							
+			           },
+			           error:function(){
+			        	   
+			        	   alert('A/S 처리상태 변경을 실패했습니다.');
+			        	   $('#asProcessForm').dialog('close');
+			           }
+			    });
+				
+			}
+	  }
 	  
 	  function fcAs_CenterEnd(){
 		  
@@ -420,6 +546,71 @@
 	            open:function(){
 	                //팝업 가져올 url
 	                $(this).load(url+'?asNo='+asNo+'&asDeliveryMethod='+asDeliveryMethod);
+	               
+	                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+	                    $("#asTransManage").dialog('close');
+
+	                    });
+	            }
+	            ,close:function(){
+	            	$('#asTransManage').empty();
+	            }
+	        });
+	    };
+	    
+	    /////AS완료배송
+	    
+	    function fcReDelivery_method(){
+
+	  	if(document.asProcForm.reDeliveryRadio[0].checked==true){
+	  		document.asProcForm.reTransportCode.disabled=false;
+	  		document.asProcForm.reTransportNo.disabled=false;
+	  		document.asProcForm.reQuickCharge.disabled=true;
+	  		document.asProcForm.reQuickTel.disabled=true;
+	  		document.asProcForm.reQuickCharge.value='';
+	  		document.asProcForm.reQuickTel.value='';
+	  		document.asProcForm.reDeliveryMethod.value='01';
+	  	}else{
+	  		document.asProcForm.reTransportCode.disabled=true;
+	  		document.asProcForm.reTransportNo.disabled=true;
+	  		document.asProcForm.reTransportCode.value='';
+	  		document.asProcForm.reTransportNo.value='';
+	  		document.asProcForm.reQuickCharge.disabled=false;
+	  		document.asProcForm.reQuickTel.disabled=false;
+	  		document.asProcForm.reDeliveryMethod.value='02';
+	  	}
+	  }
+	  
+	   function fcAs_reTranspath(){
+			
+			var url=document.asProcForm.reTransurl_Modify.value;
+			var transno=document.asProcForm.reTransportNo_Modify.value;
+			
+			var theURL=url+transno;
+			
+			var h=700;
+			var s=800;
+
+		    tmt_winLaunch(theURL, 'transObj', 'transObj', 'resizable=no,status=no,location=no,menubar=no,toolbar=no,width='+s+',height ='+h+',left=0,top=0,resizable=yes,scrollbars=yes');
+		
+		}
+	   
+	   function fcModify_retrans(asNo,reDeliveryMethod){
+
+	    	var url='<%= request.getContextPath() %>/smart/retransmodifyform';
+
+	    	$('#asTransManage').dialog({
+	            resizable : false, //사이즈 변경 불가능
+	            draggable : true, //드래그 불가능
+	            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+	            width : 800,
+	            height : 180,
+	            modal : true, //주위를 어둡게
+
+	            open:function(){
+	                //팝업 가져올 url
+	                $(this).load(url+'?asNo='+asNo+'&reDeliveryMethod='+reDeliveryMethod);
 	               
 	                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
 	                    $("#asTransManage").dialog('close');
@@ -586,8 +777,8 @@
 		       	</c:if>
 
 		       	<c:if test="${asVO.asSubState=='06' && (strAuth!='03' || strAuthId=='AD001')}">
-		       		<button type="button" class="btn btn-success" onClick="fcAs_ReceiveTrans('07')">점포배송</button>
-		       		<button type="button" class="btn btn-success" onClick="fcAs_ReceiveTrans('09')">고객배송</button>
+		       		<button type="button" class="btn btn-success" onClick="fcAs_ReceiveTrans('${asVO.asNo}')">점포배송</button>
+		       		<button type="button" class="btn btn-success" onClick="fcAs_CustomerReceive('${asVO.asNo}')">고객배송</button>
 		       	</c:if>
 		       	
 		        <c:if test="${asVO.asSubState=='07'}">
@@ -601,6 +792,81 @@
 		        </div>
 		      </tr>
 		      <br><br>
+		       <input type="hidden" name="reDeliveryMethod"               id="reDeliveryMethod"            value="01" />
+		       <c:choose>
+	    		<c:when test="${asVO.asSubState=='06' && (strAuth!='03' || strAuthId=='AD001')}">
+	    		<table class="table table-bordered" >
+					<tr>
+			          <th class='text-center' rowspan="2"  style="background-color:#E6F3FF" >운송방법선택<br>(본사->(고객/점포))</th>
+			          <th class='text-left' >
+			          <input type="radio" name="reDeliveryRadio" id="reDeliveryRadio" value="01" checked onChange="fcReDelivery_method()")/>&nbsp;택배
+			          </th>
+			          <th class='text-center' style="background-color:#E6F3FF">운송회사
+			          <th class='text-center' colspan="2" >
+					  <select class="form-control" title="운송업체" id="reTransportCode" name="reTransportCode" value="">
+	                	<option value="">없음</option>
+	                    <c:forEach var="codeVO" items="${code_comboList}" >
+	                    	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
+	                    </c:forEach>
+	           		 </select>
+			   		  <input type="hidden" id="reTransport" name="reTransport" >
+			          </th>
+			      	  <th class='text-center'  style="background-color:#E6F3FF">운송장번호</th>
+			          <th class='text-center'><input type="text" class="form-control" id="reTransportNo" name="reTransportNo" maxlength="30"   value="" placeholder="운송장번호"  /></th>	
+			      	</tr>
+			      	<tr>
+			      	  <th class='text-left' >
+			          <input type="radio" name="reDeliveryRadio" id="reDeliveryRadio" value="02"  onChange="fcReDelivery_method()")/>&nbsp;퀵
+			          </th>
+			      	  <th class='text-center' style="background-color:#E6F3FF">담당자</th>
+			          <th class='text-center' colspan="2" >
+			          <input type="text" class="form-control" id="reQuickCharge" name="reQuickCharge" disabled  maxlength="10"  value="" placeholder="담당자"  />
+			          </th>
+			      	  <th class='text-center' style="background-color:#E6F3FF">연락처</th>
+			          <th class='text-center'>
+			          <input type="text" class="form-control" id="reQuicktel" name="reQuickTel" disabled value=""  maxlength="14" placeholder="연락처"  />
+			          </th>
+			      	</tr>
+			     </table>
+				</c:when>
+				<c:otherwise>
+				 <c:if test="${asVO.asSubState=='07' || asVO.asSubState=='08' || asVO.asSubState=='09' || asVO.asSubState=='10' || asVO.asSubState=='11' }">
+				 <table class="table table-bordered" >
+					<tr>
+			          <th class='text-center' style="background-color:#E6F3FF" >운송방법(본사->(고객/점포))</th>
+			          <c:choose>
+	    				<c:when test="${asVO.reDeliveryMethod=='01'}">
+			         	  <th class='text-center' >&nbsp;택배 </th>
+			              <th class='text-center' style="background-color:#E6F3FF">운송회사&nbsp;<button id="modifyastrans" type="button" class="btn btn-xs btn-success" onClick="fcModify_retrans('${asVO.asNo}','${asVO.reDeliveryMethod}')" >수정</button></th>
+			              <th class='text-center' id="reTransCompanyId" >${asVO.reTransport}</th>
+	                      <th class='text-center'  style="background-color:#E6F3FF">운송장번호</th>
+			               <c:choose>
+	    						 <c:when test="${asVO.reTransurl!='N'}">
+	    						    <input type="hidden" name="reTransurl_Modify" id="reTransurl_Modify" value="${asVO.reTransurl}" >
+	    						    <input type="hidden" name="reTransportNo_Modify" id="reTransportNo_Modify" value="${asVO.reTransportNo}" >
+	    						  	<th class='text-center'><a href="javascript:fcAs_reTranspath();"><span id="reTransNoId">${asVO.reTransportNo}</span></a></th>
+			             	 	 </c:when>
+								 <c:otherwise>
+								    <input type="hidden" name="reTransurl_Modify" id="reTransurl_Modify" value="${asVO.reTransurl}" >
+	    						    <input type="hidden" name="reTransportNo_Modify" id="reTransportNo_Modify" value="${asVO.reTransportNo}" >
+								  	<th class='text-center' id="reTransNoId" >${asVO.reTransportNo}</th>
+								 </c:otherwise>
+			 			  </c:choose>
+			            </c:when>
+				        <c:otherwise>	
+				       	  <th class='text-center' >&nbsp;퀵 </th>
+			              <th class='text-center' style="background-color:#E6F3FF">담당자&nbsp;<button id="remodifytrans" type="button" class="btn btn-xs btn-success" onClick="fcModify_retrans('${asVO.asNo}','${asVO.reDeliveryMethod}')" >수정</button></th>
+			              <th class='text-center' colspan="2" id="reQuickId" >${asVO.reQuickCharge}</th>
+	                      <th class='text-center'  style="background-color:#E6F3FF">연락처</th>
+			              <th class='text-center' id="reQuicktelId">${asVO.reQuickTel}</th>
+			            </c:otherwise>
+			 		   </c:choose>
+			      	</tr>
+			     </table>
+			     </c:if>
+				</c:otherwise>
+			  </c:choose>
+			  
 		       <input type="hidden" name="asDeliveryMethod"               id="asDeliveryMethod"            value="01" />
 		       <c:choose>
 	    		<c:when test="${asVO.asState=='04'}">
@@ -644,7 +910,7 @@
 				   <tr>
 			       	   <div class="form-inline">
 		       	          <th class='text-center'  style="background-color:#E6F3FF">&nbsp;센터 처리내용  </th>
-				          <th class='text-center' colspan="3" ><input type="text" class="form-control" id="asHistory" style="width:400px"  name="asHistory" maxlength="30" value="" placeholder="센터 처리내용"  /></th>
+				          <th class='text-center' colspan="4" ><input type="text" class="form-control" id="asHistory" style="width:400px"  name="asHistory" maxlength="30" value="" placeholder="센터 처리내용"  /></th>
 				          <th class='text-center' ><font style="color:red">이미지 첨부 : </font><input type="file" id="files" name="files" /></th>
 				          <th class='text-center' ><button type="button" class="btn btn-success" onClick="fcAs_CenterEnd()">센터처리</button></th>
 				       </div>

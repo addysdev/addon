@@ -63,7 +63,14 @@ public interface AsService {
      */
     public int asCenterStart(AsVO as) throws BizException;
     
-
+    /**
+     * as 처리
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int asReceiveState(AsVO as) throws BizException;
+    
     /**
      * as 처리
      * 
@@ -71,6 +78,14 @@ public interface AsService {
      * @throws BizException
      */
     public int transUpdateProc(AsVO as) throws BizException;
+    
+    /**
+     * as 처리
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int reTransUpdateProc(AsVO as) throws BizException;
     
     /**
      * as 처리

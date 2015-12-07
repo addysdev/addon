@@ -27,7 +27,7 @@
                  <td><c:out value="${asHistoryVO.centerAsNo}"></c:out></td>
                  <td>
                  <c:if test="${asHistoryVO.centerImage!=null}">
-                 <a href="javascript:AutoResize('${asHistoryVO.centerImage}')"><img src='${asVO.receiptImage}' width="20" height="20" /></a>
+                 <a href="javascript:AutoResize('${asHistoryVO.centerImage}')"><img src='${asHistoryVO.centerImage}' width="20" height="20" /></a>
 				 </c:if>
                  </td>
               </tr>

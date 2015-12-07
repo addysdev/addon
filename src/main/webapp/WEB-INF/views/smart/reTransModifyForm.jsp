@@ -12,13 +12,13 @@
 //운송정보 수정
 function fcTrans_update(){
 
-	var dm='${asDeliveryMethod}';
+	var dm='${reDeliveryMethod}';
 	
 	if(dm=='01'){
 	
-		if($("#asTransportNo").val()==''){
+		if($("#reTransportNo").val()==''){
 			alert('운송장 번호를 입력하세요!');
-			$("#asTransportNo").focus();
+			$("#reTransportNo").focus();
 			return;
 		}
 	
@@ -28,8 +28,8 @@ function fcTrans_update(){
 		
 		    $.ajax({
 		        type: "POST",
-		           url:  "<%= request.getContextPath() %>/smart/astransreupdate",
-		                data:$("#asTransForm").serialize(),
+		           url:  "<%= request.getContextPath() %>/smart/retransreupdate",
+		                data:$("#reTransForm").serialize(),
 		           success: function(result) {
 		               commonDim(false);
 		               
@@ -42,9 +42,9 @@ function fcTrans_update(){
 		            	   		               
 			               //document.recoveryDetailForm.transurl_Modify.value=transArr[1];
 			       		   //document.recoveryDetailForm.transportNo_Modify.value=transArr[2];
- 
-		            	   document.all('asTransCompanyId').innerText=document.asTransForm.asTransportCode.options[document.asTransForm.asTransportCode.selectedIndex].text;
-		            	   document.all('asTransNoId').innerText=document.asTransForm.asTransportNo.value;
+
+		            	   document.all('reTransCompanyId').innerText=document.reTransForm.reTransportCode.options[document.reTransForm.reTransportCode.selectedIndex].text;  
+		            	   document.all('reTransNoId').innerText=document.reTransForm.reTransportNo.value;
 	
 		               }else{
 		            	   
@@ -67,15 +67,15 @@ function fcTrans_update(){
 	
 	}else{
 		
-		if($("#asQuickCharge").val()==''){
+		if($("#reQuickCharge").val()==''){
 			alert('담당자 정보를 입력하세요!');
-			$("#asQuickCharge").focus();
+			$("#reQuickCharge").focus();
 			return;
 		}
 		
-		if($("#asQuickTel").val()==''){
+		if($("#reQuickTel").val()==''){
 			alert('담당자 연락처를 입력하세요!');
-			$("#asQuickTel").focus();
+			$("#reQuickTel").focus();
 			return;
 		}
 		
@@ -85,8 +85,8 @@ function fcTrans_update(){
 		
 		    $.ajax({
 		        type: "POST",
-		           url:  "<%= request.getContextPath() %>/smart/astransreupdate",
-		                data:$("#asTransForm").serialize(),
+		           url:  "<%= request.getContextPath() %>/smart/retransreupdate",
+		                data:$("#reTransForm").serialize(),
 		           success: function(result) {
 		               commonDim(false);
 		              
@@ -96,14 +96,14 @@ function fcTrans_update(){
 		            	   
 		            	   //document.all('quickId').innerText=encodeURIComponent(quickArr[0]);
 		            	   //document.all('quicktelId').innerText=quickArr[1];
-		            	   document.all('asQuickId').innerText=document.asTransForm.asQuickCharge.value;
-			               document.all('asQuicktelId').innerText=document.asTransForm.asQuickTel.value;
+		            	   document.all('reQuickId').innerText=document.reTransForm.reQuickCharge.value;
+			               document.all('reQuicktelId').innerText=document.reTransForm.reQuickTel.value;
 		               }else{
 		            	   alert('퀵정보 수정에 실패했습니다.');
 		               }
 		             
 
-		               $("#asTransManage").dialog('close');
+		               $("#reTransManage").dialog('close');
 		            
 		           },
 		           error:function() {
@@ -111,7 +111,7 @@ function fcTrans_update(){
 
 		               alert('퀵정보 수정에 실패했습니다.');
 		               
-		               $("#asTransManage").dialog('close');
+		               $("#reTransManage").dialog('close');
 		           }
 		    });
 		}
@@ -126,30 +126,30 @@ function fcTrans_update(){
 <div class="container-fluid">
 	<h5><strong><font style="color:#428bca"><span class="glyphicon glyphicon-book"></span>운송정보 수정 &nbsp; 
    				</font></strong></h5>
-	  <form:form commandName="asVO" id="asTransForm" name="asTransForm" method="post" action="" >
+	  <form:form commandName="asVO" id="reTransForm" name="reTransForm" method="post" action="" >
 	  <input type="hidden" name="asNo"          id="asNo"         value="${asNo}"  />
-	  <input type="hidden" name="asDeliveryMethod"          id="asDeliveryMethod"         value="${asDeliveryMethod}"  />
+	  <input type="hidden" name="reDeliveryMethod"          id="reDeliveryMethod"         value="${reDeliveryMethod}"  />
 	  <br>
 	  <table class="table table-bordered" >
       	<tr>
       	<div class="form-inline">
           <c:choose>
-  			<c:when test="${asDeliveryMethod=='01'}">
+  			<c:when test="${reDeliveryMethod=='01'}">
   			    <th class='text-center' style="background-color:#E6F3FF" >운송방법</th>
   			    <th class='text-center' >&nbsp;택배 </th>
          	 	<th class='text-center' style="background-color:#E6F3FF">운송회사
 		          <!-- >button id="downbtn" type="button" class="btn btn-xs btn-success" onClick="" >직접입력</button --></th>
 		          <th class='text-center' colspan="2" >
-				  <select class="form-control" title="운송업체" id="asTransportCode" name="asTransportCode" value="">
+				  <select class="form-control" title="운송업체" id="reTransportCode" name="reTransportCode" value="">
                 	<option value="">없음</option>
                     <c:forEach var="codeVO" items="${code_comboList}" >
                     	<option value="${codeVO.codeId}">${codeVO.codeName}</option>
                     </c:forEach>
            		 </select>
-		   		  <input type="hidden" id="asTransport" name="asTransport" >
+		   		  <input type="hidden" id="reTransport" name="reTransport" >
 		          </th>
 		      	  <th class='text-center'  style="background-color:#E6F3FF">운송장번호</th>
-		          <th class='text-center'><input type="text" class="form-control" id="asTransportNo" name="asTransportNo" maxlength="30"   value="" placeholder="운송장번호"  /></th>	
+		          <th class='text-center'><input type="text" class="form-control" id="reTransportNo" name="reTransportNo" maxlength="30"   value="" placeholder="운송장번호"  /></th>	
 		          <th class='text-center' >&nbsp;<button id="memoinfobtn" type="button" class="btn btn-info" onClick="fcTrans_update()" >수정</button></th>
             </c:when>
 	        <c:otherwise>	
@@ -157,11 +157,11 @@ function fcTrans_update(){
   			      <th class='text-center' >&nbsp;퀵 </th>
 		      	  <th class='text-center' style="background-color:#E6F3FF">담당자</th>
 		          <th class='text-center' colspan="2" >
-		          <input type="text" class="form-control" id="asQuickCharge" name="asQuickCharge"   maxlength="10"  value="" placeholder="담당자"  />
+		          <input type="text" class="form-control" id="reQuickCharge" name="reQuickCharge"   maxlength="10"  value="" placeholder="담당자"  />
 		          </th>
 		      	  <th class='text-center' style="background-color:#E6F3FF">연락처</th>
 		          <th class='text-center'>
-		          <input type="text" class="form-control" id="asQuicktel" name="asQuickTel" value=""  maxlength="14" placeholder="연락처"  />
+		          <input type="text" class="form-control" id="reQuicktel" name="reQuickTel" value=""  maxlength="14" placeholder="연락처"  />
 		          </th>
 		          <th class='text-center' >&nbsp;<button id="memoinfobtn" type="button" class="btn btn-info" onClick="fcTrans_update()" >수정</button></th>
             </c:otherwise>

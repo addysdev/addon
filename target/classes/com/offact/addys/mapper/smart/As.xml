@@ -323,6 +323,20 @@
  		Where asNo = #{asNo}
 </update>
 
+<update id="asReceiveProc" parameterType="com.offact.addys.vo.smart.AsVO" >
+        Update smAs
+       		Set 
+  				asState =#{asState} 
+  			    ,asSubState =#{asSubState}
+  				,reDeliveryMethod = #{reDeliveryMethod}
+  				,reTransportCode = #{reTransportCode}
+  				,reTransport = #{reTransport}
+  				,reTransportNo = #{reTransportNo}
+  				,reQuickCharge = #{reQuickCharge}
+  				,reQuickTel = #{reQuickTel}
+ 		Where asNo = #{asNo}
+</update>
+
 
 <insert id="asTransHistoryInsert" parameterType="com.offact.addys.vo.smart.AsVO" >
   	  	Insert into smAsHistory( 
@@ -378,6 +392,18 @@
   				,asTransportNo = #{asTransportNo}
   				,asQuickCharge = #{asQuickCharge}
   				,asQuickTel = #{asQuickTel}
+ 		Where asNo = #{asNo}
+</update>
+
+<update id="reTransReUpdate" parameterType="com.offact.addys.vo.smart.AsVO" >
+       Update smAs
+       		Set 
+  				reDeliveryMethod = #{reDeliveryMethod}
+  				,reTransportCode = #{reTransportCode}
+  				,reTransport = #{reTransport}
+  				,reTransportNo = #{reTransportNo}
+  				,reQuickCharge = #{reQuickCharge}
+  				,reQuickTel = #{reQuickTel}
  		Where asNo = #{asNo}
 </update>
 

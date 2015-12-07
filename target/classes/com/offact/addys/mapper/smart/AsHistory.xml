@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AsHistory">
+
+<resultMap id="asHistoryVO" type="com.offact.addys.vo.smart.AsHistoryVO" >
+  <result column="asNo"              property="asNo"  />
+  <result column="groupId"            property="groupId"  />
+  <result column="groupName"            property="groupName"  />
+  <result column="userId"      	   property="userId"  />
+  <result column="userName"       	   property="userName"  />
+  <result column="asHistory"              property="asHistory"  />
+  <result column="asHistoryDateTime"              property="asHistoryDateTime"  />
+  <result column="asSubState"            property="asSubState"  />
+  <result column="centerAsNo"            property="centerAsNo"  />
+  <result column="centerImage"                property="centerImage"  />
+</resultMap>
+
+<select id="getAsHistoryList"  resultMap="asHistoryVO" parameterType="com.offact.addys.vo.smart.AsHistoryVO" >
+        SELECT T1.idx
+              ,T1.asNo
+			  ,T1.groupId
+			  ,T2.groupName
+			  ,T1.userId
+			  ,T3.userName 
+			  ,T1.asHistory
+			  ,DATE_FORMAT(T1.asHistoryDateTime, '%Y-%m-%d') as asHistoryDateTime
+			  ,T1.centerAsNo
+			  ,T1.centerImage
+			  ,T1.asSubState
+			  ,T4.codeName as asSubStateTrans
+          FROM smAsHistory T1
+          	   Left Join ofGroup T2 On T1.groupId=T2.groupId
+			   Left Join ofUser T3 On T1.userId=T3.userId
+			   Left Join ofCode T4 On T1.asSubState=T4.codeId And T4.codeGroupId='AS02'
+         WHERE T1.asNo=#{asNo}
+         ORDER BY asHistoryDateTime asc
+</select>
+
+</mapper>

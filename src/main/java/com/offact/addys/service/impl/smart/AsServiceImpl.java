@@ -105,6 +105,20 @@ public class AsServiceImpl implements AsService {
 
     
     @Override
+    public int asReceiveState(AsVO as) throws BizException {
+        //상담처리
+
+    	int retVal=-1;
+    	
+    	retVal=commonDao.update("As.asReceiveProc", as);
+    	
+    	retVal=commonDao.insert("As.asTransHistoryInsert", as);
+    	
+    	return retVal;
+
+    }
+    
+    @Override
     public int transUpdateProc(AsVO as) throws BizException {
         //상담처리
 
@@ -115,6 +129,19 @@ public class AsServiceImpl implements AsService {
     	return retVal;
 
     }
+    
+    @Override
+    public int reTransUpdateProc(AsVO as) throws BizException {
+        //상담처리
+
+    	int retVal=-1;
+    	
+    	retVal=commonDao.update("As.reTransReUpdate", as);
+
+    	return retVal;
+
+    }
+
     
     
     @Override
