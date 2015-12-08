@@ -84,4 +84,23 @@
 		 
 </select>
 
+<select id="getProductDetail" resultMap="asListVO" parameterType="com.offact.addys.vo.smart.ProductVO" >
+
+		SELECT T1.productCode
+			  ,T1.asPolicy
+			  ,T1.guide
+			  ,T1.etc
+			  ,T1.createUserId
+			  ,T2.userName as createUserName
+			  ,T1.updateUserId
+			  ,T3.userName as updateUserName
+			  ,T1.createDateTime
+			  ,T1.updateDateTime
+          FROM smProduct T1
+          	   Left Join ofUser T2 On T1.createUserId=T2.userId
+			   Left Join ofUser T3 On T1.updateUserId=T3.userId 
+		 Where T1.productCode = #{productCode}
+		 
+</select>
+
 </mapper>

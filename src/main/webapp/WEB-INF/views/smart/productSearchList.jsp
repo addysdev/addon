@@ -44,8 +44,8 @@
 				</c:otherwise>
 			 </c:choose>
                  <td class='text-center'><c:out value="${productMasterVO.productCode}"></c:out></td>
-                 <td class='text-center'><a href="javascript:fcBrand_Select('${productMasterVO.group1}','${productMasterVO.productCode}','${productMasterVO.productName}')"><c:out value="${productMasterVO.group1Name}"></c:out></a></td>
-                 <td><c:out value="${productMasterVO.productName}"></c:out></td>
+                 <td class='text-center'><c:out value="${productMasterVO.group1Name}"></c:out></td>
+                 <td><a href="javascript:fcBrand_Select('${productMasterVO.group1}','${productMasterVO.productCode}','${productMasterVO.productName}')"><c:out value="${productMasterVO.productName}"></c:out></a></td>
                  <td class='text-center'><c:out value="${productMasterVO.companyName}"></c:out></td>
               </tr>
              </c:forEach>

@@ -17,6 +17,7 @@ import com.offact.framework.db.SqlSessionCommonDao;
 import com.offact.framework.exception.BizException;
 import com.offact.addys.service.smart.BrandService;
 import com.offact.addys.vo.smart.BrandVO;
+import com.offact.addys.vo.smart.ProductVO;
 
 /**
  * @author 4530
@@ -50,5 +51,12 @@ public class BrandServiceImpl implements BrandService {
         return brandDetailVO;
     }
 
+    @Override
+    public ProductVO getProductDetail(ProductVO product) throws BizException {
+    	        
+    	ProductVO productDetailVO = commonDao.selectOne("Brand.getProductDetail", product);
+
+        return productDetailVO;
+    }
   
 }

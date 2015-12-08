@@ -73,6 +73,7 @@ import com.offact.addys.vo.smart.ComunityVO;
 import com.offact.addys.vo.smart.AsVO;
 import com.offact.addys.vo.smart.AsHistoryVO;
 import com.offact.addys.vo.smart.BrandVO;
+import com.offact.addys.vo.smart.ProductVO;
 import com.offact.addys.vo.MultipartFileVO;
 
 /**
@@ -113,6 +114,9 @@ public class SmartController {
     @Value("#{config['offact.sms.smstype']}")
     private String smsType;
 	
+    @Value("#{config['offact.sms.sendno']}")
+    private String sendNo;
+
     @Autowired
     private CommonService commonSvc;
     
@@ -2033,11 +2037,16 @@ public class SmartController {
   		}
         
         BrandVO brandVo = new BrandVO();
+        ProductVO productVo = new ProductVO();
+        
         brandVo.setBrandCode(brandCode);
+        productVo.setProductCode(productCode);
         
         brandVo = brandSvc.getBrandDetail(brandVo);
+        productVo = brandSvc.getProductDetail(productVo);
         // 조회조건저장
         mv.addObject("brandVo", brandVo);
+        mv.addObject("productVo", productVo);
         mv.addObject("productCode", productCode);
         mv.addObject("productName", productName);
 
@@ -2348,7 +2357,43 @@ public class SmartController {
         
         int retVal=this.asSvc.asTransUpdate(asVO);
 
-        //SMS발송
+        try{
+			//SMS발송
+			SmsVO smsVO = new SmsVO();
+			SmsVO resultSmsVO = new SmsVO();
+			
+			smsVO.setSmsId(smsId);
+			smsVO.setSmsPw(smsPw);
+			smsVO.setSmsType(smsType);
+			smsVO.setSmsTo(asVO.getCustomerKey());
+			smsVO.setSmsFrom(sendNo);
+			//smsVO.setSmsMsg(counselVO.getCounselResult());
+			smsVO.setSmsMsg("[애디스]요청하신 A/S대행 접수가 완료되었습니다. 제품 제조사에 A/S를 의뢰할 예정입니다.");
+			smsVO.setSmsUserId(strUserId);
+			
+			logger.debug("#########devOption :"+devOption);
+			String[] devSmss= devSms.split("\\^");
+			
+    		if(devOption.equals("true")){
+				for(int i=0;i<devSmss.length;i++){
+					
+					if(devSmss[i].equals(asVO.getCustomerKey().trim().replace("-", ""))){
+						resultSmsVO=smsSvc.sendSms(smsVO);
+					}
+				}
+			}else{
+				resultSmsVO=smsSvc.sendSms(smsVO);
+			}
+
+			logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+			logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+			logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+			
+		}catch(BizException e){
+			
+			logger.info("["+logid+"] Controller SMS전송오류");
+			
+		}
         
 		//작업이력
         /*
@@ -2518,6 +2563,7 @@ public class SmartController {
     @RequestMapping(value = "/smart/asstateprocess", method = RequestMethod.POST)
     public @ResponseBody
     String asStateProcess(String asNo,
+    		              String customerKey,
     		              String asState,
     					  String asSubState,
     					  String asHistory,
@@ -2551,6 +2597,47 @@ public class SmartController {
         int retVal=this.asSvc.asStateProc(asVO);
 
         //SMS발송
+        if(asVO.getAsSubState().equals("08")){
+        	
+        	  try{
+      			//SMS발송
+      			SmsVO smsVO = new SmsVO();
+      			SmsVO resultSmsVO = new SmsVO();
+      			
+      			smsVO.setSmsId(smsId);
+      			smsVO.setSmsPw(smsPw);
+      			smsVO.setSmsType(smsType);
+      			smsVO.setSmsTo(customerKey);
+      			smsVO.setSmsFrom(sendNo);
+      			//smsVO.setSmsMsg(counselVO.getCounselResult());
+      			smsVO.setSmsMsg("[애디스]제품A/S가 완료되었습니다. 요청하신 매장에서 수령이 가능합니다.");
+      			smsVO.setSmsUserId(strUserId);
+      			
+      			logger.debug("#########devOption :"+devOption);
+      			String[] devSmss= devSms.split("\\^");
+      			
+          		if(devOption.equals("true")){
+      				for(int i=0;i<devSmss.length;i++){
+      					
+      					if(devSmss[i].equals(customerKey.trim().replace("-", ""))){
+      						resultSmsVO=smsSvc.sendSms(smsVO);
+      					}
+      				}
+      			}else{
+      				resultSmsVO=smsSvc.sendSms(smsVO);
+      			}
+
+      			logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+      			logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+      			logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+      			
+      		}catch(BizException e){
+      			
+      			logger.info("["+logid+"] Controller SMS전송오류");
+      			
+      		}
+        	  
+        }
         
 		//작업이력
         /*
@@ -2582,6 +2669,7 @@ public class SmartController {
     @RequestMapping(value = "/smart/ascenterstart", method = RequestMethod.POST)
     public @ResponseBody
     String asCenterStart(String asNo,
+    		              String customerKey,
     		              String centerAsNo,
     					  String asHistory,
     		              HttpServletRequest request, 
@@ -2614,7 +2702,43 @@ public class SmartController {
         
         int retVal=this.asSvc.asCenterStart(asVO);
 
-        //SMS발송
+        try{
+			//SMS발송
+			SmsVO smsVO = new SmsVO();
+			SmsVO resultSmsVO = new SmsVO();
+			
+			smsVO.setSmsId(smsId);
+			smsVO.setSmsPw(smsPw);
+			smsVO.setSmsType(smsType);
+			smsVO.setSmsTo(customerKey);
+			smsVO.setSmsFrom(sendNo);
+			//smsVO.setSmsMsg(counselVO.getCounselResult());
+			smsVO.setSmsMsg("[애디스]제품 제조사로 A/S접수가 완료되었습니다. 상세 정보는 addys.kr 에서 확인가능합니다.");
+			smsVO.setSmsUserId(strUserId);
+			
+			logger.debug("#########devOption :"+devOption);
+			String[] devSmss= devSms.split("\\^");
+			
+    		if(devOption.equals("true")){
+				for(int i=0;i<devSmss.length;i++){
+					
+					if(devSmss[i].equals(customerKey.trim().replace("-", ""))){
+						resultSmsVO=smsSvc.sendSms(smsVO);
+					}
+				}
+			}else{
+				resultSmsVO=smsSvc.sendSms(smsVO);
+			}
+
+			logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+			logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+			logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+			
+		}catch(BizException e){
+			
+			logger.info("["+logid+"] Controller SMS전송오류");
+			
+		}
         
 		//작업이력
         /*
@@ -3017,6 +3141,44 @@ public class SmartController {
         int retVal=this.asSvc.asReceiveState(asVO);
 
         //SMS발송
+        try{
+			//SMS발송
+			SmsVO smsVO = new SmsVO();
+			SmsVO resultSmsVO = new SmsVO();
+			
+			smsVO.setSmsId(smsId);
+			smsVO.setSmsPw(smsPw);
+			smsVO.setSmsType(smsType);
+			smsVO.setSmsTo(asVO.getCustomerKey());
+			smsVO.setSmsFrom(sendNo);
+			//smsVO.setSmsMsg(counselVO.getCounselResult());
+			smsVO.setSmsMsg("[애디스]제품A/S가 완료되어 고객님께 배송중입니다. 상세정보는 addys.kr 에서 확인기능합니다.");
+			smsVO.setSmsUserId(strUserId);
+			
+			logger.debug("#########devOption :"+devOption);
+			String[] devSmss= devSms.split("\\^");
+			
+    		if(devOption.equals("true")){
+				for(int i=0;i<devSmss.length;i++){
+					
+					if(devSmss[i].equals(asVO.getCustomerKey().trim().replace("-", ""))){
+						resultSmsVO=smsSvc.sendSms(smsVO);
+					}
+				}
+			}else{
+				resultSmsVO=smsSvc.sendSms(smsVO);
+			}
+
+			logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+			logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+			logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+			
+		}catch(BizException e){
+			
+			logger.info("["+logid+"] Controller SMS전송오류");
+			
+		}
+        
         
 		//작업이력
         /*

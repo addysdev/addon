@@ -43,6 +43,7 @@ public class AsVO extends AbstractVO {
 	private String asResultDateTime;
 
 	private String asPolicy;
+	private String asPolicyProduct;
 	
 	private String receiveName;
 	private String receiveTelNo;
@@ -550,6 +551,12 @@ public class AsVO extends AbstractVO {
 	}
 	public void setCenterImage(String centerImage) {
 		this.centerImage = centerImage;
+	}
+	public String getAsPolicyProduct() {
+		return asPolicyProduct;
+	}
+	public void setAsPolicyProduct(String asPolicyProduct) {
+		this.asPolicyProduct = asPolicyProduct;
 	}
     
 }

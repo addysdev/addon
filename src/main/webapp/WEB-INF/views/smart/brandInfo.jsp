@@ -167,27 +167,35 @@ function radioSelect(){
 	 <form:form commandName="brandVO" name="brandInfoForm" id="brandInfoForm" method="post" action="" >
 	  <table class="table table-bordered" >
 	 	<tr>
-          <th class='text-left' style="background-color:#E6F3FF" >1.[${brandVo.brandName}] A/S정책</th>
+          <th class='text-left' style="background-color:#E6F3FF" >1.[${brandVo.brandName}] (브랜드)A/S정책</th>
       	</tr>
       	<tr>
-          <th class='text-left'>
-          <textarea style='width:572px;height:110px;ime-mode:active;' row="6" class="form-control" id="" maxlength="1000" name=""  value="${brandVo.asPolicy}" disabled >${brandVo.asPolicy}</textarea>
+          <th class='text-left' style="width:572px">
+          ${brandVo.asPolicy}<br><br><br>
           </th>
         </tr>
       	<tr>
           <th class='text-left' style="background-color:#E6F3FF" >2.안내방법</th>
       	</tr>
       	<tr>
-          <th class='text-left'>
-          <textarea style='width:572px;height:110px;ime-mode:active;' row="6" class="form-control" id="" maxlength="1000" name=""  value="${brandVo.guide}" disabled >${brandVo.guide}</textarea>
+      	  <th class='text-left' style="width:572px">
+          ${brandVo.guide}<br><br><br>
           </th>
         </tr>
       	<tr>
           <th class='text-left' style="background-color:#E6F3FF" >3.센터상세정보</th>
       	</tr>
       	<tr>
-          <th class='text-left'>
-          <textarea style='width:572px;height:110px;ime-mode:active;' row="6" class="form-control" id="" maxlength="1000" name=""  value="${brandVo.centerGuide}" disabled >${brandVo.centerGuide}</textarea>
+      	  <th class='text-left' style="width:572px">
+          ${brandVo.centerGuide}<br><br><br>
+          </th>
+        </tr>
+        <tr>
+          <th class='text-left' style="background-color:#E6F3FF" >4.[${productName}] (제품)A/S정책</th>
+      	</tr>
+        <tr>
+          <th class='text-left' style="width:572px">
+          ${productVo.asPolicy}<br><br><br>
           </th>
         </tr>
 	  </table>

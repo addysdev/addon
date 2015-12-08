@@ -51,6 +51,8 @@
   <result column="reQuickTel"   property="reQuickTel"  />
   <result column="asTransurl"      property="asTransurl"  /> 
   <result column="reTransurl"      property="reTransurl"  /> 
+  <result column="asPolicyProduct"      property="asPolicyProduct"  /> 
+  
 </resultMap>
 
 <select id="getAsPageList"  resultMap="asListVO" parameterType="com.offact.addys.vo.smart.AsVO" >
@@ -146,6 +148,7 @@
 			  ,T5.group1
 			  ,T6.brandName as group1Name
 			  ,replace(T6.asPolicy,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as asPolicy
+			  ,replace(T10.asPolicy,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as asPolicyProduct
 			  ,T1.asCategory
 			  ,T1.asCode
 			  ,replace(T1.asDetail,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as asDetail
@@ -195,6 +198,7 @@
 			   Left Join ofCode T7 On T1.asState=T7.codeId And T7.codeGroupId='AS01'  
 			   Left Join ofCode T8 On T1.asTransportCode = T8.codeId and T8.codegroupId = 'DE01'
 			   Left Join ofCode T9 On T1.reTransportCode = T9.codeId and T9.codegroupId = 'DE01'
+			   Left Join smProduct T10 On T1.productCode=T10.productCode 
 		 Where T1.asNo = #{asNo}
 		 
 </select>

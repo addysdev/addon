@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.offact.framework.exception.BizException;
 import com.offact.addys.vo.smart.BrandVO;
+import com.offact.addys.vo.smart.ProductVO;
 
 /**
  * @author
@@ -39,6 +40,14 @@ public interface BrandService {
      */
     public BrandVO getBrandDetail(BrandVO brand) throws BizException;
     
-
+    /**
+     * as상세조회
+     * 
+     * @param idx
+     * @return
+     * @throws BizException
+     */
+    public ProductVO getProductDetail(ProductVO product) throws BizException;
+    
 
 }
