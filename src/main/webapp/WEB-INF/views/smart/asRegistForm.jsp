@@ -262,27 +262,35 @@
 			
 		}
 		
-		function fcAsRegist_close(retVal,asState){
+		function fcAsRegist_close(retVal,asState,asNo){
 			
 			commonDim(false);
 			
 			if(retVal=='1'){
 				if(asState=='03'){
 					alert('1:1교환 처리가 완료되었습니다.'); 
+					$("#asRegForm").dialog('close');
+					fcAs_listSearch();
 				}else{
 					alert('A/S 접수가 완료되었습니다.'); 
+					$("#asRegForm").dialog('close');
+					fcAs_listSearch();
+					fcAs_procForm(asNo);
 				}
 			}else{
 				
 				if(asState=='03'){
 					alert('1:1교환 처리가 저장을 실패했습니다.'); 
+					$("#asRegForm").dialog('close');
+					fcAs_listSearch();
 				}else{
 					alert('A/S 접수를 실패했습니다.'); 
+					$("#asRegForm").dialog('close');
+					fcAs_listSearch();
 				}
 			}
 			
-			$("#asRegForm").dialog('close');
-			fcAs_listSearch();
+
 		}
 		
 		function fcReplace_reasonpop(){

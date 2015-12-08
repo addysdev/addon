@@ -205,7 +205,7 @@
 
 <update id="asStateUpdate" parameterType="com.offact.addys.vo.smart.AsVO" >
         Update smAs
-       		Set 
+       		Set asCompleteDateTime = now(),
   				asState = #{asState}
  		Where asNo = #{asNo}
 </update>
@@ -309,6 +309,7 @@
   				,asTransportNo = #{asTransportNo}
   				,asQuickCharge = #{asQuickCharge}
   				,asQuickTel = #{asQuickTel}
+  				,asCompleteDateTime = now()
  		Where asNo = #{asNo}
 </update>
 
@@ -317,6 +318,7 @@
        		Set
        		   asState =#{asState} 
   			   ,asSubState =#{asSubState}
+  			   ,asCompleteDateTime = now()
  		Where asNo = #{asNo}
 </update>
 
@@ -325,6 +327,7 @@
        		Set
        		   asState =#{asState} 
   			   ,asSubState =#{asSubState}
+  			   ,asCompleteDateTime = now()
  		Where asNo = #{asNo}
 </update>
 
@@ -339,6 +342,7 @@
   				,reTransportNo = #{reTransportNo}
   				,reQuickCharge = #{reQuickCharge}
   				,reQuickTel = #{reQuickTel}
+  				,asCompleteDateTime = now()
  		Where asNo = #{asNo}
 </update>
 

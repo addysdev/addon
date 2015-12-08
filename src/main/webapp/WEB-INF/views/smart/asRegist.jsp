@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/views/addys/base.jsp" %>
 <SCRIPT>
   
-parent.fcAsRegist_close('${retVal}','${asState}');
+parent.fcAsRegist_close('${retVal}','${asState}','${asNo}');
    
 </SCRIPT>

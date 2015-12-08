@@ -2187,15 +2187,21 @@ public class SmartController {
         asConVO.setAsNo("A"+strGroupId+strToday);
         asConVO=asSvc.getAsNo(asConVO);
         
-        asVO.setAsNo(asConVO.getAsNo());
+        String asNo=asConVO.getAsNo();
+        String idx="";
+        
+        asVO.setAsNo(asNo);
         asVO.setAsCompleteUserId(strUserId);
         asVO.setAsTargetDate(asVO.getAsTargetDate().trim().replace("-", ""));
         asVO.setPurchaseDate(asVO.getPurchaseDate().trim().replace("-", ""));
 
         int retVal=asSvc.asRegistInsert(asVO);
         
+        //asConVO=asSvc.asSelectIdx(asVO); 접수번호를 idx로 쓸경우
+        
         mv.addObject("retVal",""+retVal);
         mv.addObject("asState", asVO.getAsState());
+        mv.addObject("asNo", asNo);
         mv.setViewName("/smart/asRegist");
         
        //log Controller execute time end
@@ -2371,6 +2377,9 @@ public class SmartController {
 			smsVO.setSmsMsg("[애디스]요청하신 A/S대행 접수가 완료되었습니다. 제품 제조사에 A/S를 의뢰할 예정입니다.");
 			smsVO.setSmsUserId(strUserId);
 			
+			//즉시전송 세팅
+			smsVO.setSmsDirectYn("Y");
+			
 			logger.debug("#########devOption :"+devOption);
 			String[] devSmss= devSms.split("\\^");
 			
@@ -2383,6 +2392,7 @@ public class SmartController {
 				}
 			}else{
 				resultSmsVO=smsSvc.sendSms(smsVO);
+
 			}
 
 			logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
@@ -2613,6 +2623,9 @@ public class SmartController {
       			smsVO.setSmsMsg("[애디스]제품A/S가 완료되었습니다. 요청하신 매장에서 수령이 가능합니다.");
       			smsVO.setSmsUserId(strUserId);
       			
+				//즉시전송 세팅
+				smsVO.setSmsDirectYn("Y");
+      			
       			logger.debug("#########devOption :"+devOption);
       			String[] devSmss= devSms.split("\\^");
       			
@@ -2715,6 +2728,9 @@ public class SmartController {
 			//smsVO.setSmsMsg(counselVO.getCounselResult());
 			smsVO.setSmsMsg("[애디스]제품 제조사로 A/S접수가 완료되었습니다. 상세 정보는 addys.kr 에서 확인가능합니다.");
 			smsVO.setSmsUserId(strUserId);
+			
+			//즉시전송 세팅
+			smsVO.setSmsDirectYn("Y");
 			
 			logger.debug("#########devOption :"+devOption);
 			String[] devSmss= devSms.split("\\^");
@@ -3154,6 +3170,9 @@ public class SmartController {
 			//smsVO.setSmsMsg(counselVO.getCounselResult());
 			smsVO.setSmsMsg("[애디스]제품A/S가 완료되어 고객님께 배송중입니다. 상세정보는 addys.kr 에서 확인기능합니다.");
 			smsVO.setSmsUserId(strUserId);
+			
+			//즉시전송 세팅
+			smsVO.setSmsDirectYn("Y");
 			
 			logger.debug("#########devOption :"+devOption);
 			String[] devSmss= devSms.split("\\^");

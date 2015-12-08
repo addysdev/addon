@@ -31,10 +31,10 @@
 	        <th>고객명</th>
 	        <th>A/S상태</th>
 	        <th>처리상태</th>
+            <th>처리일자</th>
 	        <th>접수일자</th>
             <th>접수자</th>
             <th>예상일자</th>
-            <th>완료일자</th>
             <th>상품명</th>
 	      </tr>
 	    </thead>
@@ -49,10 +49,10 @@
                  <td><c:out value="${asListVO.customerName}"></c:out></td>
                  <td><c:out value="${asListVO.asState}"></c:out></td>
                  <td><c:out value="${asListVO.asSubState}"></c:out></td>
+                 <td><c:out value="${asListVO.asCompleteDateTime}"></c:out></td>
                  <td><c:out value="${asListVO.asStartDateTime}"></c:out></td>
                  <td><c:out value="${asListVO.asStartUserName}(${asListVO.asStartUserId})"></c:out></td>
                  <td><c:out value="${asListVO.asTargetDate}"></c:out></td>
-                 <td><c:out value="${asListVO.asCompleteDateTime}"></c:out></td>
                  <td><c:out value="${asListVO.productName}"></c:out></td>
               </tr>
              </c:forEach>
