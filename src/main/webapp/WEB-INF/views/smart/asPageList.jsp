@@ -59,7 +59,7 @@
             </c:if>
            <c:if test="${empty asList}">
            <tr>
-               <td colspan='6' class='text-center'>조회된 데이터가 없습니다.</td>
+               <td colspan='10' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>

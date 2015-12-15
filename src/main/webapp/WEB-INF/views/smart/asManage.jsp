@@ -290,6 +290,8 @@ $(function() {
   
   <div id="asTransManage"  title="운송정보 수정"></div>
   
+  <div id="memoDialog"  title="처리이력 메모"></div>
+  
 
 </div>
 <br>

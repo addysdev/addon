@@ -61,6 +61,14 @@ public interface AsService {
      * @return
      * @throws BizException
      */
+    public int asMemoProc(AsVO as) throws BizException;
+    
+    /**
+     * as 처리
+     * 
+     * @return
+     * @throws BizException
+     */
     public int asCenterStart(AsVO as) throws BizException;
     
     /**
@@ -111,6 +119,14 @@ public interface AsService {
      * @throws BizException
      */
     public int asRegistInsert(AsVO as) throws BizException;
+    
+    /**
+     * as 처리
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int asModifyUpdate(AsVO as) throws BizException;
     
     /**
      * as 상세조회

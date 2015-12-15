@@ -240,6 +240,40 @@
 	  		
 </insert>
 
+<insert id="asResultUpdate" parameterType="com.offact.addys.vo.smart.AsVO" >
+  	 Update smAs
+       		Set 
+  				customerName = #{customerName}
+  				,receiveName = #{receiveName}
+  				,receiveTelNo = #{receiveTelNo}
+  				,receiveType = #{receiveType}
+  				,receiveAddress = #{receiveAddress}
+  				,receiveAddressDetail = #{receiveAddressDetail}
+  				,asDetail = #{asDetail}
+  				,customerRequest = #{customerRequest}
+  				,purchaseDate = #{purchaseDate}
+  				,asTargetDate = #{asTargetDate}
+  				,memo = #{memo}
+ 		Where asNo = #{asNo}
+	  		
+</insert>
+
+<insert id="asImageUpdate" parameterType="com.offact.addys.vo.smart.AsVO" >
+  	 Update smAs
+       		Set 
+  				asImage = #{asImage}
+ 		Where asNo = #{asNo}
+	  		
+</insert>
+
+<insert id="receiptImageUpdate" parameterType="com.offact.addys.vo.smart.AsVO" >
+  	 Update smAs
+       		Set 
+  				receiptImage = #{receiptImage}
+ 		Where asNo = #{asNo}
+	  		
+</insert>
+
 <insert id="asReplaceInsert" parameterType="com.offact.addys.vo.smart.AsVO" >
   	Insert into smAs( 
         	 asNo

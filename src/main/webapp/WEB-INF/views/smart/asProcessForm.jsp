@@ -3,7 +3,81 @@
 <html>
  <head>
 	<script>
+	$(function() {
+	    // 기간 설정 타입 1 
+	    // start Date 설정시 end Date의 min Date 지정
+	    $( "#purchaseDate" ).datepicker({
+	        dateFormat: "yy-mm-dd",
+	        dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+	        monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+	        monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+	        defaultDate: "+1w",
+	        numberOfMonths: 1,
+	        changeMonth: true,
+	        showMonthAfterYear: true ,
+	        changeYear: true,
+	        onClose: function( selectedDate ) {
+	            $( "#asTargetDate" ).datepicker( "option", "minDate", selectedDate );
+	        }
+	    }); 
+	     // end Date 설정시 start Date max Date 지정
+	    $( "#asTargetDate" ).datepicker({
+	        dateFormat: "yy-mm-dd",
+	        dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+	        monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+	        monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+	        defaultDate: "+1w",
+	        numberOfMonths: 1,
+	        changeMonth: true,
+	        showMonthAfterYear: true ,
+	        changeYear: true,
+	        onClose: function( selectedDate ) {
+	            $( "#purchaseDate" ).datepicker( "option", "maxDate", selectedDate );
+	        }
+	    });
 
+	    // 기간 설정 타입 2 
+	    // start Date 설정시 end Date 가 start Date보다 작을 경우 end Date를 start Date와 같게 설정
+	    $("#purchaseDate").datepicker({
+	        dateFormat: "yy-mm-dd",
+	        defaultDate: "+1w",
+	        numberOfMonths: 1,
+	        changeMonth: true,
+	        showMonthAfterYear: true ,
+	        changeYear: true,
+	        onClose: function( selectedDate ) {
+	            if ($( "#purchaseDate" ).val() < selectedDate)
+	            {
+	                $( "#asTargetDate" ).val(selectedDate);
+	            }
+	        }
+	    }); 
+	    // end Date 설정시 end Date 가 start Date 보다 작을 경우 start Date를  end Date와 같게 설정
+	    $( "#asTargetDate" ).datepicker({
+	        dateFormat: "yy-mm-dd",
+	        defaultDate: "+1w",
+	        numberOfMonths: 1,
+	        changeMonth: true,
+	        showMonthAfterYear: true ,
+	        changeYear: true,
+	        onClose: function( selectedDate ) {
+	            if ($("#purchaseDate" ).val() > selectedDate)
+	            {
+	                $("#purchaseDate" ).val(selectedDate);
+	            }
+	        }
+	    });
+	   
+	});
+	function showCalendar(div){
+
+		   if(div == "1"){
+		   	   $('#purchaseDate').datepicker("show");
+		   } else if(div == "2"){
+			   $('#asTargetDate').datepicker("show");
+		   }  
+		}
+	
 		//AS 등록
 		function fAs_proc(){
 			
@@ -75,6 +149,24 @@
 			}
 			
 		}
+		function asImageResize(){
+			
+			var frm=document.asProcForm;
+			var img=frm.asImageSrc.value;
+			
+	    	   foto1= new Image();
+	    	   foto1.src=(img);
+	    	   Controlla(img);
+	    	 }
+		function receiptImageResize(){
+			
+			var frm=document.asProcForm;
+			var img=frm.receiptImageSrc.value;
+			
+	    	   foto1= new Image();
+	    	   foto1.src=(img);
+	    	   Controlla(img);
+	    	 }
 		function AutoResize(img){
 	    	   foto1= new Image();
 	    	   foto1.src=(img);
@@ -209,14 +301,14 @@
 		    
 		    if(pintYN==false){
 		    	
-		    	alert('배송 처리시 접수번호를 프린트 하신후\n배송대상 BOX에 첨부하여 보내시기 바랍니다.\n인쇄버튼을 클릭하여 접수번호를 인쇄 하신 후\n다시 시도하시기 바랍니다.');
+		    	alert('발신 처리시 접수번호를 프린트 하신후\n발신대상 BOX에 첨부하여 보내시기 바랍니다.\n인쇄버튼을 클릭하여 접수번호를 인쇄 하신 후\n다시 시도하시기 바랍니다.');
 		    	return;
 		    	
 		    }
 		    
 		    dfrm.asTransport.value=$("#asTransportCode option:selected").text();
 		    
-		    if (confirm('A/S 처리를 배송상태로 저장 하시겠습니까?\n저장시 A/S대행 접수안내 SMS가 고객님께 발송됩니다.')){
+		    if (confirm('A/S 처리를 매장발신상태로 저장 하시겠습니까?\n저장시 A/S대행 접수안내 SMS가 고객님께 발송됩니다.')){
 				
 				$.ajax({
 			        type: "POST",
@@ -263,6 +355,47 @@
 				$.ajax({
 			        type: "POST",
 			        async:false,
+			           url:  "<%= request.getContextPath() %>/smart/asstateprocess?asNo="+asNo+"&customerKey="+customerKey+"&asState="+asState+"&asSubState="+asSubState+"&asHistory="+encodeURIComponent(asHistory),			  
+			           success: function(result) {
+
+							if(result=='1'){
+								 alert('A/S 처리상태 변경을 성공했습니다.');
+							} else{
+								 alert('A/S 처리상태 변경을 실패했습니다.');
+							}
+							
+							$('#asProcessForm').dialog('close');
+							fcAs_listSearch();
+							
+			           },
+			           error:function(){
+			        	   
+			        	   alert('A/S 처리상태 변경을 실패했습니다.');
+			        	   $('#asProcessForm').dialog('close');
+			           }
+			    });
+				
+			}
+		  
+		  
+	  }
+	  function fcAs_StateProcess(asNo,asState,asSubState,asHistory,customerKey){
+		  
+		  var msg='A/S 처리상태를 변경 하시겠습니까?';
+		  
+		  if(asSubState=='08'){
+			  msg='A/S 처리상태를 변경 하시겠습니까?\저장시 A/S 제품수령 안내 SMS가 고객님께 발송됩니다.'
+		  }else{
+			  
+			  msg='A/S 처리상태를 변경 하시겠습니까?';
+		  }
+		  
+		  
+		  if (confirm(msg)){
+				
+				$.ajax({
+			        type: "POST",
+			        async:false,
 			           url:  "<%= request.getContextPath() %>/smart/asstateprocess?asNo="+asNo+"&customerKey="+asState+"&asState="+asState+"&asSubState="+asSubState+"&asHistory="+encodeURIComponent(asHistory),			  
 			           success: function(result) {
 
@@ -287,7 +420,64 @@
 		  
 		  
 	  }
-	  function fcAs_CenterStart(asNo,customerKey){
+	  function fcAs_HistoryMemoPop(asNo,customerKey){
+
+
+	    	var url='<%= request.getContextPath() %>/smart/ashistorymemopop?asNo='+asNo+'&customerKey='+customerKey;
+	    	
+	    	$('#memoDialog').dialog({
+	            resizable : false, //사이즈 변경 불가능
+	            draggable : true, //드래그 불가능
+	            closeOnEscape : true, //ESC 버튼 눌렀을때 종료
+
+	            width : 300,
+	            height : 200,
+	            modal : true, //주위를 어둡게
+
+	            open:function(){
+	                //팝업 가져올 url
+	              //  $(this).load(url+'?orderCode='+orderCode+'&productCode='+productCode+'&productNaem='+encodeURIComponent(productName));
+	                $(this).load(url);
+	               
+	                $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
+	                    $("#memoDialog").dialog('close');
+	                    });
+	            }
+	            ,close:function(){
+	            	$("#memoDialog").dialog('close');
+	            }
+	        });
+	    };
+	  function fcAs_HistoryMemo(asNo,customerKey,asHistory){
+		  
+		  if (confirm('처리이력에 메모내용을 추가 하시겠습니까?')){
+				
+				$.ajax({
+			        type: "POST",
+			        async:false,
+			           url:  "<%= request.getContextPath() %>/smart/ashistorymemo?asNo="+asNo+"&customerKey="+customerKey+"&asHistory="+encodeURIComponent(asHistory),			  
+			           success: function(result) {
+
+							if(result=='1'){
+								 alert('메모추가를 성공했습니다.');
+							} else{
+								 alert('메모추가를 실패했습니다.');
+							}
+							$("#memoDialog").dialog('close');
+							fcAs_HistoryList();
+							
+			           },
+			           error:function(){
+			        	   
+			        	   alert('메모추가를 실패했습니다.');
+			        	   $("#memoDialog").dialog('close');
+			        	   fcAs_HistoryList();
+			           }
+			    });
+				
+			}
+	  }
+function fcAs_CenterStart(asNo,customerKey){
 		  
 		  frm=document.asProcForm;
 	
@@ -321,7 +511,6 @@
 				
 			}
 	  }
-
 	  function fcAs_ReceiveTrans(asNo){
 		  
 		  	frm=document.asProcForm;
@@ -354,9 +543,9 @@
 		  frm.reTransport.value=$("#reTransportCode option:selected").text();
 		  
 	
-		  var asHistory='본사->점포배송';
+		  var asHistory='본사->매장배송';
 		  
-		  if (confirm('점포 배송상태로 저장 하시겠습니까?')){
+		  if (confirm('매장 배송상태로 저장 하시겠습니까?')){
 				
 				$.ajax({
 			        type: "POST",
@@ -461,7 +650,7 @@
 		    
 		    url="<%= request.getContextPath() %>/smart/ascenterend?fileAttach=N";
 			  
-		    files = document.all("files");
+		    files = document.all("cfiles");
 		    
 		    if(files.value != ''){
 	
@@ -632,6 +821,120 @@
 	            }
 	        });
 	    };
+	    
+	    function radioSelect(){
+	    	
+	    	var frm=document.asProcForm;
+
+	    	if(frm.receiveRadio[0].checked==true){
+	    		frm.receiveAddress.disabled=true;
+	    		frm.receiveAddressDetail.disabled=true;
+	    		frm.receiveAddress.value='';
+	    		frm.receiveAddressDetail.value='';
+	    		frm.receiveType.value='01';
+	    	}else if(frm.receiveRadio[1].checked==true){
+	    		frm.receiveAddress.disabled=false;
+	    		frm.receiveAddressDetail.disabled=false;
+	    		frm.receiveType.value='02';
+	    	}
+
+	    }
+	    
+	function fcAs_Modify(){
+			
+			var url;
+		    var frm = document.asProcForm;
+		    var files;
+		    var fileName ='';
+		    var pos = '';
+		    var ln = '';
+		    var gap = '';
+		    var gap1 = '';
+		    
+		    url="<%= request.getContextPath() %>/smart/asmodify?fileAttach=N";
+
+		    files = document.all("files");
+
+		    if(frm.customerName.value==''){
+		    	alert('의뢰인 정보는 필수입력 사항입니다.');
+		    	frm.customerName.focus(1);
+		    	return;
+		    }
+		    
+		    if(frm.asDetail.value==''){
+		    	alert('A/S제품 증상을 입력해 주시기 바랍니다.');
+		    	frm.asDetail.focus(1);
+		    	return;
+		    }
+		    
+		    if(files[0].value != ''){
+
+		        fileName = files[0].value;
+		        
+		        pos = fileName.lastIndexOf("\\");
+		        ln = fileName.lastIndexOf("\.");
+		        gap = fileName.substring(pos + 1, ln);
+		        gap1 = fileName.substring(ln+1);
+	
+		        if(gap1=="jpg" || gap1=="JPG" || gap1=="gif" || gap1=="GIF" || gap1=="png" || gap1=="PNG"){//
+		            url="<%= request.getContextPath() %>/smart/asmodify?fileAttach=Y";
+		        }else {
+		        	alert("이미지 파일만 등록 부탁드립니다.");
+		            return;
+		        }
+		        
+		    }
+		    
+
+		    if(files[1].value != ''){
+
+		        fileName = files[1].value;
+		        
+		        pos = fileName.lastIndexOf("\\");
+		        ln = fileName.lastIndexOf("\.");
+		        gap = fileName.substring(pos + 1, ln);
+		        gap1 = fileName.substring(ln+1);
+	
+		        if(gap1=="jpg" || gap1=="JPG" || gap1=="gif" || gap1=="GIF" || gap1=="png" || gap1=="PNG"){//
+		            url="<%= request.getContextPath() %>/smart/asmodify?fileAttach=Y";
+		        }else {
+		        	alert("이미지 파일만 등록 부탁드립니다.");
+		            return;
+		        }
+		        
+		    }
+
+		    frm.action = url;
+		    frm.target="file_result";
+
+	    	 if (confirm('A/S 접수내용을 수정하시겠습니까?')){ 
+	    		
+	    		 commonDim(true);
+	    		    
+			   	 frm.submit();        
+			 }
+
+			
+		}
+		
+		function fcAsModify_close(retVal,asImage,receiptImage){
+			
+			commonDim(false);
+			
+			if(asImage!='N'){
+			
+				document.all('asImageId').src=asImage;
+				document.asProcForm.asImageSrc.value=asImage;
+			}
+			
+			if(receiptImage!='N'){
+				document.all('receiptImageId').src=receiptImage;
+				document.asProcForm.receiptImageSrc.value=receiptImage;
+			}
+			
+			alert('A/S 접수내용이 수정되었습니다.'); 
+
+		}
 	</script>
   </head>
   <body>
@@ -644,10 +947,16 @@
 	   <input type="hidden" name="asStartUserId"             id="asStartUserId"            value="${strUserId}" />
 	   <input type="hidden" name="productCode"             id="productCode"            value="${productCode}" />
 	   <input type="hidden" name="customerKey"             id="customerKey"            value="${asVO.customerKey}" />
+	   <input type="hidden" name="receiveType"             id="receiveType"            value="${asVO.receiveType}" />
+	   <input type="hidden" name="asImageSrc"             id="asImageSrc"            value="${asVO.asImage}" />
+	   <input type="hidden" name="receiptImageSrc"             id="receiptImageSrc"            value="${asVO.receiptImage}" />
 	      <tr>
 	      <div style="position:absolute; left:30px" > 
 	                      ※ A/S 접수 기본정보
           </div >
+          <div style="position:absolute; right:30px" > 
+			<button type="button" class="btn btn-success" onClick="fcAs_Modify()">수정</button>
+		  </div>
           </tr>
           <br><br>
 	  <table class="table table-bordered" >
@@ -666,15 +975,15 @@
 	 	<tr>
           <th rowspan='3' class='text-center' style="background-color:#E6F3FF">고객정보</th>
           <th class='text-center' style="background-color:#E6F3FF" >의뢰인</th>
-          <th class='text-left' colspan="2" >${asVO.customerName}</th>
+          <th class='text-left' colspan="2" ><input type="text" class="form-control" id="customerName" style='width:135px' maxlength="20"  name="customerName"  value="${asVO.customerName}" placeholder="의뢰인" /></th>
           <th class='text-center'  style="background-color:#E6F3FF;width:140px" >의뢰인 연락처</th>
           <th class='text-left' colspan="2" >${asVO.customerKey}</th>
       	</tr>
       	<tr>
           <th class='text-center'  style="background-color:#E6F3FF" >수령인</th>
-          <th class=''text-left'' colspan="2" >${asVO.receiveName}</th>
+          <th class=''text-left'' colspan="2" ><input type="text" class="form-control" id="receiveName" style='width:135px' maxlength="20"  name="receiveName"  value="${asVO.receiveName}" placeholder="수령인" /></th>
           <th class='text-center'  style="background-color:#E6F3FF" >수령인 연락처</th>
-          <th class='text-left' >${asVO.receiveTelNo}</th>
+          <th class='text-left' ><input type="text" class="form-control" id="receiveTelNo" style='width:135px'  maxlength="20"  name="receiveTelNo"  value="${asVO.receiveTelNo}" placeholder="수령인 연락처" /></th>
       	</tr>
       	<tr>
           <th class='text-center'  style="background-color:#E6F3FF" >수령방법</th>
@@ -682,10 +991,18 @@
           
           <c:choose>
     		  	<c:when test="${asVO.receiveType=='02'}">
-    		  		택배(퀵) 수령  [수령주소] : ${asVO.receiveAddress} ${asVO.receiveAddressDetail}
+    		  	  <div class="form-inline text-left">
+		          <input type="radio" name="receiveRadio" id="receiveRadio" value="01"  onChange="radioSelect()">매장 <input type="radio" name="receiveRadio" id="receiveRadio" value="02" checked onChange="radioSelect()">택배(퀵)
+		          <input type="text" class="form-control" id="receiveAddress"  maxlength="500" style='width:200px'  name="receiveAddress"  value="${asVO.receiveAddress}" placeholder="배송주소"  />
+		          <input type="text" class="form-control" id="receiveAddressDetail"  maxlength="500"  style='width:405px' name="receiveAddressDetail"  value="${asVO.receiveAddressDetail}" placeholder="배송상세주소"  />
+		          </div>
             	</c:when>
 				<c:otherwise>
-					매장 수령
+				  <div class="form-inline text-left">
+		          <input type="radio" name="receiveRadio" id="receiveRadio" value="01" checked onChange="radioSelect()">매장 <input type="radio" name="receiveRadio" id="receiveRadio" value="02" onChange="radioSelect()">택배(퀵)
+		          <input type="text" class="form-control" id="receiveAddress"  maxlength="500" style='width:200px'  name="receiveAddress"  value="" placeholder="배송주소" disabled />
+		          <input type="text" class="form-control" id="receiveAddressDetail"  maxlength="500"  style='width:405px' name="receiveAddressDetail"  value="" placeholder="배송상세주소" disabled />
+		          </div>
 				</c:otherwise>
 		  </c:choose>
 
@@ -706,33 +1023,48 @@
       	<tr>
           <th class='text-center'  style="background-color:#E6F3FF" >증상</th>
           <th colspan="3" class='text-left' style="width:400px">
-          ${asVO.asDetail}
+          <textarea style='width:495px;height:100px;ime-mode:active;' row="5" class="form-control" id="asDetail" maxlength="1000" name="asDetail"  value=" ${asVO.asDetail}" placeholder="증상" > ${asVO.asDetail}</textarea>
           </th>
-          <th class='text-center'><a href="javascript:AutoResize('${asVO.asImage}')"><img src='${asVO.asImage}' width="80" height="80" /></a></th>
+          <th class='text-center'><a href="javascript:asImageResize()"><img id="asImageId" src='${asVO.asImage}' width="80" height="80" /></a>
+          <input type="file" id="files" name="files" />
+          </th>
       	</tr>
       	<tr>
           <th class='text-center'  style="background-color:#E6F3FF" >의뢰인<br>요청사항</th>
           <th colspan="4" class='text-left'>
-          ${asVO.customerRequest}
+           <textarea style='width:705px;height:50px;ime-mode:active;' row="4" class="form-control" id="customerRequest" maxlength="1000" name="customerRequest"  value="${asVO.customerRequest}"  placeholder="의뢰인 요청사항" >${asVO.customerRequest}</textarea>
           </th>
       	</tr>
       	<tr>
           <th class='text-center'  style="background-color:#E6F3FF" >구입일</th>
           <th class='text-left' colspan="2">
-		  ${asVO.purchaseDate}
+          <div class="form-inline" >
+          	  <!-- 구매일자-->
+		      <input  class="form-control" style='width:135px' name="purchaseDate" id="purchaseDate" value="${asVO.purchaseDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+		      <!-- 달력이미지 시작 -->
+		      <span class="icon_calendar"><img border="0" onclick="showCalendar('1')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
+		      <!-- 달력이미지 끝 -->
+		  </div>
 		  </th>
           <th class='text-center'  style="background-color:#E6F3FF" >영수증</th>
-          <th class='text-center'><a href="javascript:AutoResize('${asVO.receiptImage}')"><img src='${asVO.receiptImage}' width="30" height="30" /></a></th>
+          <th class='text-center'><a href="javascript:receiptImageResize()"><img id="receiptImageId" src='${asVO.receiptImage}' width="30" height="30" /></a>
+          <input type="file" id="files" name="files" /></th>
       	</tr>
       	</table>
       	<table class="table table-bordered" >
       	<tr>
           <th class='text-center' style="background-color:#E6F3FF;width:130px">완료예정일</th>
-          <th class='text-left' style="width:90px">
-          ${asVO.asTargetDate}
+          <th class='text-left' style="width:130px">
+            <div class="form-inline">
+          	  <!-- 완료일자-->
+		      <input  class="form-control" style='width:115px' name="asTargetDate" id="asTargetDate" value="${asVO.asTargetDate}" type="text"  maxlength="10" dispName="날짜" onKeyUp="if(onlyNum(this.value).length==8) addDateFormat(this);" onBlur="if(onlyNum(this.value).length!=8) addDateFormat(this);" />
+		      <!-- 달력이미지 시작 -->
+		      <span class="icon_calendar"><img border="0" onclick="showCalendar('2')" src="<%=request.getContextPath()%>/images/sub/icon_calendar.gif"></span>
+		      <!-- 달력이미지 끝 -->
+		  </div>
           </th>
-          <th class='text-center' style="background-color:#E6F3FF;width:130px">담당자<br>의견</th>
-          <th class='text-left'>${asVO.memo}</th>
+          <th class='text-center' style="background-color:#E6F3FF;width:100px">담당자<br>의견</th>
+          <th class='text-left'><textarea style='width:505px;height:50px;ime-mode:active;' row="10" class="form-control" id="memo" maxlength="1000" name="memo"  value="${asVO.memo}" placeholder="담당자 의견" >${asVO.memo}</textarea></th>
       	</tr>
 	  </table>
         <c:choose>
@@ -758,21 +1090,21 @@
 			<c:otherwise>
 			  <tr>
 		      	<div style="position:absolute; left:30px" > 
-		         	※A/S처리 및 이력
+		         	※A/S처리 및 이력 <button type="button" class="btn btn-info" onClick="fcAs_HistoryMemoPop('${asVO.asNo}','${asVO.customerKey}')">처리이력 메모</button>
 		        </div >
 		        <div style="position:absolute; right:30px" > 
 		        
 	    		<c:if test="${asVO.asState=='04'}">
 		            <button type="button" class="btn btn-default" onClick="fcAsNo_print('${asVO.asNo}')" >접수번호 인쇄</button>
-		       		<button type="button" class="btn btn-success" onClick="fcAs_MainTransfer()">배송</button>
+		       		<button type="button" class="btn btn-success" onClick="fcAs_MainTransfer()">매장발신</button>
 		       	</c:if>
 		     
 		       	<c:if test="${asVO.asSubState=='01' && (strAuth!='03' || strAuthId=='AD001')}">
-		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','05','02','점포->본사수령','${asVO.customerKey}')">수령</button>
+		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','05','02','매장->본사수신','${asVO.customerKey}')">본사수신</button>
 		       	</c:if>
 		       	
 		       	<c:if test="${asVO.asSubState=='02' && (strAuth!='03' || strAuthId=='AD001')}">
-		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','05','03','본사->센터배송','${asVO.customerKey}')">센터배송</button>
+		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','05','03','본사->센터발송','${asVO.customerKey}')">센터발송</button>
 		       	</c:if>
 		       	
 		       	<c:if test="${asVO.asSubState=='03' && (strAuth!='03' || strAuthId=='AD001')}">
@@ -784,20 +1116,26 @@
 		       	</c:if>
 		       	
 		       	<c:if test="${asVO.asSubState=='04' && (strAuth!='03' || strAuthId=='AD001')}">
-		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','06','05','센터->본사수령','${asVO.customerKey}')">본사수령</button>
+		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','06','05','센터->본사수신','${asVO.customerKey}')">센터회수</button>
 		       	</c:if>
 
 		       	<c:if test="${asVO.asSubState=='06' && (strAuth!='03' || strAuthId=='AD001')}">
-		       		<button type="button" class="btn btn-success" onClick="fcAs_ReceiveTrans('${asVO.asNo}')">점포배송</button>
-		       		<button type="button" class="btn btn-success" onClick="fcAs_CustomerReceive('${asVO.asNo}')">고객배송</button>
-		       	</c:if>
-		       	
+		       	 <c:choose>
+   						 <c:when test="${asVO.receiveType=='01'}">
+   						    <button type="button" class="btn btn-success" onClick="fcAs_ReceiveTrans('${asVO.asNo}')">본사발신</button>
+	             	 	 </c:when>
+						 <c:otherwise>
+						    <button type="button" class="btn btn-success" onClick="fcAs_CustomerReceive('${asVO.asNo}')">고객배송</button>
+						 </c:otherwise>
+	 			  </c:choose>
+	 			</c:if>
+	 			
 		        <c:if test="${asVO.asSubState=='07'}">
-		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','07','08','본사->점포수령','${asVO.customerKey}')">점포수령</button>
+		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','07','08','본사->매장수신','${asVO.customerKey}')">매장수신</button>
 		       	</c:if>
 		       	
 		       	<c:if test="${asVO.asSubState=='09' && (strAuth!='03' || strAuthId=='AD001')}">
-		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','09','11','고객통화 수령확인','${asVO.customerKey}')">고객수령확인</button>
+		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','09','11','고객통화 수령확인','${asVO.customerKey}')">고객확인</button>
 		       	</c:if>
 				
 		        </div>
@@ -808,7 +1146,7 @@
 	    		<c:when test="${asVO.asSubState=='06' && (strAuth!='03' || strAuthId=='AD001')}">
 	    		<table class="table table-bordered" >
 					<tr>
-			          <th class='text-center' rowspan="2"  style="background-color:#E6F3FF" >운송방법선택<br>(본사->(고객/점포))</th>
+			          <th class='text-center' rowspan="2"  style="background-color:#E6F3FF" >운송방법선택<br>(본사->(고객/매장))</th>
 			          <th class='text-left' >
 			          <input type="radio" name="reDeliveryRadio" id="reDeliveryRadio" value="01" checked onChange="fcReDelivery_method()")/>&nbsp;택배
 			          </th>
@@ -844,7 +1182,7 @@
 				 <c:if test="${asVO.asSubState=='07' || asVO.asSubState=='08' || asVO.asSubState=='09' || asVO.asSubState=='10' || asVO.asSubState=='11' }">
 				 <table class="table table-bordered" >
 					<tr>
-			          <th class='text-center' style="background-color:#E6F3FF" >운송방법(본사->(고객/점포))</th>
+			          <th class='text-center' style="background-color:#E6F3FF" >운송방법(본사->(고객/매장))</th>
 			          <c:choose>
 	    				<c:when test="${asVO.reDeliveryMethod=='01'}">
 			         	  <th class='text-center' >&nbsp;택배 </th>
@@ -883,7 +1221,7 @@
 	    		<c:when test="${asVO.asState=='04'}">
 	    		<table class="table table-bordered" >
 					<tr>
-			          <th class='text-center' rowspan="2"  style="background-color:#E6F3FF" >운송방법선택<br>(점포->본사)</th>
+			          <th class='text-center' rowspan="2"  style="background-color:#E6F3FF" >운송방법선택<br>(매장->본사)</th>
 			          <th class='text-left' >
 			          <input type="radio" name="asDeliveryRadio" id="asDeliveryRadio" value="01" checked onChange="fcAsDelivery_method()")/>&nbsp;택배
 			          </th>
@@ -922,13 +1260,13 @@
 			       	   <div class="form-inline">
 		       	          <th class='text-center'  style="background-color:#E6F3FF">&nbsp;센터 처리내용  </th>
 				          <th class='text-center' colspan="3" ><input type="text" class="form-control" id="asHistory" style="width:400px"  name="asHistory" maxlength="30" value="" placeholder="센터 처리내용"  /></th>
-				          <th class='text-center' ><font style="color:red">이미지 첨부 : </font><input type="file" id="files" name="files" /></th>
+				          <th class='text-center' ><font style="color:red">이미지 첨부 : </font><input type="file" id="cfiles" name="cfiles" /></th>
 				          <th class='text-center' ><button type="button" class="btn btn-success" onClick="fcAs_CenterEnd()">센터처리</button></th>
 				       </div>
 			       </tr> 
 		       	 </c:if>
 					<tr>
-			          <th class='text-center' style="background-color:#E6F3FF" >운송방법(점포->본사)</th>
+			          <th class='text-center' style="background-color:#E6F3FF" >운송방법(매장->본사)</th>
 			          <c:choose>
 	    				<c:when test="${asVO.asDeliveryMethod=='01'}">
 			         	  <th class='text-center' >&nbsp;택배 </th>

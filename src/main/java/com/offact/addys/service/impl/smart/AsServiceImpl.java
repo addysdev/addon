@@ -60,6 +60,29 @@ public class AsServiceImpl implements AsService {
     }
     
     @Override
+    public int asModifyUpdate(AsVO as) throws BizException {
+        //상담처리
+    	
+    	int retVal=-1;
+    	
+    	retVal=commonDao.insert("As.asResultUpdate", as);
+    	
+    	String asImage=as.getAsImage();
+    	String receiptImage=as.getReceiptImage();
+    	
+    	if(!asImage.equals("N")){
+    		retVal=commonDao.insert("As.asImageUpdate", as);
+    	}
+    	
+    	if(!receiptImage.equals("N")){
+    		retVal=commonDao.insert("As.receiptImageUpdate", as);
+    	}
+
+    	return retVal;
+
+    }
+    
+    @Override
     public int asTransUpdate(AsVO as) throws BizException {
         //상담처리
 
@@ -81,6 +104,19 @@ public class AsServiceImpl implements AsService {
     	
     	retVal=commonDao.update("As.asStateProc", as);
     	
+    	retVal=commonDao.insert("As.asTransHistoryInsert", as);
+    	
+    	return retVal;
+
+
+    }
+    
+    @Override
+    public int asMemoProc(AsVO as) throws BizException {
+        //상담처리
+
+    	int retVal=-1;
+
     	retVal=commonDao.insert("As.asTransHistoryInsert", as);
     	
     	return retVal;

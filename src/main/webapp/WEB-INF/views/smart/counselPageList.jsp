@@ -27,11 +27,10 @@
 	    <thead>
 	      <tr style="background-color:#E6F3FF">
 	        <th>핸드폰번호</th>
-            <th>고객명</th>
-            <th>고객ID</th>
+            <th>문의상태</th>
             <th>문의일시</th>
             <th>문의내용</th>
-            <th>문의상태</th>
+            <th>고객명</th>
             <th>처리일시</th>
             <th>처리자</th>
 	      </tr>
@@ -43,17 +42,16 @@
                  <td><a href="javascript:fcCounsel_procForm('${counselListVO.idx}')"><c:out value="${counselListVO.customerKey}"></c:out></a>
                  <img id="hisbtn" onClick="fcHis_detail('${counselListVO.customerKey}','${counselListVO.idx}','${counselListVO.counsel}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="이력">
                  </td>
-                 <td><c:out value="${counselListVO.customerName}"></c:out></td>
-                 <td><c:out value="${counselListVO.customerId}"></c:out></td>
+                 <td><c:out value="${counselListVO.counselState}"></c:out></td>
                  <td><c:out value="${counselListVO.counselDateTime}"></c:out></td>
                  <td>
                  <c:out value="${counselListVO.counsel}">
                  </c:out>
                  <c:if test="${counselListVO.counselImage!=null}">
-					<a href="javascript:imageView('${counselListVO.counselImage}')"><font style="color:blue">[image view]</font></a>
+					<img src="<%=request.getContextPath()%>/images/image_16x16.png" alt="이미지" >
 				 </c:if>
                  </td>
-                 <td><c:out value="${counselListVO.counselState}"></c:out></td>
+                 <td><c:out value="${counselListVO.customerName}"></c:out></td>
                  <td><c:out value="${counselListVO.counselResultDateTime}"></c:out></td>
                  <td><c:out value="${counselListVO.userName}(${counselListVO.userId})"></c:out></td>
               </tr>

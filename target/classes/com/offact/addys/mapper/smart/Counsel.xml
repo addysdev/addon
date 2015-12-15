@@ -29,8 +29,7 @@
 			  ,T3.customerId   
 			  ,T3.customerName 
 			  ,DATE_FORMAT(T1.counselDateTime, '%Y-%m-%d %T') as counselDateTime
-			  ,Case When T1.counselState = '03' Then '상담완료' Else
-			  		(Case When T1.counselState = '02' Then '처리중' Else '상담접수' End)
+			  ,Case When T1.counselState = '03' Then '완료' Else '접수'
 			  		End counselState
 			  ,T1.counsel
 			  ,T1.counselImage
@@ -46,17 +45,20 @@
          	<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}
            </if>
+           <if test="searchState != null and searchState != '' " >
+           		AND T1.counselState = #{searchState}
+           </if>
            <if test="searchValue != null and searchValue != ''" >
              <choose>
                <when test="searchGubun.equals('01')">
            AND T1.customerKey  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
                <when test="searchGubun.equals('02')">
-           AND T3.customerName  LIKE CONCAT('%', #{searchValue}, '%')
+           AND T1.counsel  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
              </choose>
            </if>
-         ORDER BY counselDateTime desc
+         ORDER BY T1.counselDateTime desc ,T1.counselState asc
  LIMIT ${page_limit_val1} , ${page_limit_val2}
 </select>
 
@@ -69,13 +71,16 @@
          	<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}
            </if>
+                      <if test="searchState != null and searchState != '' " >
+           		AND T1.counselState = #{searchState}
+           </if>
            <if test="searchValue != null and searchValue != ''" >
              <choose>
                <when test="searchGubun.equals('01')">
            AND T1.customerKey  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
                <when test="searchGubun.equals('02')">
-           AND T3.customerName  LIKE CONCAT('%', #{searchValue}, '%')
+           AND T1.counsel  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
              </choose>
            </if>
@@ -90,7 +95,8 @@
 			  ,T1.counselState
 			  ,T1.counsel
 			  ,T1.counselImage
-			  ,T1.counselDateTime
+			  ,T3.counselResultImage
+			  ,DATE_FORMAT(T1.counselDateTime,'%Y-%m-%d %T') as counselDateTime
 			  ,ifnull(T3.userId,'') as userId
 			  ,ifnull(T4.userName,'') as userName
 			  ,ifnull(T3.counselResult,'') as counselResult
@@ -121,6 +127,7 @@
             ,userId
             ,groupId
             ,counselResult 
+            ,counselResultImage 
             ,counselResultDateTime
             )
         Values (
@@ -128,6 +135,7 @@
 	  		, #{userId}
 	  		, #{groupId}
 	  		, #{counselResult}
+	  		, #{counselResultImage}
 	  		, now()
 	  		)
 	  		

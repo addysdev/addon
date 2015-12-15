@@ -293,7 +293,7 @@
 			          <ul class="dropdown-menu" role="menu">
  						<li><a href="<%= request.getContextPath() %>/smart/asmanage">AS 관리</a></li>
 			            <li><a href="<%= request.getContextPath() %>/smart/counselmanage">문의 관리</a></li>
-			            <li><a href="<%= request.getContextPath() %>/smart/comunitymanage">매장과talk 관리</a></li>
+			            <li><a href="<%= request.getContextPath() %>/smart/comunitymanage">매장톡 관리</a></li>
 			            
 			            <!-- li><a href="#">조직관리</a></li>
 			            <li><a href="#">메뉴권한관리</a></li -->                        

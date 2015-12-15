@@ -231,10 +231,16 @@ $(function() {
 		                </select>
 					</c:otherwise>
 				</c:choose>
+				<label for="searchGubun">문의상태 :</label>
+				<select class="form-control" title="검색조건" id="searchState" name="searchState" value="">
+				    <option value="" >전체</option>
+                	<option value="01" >접수</option>
+                    <option value="03" >완료</option>
+           		</select>
 				<label for="searchGubun">검색조건 :</label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
-                	<option value="01" >고객명</option>
-                    <option value="02" >고객ID</option>
+                	<option value="01" >핸드폰번호</option>
+                    <option value="02" >문의내용</option>
            		</select>
 				<label class="sr-only" for="searchValue"> 조회값 </label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${userConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>

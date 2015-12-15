@@ -25,6 +25,7 @@ public class CounselVO extends AbstractVO {
 	private String userId;
 	private String userName;
 	private String counselResult;
+	private String counselResultImage;
 	private String counselResultDateTime;
 	
 	private String stateUpdateUserId;
@@ -33,6 +34,7 @@ public class CounselVO extends AbstractVO {
 	
     private String searchGubun;
     private String searchValue;
+    private String searchState;
 
 	private String start_counselDate;
 	private String end_counselDate;
@@ -221,6 +223,18 @@ public class CounselVO extends AbstractVO {
 	}
 	public void setCounselImage(String counselImage) {
 		this.counselImage = counselImage;
+	}
+	public String getSearchState() {
+		return searchState;
+	}
+	public void setSearchState(String searchState) {
+		this.searchState = searchState;
+	}
+	public String getCounselResultImage() {
+		return counselResultImage;
+	}
+	public void setCounselResultImage(String counselResultImage) {
+		this.counselResultImage = counselResultImage;
 	}
     
 }

@@ -59,6 +59,7 @@ import com.offact.addys.service.history.WorkHistoryService;
 import com.offact.addys.service.common.SmsService;
 import com.offact.addys.vo.common.CodeVO;
 import com.offact.addys.vo.common.CommentVO;
+import com.offact.addys.vo.common.EmailVO;
 import com.offact.addys.vo.common.GroupVO;
 import com.offact.addys.vo.common.WorkVO;
 import com.offact.addys.vo.common.UserVO;
@@ -378,6 +379,150 @@ public class SmartController {
 		mv.setViewName("/smart/counselProcessForm");
 		return mv;
 	}
+    /**
+     * 상담하기
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/counselprocessmulti")
+    public @ResponseBody
+    ModelAndView counselProcessMulti(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO,
+             				  HttpServletRequest request, 
+             				  HttpServletResponse response,
+             				  String fileName, 
+             				  String extension,
+             				  String counselResult,
+             				  String customerKey,
+             				  String idx) throws BizException
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : idx" + idx);
+		
+		ModelAndView mv = new ModelAndView();
+		
+		String fname ="";
+        
+        CounselVO counselVO =new CounselVO();
+        
+		//오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+	        
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strMobliePhone = StringUtil.nvl((String) session.getAttribute("strMobliePhone"));
+        
+	    String imagePath="counsel/"+strToday+"/";
+
+	    ResourceBundle rb = ResourceBundle.getBundle("config");
+	    String uploadFilePath = rb.getString("offact.upload.path") + imagePath;
+
+	    this.logger.debug("파일정보:" + fileName + extension);
+	    this.logger.debug("file:" + fileVO);
+
+        try {
+        
+	        if (fileName != null && fileName != "") {
+		    	  
+		        List<MultipartFile> files = fileVO.getFiles();
+		        List fileNames = new ArrayList();
+		        String orgFileName = null;
+
+		        if ((files != null) && (files.size() > 0))
+		        {
+		          for (MultipartFile multipartFile : files)
+		          {
+		            orgFileName = multipartFile.getOriginalFilename();
+		            this.logger.debug("orgFileName 1 :" + orgFileName);
+		            orgFileName = t1 +"."+ extension;
+		            this.logger.debug("orgFileName 2 :" + orgFileName);
+
+		            counselVO.setCounselResultImage(hostUrl+"/upload/"+imagePath+orgFileName);
+		         		   
+		            boolean check=setDirectory(uploadFilePath);
+
+		            String filePath = uploadFilePath;
+
+		            File file = new File(filePath + orgFileName);
+		            multipartFile.transferTo(file);
+		            fileNames.add(orgFileName);
+		          }
+		     
+		        }
+		        
+		        fname = uploadFilePath + orgFileName;
+
+	        }
+        }catch (Exception e){
+        	
+        	logger.info("["+logid+"][error] : "+e.getMessage()); 
+        	
+        }
+        counselVO.setCounselState("03");
+        counselVO.setIdx(idx);
+        counselVO.setCounselResult(counselResult);
+        counselVO.setUserId(strUserId);
+        counselVO.setGroupId(strGroupId);
+        counselVO.setStateUpdateUserId(strUserId);
+        
+        int retVal=this.counselSvc.counselProc(counselVO);
+        
+        try{
+			//SMS발송
+			SmsVO smsVO = new SmsVO();
+			SmsVO resultSmsVO = new SmsVO();
+			
+			smsVO.setSmsId(smsId);
+			smsVO.setSmsPw(smsPw);
+			smsVO.setSmsType(smsType);
+			smsVO.setSmsTo(customerKey);
+			smsVO.setSmsFrom(strMobliePhone);
+			//smsVO.setSmsMsg(counselVO.getCounselResult());
+			smsVO.setSmsMsg("[애디스]문의하신 상담내용에 대한 답변이 등록되었습니다. 상세 정보는 addys.kr 에서 확인가능합니다.");
+			smsVO.setSmsUserId(strUserId);
+			
+			logger.debug("#########devOption :"+devOption);
+			String[] devSmss= devSms.split("\\^");
+			
+    		if(devOption.equals("true")){
+				for(int i=0;i<devSmss.length;i++){
+					
+					if(devSmss[i].equals(counselVO.getCustomerKey().trim().replace("-", ""))){
+						resultSmsVO=smsSvc.sendSms(smsVO);
+					}
+				}
+			}else{
+				resultSmsVO=smsSvc.sendSms(smsVO);
+			}
+
+			logger.debug("sms resultSmsVO.getResultCode() :"+resultSmsVO.getResultCode());
+			logger.debug("sms resultSmsVO.getResultMessage() :"+resultSmsVO.getResultMessage());
+			logger.debug("sms resultSmsVO.getResultLastPoint() :"+resultSmsVO.getResultLastPoint());
+			
+		}catch(BizException e){
+			
+			logger.info("["+logid+"] Controller SMS전송오류");
+			
+		}
+
+		 mv.setViewName("/smart/counselResult");
+	        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
 	 /**
      * 사용자관리 등록처리
      *
@@ -423,7 +568,7 @@ public class SmartController {
 			smsVO.setSmsTo(counselVO.getCustomerKey());
 			smsVO.setSmsFrom(strMobliePhone);
 			//smsVO.setSmsMsg(counselVO.getCounselResult());
-			smsVO.setSmsMsg("[애디스]문의하신 상담내용에 대한 답변이 등록되었습니다. 답변확인하러가기-> addys.kr");
+			smsVO.setSmsMsg("[애디스]문의하신 상담내용에 대한 답변이 등록되었습니다. 상세 정보는 addys.kr 에서 확인가능합니다.");
 			smsVO.setSmsUserId(strUserId);
 			
 			logger.debug("#########devOption :"+devOption);
@@ -1336,7 +1481,7 @@ public class SmartController {
 			smsVO.setSmsTo(asVO.getCustomerKey());
 			smsVO.setSmsFrom(strMobliePhone);
 			//smsVO.setSmsMsg(asVO.getAsResult());
-			smsVO.setSmsMsg("[애디스]요청하신 AS내용에 대한 상태가 변경되었습니다. AS상태확인하러가기-> addys.kr");
+			smsVO.setSmsMsg("[애디스]요청하신 AS내용에 대한 상태가 변경되었습니다.상세 정보는 addys.kr 에서 확인가능합니다.");
 			smsVO.setSmsUserId(strUserId);
 			
 			logger.debug("#########devOption :"+devOption);
@@ -1424,6 +1569,7 @@ public class SmartController {
         asConVO.setProductCode(asVO.getProductCode());
         asConVO.setCustomerKey(asVO.getCustomerKey());
         asConVO.setAsState(asVO.getAsState());
+        asConVO.setAsResult(asVO.getAsResult());
 
         int retVal=this.asSvc.asResultInsert(asConVO);
 
@@ -2211,6 +2357,153 @@ public class SmartController {
         return mv;
     }
     
+    /**
+     * AS등록
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/asmodify")
+    public ModelAndView asModify(@ModelAttribute("MultipartFileVO") MultipartFileVO fileVO,
+    		                     @ModelAttribute("asVO") AsVO asVO,
+    		                     HttpServletRequest request, 
+    		                     HttpServletResponse response,
+    		                     String fileAttach) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : fileVO" + fileVO);
+		logger.info("["+logid+"] Controller start : asVO" + asVO);
+
+        ModelAndView mv = new ModelAndView();
+
+        String fname ="";
+
+        // 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
+        if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); //로그인 상태처리		
+    		UserVO userState =new UserVO();
+    		userState.setUserId(strUserId);
+    		userState.setLoginYn("N");
+    		userState.setIp(strIp);
+    		userState.setConnectIp(sClientIP);
+    		userSvc.regiLoginYnUpdate(userState);
+            
+            //작업이력
+  	 		WorkVO work = new WorkVO();
+  	 		work.setWorkUserId(strUserId);
+  	 		work.setWorkIp(strIp);
+  	 		work.setWorkCategory("CM");
+  	 		work.setWorkCode("CM004");
+  	 		commonSvc.regiHistoryInsert(work);
+    		
+        	mv.setViewName("/addys/loginForm");
+       		return mv;
+  		}
+     
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+     
+        String imagePath="as/"+strToday+"/";
+        
+        ResourceBundle rb = ResourceBundle.getBundle("config");
+        String uploadFilePath = rb.getString("offact.upload.path") + imagePath;
+        
+        asVO.setAsImage("N");
+        asVO.setReceiptImage("N");
+
+        try {
+        
+	        if (fileAttach.equals("Y")) {
+		    	  
+		        List<MultipartFile> files = fileVO.getFiles();
+		        List fileNames = new ArrayList();
+		        String orgFileName = null;
+		        
+		        int filecnt=0;
+
+		        if ((files != null) && (files.size() > 0))
+		        {
+		          for (MultipartFile multipartFile : files)
+		          {
+		            orgFileName = multipartFile.getOriginalFilename();
+		            this.logger.debug("orgFileName :" + orgFileName);
+		            
+		            if(!orgFileName.equals("")){
+		            	int extIndex = orgFileName.lastIndexOf(".");
+			            String extension=orgFileName.substring(extIndex+1);
+			            
+			            long fileName = System.currentTimeMillis();
+			            orgFileName = fileName +"."+ extension;
+			            this.logger.debug("orgFileName 2 :" + orgFileName);
+			            
+			            boolean check=setDirectory(uploadFilePath);
+
+			            String filePath = uploadFilePath;
+
+			            File file = new File(filePath + orgFileName);
+			            multipartFile.transferTo(file);
+			            fileNames.add(orgFileName);
+			            
+			            if(filecnt==0){
+			            	asVO.setAsImage(hostUrl+"/upload/"+imagePath+orgFileName);
+			            }else{
+			            	asVO.setReceiptImage(hostUrl+"/upload/"+imagePath+orgFileName);
+			            }
+			            
+		            }
+		            
+		            filecnt++;   
+		            
+		          }
+		     
+		        }
+		        
+		        fname = uploadFilePath + orgFileName;
+
+	        }
+        }catch (Exception e){
+        	
+        	logger.info("["+logid+"][error] : "+e.getMessage()); 
+        	
+        }
+        
+        asVO.setAsCompleteUserId(strUserId);
+        asVO.setAsTargetDate(asVO.getAsTargetDate().trim().replace("-", ""));
+        asVO.setPurchaseDate(asVO.getPurchaseDate().trim().replace("-", ""));
+
+        int retVal=asSvc.asModifyUpdate(asVO);
+        
+        //asConVO=asSvc.asSelectIdx(asVO); 접수번호를 idx로 쓸경우
+        
+        mv.addObject("retVal",""+retVal);
+        mv.addObject("asImage",asVO.getAsImage());
+        mv.addObject("receiptImage",asVO.getReceiptImage());
+
+        mv.setViewName("/smart/asModify");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    
 	/**
 	 * 업로드 디렉토리 세팅
 	 */
@@ -2374,7 +2667,7 @@ public class SmartController {
 			smsVO.setSmsTo(asVO.getCustomerKey());
 			smsVO.setSmsFrom(sendNo);
 			//smsVO.setSmsMsg(counselVO.getCounselResult());
-			smsVO.setSmsMsg("[애디스]요청하신 A/S대행 접수가 완료되었습니다. 제품 제조사에 A/S를 의뢰할 예정입니다.");
+			smsVO.setSmsMsg("[애디스]요청하신 A/S대행 접수가 의뢰되었습니다.제품 제조사에 A/S를 의뢰할 예정이며 상세 정보는 addys.kr 에서 확인가능합니다.");
 			smsVO.setSmsUserId(strUserId);
 			
 			//즉시전송 세팅
@@ -2558,7 +2851,130 @@ public class SmartController {
 
       return transResult;
     }
-    
+    /**
+     * 메모관리
+     *
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/ashistorymemopop")
+    public ModelAndView asHistoryMemoPop(HttpServletRequest request, 
+    		                       HttpServletResponse response,
+    		                       String asNo,
+    		                       String customerKey) throws BizException 
+    {
+        
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller ashistorymemopop start");
+
+        ModelAndView mv = new ModelAndView();
+        
+      	// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName"));    
+        String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
+        String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
+        
+       if(strUserId.equals("") || strUserId.equals("null") || strUserId.equals(null)){
+        	
+        	strIp = request.getRemoteAddr(); 
+ 	       	//로그인 상태처리		
+ 	   		UserVO userState =new UserVO();
+ 	   		userState.setUserId(strUserId);
+ 	   		userState.setLoginYn("N");
+ 	   		userState.setIp(strIp);
+ 	   		userState.setConnectIp(sClientIP);
+ 	   		userSvc.regiLoginYnUpdate(userState);
+ 	           
+ 	        //작업이력
+ 	   		WorkVO work = new WorkVO();
+ 	   		work.setWorkUserId(strUserId);
+ 	   	    work.setWorkIp(strIp);
+ 	   		work.setWorkCategory("CM");
+ 	   		work.setWorkCode("CM004");
+ 	   		commonSvc.regiHistoryInsert(work);
+ 	   		
+ 	       	mv.setViewName("/addys/loginForm");
+       		return mv;
+		}
+        
+        mv.addObject("asNo", asNo);
+        mv.addObject("customerKey", customerKey);
+        mv.setViewName("/smart/asHistoryMemo");
+        
+       //log Controller execute time end
+      	long t2 = System.currentTimeMillis();
+      	logger.info("["+logid+"] Controller deferReason end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+      	
+        return mv;
+    }
+    /**
+     * AS상태변경
+     *
+     * @param UserManageVO
+     * @param request
+     * @param response
+     * @param model
+     * @param locale
+     * @return
+     * @throws BizException
+     */
+    @RequestMapping(value = "/smart/ashistorymemo", method = RequestMethod.POST)
+    public @ResponseBody
+    String asHistoryMemo(String asNo,
+    		              String customerKey,
+    					  String asHistory,
+    		              HttpServletRequest request, 
+    		              HttpServletResponse response) throws BizException
+    {
+    	//log Controller execute time start
+		String logid=logid();
+		long t1 = System.currentTimeMillis();
+		logger.info("["+logid+"] Controller start : asNo" + asNo);
+
+		// 사용자 세션정보
+        HttpSession session = request.getSession();
+        String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
+        String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+
+        //오늘 날짜
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+        Date currentTime = new Date();
+        String strToday = simpleDateFormat.format(currentTime);
+
+        AsVO asVO = new AsVO();
+        
+        asVO.setAsNo(asNo);
+        asVO.setUserId(strUserId);
+        asVO.setGroup1Id(strGroupId);
+        asVO.setAsState("99");
+        asVO.setAsSubState("99");
+        asVO.setAsHistory(asHistory);
+        
+        int retVal=this.asSvc.asMemoProc(asVO);
+
+		//작업이력
+        /*
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("MU");
+		work.setWorkCode("MU001");
+		commonSvc.regiHistoryInsert(work);
+		*/
+        
+		//log Controller execute time end
+       	long t2 = System.currentTimeMillis();
+       	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
+
+      return ""+retVal;
+    }
     /**
      * AS상태변경
      *
@@ -2620,7 +3036,7 @@ public class SmartController {
       			smsVO.setSmsTo(customerKey);
       			smsVO.setSmsFrom(sendNo);
       			//smsVO.setSmsMsg(counselVO.getCounselResult());
-      			smsVO.setSmsMsg("[애디스]제품A/S가 완료되었습니다. 요청하신 매장에서 수령이 가능합니다.");
+      			smsVO.setSmsMsg("[애디스]제품A/S가 완료되었습니다.요청하신 매장에서 수령이 가능하며 상세 정보는 addys.kr 에서 확인가능합니다.");
       			smsVO.setSmsUserId(strUserId);
       			
 				//즉시전송 세팅
@@ -2726,7 +3142,7 @@ public class SmartController {
 			smsVO.setSmsTo(customerKey);
 			smsVO.setSmsFrom(sendNo);
 			//smsVO.setSmsMsg(counselVO.getCounselResult());
-			smsVO.setSmsMsg("[애디스]제품 제조사로 A/S접수가 완료되었습니다. 상세 정보는 addys.kr 에서 확인가능합니다.");
+			smsVO.setSmsMsg("[애디스]제품 제조사로 A/S접수가 의뢰되었습니다.상세 정보는 addys.kr 에서 확인가능합니다.");
 			smsVO.setSmsUserId(strUserId);
 			
 			//즉시전송 세팅
@@ -2844,7 +3260,7 @@ public class SmartController {
         
 	        if (fileAttach.equals("Y")) {
 		    	  
-		        List<MultipartFile> files = fileVO.getFiles();
+		        List<MultipartFile> files = fileVO.getCfiles();
 		        List fileNames = new ArrayList();
 		        String orgFileName = null;
 		        

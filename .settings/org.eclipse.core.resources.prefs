@@ -102,6 +102,7 @@ encoding//src/main/webapp/WEB-INF/views/recovery/recoveryPageList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/recovery/recoveryRegistForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/recovery/transModifyForm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/smart/asHistory.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/smart/asHistoryMemo.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/smart/asHitoryList.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/smart/asManage.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/smart/asNoPrint.jsp=UTF-8
