@@ -284,9 +284,8 @@
 				        </li>
 			        </c:otherwise>
 					</c:choose>
-			        <!-- 관리시작 -->
-			        <c:if test="${strAuth != '03'}">
-			        <c:if test="${strAuth == '01'}">
+
+			        <c:if test="${strAuth == '01' || strGroupId == 'BD008'}">
 			        <li class="dropdown">
 			          <a class="dropdown-toggle" data-toggle="dropdown" href="#"  onmouseover="MM_nbGroup('over','menu_07','<%= request.getContextPath() %>/images/top/addys-menu_07_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_07_on.jpg',1)" onmouseout="MM_nbGroup('out')">
 						<img src="<%= request.getContextPath() %>/images/top/addys-menu_07.jpg"   name="menu_07" border="0" id="menu_07"  /></a>
@@ -300,6 +299,8 @@
 			          </ul>
 			        </li>
 			        </c:if>
+			        <!-- 관리시작 -->
+			        <c:if test="${strAuth != '03'}">
 			        <li class="dropdown">
 			          <a class="dropdown-toggle" data-toggle="dropdown" href="#"  onmouseover="MM_nbGroup('over','menu_04','<%= request.getContextPath() %>/images/top/addys-menu_04_on.jpg','<%= request.getContextPath() %>/images/top/addys-menu_04_on.jpg',1)" onmouseout="MM_nbGroup('out')">
 						<img src="<%= request.getContextPath() %>/images/top/addys-menu_04.jpg"   name="menu_04" border="0" id="menu_04"  /></a>

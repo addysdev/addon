@@ -61,6 +61,14 @@ public interface AsService {
      * @return
      * @throws BizException
      */
+    public int asStateProcComplete(AsVO as) throws BizException;
+    
+    /**
+     * as 처리
+     * 
+     * @return
+     * @throws BizException
+     */
     public int asMemoProc(AsVO as) throws BizException;
     
     /**
@@ -78,6 +86,14 @@ public interface AsService {
      * @throws BizException
      */
     public int asReceiveState(AsVO as) throws BizException;
+    
+    /**
+     * as 처리
+     * 
+     * @return
+     * @throws BizException
+     */
+    public int asReceiveStateComplete(AsVO as) throws BizException;
     
     /**
      * as 처리

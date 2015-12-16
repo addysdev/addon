@@ -379,47 +379,7 @@
 		  
 		  
 	  }
-	  function fcAs_StateProcess(asNo,asState,asSubState,asHistory,customerKey){
-		  
-		  var msg='A/S 처리상태를 변경 하시겠습니까?';
-		  
-		  if(asSubState=='08'){
-			  msg='A/S 처리상태를 변경 하시겠습니까?\저장시 A/S 제품수령 안내 SMS가 고객님께 발송됩니다.'
-		  }else{
-			  
-			  msg='A/S 처리상태를 변경 하시겠습니까?';
-		  }
-		  
-		  
-		  if (confirm(msg)){
-				
-				$.ajax({
-			        type: "POST",
-			        async:false,
-			           url:  "<%= request.getContextPath() %>/smart/asstateprocess?asNo="+asNo+"&customerKey="+asState+"&asState="+asState+"&asSubState="+asSubState+"&asHistory="+encodeURIComponent(asHistory),			  
-			           success: function(result) {
 
-							if(result=='1'){
-								 alert('A/S 처리상태 변경을 성공했습니다.');
-							} else{
-								 alert('A/S 처리상태 변경을 실패했습니다.');
-							}
-							
-							$('#asProcessForm').dialog('close');
-							fcAs_listSearch();
-							
-			           },
-			           error:function(){
-			        	   
-			        	   alert('A/S 처리상태 변경을 실패했습니다.');
-			        	   $('#asProcessForm').dialog('close');
-			           }
-			    });
-				
-			}
-		  
-		  
-	  }
 	  function fcAs_HistoryMemoPop(asNo,customerKey){
 
 
@@ -1099,15 +1059,15 @@ function fcAs_CenterStart(asNo,customerKey){
 		       		<button type="button" class="btn btn-success" onClick="fcAs_MainTransfer()">매장발신</button>
 		       	</c:if>
 		     
-		       	<c:if test="${asVO.asSubState=='01' && (strAuth!='03' || strAuthId=='AD001')}">
+		       	<c:if test="${asVO.asSubState=='01'}"><!-- 권한추가시  && (strAuth!='03' || strAuthId=='AD001')-->
 		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','05','02','매장->본사수신','${asVO.customerKey}')">본사수신</button>
 		       	</c:if>
 		       	
-		       	<c:if test="${asVO.asSubState=='02' && (strAuth!='03' || strAuthId=='AD001')}">
+		       	<c:if test="${asVO.asSubState=='02'}"><!-- 권한추가시  && (strAuth!='03' || strAuthId=='AD001')-->
 		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','05','03','본사->센터발송','${asVO.customerKey}')">센터발송</button>
 		       	</c:if>
 		       	
-		       	<c:if test="${asVO.asSubState=='03' && (strAuth!='03' || strAuthId=='AD001')}">
+		       	<c:if test="${asVO.asSubState=='03'}"><!-- 권한추가시  && (strAuth!='03' || strAuthId=='AD001')-->
        	          <div class="form-inline">
        	                  센터 접수번호 : 
 		          <input type="text" class="form-control" id="centerAsNo" style="width:120px"  name="centerAsNo" maxlength="30" value="" placeholder="센터접수번호"  />
@@ -1115,17 +1075,17 @@ function fcAs_CenterStart(asNo,customerKey){
 		    	  </div> 
 		       	</c:if>
 		       	
-		       	<c:if test="${asVO.asSubState=='04' && (strAuth!='03' || strAuthId=='AD001')}">
+		       	<c:if test="${asVO.asSubState=='04'}"><!-- 권한추가시  && (strAuth!='03' || strAuthId=='AD001')-->
 		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','06','05','센터->본사수신','${asVO.customerKey}')">센터회수</button>
 		       	</c:if>
 
-		       	<c:if test="${asVO.asSubState=='06' && (strAuth!='03' || strAuthId=='AD001')}">
+		       	<c:if test="${asVO.asSubState=='06'}"><!-- 권한추가시  && (strAuth!='03' || strAuthId=='AD001')-->
 		       	 <c:choose>
-   						 <c:when test="${asVO.receiveType=='01'}">
-   						    <button type="button" class="btn btn-success" onClick="fcAs_ReceiveTrans('${asVO.asNo}')">본사발신</button>
+   						 <c:when test="${asVO.receiveType=='02'}">
+   						   <button type="button" class="btn btn-success" onClick="fcAs_CustomerReceive('${asVO.asNo}')">고객배송</button>
 	             	 	 </c:when>
 						 <c:otherwise>
-						    <button type="button" class="btn btn-success" onClick="fcAs_CustomerReceive('${asVO.asNo}')">고객배송</button>
+						   <button type="button" class="btn btn-success" onClick="fcAs_ReceiveTrans('${asVO.asNo}')">본사발신</button>  
 						 </c:otherwise>
 	 			  </c:choose>
 	 			</c:if>
@@ -1134,7 +1094,7 @@ function fcAs_CenterStart(asNo,customerKey){
 		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','07','08','본사->매장수신','${asVO.customerKey}')">매장수신</button>
 		       	</c:if>
 		       	
-		       	<c:if test="${asVO.asSubState=='09' && (strAuth!='03' || strAuthId=='AD001')}">
+		       	<c:if test="${asVO.asSubState=='09'}"><!-- 권한추가시  && (strAuth!='03' || strAuthId=='AD001')-->
 		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','09','11','고객통화 수령확인','${asVO.customerKey}')">고객확인</button>
 		       	</c:if>
 				
@@ -1143,7 +1103,7 @@ function fcAs_CenterStart(asNo,customerKey){
 		      <br><br>
 		       <input type="hidden" name="reDeliveryMethod"               id="reDeliveryMethod"            value="01" />
 		       <c:choose>
-	    		<c:when test="${asVO.asSubState=='06' && (strAuth!='03' || strAuthId=='AD001')}">
+	    		<c:when test="${asVO.asSubState=='06'}"><!-- 권한추가시  && (strAuth!='03' || strAuthId=='AD001')-->
 	    		<table class="table table-bordered" >
 					<tr>
 			          <th class='text-center' rowspan="2"  style="background-color:#E6F3FF" >운송방법선택<br>(본사->(고객/매장))</th>
@@ -1255,7 +1215,7 @@ function fcAs_CenterStart(asNo,customerKey){
 				</c:when>
 				<c:otherwise>
 				 <table class="table table-bordered" >
-				 <c:if test="${asVO.asSubState=='05' && (strAuth!='03' || strAuthId=='AD001')}">
+				 <c:if test="${asVO.asSubState=='05'}"><!-- 권한추가시  && (strAuth!='03' || strAuthId=='AD001')-->
 				   <tr>
 			       	   <div class="form-inline">
 		       	          <th class='text-center'  style="background-color:#E6F3FF">&nbsp;센터 처리내용  </th>

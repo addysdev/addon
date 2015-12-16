@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -2294,7 +2295,8 @@ public class SmartController {
 			            String extension=orgFileName.substring(extIndex+1);
 			            
 			            long fileName = System.currentTimeMillis();
-			            orgFileName = fileName +"."+ extension;
+			            String fileName2=tokenCreate();
+			            orgFileName = fileName2 +"."+ extension;
 			            this.logger.debug("orgFileName 2 :" + orgFileName);
 			            
 			            boolean check=setDirectory(uploadFilePath);
@@ -2356,7 +2358,18 @@ public class SmartController {
       	
         return mv;
     }
-    
+    public String tokenCreate(){
+	    
+    	String token="123456789";
+		
+    	Random rand = new Random(12);
+		rand.setSeed(System.currentTimeMillis());
+		
+		token=""+rand.nextInt(1000000000);
+		logger.info("##### create token :: " + token);
+    	
+    	return token;
+    }
     /**
      * AS등록
      *
@@ -3020,10 +3033,12 @@ public class SmartController {
         asVO.setAsSubState(asSubState);
         asVO.setAsHistory(asHistory);
         
-        int retVal=this.asSvc.asStateProc(asVO);
+        int retVal=-1;
 
         //SMS발송
         if(asVO.getAsSubState().equals("08")){
+        	
+        	retVal=this.asSvc.asStateProcComplete(asVO);
         	
         	  try{
       			//SMS발송
@@ -3066,6 +3081,9 @@ public class SmartController {
       			
       		}
         	  
+        }else{
+        	
+        	retVal=this.asSvc.asStateProc(asVO);
         }
         
 		//작업이력
@@ -3570,7 +3588,7 @@ public class SmartController {
         asVO.setAsSubState("09");
         asVO.setAsHistory(asHistory);
         
-        int retVal=this.asSvc.asReceiveState(asVO);
+        int retVal=this.asSvc.asReceiveStateComplete(asVO);
 
         //SMS발송
         try{

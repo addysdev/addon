@@ -167,7 +167,7 @@
 			  ,ifnull(T1.asResultDateTime,'') as asResultDateTime
 			  ,T1.receiveName
 			  ,T1.receiveTelNo
-			  ,T1.receiveType
+			  ,ifnull(T1.receiveType,'01') as receiveType
 			  ,T1.receiveAddress
 			  ,T1.receiveAddressDetail
 			  ,T1.receivePost
@@ -205,8 +205,7 @@
 
 <update id="asStateUpdate" parameterType="com.offact.addys.vo.smart.AsVO" >
         Update smAs
-       		Set asCompleteDateTime = now(),
-  				asState = #{asState}
+       		Set asState = #{asState}
  		Where asNo = #{asNo}
 </update>
 
@@ -221,7 +220,6 @@
             ,groupId
             ,asResult 
             ,asStartDateTime
-            ,asCompleteDateTime
             ,asResultDateTime
             )
         Values (
@@ -233,7 +231,6 @@
 	  		, #{asCompleteUserId}
 	  		, #{groupId}
 	  		, #{asResult}
-	  		, now()
 	  		, now()
 	  		, now()
 	  		)
@@ -343,11 +340,18 @@
   				,asTransportNo = #{asTransportNo}
   				,asQuickCharge = #{asQuickCharge}
   				,asQuickTel = #{asQuickTel}
-  				,asCompleteDateTime = now()
  		Where asNo = #{asNo}
 </update>
 
 <update id="asStateProc" parameterType="com.offact.addys.vo.smart.AsVO" >
+        Update smAs
+       		Set
+       		   asState =#{asState} 
+  			   ,asSubState =#{asSubState}
+ 		Where asNo = #{asNo}
+</update>
+
+<update id="asStateProcComplete" parameterType="com.offact.addys.vo.smart.AsVO" >
         Update smAs
        		Set
        		   asState =#{asState} 
@@ -361,11 +365,24 @@
        		Set
        		   asState =#{asState} 
   			   ,asSubState =#{asSubState}
-  			   ,asCompleteDateTime = now()
  		Where asNo = #{asNo}
 </update>
 
 <update id="asReceiveProc" parameterType="com.offact.addys.vo.smart.AsVO" >
+        Update smAs
+       		Set 
+  				asState =#{asState} 
+  			    ,asSubState =#{asSubState}
+  				,reDeliveryMethod = #{reDeliveryMethod}
+  				,reTransportCode = #{reTransportCode}
+  				,reTransport = #{reTransport}
+  				,reTransportNo = #{reTransportNo}
+  				,reQuickCharge = #{reQuickCharge}
+  				,reQuickTel = #{reQuickTel}
+ 		Where asNo = #{asNo}
+</update>
+
+<update id="asReceiveProcComplete" parameterType="com.offact.addys.vo.smart.AsVO" >
         Update smAs
        		Set 
   				asState =#{asState} 
