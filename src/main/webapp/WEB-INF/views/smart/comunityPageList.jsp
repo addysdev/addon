@@ -58,7 +58,7 @@
             </c:if>
            <c:if test="${empty comunityList}">
            <tr>
-               <td colspan='4' class='text-center'>조회된 데이터가 없습니다.</td>
+               <td colspan='5' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>
