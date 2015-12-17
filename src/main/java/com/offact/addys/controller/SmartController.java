@@ -852,13 +852,16 @@ public class SmartController {
     public ModelAndView comunityProdessForm(HttpServletRequest request, 
     		                       HttpServletResponse response,
 		                           String upidx,
-		                           String comment) throws BizException 
+		                           String comment,
+		                           String groupId,
+		                           String commentImage) throws BizException 
     {
         
     	//log Controller execute time start
 		String logid=logid();
 		long t1 = System.currentTimeMillis();
 		logger.info("["+logid+"] Controller start comment:"+comment);
+		logger.info("["+logid+"] Controller start commentImage:"+commentImage);
 
         ModelAndView mv = new ModelAndView();
         
@@ -866,7 +869,7 @@ public class SmartController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
-        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        //String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
         String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         
@@ -896,6 +899,8 @@ public class SmartController {
         // 조회조건저장
         mv.addObject("comment", comment);
         mv.addObject("upidx", upidx);
+        mv.addObject("groupId",groupId);
+        mv.addObject("commentImage",commentImage);
         
         ComunityVO comunityVO = new ComunityVO();
         
@@ -944,7 +949,7 @@ public class SmartController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strUserName = StringUtil.nvl((String) session.getAttribute("strUserName")); 
-        String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+       // String groupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
         String strIp = StringUtil.nvl((String) session.getAttribute("strIp"));
         String sClientIP = StringUtil.nvl((String) session.getAttribute("sClientIP"));
         String strMobliePhone = StringUtil.nvl((String) session.getAttribute("strMobliePhone"));
@@ -974,7 +979,6 @@ public class SmartController {
 
 		comunityVO.setCustomerKey(strMobliePhone);
 		comunityVO.setCustomerId("");
-		comunityVO.setGroupId(groupId);
 		comunityVO.setUserId(strUserId);
 
         try{//01.리플추가
@@ -2221,7 +2225,8 @@ public class SmartController {
     		                     @ModelAttribute("asVO") AsVO asVO,
     		                     HttpServletRequest request, 
     		                     HttpServletResponse response,
-    		                     String fileAttach) throws BizException 
+    		                     String fileAttach,
+    		                     String cfileAttach) throws BizException 
     {
         
     	//log Controller execute time start
@@ -2280,8 +2285,6 @@ public class SmartController {
 		        List<MultipartFile> files = fileVO.getFiles();
 		        List fileNames = new ArrayList();
 		        String orgFileName = null;
-		        
-		        int filecnt=0;
 
 		        if ((files != null) && (files.size() > 0))
 		        {
@@ -2307,21 +2310,64 @@ public class SmartController {
 			            multipartFile.transferTo(file);
 			            fileNames.add(orgFileName);
 			            
-			            if(filecnt==0){
-			            	asVO.setAsImage(hostUrl+"/upload/"+imagePath+orgFileName);
-			            }else{
-			            	asVO.setReceiptImage(hostUrl+"/upload/"+imagePath+orgFileName);
-			            }
+			            asVO.setAsImage(hostUrl+"/upload/"+imagePath+orgFileName);
 			            
 		            }
-		            
-		            filecnt++;   
-		            
+ 
 		          }
 		     
 		        }
 		        
 		        fname = uploadFilePath + orgFileName;
+
+	        }
+        }catch (Exception e){
+        	
+        	logger.info("["+logid+"][error] : "+e.getMessage()); 
+        	
+        }
+        
+        try {
+            
+	        if (cfileAttach.equals("Y")) {
+		    	  
+		        List<MultipartFile> cfiles = fileVO.getCfiles();
+		        List cfileNames = new ArrayList();
+		        String cOrgFileName = null;
+
+		        if ((cfiles != null) && (cfiles.size() > 0))
+		        {
+		          for (MultipartFile multipartFile : cfiles)
+		          {
+		            cOrgFileName = multipartFile.getOriginalFilename();
+		            this.logger.debug("orgFileName :" + cOrgFileName);
+		            
+		            if(!cOrgFileName.equals("")){
+		            	int cExtIndex = cOrgFileName.lastIndexOf(".");
+			            String cExtension=cOrgFileName.substring(cExtIndex+1);
+			            
+			            long cfileName = System.currentTimeMillis();
+			            String cfileName2=tokenCreate();
+			            cOrgFileName = cfileName2 +"."+ cExtension;
+			            this.logger.debug("orgFileName 2 :" + cOrgFileName);
+			            
+			            boolean check=setDirectory(uploadFilePath);
+
+			            String filePath = uploadFilePath;
+
+			            File file = new File(filePath + cOrgFileName);
+			            multipartFile.transferTo(file);
+			            cfileNames.add(cOrgFileName);
+			            
+			            asVO.setReceiptImage(hostUrl+"/upload/"+imagePath+cOrgFileName);
+			            
+		            }
+		            
+		          }
+		     
+		        }
+		        
+		        fname = uploadFilePath + cOrgFileName;
 
 	        }
         }catch (Exception e){
@@ -2385,7 +2431,8 @@ public class SmartController {
     		                     @ModelAttribute("asVO") AsVO asVO,
     		                     HttpServletRequest request, 
     		                     HttpServletResponse response,
-    		                     String fileAttach) throws BizException 
+    		                     String fileAttach,
+    		                     String cfileAttach) throws BizException 
     {
         
     	//log Controller execute time start
@@ -2441,14 +2488,12 @@ public class SmartController {
         asVO.setReceiptImage("N");
 
         try {
-        
+            
 	        if (fileAttach.equals("Y")) {
 		    	  
 		        List<MultipartFile> files = fileVO.getFiles();
 		        List fileNames = new ArrayList();
 		        String orgFileName = null;
-		        
-		        int filecnt=0;
 
 		        if ((files != null) && (files.size() > 0))
 		        {
@@ -2462,7 +2507,8 @@ public class SmartController {
 			            String extension=orgFileName.substring(extIndex+1);
 			            
 			            long fileName = System.currentTimeMillis();
-			            orgFileName = fileName +"."+ extension;
+			            String fileName2=tokenCreate();
+			            orgFileName = fileName2 +"."+ extension;
 			            this.logger.debug("orgFileName 2 :" + orgFileName);
 			            
 			            boolean check=setDirectory(uploadFilePath);
@@ -2473,16 +2519,10 @@ public class SmartController {
 			            multipartFile.transferTo(file);
 			            fileNames.add(orgFileName);
 			            
-			            if(filecnt==0){
-			            	asVO.setAsImage(hostUrl+"/upload/"+imagePath+orgFileName);
-			            }else{
-			            	asVO.setReceiptImage(hostUrl+"/upload/"+imagePath+orgFileName);
-			            }
+			            asVO.setAsImage(hostUrl+"/upload/"+imagePath+orgFileName);
 			            
 		            }
-		            
-		            filecnt++;   
-		            
+ 
 		          }
 		     
 		        }
@@ -2495,6 +2535,58 @@ public class SmartController {
         	logger.info("["+logid+"][error] : "+e.getMessage()); 
         	
         }
+        
+        try {
+            
+	        if (cfileAttach.equals("Y")) {
+		    	  
+		        List<MultipartFile> cfiles = fileVO.getCfiles();
+		        List cfileNames = new ArrayList();
+		        String cOrgFileName = null;
+
+		        if ((cfiles != null) && (cfiles.size() > 0))
+		        {
+		          for (MultipartFile multipartFile : cfiles)
+		          {
+		            cOrgFileName = multipartFile.getOriginalFilename();
+		            this.logger.debug("cOrgFileName :" + cOrgFileName);
+		            
+		            if(!cOrgFileName.equals("")){
+		            	int cExtIndex = cOrgFileName.lastIndexOf(".");
+			            String cExtension=cOrgFileName.substring(cExtIndex+1);
+			            
+			            long cfileName = System.currentTimeMillis();
+			            String cfileName2=tokenCreate();
+			            cOrgFileName = cfileName2 +"."+ cExtension;
+			            this.logger.debug("cOrgFileName 2 :" + cOrgFileName);
+			            
+			            boolean check=setDirectory(uploadFilePath);
+
+			            String filePath = uploadFilePath;
+
+			            File file = new File(filePath + cOrgFileName);
+			            multipartFile.transferTo(file);
+			            cfileNames.add(cOrgFileName);
+			            
+			            asVO.setReceiptImage(hostUrl+"/upload/"+imagePath+cOrgFileName);
+			            
+		            }
+		            
+		          }
+		     
+		        }
+		        
+		        fname = uploadFilePath + cOrgFileName;
+
+	        }
+        }catch (Exception e){
+        	
+        	logger.info("["+logid+"][error] : "+e.getMessage()); 
+        	
+        }
+        
+        logger.info("["+logid+"] Controller start : asVOgetAsImage" + asVO.getAsImage());
+        logger.info("["+logid+"] Controller start : asVOgetReceiptImage" + asVO.getReceiptImage());
         
         asVO.setAsCompleteUserId(strUserId);
         asVO.setAsTargetDate(asVO.getAsTargetDate().trim().replace("-", ""));
@@ -3278,7 +3370,7 @@ public class SmartController {
         
 	        if (fileAttach.equals("Y")) {
 		    	  
-		        List<MultipartFile> files = fileVO.getCfiles();
+		        List<MultipartFile> files = fileVO.getBfiles();
 		        List fileNames = new ArrayList();
 		        String orgFileName = null;
 		        

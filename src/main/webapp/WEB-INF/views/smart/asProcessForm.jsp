@@ -610,7 +610,7 @@ function fcAs_CenterStart(asNo,customerKey){
 		    
 		    url="<%= request.getContextPath() %>/smart/ascenterend?fileAttach=N";
 			  
-		    files = document.all("cfiles");
+		    files = document.all("bfiles");
 		    
 		    if(files.value != ''){
 	
@@ -810,11 +810,15 @@ function fcAs_CenterStart(asNo,customerKey){
 		    var ln = '';
 		    var gap = '';
 		    var gap1 = '';
+		    var cfileName ='';
+		    var cpos = '';
+		    var cln = '';
+		    var cgap = '';
+		    var cgap1 = '';
 		    
-		    url="<%= request.getContextPath() %>/smart/asmodify?fileAttach=N";
-
-		    files = document.all("files");
-
+		    var fileAttach='N';
+		    var cfileAttach='N';
+		    
 		    if(frm.customerName.value==''){
 		    	alert('의뢰인 정보는 필수입력 사항입니다.');
 		    	frm.customerName.focus(1);
@@ -827,9 +831,9 @@ function fcAs_CenterStart(asNo,customerKey){
 		    	return;
 		    }
 		    
-		    if(files[0].value != ''){
+		    if($("#files").val() != ''){
 
-		        fileName = files[0].value;
+		        fileName = document.all.files.value;
 		        
 		        pos = fileName.lastIndexOf("\\");
 		        ln = fileName.lastIndexOf("\.");
@@ -837,32 +841,40 @@ function fcAs_CenterStart(asNo,customerKey){
 		        gap1 = fileName.substring(ln+1);
 	
 		        if(gap1=="jpg" || gap1=="JPG" || gap1=="gif" || gap1=="GIF" || gap1=="png" || gap1=="PNG"){//
-		            url="<%= request.getContextPath() %>/smart/asmodify?fileAttach=Y";
+		        	fileAttach='Y';
+		           
 		        }else {
 		        	alert("이미지 파일만 등록 부탁드립니다.");
 		            return;
 		        }
 		        
+		    }else{
+		    
+		    	fileAttach='N';
+		    	
+		    }
+
+		    if($("#cfiles").val() != ''){
+
+		    	cfileName = document.all.cfiles.value;
+		        
+		        cpos = cfileName.lastIndexOf("\\");
+		        cln = cfileName.lastIndexOf("\.");
+		        cgap = cfileName.substring(cpos + 1, cln);
+		        cgap1 = cfileName.substring(cln+1);
+	
+		        if(cgap1=="jpg" || cgap1=="JPG" || cgap1=="gif" || cgap1=="GIF" || cgap1=="png" || cgap1=="PNG"){//
+		        	cfileAttach='Y';
+		        }else {
+		        	alert("이미지 파일만 등록 부탁드립니다.");
+		            return;
+		        }
+		        
+		    }else{
+		    	cfileAttach='N';
 		    }
 		    
-
-		    if(files[1].value != ''){
-
-		        fileName = files[1].value;
-		        
-		        pos = fileName.lastIndexOf("\\");
-		        ln = fileName.lastIndexOf("\.");
-		        gap = fileName.substring(pos + 1, ln);
-		        gap1 = fileName.substring(ln+1);
-	
-		        if(gap1=="jpg" || gap1=="JPG" || gap1=="gif" || gap1=="GIF" || gap1=="png" || gap1=="PNG"){//
-		            url="<%= request.getContextPath() %>/smart/asmodify?fileAttach=Y";
-		        }else {
-		        	alert("이미지 파일만 등록 부탁드립니다.");
-		            return;
-		        }
-		        
-		    }
+		    url="<%= request.getContextPath() %>/smart/asmodify?fileAttach="+fileAttach+"&cfileAttach="+cfileAttach;
 
 		    frm.action = url;
 		    frm.target="file_result";
@@ -1008,7 +1020,7 @@ function fcAs_CenterStart(asNo,customerKey){
 		  </th>
           <th class='text-center'  style="background-color:#E6F3FF" >영수증</th>
           <th class='text-center'><a href="javascript:receiptImageResize()"><img id="receiptImageId" src='${asVO.receiptImage}' width="30" height="30" /></a>
-          <input type="file" id="files" name="files" /></th>
+          <input type="file" id="cfiles" name="cfiles" /></th>
       	</tr>
       	</table>
       	<table class="table table-bordered" >
@@ -1220,7 +1232,7 @@ function fcAs_CenterStart(asNo,customerKey){
 			       	   <div class="form-inline">
 		       	          <th class='text-center'  style="background-color:#E6F3FF">&nbsp;센터 처리내용  </th>
 				          <th class='text-center' colspan="3" ><input type="text" class="form-control" id="asHistory" style="width:400px"  name="asHistory" maxlength="30" value="" placeholder="센터 처리내용"  /></th>
-				          <th class='text-center' ><font style="color:red">이미지 첨부 : </font><input type="file" id="cfiles" name="cfiles" /></th>
+				          <th class='text-center' ><font style="color:red">이미지 첨부 : </font><input type="file" id="bfiles" name="bfiles" /></th>
 				          <th class='text-center' ><button type="button" class="btn btn-success" onClick="fcAs_CenterEnd()">센터처리</button></th>
 				       </div>
 			       </tr> 

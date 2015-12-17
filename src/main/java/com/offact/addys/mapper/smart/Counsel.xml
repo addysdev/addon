@@ -31,11 +31,12 @@
 			  ,DATE_FORMAT(T1.counselDateTime, '%Y-%m-%d %T') as counselDateTime
 			  ,Case When T1.counselState = '03' Then '완료' Else '접수'
 			  		End counselState
-			  ,T1.counsel
+			  ,replace(T1.counsel,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as counsel
 			  ,T1.counselImage
 			  ,Case When ifnull(T4.counselResultDateTime,'') = '' Then '' Else DATE_FORMAT(T4.counselResultDateTime, '%Y-%m-%d %T') End counselResultDateTime
 			  ,ifnull(T4.userId,'') as userId
 			  ,ifnull(T5.userName,'') as userName
+			  ,(Select count(T6.idx) From smCommunity T6 Where T6.upidx=T1.idx )  As counselCnt
           FROM smCounsel T1
           	   Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
@@ -93,7 +94,7 @@
 			  ,T2.customerId   
 			  ,T2.customerName  
 			  ,T1.counselState
-			  ,T1.counsel
+			  ,replace(T1.counsel,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as counsel
 			  ,T1.counselImage
 			  ,T3.counselResultImage
 			  ,DATE_FORMAT(T1.counselDateTime,'%Y-%m-%d %T') as counselDateTime

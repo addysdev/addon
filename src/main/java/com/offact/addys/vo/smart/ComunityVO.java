@@ -11,6 +11,7 @@ public class ComunityVO extends AbstractVO {
 
 	private String idx;
 	private String groupId;
+	private String groupName;
 	private String customerKey;
 	private String customerId;
 	private String customerName;
@@ -19,9 +20,11 @@ public class ComunityVO extends AbstractVO {
 	private String commentDateTime;
 	private String upidx;
 	private String userId;
+	private String userName;
 	
 	private String commentCnt;
-
+	private String commentImage;
+	
     private String searchGubun;
     private String searchValue;
     
@@ -164,6 +167,24 @@ public class ComunityVO extends AbstractVO {
 	}
 	public void setCon_groupId(String con_groupId) {
 		this.con_groupId = con_groupId;
+	}
+	public String getCommentImage() {
+		return commentImage;
+	}
+	public void setCommentImage(String commentImage) {
+		this.commentImage = commentImage;
+	}
+	public String getGroupName() {
+		return groupName;
+	}
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
     
 }

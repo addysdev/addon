@@ -14,6 +14,8 @@ public class MultipartFileVO extends AbstractVO  {
 	private List<MultipartFile> files;
 	
 	private List<MultipartFile> cfiles;
+	
+	private List<MultipartFile> bfiles;
 
 	public List<MultipartFile> getFiles() {
 		return files;
@@ -33,6 +35,14 @@ public class MultipartFileVO extends AbstractVO  {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public List<MultipartFile> getBfiles() {
+		return bfiles;
+	}
+
+	public void setBfiles(List<MultipartFile> bfiles) {
+		this.bfiles = bfiles;
 	}
 	
 }

@@ -108,7 +108,7 @@ $(function() {
     }
     
     //레이어팝업 : 상담처리 Layer 팝업
-    function fcComunity_procForm(idx,comment){
+    function fcComunity_procForm(idx,comment,groupId,commentImage){
 
     	$('#comunityProcessForm').dialog({
             resizable : false, //사이즈 변경 불가능
@@ -121,7 +121,7 @@ $(function() {
 
             open:function(){
                 //팝업 가져올 url
-                $(this).load('<%= request.getContextPath() %>/smart/comunityprodessform?upidx='+idx+'&comment='+encodeURIComponent(comment));
+                $(this).load('<%= request.getContextPath() %>/smart/comunityprodessform?upidx='+idx+'&comment='+encodeURIComponent(comment)+'&groupId='+groupId+'&commentImage='+commentImage);
                 //$("#userRegist").dialog().parents(".ui-dialog").find(".ui-dialog-titlebar").hide();
                 $(".ui-widget-overlay").click(function(){ //레이어팝업외 화면 클릭시 팝업 닫기
                     $("#comunityProcessForm").dialog('close');
@@ -130,6 +130,7 @@ $(function() {
             }
             ,close:function(){
                 $('#comunityProcessForm').empty();
+                fcComunity_listSearch();
 
             }
         });
@@ -179,7 +180,7 @@ $(function() {
 				<label for="searchGubun">검색조건 :</label>
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
                 	<option value="01" >핸드폰</option>
-                    <option value="02" >talk내용</option>
+                    <option value="02" >톡내용</option>
            		</select>
 				<label class="sr-only" for="searchValue"> 조회값 </label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${comunityConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>
@@ -195,6 +196,9 @@ $(function() {
  
   <!-- 상담처리-->
   <div id="comunityProcessForm"  title="커뮤니티처리"></div>
+  
+   <div id=imageView></div>
+ 
 
 </div>
 <br>

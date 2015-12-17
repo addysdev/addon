@@ -176,16 +176,19 @@
 			
 			var url;
 		    var frm = document.asRegistForm;
-		    var files;
 		    var fileName ='';
 		    var pos = '';
 		    var ln = '';
 		    var gap = '';
 		    var gap1 = '';
+		    var cfileName ='';
+		    var cpos = '';
+		    var cln = '';
+		    var cgap = '';
+		    var cgap1 = '';
 		    
-		    url="<%= request.getContextPath() %>/smart/asregist?fileAttach=N";
-
-		    files = document.all("files");
+		    var fileAttach='N';
+		    var cfileAttach='N';
 
 		    if(frm.customerName.value==''){
 		    	alert('의뢰인 정보는 필수입력 사항입니다.');
@@ -199,9 +202,9 @@
 		    	return;
 		    }
 		    
-		    if(files[0].value != ''){
+		    if($("#files").val() != ''){
 
-		        fileName = files[0].value;
+		        fileName = document.all.files.value;
 		        
 		        pos = fileName.lastIndexOf("\\");
 		        ln = fileName.lastIndexOf("\.");
@@ -209,38 +212,42 @@
 		        gap1 = fileName.substring(ln+1);
 	
 		        if(gap1=="jpg" || gap1=="JPG" || gap1=="gif" || gap1=="GIF" || gap1=="png" || gap1=="PNG"){//
-		            url="<%= request.getContextPath() %>/smart/asregist?fileAttach=Y";
+		        	fileAttach='Y';
 		        }else {
 		        	alert("이미지 파일만 등록 부탁드립니다.");
 		            return;
 		        }
 		        
 		    }else{
-		    
+		    	fileAttach='N';
 		    	alert('A/S제품 증상 이미지는 필수 첨부사항입니다.');
 		    	return;
 		    	
 		    }
 
-		    if(files[1].value != ''){
+		    if($("#cfiles").val() != ''){
 
-		        fileName = files[1].value;
+		    	cfileName = document.all.cfiles.value;
 		        
-		        pos = fileName.lastIndexOf("\\");
-		        ln = fileName.lastIndexOf("\.");
-		        gap = fileName.substring(pos + 1, ln);
-		        gap1 = fileName.substring(ln+1);
+		        cpos = cfileName.lastIndexOf("\\");
+		        cln = cfileName.lastIndexOf("\.");
+		        cgap = cfileName.substring(cpos + 1, cln);
+		        cgap1 = cfileName.substring(cln+1);
 	
-		        if(gap1=="jpg" || gap1=="JPG" || gap1=="gif" || gap1=="GIF" || gap1=="png" || gap1=="PNG"){//
-		            url="<%= request.getContextPath() %>/smart/asregist?fileAttach=Y";
+		        if(cgap1=="jpg" || cgap1=="JPG" || cgap1=="gif" || cgap1=="GIF" || cgap1=="png" || cgap1=="PNG"){//
+		        	cfileAttach='Y';
 		        }else {
 		        	alert("이미지 파일만 등록 부탁드립니다.");
 		            return;
 		        }
 		        
+		    }else{
+		    	
+		    	cfileAttach='N';
 		    }
 
-	
+		    url="<%= request.getContextPath() %>/smart/asregist?fileAttach="+fileAttach+"&cfileAttach="+cfileAttach;
+		    
 		    frm.asState.value=asState;
 		    
 		    frm.action = url;
@@ -435,7 +442,7 @@
 		  </div>
           </th>
           <th class='text-center'  style="background-color:#E6F3FF" >영수증<br>(첨부)</th>
-          <th class='text-center'><input type="file" id="files" name="files" /></th>
+          <th class='text-center'><input type="file" id="cfiles" name="cfiles" /></th>
       	</tr>
       	</table>
       	<table class="table table-bordered" >

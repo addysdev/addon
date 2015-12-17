@@ -27,6 +27,7 @@
 	    <thead>
 	      <tr style="background-color:#E6F3FF">
 	        <th>핸드폰번호</th>
+	        <th>상담히스토리</th>
             <th>문의상태</th>
             <th>문의일시</th>
             <th>문의내용</th>
@@ -40,8 +41,10 @@
              <c:forEach items="${counselList}" var="counselListVO" varStatus="status">
              <tr id="select_tr_${counselListVO.idx}">
                  <td><a href="javascript:fcCounsel_procForm('${counselListVO.idx}')"><c:out value="${counselListVO.customerKey}"></c:out></a>
-                 <img id="hisbtn" onClick="fcHis_detail('${counselListVO.customerKey}','${counselListVO.idx}','${counselListVO.counsel}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="이력">
                  </td>
+                 <td>(${counselListVO.counselCnt})
+                 <img id="hisbtn" onClick="fcHis_detail('${counselListVO.customerKey}','${counselListVO.idx}','${counselListVO.counsel}')" src="<%= request.getContextPath()%>/images/common/ico_company.gif" width="16" height="16" align="absmiddle" title="이력">
+                </td>
                  <td><c:out value="${counselListVO.counselState}"></c:out></td>
                  <td><c:out value="${counselListVO.counselDateTime}"></c:out></td>
                  <td>

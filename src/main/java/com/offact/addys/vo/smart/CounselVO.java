@@ -20,6 +20,7 @@ public class CounselVO extends AbstractVO {
 	private String counselDateTime;
 	private String counselHistory;
 	private String counselHistoryDateTime;
+	private String counselCnt;
 	
 	private String upidx;
 	private String userId;
@@ -235,6 +236,12 @@ public class CounselVO extends AbstractVO {
 	}
 	public void setCounselResultImage(String counselResultImage) {
 		this.counselResultImage = counselResultImage;
+	}
+	public String getCounselCnt() {
+		return counselCnt;
+	}
+	public void setCounselCnt(String counselCnt) {
+		this.counselCnt = counselCnt;
 	}
     
 }

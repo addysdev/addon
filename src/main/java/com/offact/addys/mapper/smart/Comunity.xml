@@ -22,13 +22,15 @@
 			  ,T3.customerId   
 			  ,T3.customerName 
         	  ,T1.commentType
-        	  ,T1.comment
+        	  ,replace(T1.comment,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as comment
+        	  ,ifnull(T1.commentImage,'') as commentImage
 			  ,DATE_FORMAT(T1.commentDateTime, '%Y-%m-%d %T') as commentDateTime
 			  ,(Select count(T4.idx) From smCommunity T4 Where T4.upidx=T1.idx )  As commentCnt
   	FROM smCommunity T1
          Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
          WHERE T1.commentDateTime between concat(#{start_comunityDate},' 00:00:00') and concat(#{end_comunityDate},' 23:59:59')
+              And T1.commentType = 'N'
          	<if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}
            </if>
@@ -52,6 +54,7 @@
          Left Join ofGroup T2 On T1.groupId=T2.groupId
 			   Left Join smCustomer T3 On T1.customerKey=T3.customerKey
          WHERE T1.commentDateTime between concat(#{start_comunityDate},' 00:00:00') and concat(#{end_comunityDate},' 23:59:59')
+           And T1.commentType = 'N'
            <if test="con_groupId != null and con_groupId != '' and con_groupId != 'G00000'" >
            		AND T1.groupId = #{con_groupId}
            </if>
@@ -70,10 +73,14 @@
 <select id="getComunityReply" resultMap="comunityListVO" parameterType="com.offact.addys.vo.smart.ComunityVO" >
 
 		SELECT T1.idx
+		      ,T1.userId
+		      ,T2.userName
 		      ,T1.customerKey
 		      ,DATE_FORMAT(T1.commentDateTime, '%Y-%m-%d %T') as commentDateTime
-			  ,T1.comment
+			  ,replace(T1.comment,replace('<![CDATA[\n]]>',' ',''),  replace('<![CDATA[<br>]]>',' ','')) as comment
+			  ,ifnull(T1.commentImage,'') as commentImage
           FROM smCommunity T1
+               Left Join ofUser T2 On T1.userId=T2.userId 
 		 Where T1.upidx = #{upidx}
 		 order by commentDateTime desc
 </select>
