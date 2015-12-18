@@ -515,8 +515,16 @@ public class SmartController {
 			logger.info("["+logid+"] Controller SMS전송오류");
 			
 		}
+    
+		//작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("CS");
+		work.setWorkCode("CS001");
+		work.setWorkKey1(idx);
+		commonSvc.regiHistoryInsert(work);
 
-		 mv.setViewName("/smart/counselResult");
+		mv.setViewName("/smart/counselResult");
 	        
        //log Controller execute time end
       	long t2 = System.currentTimeMillis();
@@ -991,6 +999,14 @@ public class SmartController {
 	        String errMsg = e.getMessage();
 	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
 	    }
+ 
+		//작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("TK");
+		work.setWorkCode("TK001");
+		work.setWorkKey1(comunityVO.getCustomerKey());
+		commonSvc.regiHistoryInsert(work);
         
         // 조회조건저장
         mv.addObject("comment", comunityVO.getComment());
@@ -1004,12 +1020,7 @@ public class SmartController {
         mv.addObject("comunityReply", comunityReply);
 
         mv.setViewName("/smart/comunityProdessForm");
-        
-        //작업이력
-		WorkVO work = new WorkVO();
-		work.setWorkUserId(strUserId);
-		//추가필요
-        
+          
         //log Controller execute time end
        	long t2 = System.currentTimeMillis();
        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -1180,10 +1191,13 @@ public class SmartController {
 
         mv.setViewName("/smart/counselHistory");
         
-        //작업이력
+		//작업이력
 		WorkVO work = new WorkVO();
 		work.setWorkUserId(strUserId);
-		//추가필요
+		work.setWorkCategory("CS");
+		work.setWorkCode("CS002");
+		work.setWorkKey1(counselVO.getCustomerKey());
+		commonSvc.regiHistoryInsert(work);
         
         //log Controller execute time end
        	long t2 = System.currentTimeMillis();
@@ -1578,14 +1592,18 @@ public class SmartController {
 
         int retVal=this.asSvc.asResultInsert(asConVO);
 
-		//작업이력
-        /*
+		//작업이력   
 		WorkVO work = new WorkVO();
 		work.setWorkUserId(strUserId);
-		work.setWorkCategory("MU");
-		work.setWorkCode("MU001");
+		work.setWorkCategory("AS");
+        if(asVO.getAsState().equals("01")){
+    		work.setWorkCode("AS001");
+        }else{
+    		work.setWorkCode("AS002");
+        }
+        work.setWorkKey1(asConVO.getAsNo());
+
 		commonSvc.regiHistoryInsert(work);
-		*/
         
 		//log Controller execute time end
        	long t2 = System.currentTimeMillis();
@@ -1743,6 +1761,7 @@ public class SmartController {
 	        String errMsg = e.getMessage();
 	        try{errMsg = errMsg.substring(errMsg.lastIndexOf("exception"));}catch(Exception ex){}
 	    }
+
         
         // 조회조건저장
         mv.addObject("as", asVO.getAsDetail());
@@ -1757,11 +1776,7 @@ public class SmartController {
 
         mv.setViewName("/smart/asHistory");
         
-        //작업이력
-		WorkVO work = new WorkVO();
-		work.setWorkUserId(strUserId);
-		//추가필요
-        
+
         //log Controller execute time end
        	long t2 = System.currentTimeMillis();
        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -2392,6 +2407,19 @@ public class SmartController {
         int retVal=asSvc.asRegistInsert(asVO);
         
         //asConVO=asSvc.asSelectIdx(asVO); 접수번호를 idx로 쓸경우
+
+		//작업이력   
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("AS");
+        if(asVO.getAsState().equals("03")){
+    		work.setWorkCode("AS003");
+        }else{
+    		work.setWorkCode("AS004");
+        }
+        work.setWorkKey1(asNo);
+        commonSvc.regiHistoryInsert(work);
+
         
         mv.addObject("retVal",""+retVal);
         mv.addObject("asState", asVO.getAsState());
@@ -2804,14 +2832,13 @@ public class SmartController {
 		}
         
 		//작업이력
-        /*
 		WorkVO work = new WorkVO();
 		work.setWorkUserId(strUserId);
-		work.setWorkCategory("MU");
-		work.setWorkCode("MU001");
+		work.setWorkCategory("AS");
+		work.setWorkCode("AS005");
+		work.setWorkKey1(asVO.getAsNo());
 		commonSvc.regiHistoryInsert(work);
-		*/
-        
+       
 		//log Controller execute time end
        	long t2 = System.currentTimeMillis();
        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -3178,14 +3205,25 @@ public class SmartController {
         	retVal=this.asSvc.asStateProc(asVO);
         }
         
-		//작업이력
-        /*
+      //작업이력   
 		WorkVO work = new WorkVO();
 		work.setWorkUserId(strUserId);
-		work.setWorkCategory("MU");
-		work.setWorkCode("MU001");
+		work.setWorkCategory("AS");
+		if(asVO.getAsSubState().equals("02")){
+			work.setWorkCode("AS006");
+		}else if(asVO.getAsSubState().equals("03")){
+			work.setWorkCode("AS007");
+		}else if(asVO.getAsSubState().equals("05")){
+			work.setWorkCode("AS009");
+		}else if(asVO.getAsSubState().equals("08")){
+			work.setWorkCode("AS012");
+		}else if(asVO.getAsSubState().equals("11")){
+			work.setWorkCode("AS014");
+		}else{
+			work.setWorkCode("AS000");
+		}
+		work.setWorkKey1(asNo);
 		commonSvc.regiHistoryInsert(work);
-		*/
         
 		//log Controller execute time end
        	long t2 = System.currentTimeMillis();
@@ -3283,14 +3321,13 @@ public class SmartController {
 		}
         
 		//작업이력
-        /*
 		WorkVO work = new WorkVO();
 		work.setWorkUserId(strUserId);
-		work.setWorkCategory("MU");
-		work.setWorkCode("MU001");
+		work.setWorkCategory("AS");
+		work.setWorkCode("AS008");
+		work.setWorkKey1(asNo);
 		commonSvc.regiHistoryInsert(work);
-		*/
-        
+
 		//log Controller execute time end
        	long t2 = System.currentTimeMillis();
        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -3424,6 +3461,14 @@ public class SmartController {
         asVO.setAsSubState("06");
         
         int retVal=this.asSvc.asCenterStart(asVO);
+        
+		//작업이력
+		WorkVO work = new WorkVO();
+		work.setWorkUserId(strUserId);
+		work.setWorkCategory("AS");
+		work.setWorkCode("AS010");
+		work.setWorkKey1(asVO.getAsNo());
+		commonSvc.regiHistoryInsert(work);
         
         mv.addObject("retVal",""+retVal);
         mv.addObject("asState", asVO.getAsState());
@@ -3626,14 +3671,13 @@ public class SmartController {
         int retVal=this.asSvc.asReceiveState(asVO);
 
 		//작업이력
-        /*
 		WorkVO work = new WorkVO();
 		work.setWorkUserId(strUserId);
-		work.setWorkCategory("MU");
-		work.setWorkCode("MU001");
+		work.setWorkCategory("AS");
+		work.setWorkCode("AS011");
+		work.setWorkKey1(asVO.getAsNo());
 		commonSvc.regiHistoryInsert(work);
-		*/
-        
+		   
 		//log Controller execute time end
        	long t2 = System.currentTimeMillis();
        	logger.info("["+logid+"] Controller end execute time:[" + (t2-t1)/1000.0 + "] seconds");
@@ -3724,15 +3768,13 @@ public class SmartController {
 			
 		}
         
-        
 		//작업이력
-        /*
 		WorkVO work = new WorkVO();
 		work.setWorkUserId(strUserId);
-		work.setWorkCategory("MU");
-		work.setWorkCode("MU001");
+		work.setWorkCategory("AS");
+		work.setWorkCode("AS013");
+		work.setWorkKey1(asVO.getAsNo());
 		commonSvc.regiHistoryInsert(work);
-		*/
         
 		//log Controller execute time end
        	long t2 = System.currentTimeMillis();

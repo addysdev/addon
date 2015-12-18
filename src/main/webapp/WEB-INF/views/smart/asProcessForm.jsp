@@ -298,14 +298,14 @@
 					return;
 				}
 			}
-		    
+		  /*  
 		    if(pintYN==false){
 		    	
 		    	alert('발신 처리시 접수번호를 프린트 하신후\n발신대상 BOX에 첨부하여 보내시기 바랍니다.\n인쇄버튼을 클릭하여 접수번호를 인쇄 하신 후\n다시 시도하시기 바랍니다.');
 		    	return;
 		    	
 		    }
-		    
+		    */
 		    dfrm.asTransport.value=$("#asTransportCode option:selected").text();
 		    
 		    if (confirm('A/S 처리를 매장발신상태로 저장 하시겠습니까?\n저장시 A/S대행 접수안내 SMS가 고객님께 발송됩니다.')){
@@ -926,7 +926,10 @@ function fcAs_CenterStart(asNo,customerKey){
 	      <div style="position:absolute; left:30px" > 
 	                      ※ A/S 접수 기본정보
           </div >
-          <div style="position:absolute; right:30px" > 
+          <div style="position:absolute; right:30px" > 		        
+    		<c:if test="${asVO.asState!='01' && asVO.asState!='02' && asVO.asState!='03'}">
+	            <button type="button" class="btn btn-default" onClick="fcAsNo_print('${asVO.asNo}')" >접수번호 인쇄</button>
+	       	</c:if>
 			<button type="button" class="btn btn-success" onClick="fcAs_Modify()">수정</button>
 		  </div>
           </tr>
@@ -1067,7 +1070,6 @@ function fcAs_CenterStart(asNo,customerKey){
 		        <div style="position:absolute; right:30px" > 
 		        
 	    		<c:if test="${asVO.asState=='04'}">
-		            <button type="button" class="btn btn-default" onClick="fcAsNo_print('${asVO.asNo}')" >접수번호 인쇄</button>
 		       		<button type="button" class="btn btn-success" onClick="fcAs_MainTransfer()">매장발신</button>
 		       	</c:if>
 		     
