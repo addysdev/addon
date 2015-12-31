@@ -1108,7 +1108,7 @@ function fcAs_CenterStart(asNo,customerKey){
 		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','07','08','본사->매장수신','${asVO.customerKey}')">매장수신</button>
 		       	</c:if>
 		       	
-		       	<c:if test="${asVO.asSubState=='09'}"><!-- 권한추가시  && (strAuth!='03' || strAuthId=='AD001')-->
+		       	<c:if test="${asVO.asSubState=='08' || asVO.asSubState=='09'}"><!-- 권한추가시  && (strAuth!='03' || strAuthId=='AD001')-->
 		       		<button type="button" class="btn btn-success" onClick="fcAs_StateProcess('${asVO.asNo}','09','11','고객통화 수령확인','${asVO.customerKey}')">고객확인</button>
 		       	</c:if>
 				

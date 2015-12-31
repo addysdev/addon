@@ -99,6 +99,14 @@ public interface CommonService {
      * @throws BizException
      */
     public List<UserVO> getSmsBatchList(UserVO usercon) throws BizException;
+    
+    /**
+     * sms batch대상 목록
+     *
+     * @return
+     * @throws BizException
+     */
+    public List<UserVO> getAsSmsBatchList(UserVO usercon) throws BizException;
     /**
      * 업무이력저장
      * 

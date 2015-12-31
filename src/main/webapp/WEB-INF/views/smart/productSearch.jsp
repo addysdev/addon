@@ -73,6 +73,7 @@
                 	<option value="03" >품목명</option>
                 	<option value="05" >브랜드</option>
                     <option value="01" >품목코드</option>
+                    <option value="02" >바코드</option>
                     <option value="04" >구매처명</option>
            		</select>
 				<label class="sr-only" for="searchValue"> 조회값 </label>

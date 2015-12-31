@@ -35,6 +35,7 @@
 	        <th>접수일자</th>
             <th>접수자</th>
             <th>완료예상일자</th>
+            <th>브랜드</th>
             <th>상품명</th>
 	      </tr>
 	    </thead>
@@ -53,13 +54,14 @@
                  <td><c:out value="${asListVO.asStartDateTime}"></c:out></td>
                  <td><c:out value="${asListVO.asStartUserName}(${asListVO.asStartUserId})"></c:out></td>
                  <td><c:out value="${asListVO.asTargetDate}"></c:out></td>
+                 <td><c:out value="${asListVO.group1Name}"></c:out></td>
                  <td><c:out value="${asListVO.productName}"></c:out></td>
               </tr>
              </c:forEach>
             </c:if>
            <c:if test="${empty asList}">
            <tr>
-               <td colspan='10' class='text-center'>조회된 데이터가 없습니다.</td>
+               <td colspan='11' class='text-center'>조회된 데이터가 없습니다.</td>
            </tr>
           </c:if>
 	    </tbody>
