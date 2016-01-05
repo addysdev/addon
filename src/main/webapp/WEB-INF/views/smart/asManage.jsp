@@ -255,7 +255,6 @@ $(function() {
 				<select class="form-control" title="검색조건" id="searchGubun" name="searchGubun" value="">
                 	<option value="01" >핸드폰번호</option>
                 	<option value="02" >고객명</option>
-                	<option value="03" >브랜드명</option>
            		</select>
 				<label class="sr-only" for="searchValue"> 조회값 </label>
 				<input type="text" class="form-control" id="searchValue" name="searchValue"  value="${userConVO.searchValue}" onkeypress="javascript:return checkKey(event);"/>

@@ -100,9 +100,6 @@
                <when test="searchGubun.equals('02')">
            AND T1.customerName  LIKE CONCAT('%', #{searchValue}, '%')
                </when>
-               <when test="searchGubun.equals('03')">
-           And T4.group1Name   LIKE CONCAT('%', #{searchValue}, '%')
-               </when>
              </choose>
            </if>
          ORDER BY asStartDateTime desc  ,asNo desc
@@ -134,9 +131,6 @@
                </when>
                <when test="searchGubun.equals('02')">
            AND T1.customerName  LIKE CONCAT('%', #{searchValue}, '%')
-               </when>
-           <when test="searchGubun.equals('03')">
-           And T4.group1Name   LIKE CONCAT('%', #{searchValue}, '%')
                </when>
              </choose>
            </if>

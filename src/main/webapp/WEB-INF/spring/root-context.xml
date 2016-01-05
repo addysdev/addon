@@ -106,23 +106,6 @@
     	
     </bean>
 
-    <!-- Cron 대상 클래스 정의 -->
-    <bean id="asSmsQuartz" class="org.springframework.scheduling.quartz.JobDetailBean">
-        <property name="jobClass" value="com.offact.batch.AsSmsBatch"></property>
-    </bean> 
-
-    <!-- Cron 시간 설정 -->
-    <bean id="asSmsQuartzTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-    	<property name="jobDetail" ref="asSmsQuartz"></property>
-           
-        <property name="cronExpression" value="0 0 10 * * ?"></property>
-    <!-- 
-        <property name="cronExpression" value="0/3 * * * * ?"></property>
-          --> 
-    	
-    </bean>
-
-
     <!-- commonBatch -->
     <!-- Cron 대상 클래스 정의 -->
     <bean id="comQuartz" class="org.springframework.scheduling.quartz.JobDetailBean">

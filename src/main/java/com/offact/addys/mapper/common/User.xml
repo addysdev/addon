@@ -89,17 +89,6 @@
                                   And T1.recoveryState ='01'
 </select>
 
-<select id="getAsSmsBatchList" resultMap="UserVO" parameterType="com.offact.addys.vo.common.UserVO" >
-			
-                            Select distinct(T2.mobliePhone) 
-                            from smAs T1
-                                 Left Join ofUser T2 On T1.groupID = T2.groupId
-                            Where T1.asTargetDate = DATE_FORMAT(date_add(now(), interval +2 day) , '%Y%m%d')
-                                  And T2.smsYn = 'Y'
-                                  And T1.asCompleteDateTime is null
-                                  
-</select>
-
 <update id="userLoginYnUpdate" parameterType="com.offact.addys.vo.common.UserVO" >
         Update ofUser
        		Set 

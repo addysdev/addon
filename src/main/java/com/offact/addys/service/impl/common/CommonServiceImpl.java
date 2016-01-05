@@ -120,13 +120,6 @@ public class CommonServiceImpl implements CommonService {
    }
    
    @Override
-   public List<UserVO> getAsSmsBatchList(UserVO usercon) throws BizException {
-       List<UserVO> smsnoList = commonDao.selectList("User.getAsSmsBatchList", usercon);
-
-       return smsnoList;
-   }
-   
-   @Override
    public int regiHistoryInsert(WorkVO work)
    	    throws BizException
 	{
