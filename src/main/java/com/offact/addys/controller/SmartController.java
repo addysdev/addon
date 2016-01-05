@@ -2775,6 +2775,7 @@ public class SmartController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strMobliePhone = StringUtil.nvl((String) session.getAttribute("strMobliePhone"));
 
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
@@ -2798,7 +2799,7 @@ public class SmartController {
 			smsVO.setSmsPw(smsPw);
 			smsVO.setSmsType(smsType);
 			smsVO.setSmsTo(asVO.getCustomerKey());
-			smsVO.setSmsFrom(sendNo);
+			smsVO.setSmsFrom(strMobliePhone);
 			//smsVO.setSmsMsg(counselVO.getCounselResult());
 			smsVO.setSmsMsg("[애디스]요청하신 A/S대행 접수가 의뢰되었습니다.제품 제조사에 A/S를 의뢰할 예정이며 상세 정보는 addys.kr 에서 확인가능합니다.");
 			smsVO.setSmsUserId(strUserId);
@@ -3137,6 +3138,7 @@ public class SmartController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strMobliePhone = StringUtil.nvl((String) session.getAttribute("strMobliePhone"));
 
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
@@ -3168,7 +3170,7 @@ public class SmartController {
       			smsVO.setSmsPw(smsPw);
       			smsVO.setSmsType(smsType);
       			smsVO.setSmsTo(customerKey);
-      			smsVO.setSmsFrom(sendNo);
+      			smsVO.setSmsFrom(strMobliePhone);
       			//smsVO.setSmsMsg(counselVO.getCounselResult());
       			smsVO.setSmsMsg("[애디스]제품A/S가 완료되었습니다.요청하신 매장에서 수령이 가능하며 상세 정보는 addys.kr 에서 확인가능합니다.");
       			smsVO.setSmsUserId(strUserId);
@@ -3261,6 +3263,7 @@ public class SmartController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strMobliePhone = StringUtil.nvl((String) session.getAttribute("strMobliePhone"));
 
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
@@ -3288,7 +3291,7 @@ public class SmartController {
 			smsVO.setSmsPw(smsPw);
 			smsVO.setSmsType(smsType);
 			smsVO.setSmsTo(customerKey);
-			smsVO.setSmsFrom(sendNo);
+			smsVO.setSmsFrom(strMobliePhone);
 			//smsVO.setSmsMsg(counselVO.getCounselResult());
 			smsVO.setSmsMsg("[애디스]제품 제조사로 A/S접수가 의뢰되었습니다.상세 정보는 addys.kr 에서 확인가능합니다.");
 			smsVO.setSmsUserId(strUserId);
@@ -3712,6 +3715,7 @@ public class SmartController {
         HttpSession session = request.getSession();
         String strUserId = StringUtil.nvl((String) session.getAttribute("strUserId"));
         String strGroupId = StringUtil.nvl((String) session.getAttribute("strGroupId"));
+        String strMobliePhone = StringUtil.nvl((String) session.getAttribute("strMobliePhone"));
 
         //오늘 날짜
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
@@ -3736,7 +3740,7 @@ public class SmartController {
 			smsVO.setSmsPw(smsPw);
 			smsVO.setSmsType(smsType);
 			smsVO.setSmsTo(asVO.getCustomerKey());
-			smsVO.setSmsFrom(sendNo);
+			smsVO.setSmsFrom(strMobliePhone);
 			//smsVO.setSmsMsg(counselVO.getCounselResult());
 			smsVO.setSmsMsg("[애디스]제품A/S가 완료되어 고객님께 배송중입니다. 상세정보는 addys.kr 에서 확인기능합니다.");
 			smsVO.setSmsUserId(strUserId);
