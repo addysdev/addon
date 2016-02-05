@@ -85,8 +85,10 @@
 	objCell = objRow.createCell((short)17);
 	objCell.setCellValue("적요(200)");
 	objCell = objRow.createCell((short)18);
-	objCell.setCellValue("부대비용(12)");
+	objCell.setCellValue("관리항목(14)");
 	objCell = objRow.createCell((short)19);
+	objCell.setCellValue("부대비용(12)");
+	objCell = objRow.createCell((short)20);
 	objCell.setCellValue("ecount");
 	
 
@@ -112,6 +114,7 @@
 	objSheet.setColumnWidth((short)17,(short)3000);
 	objSheet.setColumnWidth((short)18,(short)3000);
 	objSheet.setColumnWidth((short)19,(short)3000);
+	objSheet.setColumnWidth((short)20,(short)3000);
 	
 	//--------------------------------------------------------------------------------------
 	for (int i=0; i<orderLsit.size() ; i++) {
@@ -160,6 +163,8 @@
 		objCell = objRow.createCell((short)18);
 		objCell.setCellValue("");
 		objCell = objRow.createCell((short)19);
+		objCell.setCellValue("");
+		objCell = objRow.createCell((short)20);
 		objCell.setCellValue("ecount");
 	}
 
