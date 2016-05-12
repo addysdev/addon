@@ -173,18 +173,15 @@
                         					 ) As A4
 									 ) As I5 On I1.productCode = I5.productCode And I1.groupID = I5.groupID /*구매기준일*/   
                            Left Join(
-									  Select groupID,productCode,updateDate,
-                           					(Select max(orderCode) From adOrderDetail Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime)  as orderCode,
-                           					(Select C10.orderState 
-                               					From adOrderDetail C9
-                                    				Left Join adOrder C10 On C9.orderCode = C10.orderCode
-                               					Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime) as orderState
+								    Select A5.groupID,A5.productCode,A6.updateDateTime,A6.orderCode,A7.orderState
                 					  	From ( 
-                        					  Select C8.groupId,C7.productCode,C8.orderCode,C8.orderState, max(C7.updateDateTime) as updateDate 
+                        					  Select C8.groupId,C7.productCode,max(C7.updateDateTime) as updateDate 
                        						  	From adOrderDetail C7
-                                       				Left Join adOrder C8 On C7.orderCode=C8.orderCode
-                        							Group By  groupID,productCode 
-                        					 ) A5
+                                        Left Join adOrder C8 On C7.orderCode=C8.orderCode
+                        							  Group By  groupID,productCode 
+                                       ) A5
+                                       Left Join adOrderDetail A6 On A5.productCode = A6.productCode and A5.updateDate=A6.updateDateTime
+                                       Left Join adOrder A7 On A6.orderCode=A7.orderCode
 									) As I6 On I1.productCode = I6.productCode And I1.groupID = I6.groupID /*업데이트상태 및 주문번호*/ 
 									Left Join adProductMaster T2 On I1.ProductCode = T2.ProductCode
                    					Left Join adCompany T3 On T2.companyCode = T3.companyCode 
@@ -340,18 +337,15 @@ From (
                         					 ) As A4
 									 ) As I5 On I1.productCode = I5.productCode And I1.groupID = I5.groupID /*구매기준일*/   
                            Left Join(
-									  Select groupID,productCode,updateDate,
-                           					(Select max(orderCode) From adOrderDetail Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime)  as orderCode,
-                           					(Select C10.orderState 
-                               					From adOrderDetail C9
-                                    				Left Join adOrder C10 On C9.orderCode = C10.orderCode
-                               					Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime) as orderState
+									  Select A5.groupID,A5.productCode,A6.updateDateTime,A6.orderCode,A7.orderState
                 					  	From ( 
-                        					  Select C8.groupId,C7.productCode,C8.orderCode,C8.orderState, max(C7.updateDateTime) as updateDate 
+                        					  Select C8.groupId,C7.productCode,max(C7.updateDateTime) as updateDate 
                        						  	From adOrderDetail C7
-                                       				Left Join adOrder C8 On C7.orderCode=C8.orderCode
-                        							Group By  groupID,productCode 
-                        					 ) A5
+                                        Left Join adOrder C8 On C7.orderCode=C8.orderCode
+                        							  Group By  groupID,productCode 
+                                       ) A5
+                                       Left Join adOrderDetail A6 On A5.productCode = A6.productCode and A5.updateDate=A6.updateDateTime
+                                       Left Join adOrder A7 On A6.orderCode=A7.orderCode
 									) As I6 On I1.productCode = I6.productCode And I1.groupID = I6.groupID /*업데이트상태 및 주문번호*/ 
 									Left Join adProductMaster T2 On I1.ProductCode = T2.ProductCode
                    					Left Join adCompany T3 On T2.companyCode = T3.companyCode 
@@ -489,18 +483,15 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
                         					 ) As A4
 									 ) As I5 On I1.productCode = I5.productCode And I1.groupID = I5.groupID /*구매기준일*/   
                            Left Join(
-									  Select groupID,productCode,updateDate,
-                           					(Select max(orderCode) From adOrderDetail Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime)  as orderCode,
-                           					(Select C10.orderState 
-                               					From adOrderDetail C9
-                                    				Left Join adOrder C10 On C9.orderCode = C10.orderCode
-                               					Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime) as orderState
+									 Select A5.groupID,A5.productCode,A6.updateDateTime,A6.orderCode,A7.orderState
                 					  	From ( 
-                        					  Select C8.groupId,C7.productCode,C8.orderCode,C8.orderState, max(C7.updateDateTime) as updateDate 
+                        					  Select C8.groupId,C7.productCode,max(C7.updateDateTime) as updateDate 
                        						  	From adOrderDetail C7
-                                       				Left Join adOrder C8 On C7.orderCode=C8.orderCode
-                        							Group By  groupID,productCode 
-                        					 ) A5
+                                        Left Join adOrder C8 On C7.orderCode=C8.orderCode
+                        							  Group By  groupID,productCode 
+                                       ) A5
+                                       Left Join adOrderDetail A6 On A5.productCode = A6.productCode and A5.updateDate=A6.updateDateTime
+                                       Left Join adOrder A7 On A6.orderCode=A7.orderCode
 									) As I6 On I1.productCode = I6.productCode And I1.groupID = I6.groupID /*업데이트상태 및 주문번호*/  
 									Left Join adProductMaster T2 On I1.ProductCode = T2.ProductCode
                    					Left Join adOrderLimit T7 On I1.groupID=T7.groupId And  T2.companyCode=T7.companyCode And T7.deletedYn='N'
@@ -623,18 +614,15 @@ Select Sum(deferCnt) As deferCnt ,Sum(targetCnt) As targetCnt,Sum(failureCnt) As
                         					 ) As A4
 									 ) As I5 On I1.productCode = I5.productCode And I1.groupID = I5.groupID /*구매기준일*/   
                            Left Join(
-									  Select groupID,productCode,updateDate,
-                           					(Select max(orderCode) From adOrderDetail Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime)  as orderCode,
-                           					(Select C10.orderState 
-                               					From adOrderDetail C9
-                                    				Left Join adOrder C10 On C9.orderCode = C10.orderCode
-                               					Where A5.groupId=groupId and A5.productCode=productCode and A5.updateDate=updateDateTime) as orderState
+									Select A5.groupID,A5.productCode,A6.updateDateTime,A6.orderCode,A7.orderState
                 					  	From ( 
-                        					  Select C8.groupId,C7.productCode,C8.orderCode,C8.orderState, max(C7.updateDateTime) as updateDate 
+                        					  Select C8.groupId,C7.productCode,max(C7.updateDateTime) as updateDate 
                        						  	From adOrderDetail C7
-                                       				Left Join adOrder C8 On C7.orderCode=C8.orderCode
-                        							Group By  groupID,productCode 
-                        					 ) A5
+                                        Left Join adOrder C8 On C7.orderCode=C8.orderCode
+                        							  Group By  groupID,productCode 
+                                       ) A5
+                                       Left Join adOrderDetail A6 On A5.productCode = A6.productCode and A5.updateDate=A6.updateDateTime
+                                       Left Join adOrder A7 On A6.orderCode=A7.orderCode
 									) As I6 On I1.productCode = I6.productCode And I1.groupID = I6.groupID /*업데이트상태 및 주문번호*/  
                                       Left Join adProductMaster T2 On I1.ProductCode = T2.ProductCode
                                       Left Join adCompany T3 On T2.companyCode = T3.companyCode 
